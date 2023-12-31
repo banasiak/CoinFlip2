@@ -6,10 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.databinding.FragmentMainBinding
+import com.banasiak.coinflip.util.navigate
+import com.google.android.play.core.ktx.launchReview
+import com.google.android.play.core.ktx.requestReview
+import com.google.android.play.core.review.ReviewManagerFactory
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainFragment : Fragment() {
 
   private lateinit var binding: FragmentMainBinding
@@ -25,8 +30,15 @@ class MainFragment : Fragment() {
 
     viewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
-    binding.settingsButton.setOnClickListener { findNavController().navigate(R.id.toSettings) }
-    binding.diagnosticsButton.setOnClickListener { findNavController().navigate(R.id.toDiagnostics) }
+    binding.settingsButton.setOnClickListener { navigate(R.id.toSettings) }
+    binding.diagnosticsButton.setOnClickListener { navigate(R.id.toDiagnostics) }
+    binding.aboutButton.setOnClickListener { navigate(R.id.toAbout) }
+  }
+
+  private suspend fun showRateAppDialog() {
+    val reviewManager = ReviewManagerFactory.create(requireContext())
+    val reviewInfo = reviewManager.requestReview()
+    reviewManager.launchReview(requireActivity(), reviewInfo)
   }
 
 }

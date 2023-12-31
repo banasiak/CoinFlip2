@@ -1,14 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".diagnostics.DiagnosticsFragment">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:padding="@dimen/spacing_large"
+  tools:context=".diagnostics.DiagnosticsFragment"
+  >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Diagnostics Fragment" />
+  <TextView
+    android:id="@+id/header"
+    style="@style/MaterialAlertDialog.Material3.Title.Text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/diagnostics_fragment_title"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    />
 
-</LinearLayout>
+  <!-- HEADS -->
+
+  <TextView
+    android:id="@+id/heads"
+    style="@style/MaterialAlertDialog.Material3.Body.Text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_medium"
+    android:text="@string/heads"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/header"
+    />
+
+  <TextView
+    android:id="@+id/headsCount"
+    style="@style/MaterialAlertDialog.Material3.Body.Text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_large"
+    android:layout_marginTop="@dimen/spacing_medium"
+    app:layout_constraintStart_toEndOf="@id/heads"
+    app:layout_constraintTop_toBottomOf="@id/header"
+    tools:text="1000"
+    />
+
+  <TextView
+    android:id="@+id/headsRatio"
+    style="@style/MaterialAlertDialog.Material3.Body.Text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_small"
+    android:layout_marginTop="@dimen/spacing_medium"
+    app:layout_constraintStart_toEndOf="@id/headsCount"
+    app:layout_constraintTop_toBottomOf="@id/header"
+    tools:text="10%"
+    />
+
+  <!-- TAILS -->
+
+  <TextView
+    android:id="@+id/tails"
+    style="@style/MaterialAlertDialog.Material3.Body.Text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_small"
+    android:text="@string/tails"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/heads"
+    />
+
+  <TextView
+    android:id="@+id/tailsCount"
+    style="@style/MaterialAlertDialog.Material3.Body.Text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_large"
+    android:layout_marginTop="@dimen/spacing_small"
+    app:layout_constraintStart_toEndOf="@id/tails"
+    app:layout_constraintTop_toBottomOf="@id/headsCount"
+    tools:text="9000"
+    />
+
+  <TextView
+    android:id="@+id/tailsRatio"
+    style="@style/MaterialAlertDialog.Material3.Body.Text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_small"
+    android:layout_marginTop="@dimen/spacing_small"
+    app:layout_constraintStart_toEndOf="@id/tailsCount"
+    app:layout_constraintTop_toBottomOf="@id/headsRatio"
+    tools:text="90%"
+    />
+
+  <!-- TOTAL -->
+
+  <TextView
+    android:id="@+id/total"
+    style="@style/MaterialAlertDialog.Material3.Body.Text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_small"
+    android:text="@string/total"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/tails"
+    />
+
+  <TextView
+    android:id="@+id/totalCount"
+    style="@style/MaterialAlertDialog.Material3.Body.Text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_large"
+    android:layout_marginTop="@dimen/spacing_small"
+    app:layout_constraintStart_toEndOf="@id/total"
+    app:layout_constraintTop_toBottomOf="@id/tailsCount"
+    tools:text="10000"
+    />
+
+  <TextView
+    android:id="@+id/totalRatio"
+    style="@style/MaterialAlertDialog.Material3.Body.Text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_small"
+    android:layout_marginTop="@dimen/spacing_small"
+    app:layout_constraintStart_toEndOf="@id/totalCount"
+    app:layout_constraintTop_toBottomOf="@id/tailsRatio"
+    tools:text="100%"
+    />
+
+  <!-- DURATION -->
+
+  <TextView
+    android:id="@+id/time"
+    style="@style/MaterialAlertDialog.Material3.Body.Text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_small"
+    android:text="@string/time"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/total"
+    />
+
+  <TextView
+    android:id="@+id/elapsedTime"
+    style="@style/MaterialAlertDialog.Material3.Body.Text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_large"
+    android:layout_marginTop="@dimen/spacing_small"
+    app:layout_constraintStart_toEndOf="@id/time"
+    app:layout_constraintTop_toBottomOf="@id/totalCount"
+    tools:text="5678"
+    />
+
+  <TextView
+    android:id="@+id/timeUnits"
+    style="@style/MaterialAlertDialog.Material3.Body.Text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_xsmall"
+    android:layout_marginTop="@dimen/spacing_small"
+    app:layout_constraintStart_toEndOf="@id/elapsedTime"
+    app:layout_constraintTop_toBottomOf="@id/totalRatio"
+    tools:text="ms"
+    />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

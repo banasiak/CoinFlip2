@@ -1,6 +1,8 @@
 plugins {
   id("com.android.application")
   id("org.jetbrains.kotlin.android")
+  id("com.google.devtools.ksp")
+  id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -11,8 +13,12 @@ android {
     applicationId = "com.banasiak.coinflip"
     minSdk = 24
     targetSdk = 34
-    versionCode = 1
-    versionName = "1.0"
+    versionCode = 49
+    versionName = "2024.1.0"
+  }
+
+  buildFeatures {
+    buildConfig = true
   }
 
   buildTypes {
@@ -39,6 +45,12 @@ dependencies {
   implementation("androidx.navigation:navigation-fragment-ktx:2.7.6")
   implementation("androidx.navigation:navigation-ui-ktx:2.7.6")
   implementation("androidx.preference:preference-ktx:1.2.1")
+  implementation("com.google.android.play:review-ktx:2.0.1")
   implementation("com.google.android.material:material:1.11.0")
+  implementation("com.google.dagger:hilt-android:2.50")
+  implementation("com.jakewharton.timber:timber:5.0.1")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+  ksp("com.google.dagger:dagger-compiler:2.50")
+  ksp("com.google.dagger:hilt-android-compiler:2.50")
   testImplementation("junit:junit:4.13.2")
 }

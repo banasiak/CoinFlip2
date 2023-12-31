@@ -1,19 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Coin Flip</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+  <string name="about_fragment_title">About Coin Flip</string>
+  <string name="about_menu_title">About</string>
+  <string name="about_text">
+        A convenient way to flip a coin, even if you don\'t have one. Simply tap the question mark or shake and view the result. Tap or
+        shake to spin the coin again.
+        \n\nQuarter-dollar coin images from the United States Mint. Presidential $1 Coin images from the United States Mint.
+        \n\nCopyright © 2024 - Richard Banasiak
+        \nOpen-source contributions from Alex Baker, Ciaran Gultnieks, Spanti Nicola &amp; Michael Riepen.
     </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+  <string name="app_name">Coin Flip</string>
+  <string name="coin_animation">Coin Animation</string>
+  <string name="exit">Exit</string>
+  <string name="instructions_tap_shake_tv">Tap/Shake to Flip Coin</string>
+  <string name="instructions_tap_tv">Tap to Flip Coin</string>
+  <string name="heads">HEADS</string>
+  <string name="max">MAX</string>
+  <string name="milliseconds">ms</string>
+  <string name="min">OFF</string>
+  <string name="new_coins">Sweet! New coins available!</string>
+  <string name="rate_app_text">Rate App on Google Play</string>
+  <string name="reset">Reset</string>
+  <string name="diagnostics_fragment_title">Diagnostic Test</string>
+  <string name="diagnostics_menu_title">Diagnostics</string>
+  <string name="settings_activity_title">Coin Flip Settings</string>
+  <string name="settings_header_basic_title">Basic Settings</string>
+  <string name="settings_header_advanced_title">Advanced Settings</string>
+  <string name="settings_item_animation_summary">Render spinning coin</string>
+  <string name="settings_item_animation_title">Animation</string>
+  <string name="settings_item_coin_summary">The type of coin to be displayed</string>
+  <string name="settings_item_coin_title">Coin Type</string>
+  <string name="settings_item_download_summary">Download more coins from Google Play</string>
+  <string name="settings_item_download_title">Get More Coins</string>
+  <string name="settings_item_force_summary">Force required</string>
+  <string name="settings_item_force_title">Shake</string>
+  <string name="settings_item_selftest_title">Diagnostic Test</string>
+  <string name="settings_item_selftest_summary">iterations</string>
+  <string name="settings_item_selftest_dialog">Number of Iterations</string>
+  <string name="settings_item_sound_summary">Play sound after coin flip</string>
+  <string name="settings_item_sound_title">Sound</string>
+  <string name="settings_item_stats_summary">Display running total</string>
+  <string name="settings_item_stats_title">Statistics</string>
+  <string name="settings_item_text_summary">Display HEADS/TAILS</string>
+  <string name="settings_item_text_title">Text</string>
+  <string name="settings_item_vibrate_summary">Vibrate on coin flip</string>
+  <string name="settings_item_vibrate_title">Vibrate</string>
+  <string name="settings_menu_title">Settings</string>
+  <string name="tails">TAILS</string>
+  <string name="time">TIME</string>
+  <string name="toast_coin_error">Coin Not Found - Resetting Selection</string>
+  <string name="total">TOTAL</string>
+  <string name="unknown">UNKNOWN</string>
+  <string name="version">version %1s (%2d)</string>
+
+
+  <!-- TODO: Remove or change this placeholder text -->
+  <string name="hello_blank_fragment">Hello blank fragment</string>
+  <!-- Preference Titles -->
+  <string name="messages_header">Messages</string>
+  <string name="sync_header">Sync</string>
+
+  <!-- Messages Preferences -->
+  <string name="signature_title">Your signature</string>
+  <string name="reply_title">Default reply action</string>
+
+  <!-- Sync Preferences -->
+  <string name="sync_title">Sync email periodically</string>
+  <string name="attachment_title">Download incoming attachments</string>
+  <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+  <string name="attachment_summary_off">Only download attachments when manually requested</string>
 </resources>
