@@ -1,5 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string-array name="coins">
+    <item>Alabama Quarter</item>
+    <item>Alaska Quarter</item>
+    <item>Arizona Quarter</item>
+    <item>Arkansas Quarter</item>
+    <item>California Quarter</item>
+    <item>Colorado Quarter</item>
+    <item>Connecticut Quarter</item>
+    <item>Delaware Quarter</item>
+    <item>District of Columbia Quarter</item>
+    <item>Florida Quarter</item>
+    <item>Georgia Quarter</item>
+    <item>Hawaii Quarter</item>
+    <item>Idaho Quarter</item>
+    <item>Illinois Quarter</item>
+    <item>Indiana Quarter</item>
+    <item>Iowa Quarter</item>
+    <item>Kansas Quarter</item>
+    <item>Kentucky Quarter</item>
+    <item>Louisiana Quarter</item>
+    <item>Maine Quarter</item>
+    <item>Maryland Quarter</item>
+    <item>Massachusetts Quarter</item>
+    <item>Michigan Quarter</item>
+    <item>Minnesota Quarter</item>
+    <item>Mississippi Quarter</item>
+    <item>Missouri Quarter</item>
+    <item>Montana Quarter</item>
+    <item>Nebraska Quarter</item>
+    <item>Nevada Quarter</item>
+    <item>New Hampshire Quarter</item>
+    <item>New Jersey Quarter</item>
+    <item>New Mexico Quarter</item>
+    <item>New York Quarter</item>
+    <item>North Carolina Quarter</item>
+    <item>North Dakota Quarter</item>
+    <item>Ohio Quarter</item>
+    <item>Oklahoma Quarter</item>
+    <item>Oregon Quarter</item>
+    <item>Pennsylvania Quarter</item>
+    <item>Rhode Island Quarter</item>
+    <item>South Carolina Quarter</item>
+    <item>South Dakota Quarter</item>
+    <item>Tennessee Quarter</item>
+    <item>Texas Quarter</item>
+    <item>Utah Quarter</item>
+    <item>Vermont Quarter</item>
+    <item>Virginia Quarter</item>
+    <item>Washington Quarter</item>
+    <item>West Virginia Quarter</item>
+    <item>Wisconsin Quarter</item>
+    <item>Wyoming Quarter</item>
+    <item>JFK Half-Dollar</item>
+    <item>George Washington Dollar</item>
+  </string-array>
+  <string-array name="coins_values">
+    <item>al</item>
+    <item>ak</item>
+    <item>az</item>
+    <item>ar</item>
+    <item>ca</item>
+    <item>co</item>
+    <item>ct</item>
+    <item>de</item>
+    <item>dc</item>
+    <item>fl</item>
+    <item>ga</item>
+    <item>hi</item>
+    <item>id</item>
+    <item>il</item>
+    <item>in</item>
+    <item>ia</item>
+    <item>ks</item>
+    <item>ky</item>
+    <item>la</item>
+    <item>me</item>
+    <item>md</item>
+    <item>ma</item>
+    <item>mi</item>
+    <item>mn</item>
+    <item>ms</item>
+    <item>mo</item>
+    <item>mt</item>
+    <item>ne</item>
+    <item>nv</item>
+    <item>nh</item>
+    <item>nj</item>
+    <item>nm</item>
+    <item>ny</item>
+    <item>nc</item>
+    <item>nd</item>
+    <item>oh</item>
+    <item>ok</item>
+    <item>or</item>
+    <item>pa</item>
+    <item>ri</item>
+    <item>sc</item>
+    <item>sd</item>
+    <item>tn</item>
+    <item>tx</item>
+    <item>ut</item>
+    <item>vt</item>
+    <item>va</item>
+    <item>wa</item>
+    <item>wv</item>
+    <item>wi</item>
+    <item>wy</item>
+    <item>jfk</item>
+    <item>gw</item>
+  </string-array>
+
   <!-- Reply Preference -->
   <string-array name="reply_entries">
     <item>Reply</item>
