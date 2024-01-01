@@ -21,7 +21,7 @@ class DiagnosticsViewModel @Inject constructor(
   }
 
   private var state = DiagnosticsState()
-  private var _stateFlow = MutableStateFlow<DiagnosticsState>(state)
+  private val _stateFlow = MutableStateFlow<DiagnosticsState>(state)
   val stateFlow: StateFlow<DiagnosticsState> = _stateFlow
 
   init {
@@ -29,23 +29,26 @@ class DiagnosticsViewModel @Inject constructor(
   }
 
   private suspend fun runDiagnostics() {
+    state = state.copy(startTime = System.currentTimeMillis())
     for (i in 1..MAX_FLIPS) {
       when (val value = coin.flip().second) {
         Coin.Value.HEADS -> incrementHeads()
         Coin.Value.TAILS -> incrementTails()
         else -> {
-          throw IllegalStateException("Coin flip returned invalid value: $value")
+          throw IllegalStateException("Coin.flip() returned invalid value: $value")
         }
       }
 
       if (state.totalCount % 100 == 0L) {
+        val elapsedTime = System.currentTimeMillis() - state.startTime
+        state = state.copy(elapsedTime = elapsedTime)
         _stateFlow.emit(state)
         delay(SMOOTH_DELAY)
       }
     }
   }
 
-  private suspend fun incrementHeads() {
+  private fun incrementHeads() {
     val heads = state.headsCount + 1
     val total = state.totalCount + 1
     val headsRatio = calculatePercentage(heads, total)
