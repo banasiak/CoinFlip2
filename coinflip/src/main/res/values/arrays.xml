@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string-array name="coins">
+    <item>George Washington Dollar</item>
     <item>Alabama Quarter</item>
     <item>Alaska Quarter</item>
     <item>Arizona Quarter</item>
@@ -53,9 +54,9 @@
     <item>Wisconsin Quarter</item>
     <item>Wyoming Quarter</item>
     <item>JFK Half-Dollar</item>
-    <item>George Washington Dollar</item>
   </string-array>
   <string-array name="coins_values">
+    <item>gw</item>
     <item>al</item>
     <item>ak</item>
     <item>az</item>
@@ -108,17 +109,5 @@
     <item>wi</item>
     <item>wy</item>
     <item>jfk</item>
-    <item>gw</item>
-  </string-array>
-
-  <!-- Reply Preference -->
-  <string-array name="reply_entries">
-    <item>Reply</item>
-    <item>Reply to all</item>
-  </string-array>
-
-  <string-array name="reply_values">
-    <item>reply</item>
-    <item>reply_all</item>
   </string-array>
 </resources>
