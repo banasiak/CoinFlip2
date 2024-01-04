@@ -6,7 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.databinding.FragmentMainBinding
 import com.banasiak.coinflip.settings.SettingsManager
@@ -16,7 +19,7 @@ import com.google.android.play.core.ktx.requestReview
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.squareup.seismic.ShakeDetector
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -37,17 +40,15 @@ class MainFragment : Fragment() {
     super.onViewCreated(view, savedInstanceState)
 
     viewModel = ViewModelProvider(this)[MainViewModel::class.java]
-    shakeDetector = ShakeDetector { Timber.i("Shake detected!") }
 
-    binding.settingsButton.setOnClickListener { navigate(R.id.toSettings) }
-    binding.diagnosticsButton.setOnClickListener { navigate(R.id.toDiagnostics) }
-    binding.aboutButton.setOnClickListener { navigate(R.id.toAbout) }
-  }
+    viewLifecycleOwner.lifecycleScope.launch {
+      repeatOnLifecycle(Lifecycle.State.STARTED) {
+        launch { viewModel.stateFlow.collect { bind(it) } }
+        launch { viewModel.effectFlow.collect { onEffect(it) } }
+      }
+    }
 
-  private suspend fun showRateAppDialog() {
-    val reviewManager = ReviewManagerFactory.create(requireContext())
-    val reviewInfo = reviewManager.requestReview()
-    reviewManager.launchReview(requireActivity(), reviewInfo)
+    setupActions()
   }
 
   override fun onResume() {
@@ -61,5 +62,34 @@ class MainFragment : Fragment() {
   override fun onPause() {
     super.onPause()
     shakeDetector.stop()
+  }
+
+  private fun setupActions() {
+    binding.aboutButton.setOnClickListener { viewModel.postAction(MainAction.TapAbout) }
+    binding.coinImage.setOnClickListener { viewModel.postAction(MainAction.TapCoin) }
+    binding.diagnosticsButton.setOnClickListener { viewModel.postAction(MainAction.TapDiagnostics) }
+    binding.settingsButton.setOnClickListener { viewModel.postAction(MainAction.TapSettings) }
+
+    shakeDetector = ShakeDetector { viewModel.postAction(MainAction.Shake) }
+  }
+
+  private fun bind(state: MainState) {
+  }
+
+  private fun onEffect(effect: MainEffect) {
+    when (effect) {
+      is MainEffect.NavToAbout -> navigate(R.id.toAbout)
+      is MainEffect.NavToDiagnostics -> navigate(R.id.toDiagnostics)
+      is MainEffect.NavToSettings -> navigate(R.id.toSettings)
+      is MainEffect.ShowRateDialog -> showRateAppDialog()
+    }
+  }
+
+  private fun showRateAppDialog() {
+    lifecycleScope.launch {
+      val reviewManager = ReviewManagerFactory.create(requireContext())
+      val reviewInfo = reviewManager.requestReview()
+      reviewManager.launchReview(requireActivity(), reviewInfo)
+    }
   }
 }

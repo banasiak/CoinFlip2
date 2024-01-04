@@ -34,4 +34,17 @@
     android:text="About"
     />
 
+  <ImageView
+    android:id="@+id/coin_image"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginTop="30dp"
+    android:maxWidth="390dp"
+    android:maxHeight="390dp"
+    android:contentDescription="@string/coin_animation"
+    android:src="@drawable/unknown"
+    android:scaleType="center"
+    />
+
 </LinearLayout>

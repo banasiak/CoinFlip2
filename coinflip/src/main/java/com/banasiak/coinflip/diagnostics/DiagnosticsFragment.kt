@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.banasiak.coinflip.databinding.FragmentDiagnosticsBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,7 +28,9 @@ class DiagnosticsFragment : BottomSheetDialogFragment() {
 
     viewModel = ViewModelProvider(this)[DiagnosticsViewModel::class.java]
     viewLifecycleOwner.lifecycleScope.launch {
-      viewModel.stateFlow.collect { bind(it) }
+      repeatOnLifecycle(Lifecycle.State.STARTED) {
+        viewModel.stateFlow.collect { bind(it) }
+      }
     }
   }
 

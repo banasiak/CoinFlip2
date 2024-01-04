@@ -6,8 +6,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.databinding.FragmentAboutBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -29,10 +31,10 @@ class AboutFragment : BottomSheetDialogFragment() {
 
     viewModel = ViewModelProvider(this)[AboutViewModel::class.java]
     viewLifecycleOwner.lifecycleScope.launch {
-      viewModel.stateFlow.collect { bind(it) }
-    }
-    viewLifecycleOwner.lifecycleScope.launch {
-      viewModel.effectFlow.collect { onEffect(it) }
+      repeatOnLifecycle(Lifecycle.State.STARTED) {
+        launch { viewModel.stateFlow.collect { bind(it) } }
+        launch { viewModel.effectFlow.collect { onEffect(it) } }
+      }
     }
 
     binding.rateButton.setOnClickListener { viewModel.postAction(AboutAction.RateApp) }
