@@ -1,8 +1,10 @@
 package com.banasiak.coinflip.diagnostics
 
+import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.banasiak.coinflip.common.Coin
+import com.banasiak.coinflip.settings.SettingsManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,15 +14,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DiagnosticsViewModel @Inject constructor(
-  private val coin: Coin
+  settings: SettingsManager,
+  private val coin: Coin,
 ) : ViewModel() {
 
   companion object {
-    private const val MAX_FLIPS = 100_000L
     private const val SMOOTH_DELAY = 5L
   }
 
-  private var state = DiagnosticsState()
+  private var state = DiagnosticsState(iterations = settings.diagnostics)
   private val _stateFlow = MutableStateFlow<DiagnosticsState>(state)
   val stateFlow: StateFlow<DiagnosticsState> = _stateFlow
 
@@ -30,7 +32,7 @@ class DiagnosticsViewModel @Inject constructor(
 
   private suspend fun runDiagnostics() {
     state = state.copy(startTime = System.currentTimeMillis())
-    for (i in 1..MAX_FLIPS) {
+    for (i in 1..state.iterations) {
       when (val value = coin.flip().second) {
         Coin.Value.HEADS -> incrementHeads()
         Coin.Value.TAILS -> incrementTails()
@@ -39,11 +41,11 @@ class DiagnosticsViewModel @Inject constructor(
         }
       }
 
-      if (state.totalCount % 100 == 0L) {
+      if (state.totalCount % 100 == 0L || state.totalCount == state.iterations) {
         val elapsedTime = System.currentTimeMillis() - state.startTime
         state = state.copy(elapsedTime = elapsedTime)
         _stateFlow.emit(state)
-        delay(SMOOTH_DELAY)
+        delay(SMOOTH_DELAY) // this short delay smooths out the UI animation and make it looks nicer
       }
     }
   }
@@ -52,7 +54,7 @@ class DiagnosticsViewModel @Inject constructor(
     val heads = state.headsCount + 1
     val total = state.totalCount + 1
     val headsRatio = calculatePercentage(heads, total)
-    val totalRatio = calculatePercentage(total, MAX_FLIPS)
+    val totalRatio = calculatePercentage(total, state.iterations)
     state = state.copy(headsCount = heads, headsRatio = headsRatio, totalCount = total, totalRatio = totalRatio)
   }
 
@@ -60,7 +62,7 @@ class DiagnosticsViewModel @Inject constructor(
     val tails = state.tailsCount + 1
     val total = state.totalCount + 1
     val tailsRatio = calculatePercentage(tails, total)
-    val totalRatio = calculatePercentage(total, MAX_FLIPS)
+    val totalRatio = calculatePercentage(total, state.iterations)
     state = state.copy(tailsCount = tails, tailsRatio = tailsRatio, totalCount = total, totalRatio = totalRatio)
   }
 

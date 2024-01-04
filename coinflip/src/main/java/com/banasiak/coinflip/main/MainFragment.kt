@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.databinding.FragmentMainBinding
+import com.banasiak.coinflip.settings.SettingsManager
 import com.banasiak.coinflip.util.navigate
 import com.google.android.play.core.ktx.launchReview
 import com.google.android.play.core.ktx.requestReview
@@ -21,8 +22,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainFragment : Fragment() {
 
-  @Inject
-  lateinit var sensorManager: SensorManager
+  @Inject lateinit var sensorManager: SensorManager
+  @Inject lateinit var settingsManager: SettingsManager
 
   private lateinit var binding: FragmentMainBinding
   private lateinit var viewModel: MainViewModel
@@ -52,7 +53,10 @@ class MainFragment : Fragment() {
 
   override fun onResume() {
     super.onResume()
-    shakeDetector.start(sensorManager, SensorManager.SENSOR_DELAY_GAME)
+    if (settingsManager.shake) {
+      shakeDetector.start(sensorManager, SensorManager.SENSOR_DELAY_GAME)
+      shakeDetector.setSensitivity(settingsManager.force)
+    }
   }
 
   override fun onPause() {

@@ -1,7 +1,9 @@
 package com.banasiak.coinflip
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.hardware.SensorManager
+import androidx.preference.PreferenceManager
 import com.banasiak.coinflip.common.BuildInfo
 import dagger.Module
 import dagger.Provides
@@ -21,5 +23,10 @@ object AppModule {
   @Provides
   fun provideSensorManager(@ApplicationContext context: Context): SensorManager {
     return context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+  }
+
+  @Provides
+  fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+    return PreferenceManager.getDefaultSharedPreferences(context)
   }
 }

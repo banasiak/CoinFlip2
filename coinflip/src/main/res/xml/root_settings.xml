@@ -42,13 +42,13 @@
       app:title="@string/settings_item_coin_title" />
   </PreferenceCategory>
   <PreferenceCategory app:title="@string/settings_header_advanced_title">
-    <EditTextPreference
+    <com.banasiak.coinflip.settings.NumberPreference
       app:defaultValue="10000"
       app:dialogMessage="@string/settings_item_selftest_dialog"
       app:key="diagnostics"
       app:persistent="true"
-      app:title="@string/settings_item_selftest_title"
-      app:useSimpleSummaryProvider="true" />
+      app:summary="@string/settings_item_selftest_summary"
+      app:title="@string/settings_item_selftest_title" />
     <SeekBarPreference
       android:max="3"
       app:defaultValue="2"

@@ -48,6 +48,7 @@
   <string name="settings_item_vibrate_summary">Vibrate on coin flip</string>
   <string name="settings_item_vibrate_title">Vibrate</string>
   <string name="settings_menu_title">Settings</string>
+  <string name="settings_not_set">Not set</string>
   <string name="tails">TAILS</string>
   <string name="time">TIME</string>
   <string name="toast_coin_error">Coin Not Found - Resetting Selection</string>

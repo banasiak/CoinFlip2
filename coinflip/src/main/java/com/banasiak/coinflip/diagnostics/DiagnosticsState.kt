@@ -8,5 +8,6 @@ data class DiagnosticsState(
   val totalCount: Long = 0,
   val totalRatio: String = "",
   val startTime: Long = 0,
-  val elapsedTime: Long = 0
+  val elapsedTime: Long = 0,
+  val iterations: Long = 0
 )
