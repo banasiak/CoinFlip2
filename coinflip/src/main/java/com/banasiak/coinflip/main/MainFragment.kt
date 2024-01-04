@@ -21,7 +21,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainFragment : Fragment() {
-
   @Inject lateinit var sensorManager: SensorManager
   @Inject lateinit var settingsManager: SettingsManager
 
@@ -63,5 +62,4 @@ class MainFragment : Fragment() {
     super.onPause()
     shakeDetector.stop()
   }
-
 }

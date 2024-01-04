@@ -3,12 +3,14 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/nav_graph"
-  app:startDestination="@id/mainFragment">
+  app:startDestination="@id/mainFragment"
+  >
   <fragment
     android:id="@+id/mainFragment"
     android:name="com.banasiak.coinflip.main.MainFragment"
     android:label="fragment_main"
-    tools:layout="@layout/fragment_main">
+    tools:layout="@layout/fragment_main"
+    >
     <action
       android:id="@+id/toSettings"
       app:destination="@id/settingsFragment"
@@ -19,23 +21,28 @@
       />
     <action
       android:id="@+id/toDiagnostics"
-      app:destination="@id/diagnosticsFragment" />
+      app:destination="@id/diagnosticsFragment"
+      />
     <action
       android:id="@+id/toAbout"
-      app:destination="@id/aboutFragment" />
+      app:destination="@id/aboutFragment"
+      />
   </fragment>
   <fragment
     android:id="@+id/settingsFragment"
     android:name="com.banasiak.coinflip.settings.SettingsFragment"
-    android:label="SettingsFragment" />
+    android:label="SettingsFragment"
+    />
   <dialog
     android:id="@+id/diagnosticsFragment"
     android:name="com.banasiak.coinflip.diagnostics.DiagnosticsFragment"
     android:label="fragment_diagnostics"
-    tools:layout="@layout/fragment_diagnostics" />
+    tools:layout="@layout/fragment_diagnostics"
+    />
   <dialog
     android:id="@+id/aboutFragment"
     android:name="com.banasiak.coinflip.about.AboutFragment"
     android:label="fragment_about"
-    tools:layout="@layout/fragment_about" />
+    tools:layout="@layout/fragment_about"
+    />
 </navigation>

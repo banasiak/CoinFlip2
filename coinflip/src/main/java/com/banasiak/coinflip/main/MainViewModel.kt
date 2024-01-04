@@ -8,9 +8,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(private val coin: Coin) : ViewModel() {
-
   init {
     Timber.wtf("Hello MainViewModel")
   }
-
 }

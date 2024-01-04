@@ -13,7 +13,6 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class DiagnosticsFragment : BottomSheetDialogFragment() {
-
   private lateinit var binding: FragmentDiagnosticsBinding
   private lateinit var viewModel: DiagnosticsViewModel
 
@@ -40,5 +39,4 @@ class DiagnosticsFragment : BottomSheetDialogFragment() {
     binding.totalRatio.text = state.totalRatio
     binding.elapsedTime.text = state.elapsedTime.toString()
   }
-
 }

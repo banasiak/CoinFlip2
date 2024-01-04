@@ -28,5 +28,4 @@ class Coin @Inject constructor() {
     val next = this.nextBoolean()
     return if (next) Value.HEADS else Value.TAILS
   }
-
 }

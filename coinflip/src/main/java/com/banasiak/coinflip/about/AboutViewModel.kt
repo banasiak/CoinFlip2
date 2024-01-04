@@ -13,7 +13,6 @@ import javax.inject.Inject
 class AboutViewModel @Inject constructor(
   buildInfo: BuildInfo
 ) : ViewModel() {
-
   private var state = AboutState(buildInfo.versionName, buildInfo.versionCode)
   private val _stateFlow = MutableStateFlow<AboutState>(state)
   val stateFlow: StateFlow<AboutState> = _stateFlow
@@ -26,5 +25,4 @@ class AboutViewModel @Inject constructor(
       is AboutAction.RateApp -> _effectFlow.tryEmit(AboutEffect.ShowRateAppDialog)
     }
   }
-
 }

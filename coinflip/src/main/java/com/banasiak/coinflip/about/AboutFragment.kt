@@ -16,7 +16,6 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AboutFragment : BottomSheetDialogFragment() {
-
   private lateinit var binding: FragmentAboutBinding
   private lateinit var viewModel: AboutViewModel
 
@@ -37,7 +36,6 @@ class AboutFragment : BottomSheetDialogFragment() {
     }
 
     binding.rateButton.setOnClickListener { viewModel.postAction(AboutAction.RateApp) }
-
   }
 
   private fun bind(state: AboutState) {
@@ -56,5 +54,4 @@ class AboutFragment : BottomSheetDialogFragment() {
     val intent = Intent(Intent.ACTION_VIEW, uri)
     startActivity(intent)
   }
-
 }

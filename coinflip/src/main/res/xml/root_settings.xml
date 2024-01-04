@@ -1,37 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto">
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  >
   <PreferenceCategory app:title="@string/settings_header_basic_title">
     <SwitchPreferenceCompat
       app:defaultValue="true"
       app:key="animation"
       app:persistent="true"
       app:summary="@string/settings_item_animation_summary"
-      app:title="@string/settings_item_animation_title" />
+      app:title="@string/settings_item_animation_title"
+      />
     <SwitchPreferenceCompat
       app:defaultValue="true"
       app:key="shake"
       app:persistent="true"
       app:summary="@string/settings_item_shake_summary"
-      app:title="@string/settings_item_shake_title" />
+      app:title="@string/settings_item_shake_title"
+      />
     <SwitchPreferenceCompat
       app:defaultValue="true"
       app:key="sound"
       app:persistent="true"
       app:summary="@string/settings_item_sound_summary"
-      app:title="@string/settings_item_sound_title" />
+      app:title="@string/settings_item_sound_title"
+      />
     <SwitchPreferenceCompat
       app:defaultValue="true"
       app:key="text"
       app:persistent="true"
       app:summary="@string/settings_item_text_summary"
-      app:title="@string/settings_item_text_title" />
+      app:title="@string/settings_item_text_title"
+      />
     <SwitchPreferenceCompat
       app:defaultValue="true"
       app:key="vibrate"
       app:persistent="true"
       app:summary="@string/settings_item_vibrate_summary"
-      app:title="@string/settings_item_vibrate_title" />
+      app:title="@string/settings_item_vibrate_title"
+      />
     <ListPreference
       app:defaultValue="gw"
       app:entries="@array/coins"
@@ -39,7 +45,8 @@
       app:key="coin"
       app:persistent="true"
       app:summary="@string/settings_item_coin_summary"
-      app:title="@string/settings_item_coin_title" />
+      app:title="@string/settings_item_coin_title"
+      />
   </PreferenceCategory>
   <PreferenceCategory app:title="@string/settings_header_advanced_title">
     <com.banasiak.coinflip.settings.NumberPreference
@@ -48,7 +55,8 @@
       app:key="diagnostics"
       app:persistent="true"
       app:summary="@string/settings_item_selftest_summary"
-      app:title="@string/settings_item_selftest_title" />
+      app:title="@string/settings_item_selftest_title"
+      />
     <SeekBarPreference
       android:max="3"
       app:defaultValue="2"
@@ -57,12 +65,14 @@
       app:min="1"
       app:persistent="true"
       app:summary="@string/settings_item_force_summary"
-      app:title="@string/settings_item_force_title" />
+      app:title="@string/settings_item_force_title"
+      />
     <SwitchPreferenceCompat
       app:defaultValue="true"
       app:key="stats"
       app:persistent="true"
       app:summary="@string/settings_item_stats_summary"
-      app:title="@string/settings_item_stats_title" />
+      app:title="@string/settings_item_stats_title"
+      />
   </PreferenceCategory>
 </PreferenceScreen>

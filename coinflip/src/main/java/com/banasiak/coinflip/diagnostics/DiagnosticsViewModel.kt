@@ -1,6 +1,5 @@
 package com.banasiak.coinflip.diagnostics
 
-import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.banasiak.coinflip.common.Coin
@@ -15,9 +14,8 @@ import javax.inject.Inject
 @HiltViewModel
 class DiagnosticsViewModel @Inject constructor(
   settings: SettingsManager,
-  private val coin: Coin,
+  private val coin: Coin
 ) : ViewModel() {
-
   companion object {
     private const val SMOOTH_DELAY = 5L
   }

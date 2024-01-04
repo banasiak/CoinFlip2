@@ -8,8 +8,7 @@ import androidx.preference.Preference
 import com.banasiak.coinflip.R
 
 // For the record, I resent having to implement this...
-class NumberPreference: EditTextPreference {
-
+class NumberPreference : EditTextPreference {
   var summaryAttribute: CharSequence? = null
 
   constructor(context: Context) : super(context)
@@ -18,7 +17,8 @@ class NumberPreference: EditTextPreference {
 
   constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-  constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
+  constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) :
+    super(context, attrs, defStyleAttr, defStyleRes)
 
   init {
     setOnBindEditTextListener {
@@ -31,8 +31,7 @@ class NumberPreference: EditTextPreference {
   }
 }
 
-class NumberSummaryProvider private constructor(): Preference.SummaryProvider<NumberPreference> {
-
+class NumberSummaryProvider private constructor() : Preference.SummaryProvider<NumberPreference> {
   companion object {
     val instance: NumberSummaryProvider by lazy { NumberSummaryProvider() }
   }
