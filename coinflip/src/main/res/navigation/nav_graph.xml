@@ -14,10 +14,10 @@
     <action
       android:id="@+id/toSettings"
       app:destination="@id/settingsFragment"
-      app:enterAnim="@anim/slide_in"
-      app:exitAnim="@anim/slide_out"
-      app:popEnterAnim="@anim/slide_in"
-      app:popExitAnim="@anim/slide_out"
+      app:enterAnim="@anim/slide_enter"
+      app:exitAnim="@anim/slide_exit"
+      app:popEnterAnim="@anim/slide_enter_pop"
+      app:popExitAnim="@anim/slide_exit_pop"
       />
     <action
       android:id="@+id/toDiagnostics"
