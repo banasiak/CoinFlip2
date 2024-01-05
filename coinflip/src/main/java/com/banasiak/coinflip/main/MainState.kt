@@ -1,6 +1,8 @@
 package com.banasiak.coinflip.main
 
+import com.banasiak.coinflip.common.AnimationCallback
 import com.banasiak.coinflip.common.Coin
+import com.banasiak.coinflip.util.AnimationHelper
 
 data class MainState(
   val currentValue: Coin.Value = Coin.Value.UNKNOWN,
@@ -18,6 +20,8 @@ sealed class MainAction {
 }
 
 sealed class MainEffect {
+  data class FlipCoin(val permutation: AnimationHelper.Permutation, val callback: AnimationCallback) : MainEffect()
+
   data object NavToAbout : MainEffect()
 
   data object NavToDiagnostics : MainEffect()

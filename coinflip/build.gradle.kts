@@ -11,7 +11,7 @@ android {
 
   defaultConfig {
     applicationId = "com.banasiak.coinflip"
-    minSdk = 24
+    minSdk = 26
     targetSdk = 34
     versionCode = 49
     versionName = "2024.1.0"

@@ -1,4 +1,4 @@
-package com.banasiak.coinflip.common
+package com.banasiak.coinflip.util
 
 import android.content.res.Resources
 import android.graphics.Bitmap
@@ -6,13 +6,14 @@ import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import androidx.annotation.DrawableRes
 import androidx.core.content.res.ResourcesCompat
-import com.banasiak.coinflip.common.SpinAnimationHelper.Permutation.HEADS_HEADS
-import com.banasiak.coinflip.common.SpinAnimationHelper.Permutation.HEADS_TAILS
-import com.banasiak.coinflip.common.SpinAnimationHelper.Permutation.TAILS_HEADS
-import com.banasiak.coinflip.common.SpinAnimationHelper.Permutation.TAILS_TAILS
+import com.banasiak.coinflip.common.CallbackAnimationDrawable
+import com.banasiak.coinflip.util.AnimationHelper.Permutation.HEADS_HEADS
+import com.banasiak.coinflip.util.AnimationHelper.Permutation.HEADS_TAILS
+import com.banasiak.coinflip.util.AnimationHelper.Permutation.TAILS_HEADS
+import com.banasiak.coinflip.util.AnimationHelper.Permutation.TAILS_TAILS
 import timber.log.Timber
 
-class SpinAnimationHelper(
+class AnimationHelper(
   @DrawableRes private val imageA: Int,
   @DrawableRes private val imageB: Int,
   @DrawableRes private val edge: Int,

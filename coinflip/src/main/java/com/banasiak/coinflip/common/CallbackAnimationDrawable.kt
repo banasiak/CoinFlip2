@@ -4,8 +4,10 @@ import android.graphics.drawable.AnimationDrawable
 import android.os.Handler
 import android.os.Looper
 
+typealias AnimationCallback = () -> Unit
+
 class CallbackAnimationDrawable : AnimationDrawable() {
-  var onFinished: (() -> Unit)? = null
+  var onFinished: AnimationCallback? = null
 
   private val handler = Handler(Looper.getMainLooper())
   private val runnable = Runnable { onFinished?.invoke() }

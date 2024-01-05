@@ -5,17 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.banasiak.coinflip.R
-import com.banasiak.coinflip.common.SpinAnimationHelper
+import com.banasiak.coinflip.common.AnimationCallback
 import com.banasiak.coinflip.databinding.FragmentMainBinding
 import com.banasiak.coinflip.settings.SettingsManager
+import com.banasiak.coinflip.util.AnimationHelper
 import com.banasiak.coinflip.util.navigate
 import com.google.android.play.core.ktx.launchReview
 import com.google.android.play.core.ktx.requestReview
@@ -32,7 +31,7 @@ class MainFragment : Fragment() {
   private lateinit var binding: FragmentMainBinding
   private lateinit var viewModel: MainViewModel
 
-  private lateinit var spinAnimation: SpinAnimationHelper
+  private lateinit var animationHelper: AnimationHelper
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
     binding = FragmentMainBinding.inflate(inflater, container, false)
@@ -53,21 +52,12 @@ class MainFragment : Fragment() {
 
     setupActions()
 
-    spinAnimation = SpinAnimationHelper(R.drawable.gw_heads, R.drawable.gw_tails, R.drawable.gw_edge, R.drawable.background, resources)
-
-    val animation = spinAnimation.animations[SpinAnimationHelper.Permutation.HEADS_TAILS]
-    animation?.onFinished = { Toast.makeText(context, "callback", Toast.LENGTH_SHORT).show() }
-    binding.coinImage.setOnClickListener { it as ImageView
-      it.setImageDrawable(null)
-      it.background = animation
-      animation?.stop()
-      animation?.start()
-    }
+    animationHelper = AnimationHelper(R.drawable.gw_heads, R.drawable.gw_tails, R.drawable.gw_edge, R.drawable.background, resources)
   }
 
   private fun setupActions() {
     binding.aboutButton.setOnClickListener { viewModel.postAction(MainAction.TapAbout) }
-//    binding.coinImage.setOnClickListener { viewModel.postAction(MainAction.TapCoin) }
+    binding.coinImage.setOnClickListener { viewModel.postAction(MainAction.TapCoin) }
     binding.diagnosticsButton.setOnClickListener { viewModel.postAction(MainAction.TapDiagnostics) }
     binding.settingsButton.setOnClickListener { viewModel.postAction(MainAction.TapSettings) }
   }
@@ -77,11 +67,21 @@ class MainFragment : Fragment() {
 
   private fun onEffect(effect: MainEffect) {
     when (effect) {
+      is MainEffect.FlipCoin -> renderAnimation(effect.permutation, effect.callback)
       is MainEffect.NavToAbout -> navigate(R.id.toAbout)
       is MainEffect.NavToDiagnostics -> navigate(R.id.toDiagnostics)
       is MainEffect.NavToSettings -> navigate(R.id.toSettings)
       is MainEffect.ShowRateDialog -> showRateAppDialog()
     }
+  }
+
+  private fun renderAnimation(permutation: AnimationHelper.Permutation, callback: AnimationCallback) {
+    val animation = animationHelper.animations[permutation]
+    animation?.onFinished = callback
+    binding.coinImage.setImageDrawable(null)
+    binding.coinImage.background = animation
+    animation?.stop()
+    animation?.start()
   }
 
   private fun showRateAppDialog() {
