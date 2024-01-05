@@ -12,6 +12,9 @@
   <string name="app_name">Coin Flip</string>
   <string name="coin_animation">Coin Animation</string>
   <string name="exit">Exit</string>
+  <string name="force_low">Low</string>
+  <string name="force_medium">Medium</string>
+  <string name="force_high">High</string>
   <string name="instructions_tap_shake_tv">Tap/Shake to Flip Coin</string>
   <string name="instructions_tap_tv">Tap to Flip Coin</string>
   <string name="heads">HEADS</string>
@@ -32,8 +35,8 @@
   <string name="settings_item_coin_title">Coin Type</string>
   <string name="settings_item_download_summary">Download more coins from Google Play</string>
   <string name="settings_item_download_title">Get More Coins</string>
-  <string name="settings_item_force_summary">Force required to flip</string>
-  <string name="settings_item_force_title">Shake</string>
+  <string name="settings_item_force_summary">Force required to flip coin</string>
+  <string name="settings_item_force_title">Shake Sensitivity</string>
   <string name="settings_item_selftest_title">Diagnostic Test</string>
   <string name="settings_item_selftest_summary">iterations</string>
   <string name="settings_item_selftest_dialog">Number of Iterations</string>

@@ -15,8 +15,6 @@ sealed class MainAction {
   data object TapDiagnostics : MainAction()
 
   data object TapSettings : MainAction()
-
-  data object Shake : MainAction()
 }
 
 sealed class MainEffect {

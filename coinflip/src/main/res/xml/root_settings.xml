@@ -3,12 +3,14 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   >
   <PreferenceCategory app:title="@string/settings_header_basic_title">
-    <SwitchPreferenceCompat
-      app:defaultValue="true"
-      app:key="animation"
+    <ListPreference
+      app:defaultValue="gw"
+      app:entries="@array/coins"
+      app:entryValues="@array/coins_values"
+      app:key="coin"
       app:persistent="true"
-      app:summary="@string/settings_item_animation_summary"
-      app:title="@string/settings_item_animation_title"
+      app:useSimpleSummaryProvider="true"
+      app:title="@string/settings_item_coin_title"
       />
     <SwitchPreferenceCompat
       app:defaultValue="true"
@@ -26,10 +28,10 @@
       />
     <SwitchPreferenceCompat
       app:defaultValue="true"
-      app:key="text"
+      app:key="stats"
       app:persistent="true"
-      app:summary="@string/settings_item_text_summary"
-      app:title="@string/settings_item_text_title"
+      app:summary="@string/settings_item_stats_summary"
+      app:title="@string/settings_item_stats_title"
       />
     <SwitchPreferenceCompat
       app:defaultValue="true"
@@ -37,15 +39,6 @@
       app:persistent="true"
       app:summary="@string/settings_item_vibrate_summary"
       app:title="@string/settings_item_vibrate_title"
-      />
-    <ListPreference
-      app:defaultValue="gw"
-      app:entries="@array/coins"
-      app:entryValues="@array/coins_values"
-      app:key="coin"
-      app:persistent="true"
-      app:summary="@string/settings_item_coin_summary"
-      app:title="@string/settings_item_coin_title"
       />
   </PreferenceCategory>
   <PreferenceCategory app:title="@string/settings_header_advanced_title">
@@ -57,22 +50,16 @@
       app:summary="@string/settings_item_selftest_summary"
       app:title="@string/settings_item_selftest_title"
       />
-    <SeekBarPreference
-      android:max="3"
-      app:defaultValue="2"
+    <ListPreference
+      app:defaultValue="medium"
+      app:entries="@array/force"
+      app:entryValues="@array/force_values"
       app:dependency="shake"
       app:key="force"
       app:min="1"
       app:persistent="true"
       app:summary="@string/settings_item_force_summary"
       app:title="@string/settings_item_force_title"
-      />
-    <SwitchPreferenceCompat
-      app:defaultValue="true"
-      app:key="stats"
-      app:persistent="true"
-      app:summary="@string/settings_item_stats_summary"
-      app:title="@string/settings_item_stats_title"
       />
   </PreferenceCategory>
 </PreferenceScreen>

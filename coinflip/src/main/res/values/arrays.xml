@@ -110,4 +110,15 @@
     <item>wy</item>
     <item>jfk</item>
   </string-array>
+  <string-array name="force">
+    <item>@string/force_low</item>
+    <item>@string/force_medium</item>
+    <item>@string/force_high</item>
+  </string-array>
+  <string-array name="force_values">
+    <item>low</item>
+    <item>medium</item>
+    <item>high</item>
+  </string-array>
+
 </resources>

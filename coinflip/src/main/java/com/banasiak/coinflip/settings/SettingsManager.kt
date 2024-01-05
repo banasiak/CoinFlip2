@@ -6,22 +6,22 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SettingsManager @Inject constructor(prefs: SharedPreferences) {
-  val animation = prefs.getBoolean("animation", true)
-  val shake = prefs.getBoolean("shake", true)
-  val sound = prefs.getBoolean("sound", true)
-  val text = prefs.getBoolean("text", true)
-  val vibrate = prefs.getBoolean("vibrate", true)
-  val coin = prefs.getString("coin", "gw")!!
-  val diagnostics = prefs.getString("diagnostics", "10000")!!.toLong()
-  val force = prefs.getInt("force", 2).toSensitivity()
-  val stats = prefs.getBoolean("stats", true)
+class SettingsManager @Inject constructor(private val prefs: SharedPreferences) {
+  val animation get() = prefs.getBoolean("animation", true)
+  val shake get() = prefs.getBoolean("shake", true)
+  val sound get() = prefs.getBoolean("sound", true)
+  val text get() = prefs.getBoolean("text", true)
+  val vibrate get() = prefs.getBoolean("vibrate", true)
+  val coin get() = prefs.getString("coin", "gw")!!
+  val diagnostics get() = prefs.getString("diagnostics", "10000")!!.toLong()
+  val force get() = prefs.getString("force", "medium").toSensitivity()
+  val stats get() = prefs.getBoolean("stats", true)
 
-  private fun Int.toSensitivity(): Int {
+  private fun String?.toSensitivity(): Int {
     return when (this) {
-      1 -> ShakeDetector.SENSITIVITY_LIGHT
-      2 -> ShakeDetector.SENSITIVITY_MEDIUM
-      3 -> ShakeDetector.SENSITIVITY_HARD
+      "low" -> ShakeDetector.SENSITIVITY_LIGHT
+      "medium" -> ShakeDetector.SENSITIVITY_MEDIUM
+      "high" -> ShakeDetector.SENSITIVITY_HARD
       else -> ShakeDetector.SENSITIVITY_MEDIUM
     }
   }
