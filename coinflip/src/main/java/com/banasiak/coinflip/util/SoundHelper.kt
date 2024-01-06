@@ -14,7 +14,6 @@ class SoundHelper @Inject constructor(
   @ApplicationContext context: Context,
   private val audioManager: AudioManager
 ) {
-
   @Suppress("DEPRECATION") // SoundPool.Builder requires API 34
   private val soundPool = SoundPool(1, AudioManager.STREAM_MUSIC, 100)
   private val coinSound = soundPool.load(context, Sound.COIN.resId, 1)

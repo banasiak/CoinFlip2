@@ -5,16 +5,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.banasiak.coinflip.R
-import com.banasiak.coinflip.common.AnimationCallback
+import com.banasiak.coinflip.common.CallbackAnimationDrawable
 import com.banasiak.coinflip.databinding.FragmentMainBinding
 import com.banasiak.coinflip.settings.SettingsManager
-import com.banasiak.coinflip.util.AnimationHelper
 import com.banasiak.coinflip.util.navigate
 import com.google.android.play.core.ktx.launchReview
 import com.google.android.play.core.ktx.requestReview
@@ -30,8 +31,6 @@ class MainFragment : Fragment() {
 
   private lateinit var binding: FragmentMainBinding
   private lateinit var viewModel: MainViewModel
-
-  private lateinit var animationHelper: AnimationHelper
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
     binding = FragmentMainBinding.inflate(inflater, container, false)
@@ -51,8 +50,6 @@ class MainFragment : Fragment() {
     }
 
     setupActions()
-
-    animationHelper = AnimationHelper(R.drawable.gw_heads, R.drawable.gw_tails, R.drawable.gw_edge, R.drawable.background, resources)
   }
 
   private fun setupActions() {
@@ -63,11 +60,16 @@ class MainFragment : Fragment() {
   }
 
   private fun bind(state: MainState) {
+    val drawable = state.image?.let { ResourcesCompat.getDrawable(resources, it, null) }
+    binding.coinImage.setImageDrawable(drawable)
+    binding.coinImage.background = state.animation
+    binding.resultText.isVisible = state.resultVisible
+    binding.resultText.text = getString(state.result.value.string)
   }
 
   private fun onEffect(effect: MainEffect) {
     when (effect) {
-      is MainEffect.FlipCoin -> renderAnimation(effect.permutation, effect.callback)
+      is MainEffect.FlipCoin -> renderAnimation()
       is MainEffect.NavToAbout -> navigate(R.id.toAbout)
       is MainEffect.NavToDiagnostics -> navigate(R.id.toDiagnostics)
       is MainEffect.NavToSettings -> navigate(R.id.toSettings)
@@ -75,11 +77,8 @@ class MainFragment : Fragment() {
     }
   }
 
-  private fun renderAnimation(permutation: AnimationHelper.Permutation, callback: AnimationCallback) {
-    val animation = animationHelper.animations[permutation]
-    animation?.onFinished = callback
-    binding.coinImage.setImageDrawable(null)
-    binding.coinImage.background = animation
+  private fun renderAnimation() {
+    val animation = binding.coinImage.background as? CallbackAnimationDrawable
     animation?.stop()
     animation?.start()
   }

@@ -2,6 +2,7 @@ package com.banasiak.coinflip
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.hardware.SensorManager
 import android.media.AudioManager
 import android.os.Vibrator
@@ -24,6 +25,11 @@ object AppModule {
   @Provides
   fun provideBuildInfo(): BuildInfo {
     return BuildInfo(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
+  }
+
+  @Provides
+  fun provideResources(@ApplicationContext context: Context): Resources {
+    return context.resources
   }
 
   @Provides

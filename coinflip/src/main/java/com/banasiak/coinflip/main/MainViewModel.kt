@@ -7,6 +7,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.AnimationCallback
 import com.banasiak.coinflip.common.Coin
 import com.banasiak.coinflip.settings.SettingsManager
@@ -18,11 +20,13 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
+  private val animationHelper: AnimationHelper,
   private val coin: Coin,
   private val sensorManager: SensorManager,
   private val settings: SettingsManager,
@@ -40,25 +44,15 @@ class MainViewModel @Inject constructor(
   private val _effectFlow = MutableSharedFlow<MainEffect>(extraBufferCapacity = 1)
   val effectFlow: SharedFlow<MainEffect> = _effectFlow
 
-  private val shakeDetector = ShakeDetector { onShake() }
+  private val shakeDetector = ShakeDetector { flipCoin() }
 
   fun postAction(action: MainAction) {
     when (action) {
       MainAction.TapAbout -> _effectFlow.tryEmit(MainEffect.NavToAbout)
-      MainAction.TapCoin -> onTap()
+      MainAction.TapCoin -> flipCoin()
       MainAction.TapDiagnostics -> _effectFlow.tryEmit(MainEffect.NavToDiagnostics)
       MainAction.TapSettings -> _effectFlow.tryEmit(MainEffect.NavToSettings)
     }
-  }
-
-  private fun onShake() {
-    Timber.wtf("SHAKE!")
-    flipCoin()
-  }
-
-  private fun onTap() {
-    Timber.wtf("TAP!")
-    flipCoin()
   }
 
   override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
@@ -71,6 +65,7 @@ class MainViewModel @Inject constructor(
   }
 
   private fun onResume() {
+    generateAnimations()
     startShakeListener()
   }
 
@@ -81,19 +76,46 @@ class MainViewModel @Inject constructor(
   private fun flipCoin() {
     // pause the shake listener while the animation is in progress -- it will be re-enabled by the callback
     stopShakeListener()
-    _effectFlow.tryEmit(MainEffect.FlipCoin(AnimationHelper.Permutation.HEADS_TAILS, onFlipFinished()))
+
+    val result = coin.flip()
+    val animation = animationHelper.animations[result.permutation]
+    animation?.onFinished = onFlipFinished()
+
+    state =
+      state.copy(
+        animation = animation,
+        image = null,
+        result = result,
+        resultVisible = false
+      )
+    _stateFlow.tryEmit(state)
+    _effectFlow.tryEmit(MainEffect.FlipCoin)
   }
 
   private fun onFlipFinished(): AnimationCallback {
     return {
+      state = state.copy(resultVisible = true)
+      _stateFlow.tryEmit(state)
+
       if (settings.sound) {
         soundHelper.playSound(SoundHelper.Sound.COIN)
       }
+
       if (settings.vibrate) {
         vibrator.vibrate(VIBRATION_EFFECT)
       }
+
       // re-enable the shake listener
       startShakeListener()
+    }
+  }
+
+  private fun generateAnimations() {
+    viewModelScope.launch {
+      // TODO -> load drawables for selected coin
+      animationHelper.generateAnimations(R.drawable.gw_heads, R.drawable.gw_tails)
+      state = state.copy(animation = null, image = R.drawable.unknown)
+      _stateFlow.tryEmit(state)
     }
   }
 
@@ -106,7 +128,7 @@ class MainViewModel @Inject constructor(
   }
 
   private fun stopShakeListener() {
-    Timber.d("shakeDetector.stop")
+    Timber.d("shakeDetector.stop()")
     shakeDetector.stop()
   }
 }

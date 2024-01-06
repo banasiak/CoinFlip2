@@ -2,30 +2,43 @@ package com.banasiak.coinflip.common
 
 import androidx.annotation.StringRes
 import com.banasiak.coinflip.R
+import com.banasiak.coinflip.util.AnimationHelper
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.random.Random
 
 @Singleton
 class Coin @Inject constructor() {
-  enum class Value(@StringRes val display: Int) {
+  enum class Value(@StringRes val string: Int) {
     HEADS(R.string.heads),
     TAILS(R.string.tails),
-    UNKNOWN(0)
+    UNKNOWN(R.string.empty)
   }
 
   private val generator = Random.Default
-  private var currentValue: Value = Value.UNKNOWN
+  private var currentValue: Value = Value.HEADS
 
-  fun flip(): Pair<Value, Value> {
+  fun flip(): Result {
     val current = currentValue
     val next = generator.nextValue()
     currentValue = next
-    return Pair(current, next)
+    return Result(next, permutation(current, next))
+  }
+
+  private fun permutation(current: Value, next: Value): AnimationHelper.Permutation {
+    return when {
+      current == Value.HEADS && next == Value.HEADS -> AnimationHelper.Permutation.HEADS_HEADS
+      current == Value.HEADS && next == Value.TAILS -> AnimationHelper.Permutation.HEADS_TAILS
+      current == Value.TAILS && next == Value.HEADS -> AnimationHelper.Permutation.TAILS_HEADS
+      current == Value.TAILS && next == Value.TAILS -> AnimationHelper.Permutation.TAILS_TAILS
+      else -> AnimationHelper.Permutation.UNKNOWN
+    }
   }
 
   private fun Random.Default.nextValue(): Value {
     val next = this.nextBoolean()
     return if (next) Value.HEADS else Value.TAILS
   }
+
+  data class Result(val value: Value, val permutation: AnimationHelper.Permutation)
 }

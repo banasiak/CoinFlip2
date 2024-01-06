@@ -6,18 +6,18 @@ import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import androidx.annotation.DrawableRes
 import androidx.core.content.res.ResourcesCompat
+import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.CallbackAnimationDrawable
 import com.banasiak.coinflip.util.AnimationHelper.Permutation.HEADS_HEADS
 import com.banasiak.coinflip.util.AnimationHelper.Permutation.HEADS_TAILS
 import com.banasiak.coinflip.util.AnimationHelper.Permutation.TAILS_HEADS
 import com.banasiak.coinflip.util.AnimationHelper.Permutation.TAILS_TAILS
 import timber.log.Timber
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class AnimationHelper(
-  @DrawableRes private val imageA: Int,
-  @DrawableRes private val imageB: Int,
-  @DrawableRes private val edge: Int,
-  @DrawableRes private val background: Int,
+@Singleton
+class AnimationHelper @Inject constructor(
   private val resources: Resources
 ) {
   companion object {
@@ -27,15 +27,14 @@ class AnimationHelper(
   private val _animations = mutableMapOf<Permutation, CallbackAnimationDrawable>()
   val animations: Map<Permutation, CallbackAnimationDrawable> = _animations
 
-  init {
-    generateAnimations()
-  }
-
-  private fun generateAnimations() {
+  suspend fun generateAnimations(
+    @DrawableRes imageA: Int,
+    @DrawableRes imageB: Int
+  ) {
     val drawableA = ResourcesCompat.getDrawable(resources, imageA, null)!!
     val drawableB = ResourcesCompat.getDrawable(resources, imageB, null)!!
-    val drawableEdge = ResourcesCompat.getDrawable(resources, edge, null)!!
-    val drawableBackground = ResourcesCompat.getDrawable(resources, background, null)!!
+    val drawableEdge = ResourcesCompat.getDrawable(resources, R.drawable.edge, null)!!
+    val drawableBackground = ResourcesCompat.getDrawable(resources, R.drawable.background, null)!!
 
     val e = drawableEdge as BitmapDrawable
     val bg = drawableBackground as BitmapDrawable
@@ -57,7 +56,7 @@ class AnimationHelper(
     }
   }
 
-  private fun resizeBitmapDrawable(
+  private suspend fun resizeBitmapDrawable(
     image: BitmapDrawable,
     background: BitmapDrawable,
     widthScale: Float
@@ -84,7 +83,7 @@ class AnimationHelper(
     return BitmapDrawable(resources, comboImageBitmap)
   }
 
-  private fun generateAnimatedDrawable(
+  private suspend fun generateAnimatedDrawable(
     a4: BitmapDrawable,
     a3: BitmapDrawable,
     a2: BitmapDrawable,

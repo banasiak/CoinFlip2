@@ -31,7 +31,7 @@ class DiagnosticsViewModel @Inject constructor(
   private suspend fun runDiagnostics() {
     state = state.copy(startTime = System.currentTimeMillis())
     for (i in 1..state.iterations) {
-      when (val value = coin.flip().second) {
+      when (val value = coin.flip().value) {
         Coin.Value.HEADS -> incrementHeads()
         Coin.Value.TAILS -> incrementTails()
         else -> {

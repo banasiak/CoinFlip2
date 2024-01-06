@@ -1,12 +1,15 @@
 package com.banasiak.coinflip.main
 
-import com.banasiak.coinflip.common.AnimationCallback
+import androidx.annotation.DrawableRes
+import com.banasiak.coinflip.common.CallbackAnimationDrawable
 import com.banasiak.coinflip.common.Coin
 import com.banasiak.coinflip.util.AnimationHelper
 
 data class MainState(
-  val currentValue: Coin.Value = Coin.Value.UNKNOWN,
-  val nextValue: Coin.Value = Coin.Value.UNKNOWN
+  val animation: CallbackAnimationDrawable? = null,
+  @DrawableRes val image: Int? = null,
+  val result: Coin.Result = Coin.Result(Coin.Value.UNKNOWN, AnimationHelper.Permutation.UNKNOWN),
+  val resultVisible: Boolean = false
 )
 
 sealed class MainAction {
@@ -20,7 +23,7 @@ sealed class MainAction {
 }
 
 sealed class MainEffect {
-  data class FlipCoin(val permutation: AnimationHelper.Permutation, val callback: AnimationCallback) : MainEffect()
+  data object FlipCoin : MainEffect()
 
   data object NavToAbout : MainEffect()
 

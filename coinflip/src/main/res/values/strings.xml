@@ -11,6 +11,7 @@
     </string>
   <string name="app_name">Coin Flip</string>
   <string name="coin_animation">Coin Animation</string>
+  <string name="empty" />
   <string name="exit">Exit</string>
   <string name="force_low">Low</string>
   <string name="force_medium">Medium</string>
