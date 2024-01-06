@@ -1,11 +1,11 @@
 package com.banasiak.coinflip.main
 
-import android.hardware.SensorManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -15,20 +15,15 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.CallbackAnimationDrawable
 import com.banasiak.coinflip.databinding.FragmentMainBinding
-import com.banasiak.coinflip.settings.SettingsManager
 import com.banasiak.coinflip.util.navigate
 import com.google.android.play.core.ktx.launchReview
 import com.google.android.play.core.ktx.requestReview
 import com.google.android.play.core.review.ReviewManagerFactory
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainFragment : Fragment() {
-  @Inject lateinit var sensorManager: SensorManager
-  @Inject lateinit var settingsManager: SettingsManager
-
   private lateinit var binding: FragmentMainBinding
   private lateinit var viewModel: MainViewModel
 
@@ -63,8 +58,11 @@ class MainFragment : Fragment() {
     val drawable = state.image?.let { ResourcesCompat.getDrawable(resources, it, null) }
     binding.coinImage.setImageDrawable(drawable)
     binding.coinImage.background = state.animation
-    binding.resultText.isVisible = state.resultVisible
+    binding.resultText.isInvisible = !state.resultVisible // invisible, not gone
     binding.resultText.text = getString(state.result.value.string)
+    binding.headsCount.isVisible = state.statsVisible
+    binding.tailsCount.isVisible = state.statsVisible
+    // note: don't update the count values based on the stats contained in the state object, they will be updated via an effect
   }
 
   private fun onEffect(effect: MainEffect) {
@@ -74,6 +72,7 @@ class MainFragment : Fragment() {
       is MainEffect.NavToDiagnostics -> navigate(R.id.toDiagnostics)
       is MainEffect.NavToSettings -> navigate(R.id.toSettings)
       is MainEffect.ShowRateDialog -> showRateAppDialog()
+      is MainEffect.UpdateStats -> updateStats(effect.headsCount, effect.tailsCount)
     }
   }
 
@@ -81,6 +80,11 @@ class MainFragment : Fragment() {
     val animation = binding.coinImage.background as? CallbackAnimationDrawable
     animation?.stop()
     animation?.start()
+  }
+
+  private fun updateStats(headsCount: Long, tailsCount: Long) {
+    binding.headsCount.text = headsCount.toString()
+    binding.tailsCount.text = tailsCount.toString()
   }
 
   private fun showRateAppDialog() {

@@ -66,11 +66,23 @@ class MainViewModel @Inject constructor(
 
   private fun onResume() {
     generateAnimations()
+    state =
+      state.copy(
+        animation = null,
+        image = R.drawable.unknown,
+        resultVisible = false,
+        stats = settings.loadStats(),
+        statsVisible = settings.stats
+      )
+    _stateFlow.tryEmit(state)
+    _effectFlow.tryEmit(updateStats())
+
     startShakeListener()
   }
 
   private fun onPause() {
     stopShakeListener()
+    settings.persistStats(state.stats)
   }
 
   private fun flipCoin() {
@@ -81,12 +93,17 @@ class MainViewModel @Inject constructor(
     val animation = animationHelper.animations[result.permutation]
     animation?.onFinished = onFlipFinished()
 
+    val stats = state.stats.toMutableMap()
+    val currentCount = stats.getOrDefault(result.value, 0)
+    stats[result.value] = currentCount + 1
+
     state =
       state.copy(
         animation = animation,
         image = null,
         result = result,
-        resultVisible = false
+        resultVisible = false,
+        stats = stats
       )
     _stateFlow.tryEmit(state)
     _effectFlow.tryEmit(MainEffect.FlipCoin)
@@ -96,6 +113,7 @@ class MainViewModel @Inject constructor(
     return {
       state = state.copy(resultVisible = true)
       _stateFlow.tryEmit(state)
+      _effectFlow.tryEmit(updateStats())
 
       if (settings.sound) {
         soundHelper.playSound(SoundHelper.Sound.COIN)
@@ -114,9 +132,14 @@ class MainViewModel @Inject constructor(
     viewModelScope.launch {
       // TODO -> load drawables for selected coin
       animationHelper.generateAnimations(R.drawable.gw_heads, R.drawable.gw_tails)
-      state = state.copy(animation = null, image = R.drawable.unknown)
-      _stateFlow.tryEmit(state)
     }
+  }
+
+  private fun updateStats(): MainEffect.UpdateStats {
+    return MainEffect.UpdateStats(
+      headsCount = state.stats[Coin.Value.HEADS]!!,
+      tailsCount = state.stats[Coin.Value.TAILS]!!
+    )
   }
 
   private fun startShakeListener() {

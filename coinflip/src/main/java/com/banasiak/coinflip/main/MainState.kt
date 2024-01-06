@@ -9,7 +9,9 @@ data class MainState(
   val animation: CallbackAnimationDrawable? = null,
   @DrawableRes val image: Int? = null,
   val result: Coin.Result = Coin.Result(Coin.Value.UNKNOWN, AnimationHelper.Permutation.UNKNOWN),
-  val resultVisible: Boolean = false
+  val resultVisible: Boolean = false,
+  val stats: Map<Coin.Value, Long> = emptyMap(),
+  val statsVisible: Boolean = true
 )
 
 sealed class MainAction {
@@ -32,4 +34,6 @@ sealed class MainEffect {
   data object NavToSettings : MainEffect()
 
   data object ShowRateDialog : MainEffect()
+
+  data class UpdateStats(val headsCount: Long, val tailsCount: Long) : MainEffect()
 }
