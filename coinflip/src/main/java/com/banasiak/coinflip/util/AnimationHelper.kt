@@ -7,7 +7,7 @@ import android.graphics.drawable.BitmapDrawable
 import androidx.annotation.DrawableRes
 import androidx.core.content.res.ResourcesCompat
 import com.banasiak.coinflip.R
-import com.banasiak.coinflip.common.CallbackAnimationDrawable
+import com.banasiak.coinflip.ui.CallbackAnimationDrawable
 import com.banasiak.coinflip.util.AnimationHelper.Permutation.HEADS_HEADS
 import com.banasiak.coinflip.util.AnimationHelper.Permutation.HEADS_TAILS
 import com.banasiak.coinflip.util.AnimationHelper.Permutation.TAILS_HEADS
@@ -69,6 +69,7 @@ class AnimationHelper @Inject constructor(
     val width = (imageBitmap.width * widthScale).toInt()
     val height = imageBitmap.height
     val scaledBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, true)
+    scaledBitmap.density = Bitmap.DENSITY_NONE
 
     // create a new canvas to combine the two images on
     val comboImageBitmap = Bitmap.createBitmap(backgroundBitmap.width, backgroundBitmap.height, Bitmap.Config.ARGB_8888)

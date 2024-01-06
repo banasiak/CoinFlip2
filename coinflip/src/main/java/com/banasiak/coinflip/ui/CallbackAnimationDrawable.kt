@@ -1,4 +1,4 @@
-package com.banasiak.coinflip.common
+package com.banasiak.coinflip.ui
 
 import android.graphics.drawable.AnimationDrawable
 import android.os.Handler

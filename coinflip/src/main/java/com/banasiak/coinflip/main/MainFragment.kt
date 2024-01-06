@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -13,8 +12,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.banasiak.coinflip.R
-import com.banasiak.coinflip.common.CallbackAnimationDrawable
 import com.banasiak.coinflip.databinding.FragmentMainBinding
+import com.banasiak.coinflip.ui.CallbackAnimationDrawable
 import com.banasiak.coinflip.util.navigate
 import com.google.android.play.core.ktx.launchReview
 import com.google.android.play.core.ktx.requestReview
@@ -55,9 +54,8 @@ class MainFragment : Fragment() {
   }
 
   private fun bind(state: MainState) {
-    val drawable = state.image?.let { ResourcesCompat.getDrawable(resources, it, null) }
-    binding.coinImage.setImageDrawable(drawable)
     binding.coinImage.background = state.animation
+    binding.coinPlaceholder.isVisible = state.placeholderVisible
     binding.resultText.isInvisible = !state.resultVisible // invisible, not gone
     binding.resultText.text = getString(state.result.value.string)
     binding.headsCount.isVisible = state.statsVisible
@@ -67,11 +65,11 @@ class MainFragment : Fragment() {
 
   private fun onEffect(effect: MainEffect) {
     when (effect) {
-      is MainEffect.FlipCoin -> renderAnimation()
-      is MainEffect.NavToAbout -> navigate(R.id.toAbout)
-      is MainEffect.NavToDiagnostics -> navigate(R.id.toDiagnostics)
-      is MainEffect.NavToSettings -> navigate(R.id.toSettings)
-      is MainEffect.ShowRateDialog -> showRateAppDialog()
+      MainEffect.FlipCoin -> renderAnimation()
+      MainEffect.NavToAbout -> navigate(R.id.toAbout)
+      MainEffect.NavToDiagnostics -> navigate(R.id.toDiagnostics)
+      MainEffect.NavToSettings -> navigate(R.id.toSettings)
+      MainEffect.ShowRateDialog -> showRateAppDialog()
       is MainEffect.UpdateStats -> updateStats(effect.headsCount, effect.tailsCount)
     }
   }

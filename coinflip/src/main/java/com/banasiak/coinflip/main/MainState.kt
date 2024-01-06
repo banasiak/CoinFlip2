@@ -1,13 +1,12 @@
 package com.banasiak.coinflip.main
 
-import androidx.annotation.DrawableRes
-import com.banasiak.coinflip.common.CallbackAnimationDrawable
 import com.banasiak.coinflip.common.Coin
+import com.banasiak.coinflip.ui.CallbackAnimationDrawable
 import com.banasiak.coinflip.util.AnimationHelper
 
 data class MainState(
   val animation: CallbackAnimationDrawable? = null,
-  @DrawableRes val image: Int? = null,
+  val placeholderVisible: Boolean = true,
   val result: Coin.Result = Coin.Result(Coin.Value.UNKNOWN, AnimationHelper.Permutation.UNKNOWN),
   val resultVisible: Boolean = false,
   val stats: Map<Coin.Value, Long> = emptyMap(),

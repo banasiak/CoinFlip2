@@ -20,7 +20,7 @@ class DiagnosticsViewModel @Inject constructor(
     private const val SMOOTH_DELAY = 5L
   }
 
-  private var state = DiagnosticsState(iterations = settings.diagnostics)
+  private var state = DiagnosticsState(iterations = settings.diagnosticsIterations)
   private val _stateFlow = MutableStateFlow<DiagnosticsState>(state)
   val stateFlow: StateFlow<DiagnosticsState> = _stateFlow
 

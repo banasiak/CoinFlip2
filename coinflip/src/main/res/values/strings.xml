@@ -37,6 +37,8 @@
   <string name="settings_item_coin_title">Coin Type</string>
   <string name="settings_item_download_summary">Download more coins from Google Play</string>
   <string name="settings_item_download_title">Get More Coins</string>
+  <string name="settings_item_dynamic_colors_summary">Use wallpaper colors (Android 12+)</string>
+  <string name="settings_item_dynamic_colors_title">Dynamic Color Theme</string>
   <string name="settings_item_force_summary">Force required to flip coin</string>
   <string name="settings_item_force_title">Shake Sensitivity</string>
   <string name="settings_item_reset_stats_title">Reset Statistics</string>

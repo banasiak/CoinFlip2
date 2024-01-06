@@ -9,9 +9,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.banasiak.coinflip.R
-import com.banasiak.coinflip.common.AnimationCallback
 import com.banasiak.coinflip.common.Coin
 import com.banasiak.coinflip.settings.SettingsManager
+import com.banasiak.coinflip.ui.AnimationCallback
 import com.banasiak.coinflip.util.AnimationHelper
 import com.banasiak.coinflip.util.SoundHelper
 import com.squareup.seismic.ShakeDetector
@@ -69,10 +69,10 @@ class MainViewModel @Inject constructor(
     state =
       state.copy(
         animation = null,
-        image = R.drawable.unknown,
+        placeholderVisible = true,
         resultVisible = false,
         stats = settings.loadStats(),
-        statsVisible = settings.stats
+        statsVisible = settings.showStats
       )
     _stateFlow.tryEmit(state)
     _effectFlow.tryEmit(updateStats())
@@ -100,7 +100,7 @@ class MainViewModel @Inject constructor(
     state =
       state.copy(
         animation = animation,
-        image = null,
+        placeholderVisible = false,
         result = result,
         resultVisible = false,
         stats = stats
@@ -115,11 +115,11 @@ class MainViewModel @Inject constructor(
       _stateFlow.tryEmit(state)
       _effectFlow.tryEmit(updateStats())
 
-      if (settings.sound) {
+      if (settings.soundEnabled) {
         soundHelper.playSound(SoundHelper.Sound.COIN)
       }
 
-      if (settings.vibrate) {
+      if (settings.vibrateEnabled) {
         vibrator.vibrate(VIBRATION_EFFECT)
       }
 
@@ -143,10 +143,10 @@ class MainViewModel @Inject constructor(
   }
 
   private fun startShakeListener() {
-    if (settings.shake) {
+    if (settings.shakeEnabled) {
       Timber.d("shakeDetector.start()")
       shakeDetector.start(sensorManager, SensorManager.SENSOR_DELAY_GAME)
-      shakeDetector.setSensitivity(settings.force)
+      shakeDetector.setSensitivity(settings.shakeSensitivity)
     }
   }
 

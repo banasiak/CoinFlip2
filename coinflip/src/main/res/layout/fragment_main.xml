@@ -34,18 +34,40 @@
     android:text="About"
     />
 
-  <ImageView
-    android:id="@+id/coin_image"
-    android:layout_width="wrap_content"
+  <com.banasiak.coinflip.ui.SquareFrameLayout
+    android:id="@+id/coin_container"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:minHeight="390dp"
     android:layout_gravity="center"
-    android:layout_marginTop="30dp"
-    android:maxWidth="390dp"
-    android:maxHeight="390dp"
-    android:contentDescription="@string/coin_animation"
-    android:src="@drawable/unknown"
-    android:scaleType="center"
-    />
+    >
+
+    <TextView
+      android:id="@+id/coin_placeholder"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:autoSizeMaxTextSize="390dp"
+      android:autoSizeTextType="uniform"
+      android:gravity="center"
+      android:includeFontPadding="false"
+      android:lineSpacingExtra="0dp"
+      android:text="\?"
+      android:textAppearance="@style/AppTheme.TextAppearance.Placeholder"
+      tools:ignore="HardcodedText"
+      tools:visibility="visible"
+      />
+
+    <ImageView
+      android:id="@+id/coin_image"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_margin="@dimen/spacing_xlarge"
+      android:contentDescription="@string/coin_animation"
+      android:scaleType="centerInside"
+      tools:src="@drawable/gw_heads"
+      tools:visibility="invisible"
+      />
+  </com.banasiak.coinflip.ui.SquareFrameLayout>
 
   <TextView
     android:id="@+id/result_text"
@@ -53,8 +75,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:gravity="center"
-    android:textSize="64sp"
-    android:textStyle="bold"
+    style="@style/AppTheme.TextAppearance.Result"
     />
 
   <TextView

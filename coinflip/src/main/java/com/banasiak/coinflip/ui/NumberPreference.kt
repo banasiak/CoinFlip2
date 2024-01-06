@@ -1,4 +1,4 @@
-package com.banasiak.coinflip.settings
+package com.banasiak.coinflip.ui
 
 import android.content.Context
 import android.text.InputType
@@ -8,17 +8,8 @@ import androidx.preference.Preference
 import com.banasiak.coinflip.R
 
 // For the record, I resent having to implement this...
-class NumberPreference : EditTextPreference {
+class NumberPreference(context: Context, attrs: AttributeSet?) : EditTextPreference(context, attrs) {
   var summaryAttribute: CharSequence? = null
-
-  constructor(context: Context) : super(context)
-
-  constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
-
-  constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
-
-  constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) :
-    super(context, attrs, defStyleAttr, defStyleRes)
 
   init {
     setOnBindEditTextListener {

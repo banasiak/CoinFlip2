@@ -13,13 +13,14 @@ class SettingsManager @Inject constructor(private val prefs: SharedPreferences) 
     private const val TAILS_COUNT = "tailsCount"
   }
 
-  val coin get() = prefs.getString("coin", "gw")!!
-  val shake get() = prefs.getBoolean("shake", true)
-  val sound get() = prefs.getBoolean("sound", true)
-  val stats get() = prefs.getBoolean("stats", true)
-  val vibrate get() = prefs.getBoolean("vibrate", true)
-  val diagnostics get() = prefs.getString("diagnostics", "10000")!!.toLong()
-  val force get() = prefs.getString("force", "medium").toSensitivity()
+  val coinPrefix get() = prefs.getString("coin", "gw")!!
+  val shakeEnabled get() = prefs.getBoolean("shake", true)
+  val soundEnabled get() = prefs.getBoolean("sound", true)
+  val showStats get() = prefs.getBoolean("stats", true)
+  val vibrateEnabled get() = prefs.getBoolean("vibrate", true)
+  val diagnosticsIterations get() = prefs.getString("diagnostics", "10000")!!.toLong()
+  val dynamicColorsEnabled get() = prefs.getBoolean("dynamic", true)
+  val shakeSensitivity get() = prefs.getString("force", "medium").toSensitivity()
 
   fun loadStats(): Map<Coin.Value, Long> {
     val map: MutableMap<Coin.Value, Long> = mutableMapOf()
