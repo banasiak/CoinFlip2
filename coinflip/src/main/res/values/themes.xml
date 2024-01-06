@@ -30,6 +30,15 @@
     <item name="colorPrimaryInverse">@color/md_theme_light_inversePrimary</item>
   </style>
 
+  <style name="AppTheme.BottomNavigation.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+    <item name="android:width">0dp</item>
+    <item name="android:height">0dp</item>
+    <item name="marginHorizontal">0dp</item>
+    <item name="shapeAppearance">@null</item>
+    <item name="android:color">#00FFFFFF</item>
+    <item name="itemTextAppearanceActive">@null</item>
+  </style>
+
   <style name="AppTheme.TextAppearance.Placeholder" parent="AppTheme">
     <item name="android:textColor">?attr/colorPrimary</item>
     <item name="android:textStyle">bold</item>
@@ -39,5 +48,15 @@
     <item name="android:textColor">?attr/colorPrimary</item>
     <item name="android:textStyle">bold</item>
     <item name="android:textSize">72sp</item>
+  </style>
+
+  <style name="AppTheme.TextAppearance.Instructions" parent="TextAppearance.Material3.TitleMedium" />
+
+  <style name="AppTheme.TextAppearance.Stats.Label" parent="TextAppearance.Material3.TitleLarge">
+    <item name="android:textColor">?attr/colorSecondary</item>
+  </style>
+
+  <style name="AppTheme.TextAppearance.Stats.Count" parent="TextAppearance.Material3.TitleLarge">
+    <item name="android:textColor">?attr/colorTertiary</item>
   </style>
 </resources>

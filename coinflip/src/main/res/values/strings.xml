@@ -17,8 +17,8 @@
   <string name="force_low">Low</string>
   <string name="force_medium">Medium</string>
   <string name="force_high">High</string>
-  <string name="instructions_tap_shake_tv">Tap/Shake to Flip Coin</string>
-  <string name="instructions_tap_tv">Tap to Flip Coin</string>
+  <string name="instructions_tap_shake">Tap/Shake to Flip Coin</string>
+  <string name="instructions_tap">Tap to Flip Coin</string>
   <string name="heads">HEADS</string>
   <string name="max">MAX</string>
   <string name="milliseconds">ms</string>

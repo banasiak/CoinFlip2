@@ -11,10 +11,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.banasiak.coinflip.R
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.banasiak.coinflip.databinding.FragmentMainBinding
 import com.banasiak.coinflip.ui.CallbackAnimationDrawable
-import com.banasiak.coinflip.util.navigate
 import com.google.android.play.core.ktx.launchReview
 import com.google.android.play.core.ktx.requestReview
 import com.google.android.play.core.review.ReviewManagerFactory
@@ -43,14 +43,8 @@ class MainFragment : Fragment() {
       }
     }
 
-    setupActions()
-  }
-
-  private fun setupActions() {
-    binding.aboutButton.setOnClickListener { viewModel.postAction(MainAction.TapAbout) }
+    binding.navigationBar.setupWithNavController(findNavController())
     binding.coinImage.setOnClickListener { viewModel.postAction(MainAction.TapCoin) }
-    binding.diagnosticsButton.setOnClickListener { viewModel.postAction(MainAction.TapDiagnostics) }
-    binding.settingsButton.setOnClickListener { viewModel.postAction(MainAction.TapSettings) }
   }
 
   private fun bind(state: MainState) {
@@ -66,9 +60,6 @@ class MainFragment : Fragment() {
   private fun onEffect(effect: MainEffect) {
     when (effect) {
       MainEffect.FlipCoin -> renderAnimation()
-      MainEffect.NavToAbout -> navigate(R.id.toAbout)
-      MainEffect.NavToDiagnostics -> navigate(R.id.toDiagnostics)
-      MainEffect.NavToSettings -> navigate(R.id.toSettings)
       MainEffect.ShowRateDialog -> showRateAppDialog()
       is MainEffect.UpdateStats -> updateStats(effect.headsCount, effect.tailsCount)
     }

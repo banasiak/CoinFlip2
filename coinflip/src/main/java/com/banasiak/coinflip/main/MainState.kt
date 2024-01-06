@@ -14,23 +14,11 @@ data class MainState(
 )
 
 sealed class MainAction {
-  data object TapAbout : MainAction()
-
   data object TapCoin : MainAction()
-
-  data object TapDiagnostics : MainAction()
-
-  data object TapSettings : MainAction()
 }
 
 sealed class MainEffect {
   data object FlipCoin : MainEffect()
-
-  data object NavToAbout : MainEffect()
-
-  data object NavToDiagnostics : MainEffect()
-
-  data object NavToSettings : MainEffect()
 
   data object ShowRateDialog : MainEffect()
 

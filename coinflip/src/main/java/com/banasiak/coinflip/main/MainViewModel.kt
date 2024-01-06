@@ -48,10 +48,7 @@ class MainViewModel @Inject constructor(
 
   fun postAction(action: MainAction) {
     when (action) {
-      MainAction.TapAbout -> _effectFlow.tryEmit(MainEffect.NavToAbout)
       MainAction.TapCoin -> flipCoin()
-      MainAction.TapDiagnostics -> _effectFlow.tryEmit(MainEffect.NavToDiagnostics)
-      MainAction.TapSettings -> _effectFlow.tryEmit(MainEffect.NavToSettings)
     }
   }
 

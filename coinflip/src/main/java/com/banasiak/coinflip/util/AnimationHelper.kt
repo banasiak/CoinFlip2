@@ -12,7 +12,6 @@ import com.banasiak.coinflip.util.AnimationHelper.Permutation.HEADS_HEADS
 import com.banasiak.coinflip.util.AnimationHelper.Permutation.HEADS_TAILS
 import com.banasiak.coinflip.util.AnimationHelper.Permutation.TAILS_HEADS
 import com.banasiak.coinflip.util.AnimationHelper.Permutation.TAILS_TAILS
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -96,8 +95,6 @@ class AnimationHelper @Inject constructor(
     edge: BitmapDrawable,
     permutation: Permutation
   ): CallbackAnimationDrawable {
-    Timber.d("generateAnimatedDrawable()")
-
     val animation = CallbackAnimationDrawable()
     animation.isOneShot = true
 

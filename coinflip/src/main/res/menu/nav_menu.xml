@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+  <item
+    android:id="@+id/diagnosticsFragment"
+    android:checkable="false"
+    android:icon="@drawable/diagnostics"
+    android:title="@string/diagnostics_menu_title" />
+  <item
+    android:id="@+id/settingsFragment"
+    android:checkable="false"
+    android:icon="@drawable/settings"
+    android:title="@string/settings_menu_title"
+
+    />
+  <item
+    android:id="@+id/aboutFragment"
+    android:checkable="false"
+    android:icon="@drawable/about"
+    android:title="@string/about_menu_title" />
+</menu>
