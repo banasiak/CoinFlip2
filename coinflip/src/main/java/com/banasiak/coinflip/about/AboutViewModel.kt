@@ -13,6 +13,9 @@ import javax.inject.Inject
 class AboutViewModel @Inject constructor(
   buildInfo: BuildInfo
 ) : ViewModel() {
+  private val donateUrl = "https://eff.org/donate"
+  private val rateUrl = "market://details?id=${buildInfo.packageName}"
+
   private var state = AboutState(buildInfo.versionName, buildInfo.versionCode)
   private val _stateFlow = MutableStateFlow<AboutState>(state)
   val stateFlow: StateFlow<AboutState> = _stateFlow
@@ -22,7 +25,8 @@ class AboutViewModel @Inject constructor(
 
   fun postAction(action: AboutAction) {
     when (action) {
-      is AboutAction.RateApp -> _effectFlow.tryEmit(AboutEffect.ShowRateAppDialog)
+      is AboutAction.Donate -> _effectFlow.tryEmit(AboutEffect.LaunchUrl(donateUrl))
+      is AboutAction.RateApp -> _effectFlow.tryEmit(AboutEffect.LaunchUrl(rateUrl))
     }
   }
 }

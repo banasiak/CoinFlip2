@@ -23,8 +23,8 @@ object AppModule {
   }
 
   @Provides
-  fun provideBuildInfo(): BuildInfo {
-    return BuildInfo(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
+  fun provideBuildInfo(@ApplicationContext context: Context): BuildInfo {
+    return BuildInfo(context.packageName, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
   }
 
   @Provides

@@ -35,12 +35,21 @@
     />
 
   <Button
-    android:id="@+id/rate_button"
-    style="@style/ThemeOverlay.Material3.Button"
+    android:id="@+id/donate_button"
+    style="@style/Widget.Material3.Button.TextButton"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:text="@string/rate_app_text"
+    android:text="@string/donate"
+    />
+
+  <Button
+    android:id="@+id/rate_button"
+    style="@style/Widget.Material3.Button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:text="@string/rate_app"
     />
 
 </LinearLayout>

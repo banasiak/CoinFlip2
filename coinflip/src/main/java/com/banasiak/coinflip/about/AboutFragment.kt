@@ -37,7 +37,13 @@ class AboutFragment : BottomSheetDialogFragment() {
       }
     }
 
+    setupActions()
     binding.rateButton.setOnClickListener { viewModel.postAction(AboutAction.RateApp) }
+  }
+
+  private fun setupActions() {
+    binding.rateButton.setOnClickListener { viewModel.postAction(AboutAction.RateApp) }
+    binding.donateButton.setOnClickListener { viewModel.postAction(AboutAction.Donate) }
   }
 
   private fun bind(state: AboutState) {
@@ -46,13 +52,19 @@ class AboutFragment : BottomSheetDialogFragment() {
 
   private fun onEffect(effect: AboutEffect) {
     when (effect) {
-      is AboutEffect.ShowRateAppDialog -> launchGooglePlayStore()
+      is AboutEffect.LaunchUrl -> launchUrl(effect.url)
     }
   }
 
   private fun launchGooglePlayStore() {
     val packageName = requireContext().packageName
     val uri = Uri.parse("market://details?id=$packageName")
+    val intent = Intent(Intent.ACTION_VIEW, uri)
+    startActivity(intent)
+  }
+
+  private fun launchUrl(url: String) {
+    val uri = Uri.parse(url)
     val intent = Intent(Intent.ACTION_VIEW, uri)
     startActivity(intent)
   }
