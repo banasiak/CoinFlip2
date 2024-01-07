@@ -8,7 +8,6 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.Coin
 import com.banasiak.coinflip.settings.SettingsManager
 import com.banasiak.coinflip.ui.AnimationCallback
@@ -127,8 +126,8 @@ class MainViewModel @Inject constructor(
 
   private fun generateAnimations() {
     viewModelScope.launch {
-      // TODO -> load drawables for selected coin
-      animationHelper.generateAnimations(R.drawable.gw_heads, R.drawable.gw_tails)
+      val prefix = settings.coinPrefix
+      animationHelper.loadAnimationsForCoin(prefix)
     }
   }
 

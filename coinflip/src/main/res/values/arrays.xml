@@ -54,6 +54,7 @@
     <item>Wisconsin Quarter</item>
     <item>Wyoming Quarter</item>
     <item>JFK Half-Dollar</item>
+    <item>Random Coin</item>
   </string-array>
   <string-array name="coins_values">
     <item>gw</item>
@@ -109,6 +110,7 @@
     <item>wi</item>
     <item>wy</item>
     <item>jfk</item>
+    <item>random</item>
   </string-array>
   <string-array name="force">
     <item>@string/force_low</item>

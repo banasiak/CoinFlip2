@@ -1,5 +1,6 @@
 package com.banasiak.coinflip.util
 
+import android.annotation.SuppressLint
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -7,26 +8,55 @@ import android.graphics.drawable.BitmapDrawable
 import androidx.annotation.DrawableRes
 import androidx.core.content.res.ResourcesCompat
 import com.banasiak.coinflip.R
+import com.banasiak.coinflip.common.BuildInfo
 import com.banasiak.coinflip.ui.CallbackAnimationDrawable
 import com.banasiak.coinflip.util.AnimationHelper.Permutation.HEADS_HEADS
 import com.banasiak.coinflip.util.AnimationHelper.Permutation.HEADS_TAILS
 import com.banasiak.coinflip.util.AnimationHelper.Permutation.TAILS_HEADS
 import com.banasiak.coinflip.util.AnimationHelper.Permutation.TAILS_TAILS
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class AnimationHelper @Inject constructor(
+  private val buildInfo: BuildInfo,
   private val resources: Resources
 ) {
   companion object {
     private const val FRAME_DURATION = 20 // milliseconds
+    private const val RANDOM = "random"
   }
 
   private val _animations = mutableMapOf<Permutation, CallbackAnimationDrawable>()
   val animations: Map<Permutation, CallbackAnimationDrawable> = _animations
 
-  suspend fun generateAnimations(
+  suspend fun loadAnimationsForCoin(prefix: String) {
+    val startTime = System.currentTimeMillis()
+    withContext(Dispatchers.IO) {
+      val ids = getIdentifiersForPrefix(prefix)
+      generateAnimations(ids.first, ids.second)
+      Timber.i("Animations generated in: ${System.currentTimeMillis() - startTime} milliseconds")
+    }
+  }
+
+  @SuppressLint("DiscouragedApi") // lol
+  private fun getIdentifiersForPrefix(prefix: String): Pair<Int, Int> {
+    val newPrefix =
+      if (prefix == RANDOM) {
+        val entries = resources.getStringArray(R.array.coins_values).filterNot { it == RANDOM }
+        entries.random()
+      } else {
+        prefix
+      }
+    val heads = resources.getIdentifier("${newPrefix}_heads", "drawable", buildInfo.packageName)
+    val tails = resources.getIdentifier("${newPrefix}_tails", "drawable", buildInfo.packageName)
+    return Pair(heads, tails)
+  }
+
+  private fun generateAnimations(
     @DrawableRes imageA: Int,
     @DrawableRes imageB: Int
   ) {
@@ -55,7 +85,7 @@ class AnimationHelper @Inject constructor(
     }
   }
 
-  private suspend fun resizeBitmapDrawable(
+  private fun resizeBitmapDrawable(
     image: BitmapDrawable,
     background: BitmapDrawable,
     widthScale: Float
@@ -83,7 +113,7 @@ class AnimationHelper @Inject constructor(
     return BitmapDrawable(resources, comboImageBitmap)
   }
 
-  private suspend fun generateAnimatedDrawable(
+  private fun generateAnimatedDrawable(
     a4: BitmapDrawable,
     a3: BitmapDrawable,
     a2: BitmapDrawable,

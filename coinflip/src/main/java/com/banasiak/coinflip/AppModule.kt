@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.hardware.SensorManager
-import android.media.AudioManager
 import android.os.Vibrator
 import androidx.preference.PreferenceManager
 import com.banasiak.coinflip.common.BuildInfo
@@ -17,11 +16,6 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-  @Provides
-  fun provideAudioManager(@ApplicationContext context: Context): AudioManager {
-    return context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-  }
-
   @Provides
   fun provideBuildInfo(@ApplicationContext context: Context): BuildInfo {
     return BuildInfo(context.packageName, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)

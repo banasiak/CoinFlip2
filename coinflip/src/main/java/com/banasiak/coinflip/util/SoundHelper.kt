@@ -11,8 +11,7 @@ import javax.inject.Singleton
 
 @Singleton
 class SoundHelper @Inject constructor(
-  @ApplicationContext context: Context,
-  private val audioManager: AudioManager
+  @ApplicationContext context: Context
 ) {
   @Suppress("DEPRECATION") // SoundPool.Builder requires API 34
   private val soundPool = SoundPool(1, AudioManager.STREAM_MUSIC, 100)
@@ -20,18 +19,16 @@ class SoundHelper @Inject constructor(
   private val oneUpSound = soundPool.load(context, Sound.ONEUP.resId, 1)
 
   fun playSound(sound: Sound) {
-    // use the "media volume" audio level so the user can manually adjust the volume using the system volume controls
-    val volume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC).toFloat()
     val soundId =
       when (sound) {
         Sound.COIN -> coinSound
         Sound.ONEUP -> oneUpSound
       }
-    soundPool.play(soundId, volume, volume, 1, 0, 1f)
+    soundPool.play(soundId, 1.0f, 1.0f, sound.priority, 0, 1.0f)
   }
 
-  enum class Sound(@RawRes val resId: Int) {
-    COIN(R.raw.coin),
-    ONEUP(R.raw.oneup)
+  enum class Sound(@RawRes val resId: Int, val priority: Int) {
+    COIN(R.raw.coin, 0),
+    ONEUP(R.raw.oneup, 1) // always make sure this special sound plays :)
   }
 }
