@@ -41,21 +41,21 @@ android {
 val ktlint by configurations.creating
 
 dependencies {
-  implementation("androidx.appcompat:appcompat:1.6.1")
-  implementation("androidx.core:core-ktx:1.12.0")
-  implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
-  implementation("androidx.navigation:navigation-fragment-ktx:2.7.6")
-  implementation("androidx.navigation:navigation-ui-ktx:2.7.6")
-  implementation("androidx.preference:preference-ktx:1.2.1")
-  implementation("com.google.android.play:review-ktx:2.0.1")
-  implementation("com.google.android.material:material:1.11.0")
-  implementation("com.google.dagger:hilt-android:2.50")
-  implementation("com.jakewharton.timber:timber:5.0.1")
-  implementation("com.squareup:seismic:1.0.3")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2")
-  ksp("com.google.dagger:dagger-compiler:2.50")
-  ksp("com.google.dagger:hilt-android-compiler:2.50")
-  testImplementation("junit:junit:4.13.2")
+  implementation(libs.androidx.appcompat)
+  implementation(libs.androidx.core.ktx)
+  implementation(libs.androidx.lifecycle.viewmodel.ktx)
+  implementation(libs.androidx.navigation.fragment.ktx)
+  implementation(libs.androidx.navigation.ui.ktx)
+  implementation(libs.androidx.preference.ktx)
+  implementation(libs.review.ktx)
+  implementation(libs.material)
+  implementation(libs.hilt.android)
+  implementation(libs.timber)
+  implementation(libs.seismic)
+  implementation(libs.kotlinx.coroutines.android)
+  ksp(libs.dagger.compiler)
+  ksp(libs.hilt.android.compiler)
+  testImplementation(libs.junit)
 
   ktlint("com.pinterest.ktlint:ktlint-cli:1.1.0") {
     attributes {
