@@ -10,8 +10,7 @@ import javax.inject.Inject
 
 @HiltAndroidApp
 class App : Application() {
-  @Inject
-  lateinit var settings: SettingsManager
+  @Inject lateinit var settings: SettingsManager
 
   override fun onCreate() {
     super.onCreate()
