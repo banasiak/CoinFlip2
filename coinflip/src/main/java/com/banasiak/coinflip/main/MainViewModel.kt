@@ -6,8 +6,10 @@ import android.os.Vibrator
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.Coin
 import com.banasiak.coinflip.settings.SettingsManager
 import com.banasiak.coinflip.ui.AnimationCallback
@@ -30,13 +32,14 @@ class MainViewModel @Inject constructor(
   private val sensorManager: SensorManager,
   private val settings: SettingsManager,
   private val soundHelper: SoundHelper,
-  private val vibrator: Vibrator
+  private val vibrator: Vibrator,
+  private val savedState: SavedStateHandle
 ) : ViewModel(), LifecycleEventObserver {
   companion object {
     private val VIBRATION_EFFECT = VibrationEffect.createOneShot(200, 255)
   }
 
-  private var state = MainState()
+  private var state = savedState.restore() ?: MainState()
   private val _stateFlow = MutableStateFlow<MainState>(state)
   val stateFlow: StateFlow<MainState> = _stateFlow
 
@@ -53,7 +56,7 @@ class MainViewModel @Inject constructor(
   }
 
   override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-    Timber.d("Lifecycle state change: $event")
+    Timber.d("Lifecycle onStateChanged(): $event")
     when (event) {
       Lifecycle.Event.ON_RESUME -> onResume()
       Lifecycle.Event.ON_PAUSE -> onPause()
@@ -63,16 +66,21 @@ class MainViewModel @Inject constructor(
 
   private fun onResume() {
     generateAnimations()
+
+    val instructions = if (settings.shakeEnabled) R.string.instructions_tap_shake else R.string.instructions_tap
+
     state =
       state.copy(
         animation = null,
+        instructionsText = instructions,
         placeholderVisible = true,
         resultVisible = false,
         stats = settings.loadStats(),
         statsVisible = settings.showStats
       )
     _stateFlow.tryEmit(state)
-    _effectFlow.tryEmit(updateStats())
+
+    _effectFlow.tryEmit(updateStatsEffect(state.stats))
 
     startShakeListener()
   }
@@ -80,6 +88,7 @@ class MainViewModel @Inject constructor(
   private fun onPause() {
     stopShakeListener()
     settings.persistStats(state.stats)
+    savedState.save(state)
   }
 
   private fun flipCoin() {
@@ -114,7 +123,7 @@ class MainViewModel @Inject constructor(
     return {
       state = state.copy(resultVisible = true)
       _stateFlow.tryEmit(state)
-      _effectFlow.tryEmit(updateStats())
+      _effectFlow.tryEmit(updateStatsEffect(state.stats))
 
       if (settings.soundEnabled) {
         if (total % 100 == 0L) {
@@ -141,10 +150,10 @@ class MainViewModel @Inject constructor(
     }
   }
 
-  private fun updateStats(): MainEffect.UpdateStats {
+  private fun updateStatsEffect(stats: Map<Coin.Value, Long>): MainEffect.UpdateStats {
     return MainEffect.UpdateStats(
-      headsCount = state.stats[Coin.Value.HEADS]!!,
-      tailsCount = state.stats[Coin.Value.TAILS]!!
+      headsCount = stats[Coin.Value.HEADS] ?: 0,
+      tailsCount = stats[Coin.Value.TAILS] ?: 0
     )
   }
 
@@ -159,5 +168,13 @@ class MainViewModel @Inject constructor(
   private fun stopShakeListener() {
     Timber.d("shakeDetector.stop()")
     shakeDetector.stop()
+  }
+
+  private fun SavedStateHandle.save(state: MainState) {
+    this.set("state", state)
+  }
+
+  private fun SavedStateHandle.restore(): MainState? {
+    return this.get<MainState>("state")
   }
 }

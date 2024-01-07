@@ -1,8 +1,10 @@
 package com.banasiak.coinflip.common
 
+import android.os.Parcelable
 import androidx.annotation.StringRes
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.util.AnimationHelper
+import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.random.Random
@@ -40,5 +42,6 @@ class Coin @Inject constructor() {
     return if (next) Value.HEADS else Value.TAILS
   }
 
-  data class Result(val value: Value, val permutation: AnimationHelper.Permutation)
+  @Parcelize
+  data class Result(val value: Value, val permutation: AnimationHelper.Permutation) : Parcelable
 }

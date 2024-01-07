@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
@@ -25,7 +25,7 @@ import timber.log.Timber
 @AndroidEntryPoint
 class MainFragment : Fragment() {
   private lateinit var binding: FragmentMainBinding
-  private lateinit var viewModel: MainViewModel
+  private val viewModel: MainViewModel by viewModels()
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
     binding = FragmentMainBinding.inflate(inflater, container, false)
@@ -35,7 +35,7 @@ class MainFragment : Fragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-    viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+//    viewModel = ViewModelP
     viewLifecycleOwner.lifecycle.addObserver(viewModel)
     viewLifecycleOwner.lifecycleScope.launch {
       repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -52,6 +52,7 @@ class MainFragment : Fragment() {
     Timber.d("bind(): $state")
     binding.coinImage.background = state.animation
     binding.coinPlaceholder.isVisible = state.placeholderVisible
+    binding.instructionsText.text = getString(state.instructionsText)
     binding.resultText.isInvisible = !state.resultVisible // invisible, not gone
     binding.resultText.text = getString(state.result.value.string)
     binding.statsContainer.isVisible = state.statsVisible
