@@ -10,7 +10,6 @@ import javax.inject.Singleton
 
 @Singleton
 class SettingsManager @Inject constructor(private val prefs: SharedPreferences) {
-
   val coinPrefix get() = prefs.getString(Settings.COIN.key, Settings.COIN.default as String)!!
   val shakeEnabled get() = prefs.getBoolean(Settings.SHAKE.key, Settings.SHAKE.default as Boolean)
   val soundEnabled get() = prefs.getBoolean(Settings.SOUND.key, Settings.SOUND.default as Boolean)

@@ -44,7 +44,7 @@ class MainFragment : Fragment() {
     }
 
     binding.navigationBar.setupWithNavController(findNavController())
-    binding.coinImage.setOnClickListener { viewModel.postAction(MainAction.TapCoin) }
+    binding.root.setOnClickListener { viewModel.postAction(MainAction.TapCoin) }
   }
 
   private fun bind(state: MainState) {
