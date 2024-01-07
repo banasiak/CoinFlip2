@@ -10,21 +10,6 @@ import javax.inject.Singleton
 
 @Singleton
 class SettingsManager @Inject constructor(private val prefs: SharedPreferences) {
-  companion object {
-    private enum class Settings(val key: String, val default: Any) {
-      COIN("coin", "gw"),
-      SHAKE("shake", true),
-      SOUND("sound", true),
-      STATS("stats", true),
-      VIBRATE("vibrate", true),
-      DIAGNOSTICS("diagnostics", "100000"), // unfortunately the preference stores this as a string
-      DYNAMIC("dynamic", true),
-      FORCE("force", "medium"),
-      HEADS("headsCount", 0L),
-      TAILS("tailsCount", 0L),
-      SCHEMA("schemaVersion", 7) // the old version of the app was '6'
-    }
-  }
 
   val coinPrefix get() = prefs.getString(Settings.COIN.key, Settings.COIN.default as String)!!
   val shakeEnabled get() = prefs.getBoolean(Settings.SHAKE.key, Settings.SHAKE.default as Boolean)
@@ -77,5 +62,19 @@ class SettingsManager @Inject constructor(private val prefs: SharedPreferences) 
       "high" -> ShakeDetector.SENSITIVITY_HARD
       else -> ShakeDetector.SENSITIVITY_MEDIUM
     }
+  }
+
+  enum class Settings(val key: String, val default: Any) {
+    COIN("coin", "gw"), // George Washington dollar
+    SHAKE("shake", true),
+    SOUND("sound", true),
+    STATS("stats", true),
+    VIBRATE("vibrate", true),
+    DIAGNOSTICS("diagnostics", "100000"), // unfortunately the preference stores this as a string
+    DYNAMIC("dynamic", true),
+    FORCE("force", "medium"),
+    HEADS("headsCount", 0L),
+    TAILS("tailsCount", 0L),
+    SCHEMA("schemaVersion", 7) // the old version of the app was '6'
   }
 }

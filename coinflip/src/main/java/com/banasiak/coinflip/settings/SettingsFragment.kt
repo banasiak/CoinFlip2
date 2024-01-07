@@ -26,7 +26,7 @@ class SettingsFragment @Inject constructor() : PreferenceFragmentCompat() {
   override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
     setPreferencesFromResource(R.xml.root_settings, rootKey)
 
-    val resetStats = findPreference<Preference>("resetStats")
+    val resetStats = findPreference<Preference>(SettingsManager.Settings.STATS.key)
     resetStats?.onPreferenceClickListener =
       Preference.OnPreferenceClickListener {
         val stats = settings.loadStats()
@@ -38,7 +38,7 @@ class SettingsFragment @Inject constructor() : PreferenceFragmentCompat() {
         return@OnPreferenceClickListener true
       }
 
-    val dynamicColor = findPreference<Preference>("dynamic")
+    val dynamicColor = findPreference<Preference>(SettingsManager.Settings.DYNAMIC.key)
     dynamicColor?.onPreferenceChangeListener =
       Preference.OnPreferenceChangeListener { _, _ ->
         onBackPressedCallback.isEnabled = true

@@ -152,8 +152,8 @@ class MainViewModel @Inject constructor(
 
   private fun updateStatsEffect(stats: Map<Coin.Value, Long>): MainEffect.UpdateStats {
     return MainEffect.UpdateStats(
-      headsCount = stats[Coin.Value.HEADS] ?: 0,
-      tailsCount = stats[Coin.Value.TAILS] ?: 0
+      headsCount = (stats[Coin.Value.HEADS] ?: 0).toString(),
+      tailsCount = (stats[Coin.Value.TAILS] ?: 0).toString()
     )
   }
 

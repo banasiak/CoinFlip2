@@ -35,7 +35,6 @@ class MainFragment : Fragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-//    viewModel = ViewModelP
     viewLifecycleOwner.lifecycle.addObserver(viewModel)
     viewLifecycleOwner.lifecycleScope.launch {
       repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -74,9 +73,9 @@ class MainFragment : Fragment() {
     animation?.start()
   }
 
-  private fun updateStats(headsCount: Long, tailsCount: Long) {
-    binding.headsCount.text = headsCount.toString()
-    binding.tailsCount.text = tailsCount.toString()
+  private fun updateStats(headsCount: String, tailsCount: String) {
+    binding.headsCount.text = headsCount
+    binding.tailsCount.text = tailsCount
   }
 
   private fun showRateAppDialog() {

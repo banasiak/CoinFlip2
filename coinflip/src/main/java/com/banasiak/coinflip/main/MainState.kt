@@ -29,5 +29,5 @@ sealed class MainEffect {
 
   data object ShowRateDialog : MainEffect()
 
-  data class UpdateStats(val headsCount: Long, val tailsCount: Long) : MainEffect()
+  data class UpdateStats(val headsCount: String, val tailsCount: String) : MainEffect()
 }
