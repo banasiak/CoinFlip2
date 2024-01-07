@@ -46,6 +46,7 @@ class MainViewModel @Inject constructor(
   private val shakeDetector = ShakeDetector { flipCoin() }
 
   fun postAction(action: MainAction) {
+    Timber.d("postAction(): $action")
     when (action) {
       MainAction.TapCoin -> flipCoin()
     }
@@ -86,12 +87,16 @@ class MainViewModel @Inject constructor(
     stopShakeListener()
 
     val result = coin.flip()
-    val animation = animationHelper.animations[result.permutation]
-    animation?.onFinished = onFlipFinished()
 
     val stats = state.stats.toMutableMap()
     val currentCount = stats.getOrDefault(result.value, 0)
     stats[result.value] = currentCount + 1
+
+    var total = 0L
+    stats.forEach { (k, v) -> total += v }
+
+    val animation = animationHelper.animations[result.permutation]
+    animation?.onFinished = onFlipFinished(total)
 
     state =
       state.copy(
@@ -105,14 +110,19 @@ class MainViewModel @Inject constructor(
     _effectFlow.tryEmit(MainEffect.FlipCoin)
   }
 
-  private fun onFlipFinished(): AnimationCallback {
+  private fun onFlipFinished(total: Long): AnimationCallback {
     return {
       state = state.copy(resultVisible = true)
       _stateFlow.tryEmit(state)
       _effectFlow.tryEmit(updateStats())
 
       if (settings.soundEnabled) {
-        soundHelper.playSound(SoundHelper.Sound.COIN)
+        if (total % 100 == 0L) {
+          soundHelper.playSound(SoundHelper.Sound.ONEUP) // Happy Easter, Ryan!
+          _effectFlow.tryEmit(MainEffect.ShowRateDialog) // might as well ask for free internet points while we're at it
+        } else {
+          soundHelper.playSound(SoundHelper.Sound.COIN)
+        }
       }
 
       if (settings.vibrateEnabled) {

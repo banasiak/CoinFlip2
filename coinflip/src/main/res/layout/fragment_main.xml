@@ -74,6 +74,13 @@
     app:layout_constraintTop_toBottomOf="@+id/result_text"
     />
 
+  <androidx.constraintlayout.widget.Group
+    android:id="@+id/stats_container"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    app:constraint_referenced_ids="heads_label, heads_count, tails_label, tails_count"
+    />
+
   <TextView
     android:id="@+id/heads_label"
     style="@style/AppTheme.TextAppearance.Stats.Label"

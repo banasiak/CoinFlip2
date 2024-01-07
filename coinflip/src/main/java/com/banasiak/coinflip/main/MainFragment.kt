@@ -20,6 +20,7 @@ import com.google.android.play.core.ktx.requestReview
 import com.google.android.play.core.review.ReviewManagerFactory
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MainFragment : Fragment() {
@@ -48,16 +49,17 @@ class MainFragment : Fragment() {
   }
 
   private fun bind(state: MainState) {
+    Timber.d("bind(): $state")
     binding.coinImage.background = state.animation
     binding.coinPlaceholder.isVisible = state.placeholderVisible
     binding.resultText.isInvisible = !state.resultVisible // invisible, not gone
     binding.resultText.text = getString(state.result.value.string)
-    binding.headsCount.isVisible = state.statsVisible
-    binding.tailsCount.isVisible = state.statsVisible
+    binding.statsContainer.isVisible = state.statsVisible
     // note: don't update the count values based on the stats contained in the state object, they will be updated via an effect
   }
 
   private fun onEffect(effect: MainEffect) {
+    Timber.d("onEffect(): $effect")
     when (effect) {
       MainEffect.FlipCoin -> renderAnimation()
       MainEffect.ShowRateDialog -> showRateAppDialog()

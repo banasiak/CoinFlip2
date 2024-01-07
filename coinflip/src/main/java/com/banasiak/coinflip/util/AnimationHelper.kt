@@ -51,6 +51,7 @@ class AnimationHelper @Inject constructor(
       } else {
         prefix
       }
+    Timber.d("coin selected: $newPrefix")
     val heads = resources.getIdentifier("${newPrefix}_heads", "drawable", buildInfo.packageName)
     val tails = resources.getIdentifier("${newPrefix}_tails", "drawable", buildInfo.packageName)
     return Pair(heads, tails)
