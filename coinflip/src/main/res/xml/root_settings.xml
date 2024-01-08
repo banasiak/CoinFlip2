@@ -49,7 +49,7 @@
       app:summary="@string/settings_item_selftest_summary"
       app:title="@string/settings_item_selftest_title" />
     <SwitchPreferenceCompat
-      app:defaultValue="true"
+      app:defaultValue="false"
       app:key="dynamic"
       app:persistent="true"
       app:summary="@string/settings_item_dynamic_colors_summary"

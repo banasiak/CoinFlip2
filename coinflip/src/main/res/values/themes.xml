@@ -52,11 +52,46 @@
 
   <style name="AppTheme.TextAppearance.Instructions" parent="TextAppearance.Material3.TitleMedium" />
 
-  <style name="AppTheme.TextAppearance.Stats.Label" parent="TextAppearance.Material3.TitleLarge">
+  <style name="AppTheme.TextAppearance.Stats.Heads" parent="TextAppearance.Material3.TitleLarge">
     <item name="android:textColor">?attr/colorSecondary</item>
   </style>
 
-  <style name="AppTheme.TextAppearance.Stats.Count" parent="TextAppearance.Material3.TitleLarge">
+  <style name="AppTheme.TextAppearance.Stats.Tails" parent="TextAppearance.Material3.TitleLarge">
     <item name="android:textColor">?attr/colorTertiary</item>
+  </style>
+
+  <style name="AppTheme.TextAppearance.Diagnostics.Label" parent="TextAppearance.Material3.TitleMedium" >
+    <item name="android:textSize">20sp</item>
+  </style>
+
+  <style name="AppTheme.TextAppearance.Diagnostics.Label.Heads" parent="TextAppearance.Material3.TitleMedium">
+    <item name="android:textSize">20sp</item>
+    <item name="android:textColor">?attr/colorSecondary</item>
+  </style>
+
+  <style name="AppTheme.TextAppearance.Diagnostics.Label.Tails" parent="TextAppearance.Material3.TitleMedium">
+    <item name="android:textSize">20sp</item>
+    <item name="android:textColor">?attr/colorTertiary</item>
+  </style>
+
+  <style name="AppTheme.TextAppearance.Diagnostics.Value" parent="TextAppearance.Material3.TitleSmall" >
+    <item name="android:textSize">18sp</item>
+  </style>
+
+  <style name="AppTheme.TextAppearance.Diagnostics.Value.Heads" parent="TextAppearance.Material3.TitleSmall">
+    <item name="android:textSize">18sp</item>
+    <item name="android:textColor">?attr/colorSecondary</item>
+  </style>
+
+  <style name="AppTheme.TextAppearance.Diagnostics.Value.Tails" parent="TextAppearance.Material3.TitleSmall">
+    <item name="android:textSize">18sp</item>
+    <item name="android:textColor">?attr/colorTertiary</item>
+  </style>
+
+  <style name="AppTheme.TextAppearance.Diagnostics.Information" parent="MaterialAlertDialog.Material3.Body.Text" />
+
+  <style name="AppTheme.TextAppearance.Diagnostics.Citation" parent="MaterialAlertDialog.Material3.Body.Text">
+    <item name="android:textStyle">italic</item>
+    <item name="android:textColor">?attr/colorPrimary</item>
   </style>
 </resources>

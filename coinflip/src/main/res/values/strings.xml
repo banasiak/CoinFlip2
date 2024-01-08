@@ -21,7 +21,7 @@
   <string name="instructions_tap">Tap to Flip Coin</string>
   <string name="heads">HEADS</string>
   <string name="max">MAX</string>
-  <string name="milliseconds">ms</string>
+  <string name="seconds">%1s seconds</string>
   <string name="min">OFF</string>
   <string name="new_coins">Sweet! New coins available!</string>
   <string name="rate_app">Rate App on Google Play</string>
@@ -65,4 +65,6 @@
   <string name="undo">Undo</string>
   <string name="unknown">UNKNOWN</string>
   <string name="version">version %1s (%2d)</string>
+  <string name="rng">Random (or, pseudo-random) number generation is a process by which a sequence of numbers that cannot be reasonably predicted better than by random chance is generated. This means that the particular outcome sequence will contain some patterns detectable in hindsight but impossible to foresee.</string>
+  <string name="wikipedia">\u2014 Wikipedia (January 2024)</string>
 </resources>

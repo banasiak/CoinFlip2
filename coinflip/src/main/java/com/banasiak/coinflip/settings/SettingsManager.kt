@@ -70,7 +70,7 @@ class SettingsManager @Inject constructor(private val prefs: SharedPreferences) 
     STATS("stats", true),
     VIBRATE("vibrate", true),
     DIAGNOSTICS("diagnostics", "100000"), // unfortunately the preference stores this as a string
-    DYNAMIC("dynamic", true),
+    DYNAMIC("dynamic", false),
     FORCE("force", "medium"),
     RESET("resetStats", Unit),
     HEADS("headsCount", 0L),

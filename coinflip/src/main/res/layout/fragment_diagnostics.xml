@@ -22,148 +22,195 @@
 
   <TextView
     android:id="@+id/heads"
-    style="@style/MaterialAlertDialog.Material3.Body.Text"
+    style="@style/AppTheme.TextAppearance.Diagnostics.Label.Heads"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/spacing_medium"
     android:text="@string/heads"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/header"
+    app:layout_constraintStart_toStartOf="@id/left_margin"
+    app:layout_constraintTop_toBottomOf="@id/top_barrier"
     />
 
   <TextView
-    android:id="@+id/headsCount"
-    style="@style/MaterialAlertDialog.Material3.Body.Text"
+    android:id="@+id/heads_count"
+    style="@style/AppTheme.TextAppearance.Diagnostics.Value.Heads"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/spacing_large"
-    android:layout_marginTop="@dimen/spacing_medium"
-    app:layout_constraintStart_toEndOf="@id/heads"
-    app:layout_constraintTop_toBottomOf="@id/header"
-    tools:text="1000"
+    app:layout_constraintStart_toEndOf="@id/label_barrier"
+    app:layout_constraintTop_toTopOf="@+id/heads"
+    app:layout_constraintBottom_toBottomOf="@+id/heads"
+    tools:text="1,000"
     />
 
   <TextView
-    android:id="@+id/headsRatio"
-    style="@style/MaterialAlertDialog.Material3.Body.Text"
+    android:id="@+id/heads_ratio"
+    style="@style/AppTheme.TextAppearance.Diagnostics.Value.Heads"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/spacing_small"
-    android:layout_marginTop="@dimen/spacing_medium"
-    app:layout_constraintStart_toEndOf="@id/headsCount"
-    app:layout_constraintTop_toBottomOf="@id/header"
-    tools:text="10%"
+    app:layout_constraintStart_toEndOf="@+id/count_barrier"
+    app:layout_constraintBaseline_toBaselineOf="@id/heads_count"
+    tools:text="[10.00%]"
     />
 
   <!-- TAILS -->
 
   <TextView
     android:id="@+id/tails"
-    style="@style/MaterialAlertDialog.Material3.Body.Text"
+    style="@style/AppTheme.TextAppearance.Diagnostics.Label.Tails"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/spacing_small"
     android:text="@string/tails"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/heads"
+    app:layout_constraintStart_toStartOf="@id/left_margin"
+    app:layout_constraintTop_toBottomOf="@+id/heads"
     />
 
   <TextView
-    android:id="@+id/tailsCount"
-    style="@style/MaterialAlertDialog.Material3.Body.Text"
+    android:id="@+id/tails_count"
+    style="@style/AppTheme.TextAppearance.Diagnostics.Value.Tails"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/spacing_large"
-    android:layout_marginTop="@dimen/spacing_small"
-    app:layout_constraintStart_toEndOf="@id/tails"
-    app:layout_constraintTop_toBottomOf="@id/headsCount"
-    tools:text="9000"
+    app:layout_constraintStart_toEndOf="@+id/label_barrier"
+    app:layout_constraintTop_toTopOf="@+id/tails"
+    app:layout_constraintBottom_toBottomOf="@+id/tails"
+    tools:text="9,000"
     />
 
   <TextView
-    android:id="@+id/tailsRatio"
-    style="@style/MaterialAlertDialog.Material3.Body.Text"
+    android:id="@+id/tails_ratio"
+    style="@style/AppTheme.TextAppearance.Diagnostics.Value.Tails"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/spacing_small"
     android:layout_marginTop="@dimen/spacing_small"
-    app:layout_constraintStart_toEndOf="@id/tailsCount"
-    app:layout_constraintTop_toBottomOf="@id/headsRatio"
-    tools:text="90%"
+    app:layout_constraintStart_toEndOf="@+id/count_barrier"
+    app:layout_constraintBaseline_toBaselineOf="@+id/tails_count"
+    tools:text="[90.00%]"
     />
 
   <!-- TOTAL -->
 
   <TextView
     android:id="@+id/total"
-    style="@style/MaterialAlertDialog.Material3.Body.Text"
+    style="@style/AppTheme.TextAppearance.Diagnostics.Label"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/spacing_small"
     android:text="@string/total"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/tails"
+    app:layout_constraintStart_toStartOf="@id/left_margin"
+    app:layout_constraintTop_toBottomOf="@+id/tails"
     />
 
   <TextView
-    android:id="@+id/totalCount"
-    style="@style/MaterialAlertDialog.Material3.Body.Text"
+    android:id="@+id/total_count"
+    style="@style/AppTheme.TextAppearance.Diagnostics.Value"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/spacing_large"
-    android:layout_marginTop="@dimen/spacing_small"
-    app:layout_constraintStart_toEndOf="@id/total"
-    app:layout_constraintTop_toBottomOf="@id/tailsCount"
-    tools:text="10000"
+    app:layout_constraintStart_toEndOf="@+id/label_barrier"
+    app:layout_constraintTop_toTopOf="@+id/total"
+    app:layout_constraintBottom_toBottomOf="@+id/total"
+    tools:text="10,000"
     />
 
   <TextView
-    android:id="@+id/totalRatio"
-    style="@style/MaterialAlertDialog.Material3.Body.Text"
+    android:id="@+id/total_ratio"
+    style="@style/AppTheme.TextAppearance.Diagnostics.Value"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/spacing_small"
-    android:layout_marginTop="@dimen/spacing_small"
-    app:layout_constraintStart_toEndOf="@id/totalCount"
-    app:layout_constraintTop_toBottomOf="@id/tailsRatio"
-    tools:text="100%"
+    app:layout_constraintStart_toEndOf="@+id/count_barrier"
+    app:layout_constraintBaseline_toBaselineOf="@+id/total_count"
+    tools:text="[100.00%]"
     />
 
   <!-- DURATION -->
 
   <TextView
     android:id="@+id/time"
-    style="@style/MaterialAlertDialog.Material3.Body.Text"
+    style="@style/AppTheme.TextAppearance.Diagnostics.Label"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/spacing_small"
+    android:layout_marginTop="@dimen/spacing_medium"
     android:text="@string/time"
+    app:layout_constraintStart_toStartOf="@id/left_margin"
+    app:layout_constraintTop_toBottomOf="@+id/total"
+    />
+
+  <TextView
+    android:id="@+id/elapsed_time"
+    style="@style/AppTheme.TextAppearance.Diagnostics.Value"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_constraintStart_toEndOf="@+id/label_barrier"
+    app:layout_constraintTop_toTopOf="@+id/time"
+    app:layout_constraintBottom_toBottomOf="@+id/time"
+    tools:text="5.678 seconds"
+    />
+
+  <TextView
+    android:id="@+id/information"
+    style="@style/AppTheme.TextAppearance.Diagnostics.Information"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:justificationMode="inter_word"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/total"
+    app:layout_constraintTop_toBottomOf="@id/bottom_barrier"
+    android:text="@string/rng"
     />
 
   <TextView
-    android:id="@+id/elapsedTime"
-    style="@style/MaterialAlertDialog.Material3.Body.Text"
+    android:id="@+id/wikipedia"
+    style="@style/AppTheme.TextAppearance.Diagnostics.Citation"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/spacing_large"
     android:layout_marginTop="@dimen/spacing_small"
-    app:layout_constraintStart_toEndOf="@id/time"
-    app:layout_constraintTop_toBottomOf="@id/totalCount"
-    tools:text="5678"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/information"
+    android:text="@string/wikipedia"
     />
 
-  <TextView
-    android:id="@+id/timeUnits"
-    style="@style/MaterialAlertDialog.Material3.Body.Text"
+  <androidx.constraintlayout.widget.Guideline
+    android:id="@+id/left_margin"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/spacing_xsmall"
-    android:layout_marginTop="@dimen/spacing_small"
-    app:layout_constraintStart_toEndOf="@id/elapsedTime"
-    app:layout_constraintTop_toBottomOf="@id/totalRatio"
-    android:text="@string/milliseconds"
+    android:orientation="vertical"
+    app:layout_constraintGuide_begin="24dp"
     />
+
+  <androidx.constraintlayout.widget.Barrier
+    android:id="@+id/top_barrier"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:barrierDirection="bottom"
+    app:constraint_referenced_ids="header"
+    app:barrierMargin="@dimen/spacing_large"
+    />
+
+  <androidx.constraintlayout.widget.Barrier
+    android:id="@+id/bottom_barrier"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:barrierDirection="bottom"
+    app:constraint_referenced_ids="time, elapsed_time"
+    app:barrierMargin="@dimen/spacing_large"
+    />
+
+  <androidx.constraintlayout.widget.Barrier
+    android:id="@+id/label_barrier"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:barrierDirection="end"
+    app:constraint_referenced_ids="heads, tails, total, time"
+    app:barrierMargin="@dimen/spacing_medium"
+    />
+
+  <androidx.constraintlayout.widget.Barrier
+    android:id="@+id/count_barrier"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:barrierDirection="end"
+    app:constraint_referenced_ids="heads_count, tails_count, total_count"
+    app:barrierMargin="@dimen/spacing_small"
+    />
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,7 +1,5 @@
 package com.banasiak.coinflip.about
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.databinding.FragmentAboutBinding
+import com.banasiak.coinflip.util.launchUrl
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -54,18 +53,5 @@ class AboutFragment : BottomSheetDialogFragment() {
     when (effect) {
       is AboutEffect.LaunchUrl -> launchUrl(effect.url)
     }
-  }
-
-  private fun launchGooglePlayStore() {
-    val packageName = requireContext().packageName
-    val uri = Uri.parse("market://details?id=$packageName")
-    val intent = Intent(Intent.ACTION_VIEW, uri)
-    startActivity(intent)
-  }
-
-  private fun launchUrl(url: String) {
-    val uri = Uri.parse(url)
-    val intent = Intent(Intent.ACTION_VIEW, uri)
-    startActivity(intent)
   }
 }

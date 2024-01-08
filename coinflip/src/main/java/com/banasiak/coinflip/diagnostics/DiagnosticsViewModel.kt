@@ -6,7 +6,9 @@ import com.banasiak.coinflip.common.Coin
 import com.banasiak.coinflip.settings.SettingsManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,14 +20,24 @@ class DiagnosticsViewModel @Inject constructor(
 ) : ViewModel() {
   companion object {
     private const val SMOOTH_DELAY = 5L
+    private const val WIKIPEDIA_URL = "https://en.wikipedia.org/wiki/Random_number_generation"
   }
 
   private var state = DiagnosticsState(iterations = settings.diagnosticsIterations)
   private val _stateFlow = MutableStateFlow<DiagnosticsState>(state)
   val stateFlow: StateFlow<DiagnosticsState> = _stateFlow
 
+  private val _effectFlow = MutableSharedFlow<DiagnosticsEffect>(extraBufferCapacity = 1)
+  val effectFlow: SharedFlow<DiagnosticsEffect> = _effectFlow
+
   init {
     viewModelScope.launch { runDiagnostics() }
+  }
+
+  fun postAction(action: DiagnosticsAction) {
+    when (action) {
+      DiagnosticsAction.Wikipedia -> _effectFlow.tryEmit(DiagnosticsEffect.LaunchUrl(WIKIPEDIA_URL))
+    }
   }
 
   private suspend fun runDiagnostics() {
@@ -39,9 +51,16 @@ class DiagnosticsViewModel @Inject constructor(
         }
       }
 
-      if (state.totalCount % 100 == 0L || state.totalCount == state.iterations) {
+      if (state.total % 100 == 0L || state.total == state.iterations) {
         val elapsedTime = System.currentTimeMillis() - state.startTime
-        state = state.copy(elapsedTime = elapsedTime)
+        state =
+          state.copy(
+            headsCount = formatCount(state.heads),
+            tailsCount = formatCount(state.tails),
+            totalCount = formatCount(state.total),
+            elapsedTime = elapsedTime,
+            formattedTime = formatTime(elapsedTime)
+          )
         _stateFlow.emit(state)
         delay(SMOOTH_DELAY) // this short delay smooths out the UI animation and make it looks nicer
       }
@@ -49,22 +68,30 @@ class DiagnosticsViewModel @Inject constructor(
   }
 
   private fun incrementHeads() {
-    val heads = state.headsCount + 1
-    val total = state.totalCount + 1
-    val headsRatio = calculatePercentage(heads, total)
-    val totalRatio = calculatePercentage(total, state.iterations)
-    state = state.copy(headsCount = heads, headsRatio = headsRatio, totalCount = total, totalRatio = totalRatio)
+    val heads = state.heads + 1
+    val total = state.total + 1
+    val headsRatio = formatRatio(heads, total)
+    val totalRatio = formatRatio(total, state.iterations)
+    state = state.copy(heads = heads, headsRatio = headsRatio, total = total, totalRatio = totalRatio)
   }
 
   private fun incrementTails() {
-    val tails = state.tailsCount + 1
-    val total = state.totalCount + 1
-    val tailsRatio = calculatePercentage(tails, total)
-    val totalRatio = calculatePercentage(total, state.iterations)
-    state = state.copy(tailsCount = tails, tailsRatio = tailsRatio, totalCount = total, totalRatio = totalRatio)
+    val tails = state.tails + 1
+    val total = state.total + 1
+    val tailsRatio = formatRatio(tails, total)
+    val totalRatio = formatRatio(total, state.iterations)
+    state = state.copy(tails = tails, tailsRatio = tailsRatio, total = total, totalRatio = totalRatio)
   }
 
-  private fun calculatePercentage(numerator: Long, denominator: Long): String {
-    return "%.2f".format((numerator.toDouble() / denominator.toDouble()) * 100) + "%"
+  private fun formatRatio(numerator: Long, denominator: Long): String {
+    return "[" + "%.2f".format((numerator.toDouble() / denominator.toDouble()) * 100) + "%]"
+  }
+
+  private fun formatCount(count: Long): String {
+    return "%,d".format(count)
+  }
+
+  private fun formatTime(elapsed: Long): String {
+    return "%.3f".format(elapsed.toDouble() / 1000)
   }
 }
