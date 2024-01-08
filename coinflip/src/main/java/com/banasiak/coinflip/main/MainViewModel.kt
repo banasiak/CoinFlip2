@@ -88,6 +88,7 @@ class MainViewModel @Inject constructor(
   private fun onPause() {
     stopShakeListener()
     settings.persistStats(state.stats)
+    state.animation?.removeCallbacks()
     savedState.save(state)
   }
 
