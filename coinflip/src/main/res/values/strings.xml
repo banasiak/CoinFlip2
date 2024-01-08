@@ -28,6 +28,7 @@
   </string>
   <string name="diagnostics_fragment_title">Diagnostic Test</string>
   <string name="diagnostics_menu_title">Diagnostics</string>
+  <string name="invalid_iterations">Invalid Number of Iterations</string>
   <string name="settings_activity_title">Coin Flip Settings</string>
   <string name="settings_header_basic_title">Basic Settings</string>
   <string name="settings_header_advanced_title">Advanced Settings</string>
@@ -57,4 +58,9 @@
   <string name="undo">Undo</string>
   <string name="version">version %1s (%2d)</string>
   <string name="wikipedia">\u2014 Wikipedia (January 2024)</string>
+
+  <plurals name="iterations">
+    <item quantity="one">iteration</item>
+    <item quantity="other">iterations</item>
+  </plurals>
 </resources>

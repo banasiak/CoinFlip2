@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.banasiak.coinflip.common.Coin
 import com.banasiak.coinflip.settings.SettingsManager
+import com.banasiak.coinflip.util.formatMilliseconds
+import com.banasiak.coinflip.util.formatNumber
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -11,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.yield
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,6 +23,7 @@ class DiagnosticsViewModel @Inject constructor(
 ) : ViewModel() {
   companion object {
     private const val SMOOTH_DELAY = 5L
+    private const val SMOOTH_DELAY_THRESHOLD = 100_000L
     private const val WIKIPEDIA_URL = "https://en.wikipedia.org/wiki/Random_number_generation"
   }
 
@@ -43,55 +47,42 @@ class DiagnosticsViewModel @Inject constructor(
   private suspend fun runDiagnostics() {
     state = state.copy(startTime = System.currentTimeMillis())
     for (i in 1..state.iterations) {
-      when (val value = coin.flip().value) {
-        Coin.Value.HEADS -> incrementHeads()
-        Coin.Value.TAILS -> incrementTails()
-        else -> {
-          throw IllegalStateException("Coin.flip() returned invalid value: $value")
+      state =
+        when (val value = coin.flip().value) {
+          Coin.Value.HEADS -> state.copy(heads = state.heads + 1, total = state.total + 1)
+          Coin.Value.TAILS -> state.copy(tails = state.tails + 1, total = state.total + 1)
+          else -> {
+            throw IllegalStateException("Coin.flip() returned invalid value: $value")
+          }
         }
-      }
 
       if (state.total % 100 == 0L || state.total == state.iterations) {
         val elapsedTime = System.currentTimeMillis() - state.startTime
         state =
           state.copy(
-            headsCount = formatCount(state.heads),
-            tailsCount = formatCount(state.tails),
-            totalCount = formatCount(state.total),
+            headsCount = state.heads.formatNumber(),
+            tailsCount = state.tails.formatNumber(),
+            totalCount = state.total.formatNumber(),
+            headsRatio = formatRatio(state.heads, state.iterations),
+            tailsRatio = formatRatio(state.tails, state.iterations),
+            totalRatio = formatRatio(state.total, state.iterations),
             elapsedTime = elapsedTime,
-            formattedTime = formatTime(elapsedTime)
+            formattedTime = elapsedTime.formatMilliseconds()
           )
         _stateFlow.emit(state)
-        delay(SMOOTH_DELAY) // this short delay smooths out the UI animation and make it looks nicer
+
+        if (state.iterations <= SMOOTH_DELAY_THRESHOLD) {
+          // this short delay smooths out the UI animation and make it looks nicer for small values
+          delay(SMOOTH_DELAY)
+        } else {
+          // but don't delay UI updates if the user has chosen to run more than the default number of iterations
+          yield()
+        }
       }
     }
   }
 
-  private fun incrementHeads() {
-    val heads = state.heads + 1
-    val total = state.total + 1
-    val headsRatio = formatRatio(heads, total)
-    val totalRatio = formatRatio(total, state.iterations)
-    state = state.copy(heads = heads, headsRatio = headsRatio, total = total, totalRatio = totalRatio)
-  }
-
-  private fun incrementTails() {
-    val tails = state.tails + 1
-    val total = state.total + 1
-    val tailsRatio = formatRatio(tails, total)
-    val totalRatio = formatRatio(total, state.iterations)
-    state = state.copy(tails = tails, tailsRatio = tailsRatio, total = total, totalRatio = totalRatio)
-  }
-
   private fun formatRatio(numerator: Long, denominator: Long): String {
     return "[" + "%.2f".format((numerator.toDouble() / denominator.toDouble()) * 100) + "%]"
-  }
-
-  private fun formatCount(count: Long): String {
-    return "%,d".format(count)
-  }
-
-  private fun formatTime(elapsed: Long): String {
-    return "%.3f".format(elapsed.toDouble() / 1000)
   }
 }
