@@ -42,7 +42,7 @@
     app:iconSpaceReserved="false"
     app:title="@string/settings_header_advanced_title">
     <com.banasiak.coinflip.ui.NumberPreference
-      app:defaultValue="10000"
+      app:defaultValue="100000"
       app:dialogMessage="@string/settings_item_selftest_dialog"
       app:key="diagnostics"
       app:persistent="true"

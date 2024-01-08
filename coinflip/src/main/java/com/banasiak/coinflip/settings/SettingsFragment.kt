@@ -26,7 +26,7 @@ class SettingsFragment @Inject constructor() : PreferenceFragmentCompat() {
   override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
     setPreferencesFromResource(R.xml.root_settings, rootKey)
 
-    val resetStats = findPreference<Preference>(SettingsManager.Settings.STATS.key)
+    val resetStats = findPreference<Preference>(SettingsManager.Settings.RESET.key)
     resetStats?.onPreferenceClickListener =
       Preference.OnPreferenceClickListener {
         val stats = settings.loadStats()

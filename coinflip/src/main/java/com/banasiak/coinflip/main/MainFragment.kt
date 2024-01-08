@@ -11,10 +11,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.setupWithNavController
+import com.banasiak.coinflip.R
 import com.banasiak.coinflip.databinding.FragmentMainBinding
 import com.banasiak.coinflip.ui.CallbackAnimationDrawable
+import com.banasiak.coinflip.util.navigate
 import com.google.android.play.core.ktx.launchReview
 import com.google.android.play.core.ktx.requestReview
 import com.google.android.play.core.review.ReviewManagerFactory
@@ -43,7 +43,28 @@ class MainFragment : Fragment() {
       }
     }
 
-    binding.navigationBar.setupWithNavController(findNavController())
+    // setupWithNavController() doesn't respect the animations set in the nav graph, so set up the click listener manually
+    binding.navigationBar.setOnItemSelectedListener { item ->
+      when (item.itemId) {
+        R.id.diagnosticsMenuItem -> {
+          navigate(R.id.toDiagnostics)
+          false
+        }
+        R.id.settingsMenuItem -> {
+          navigate(R.id.toSettings)
+          false
+        }
+        R.id.aboutMenuItem -> {
+          navigate(R.id.toAbout)
+          false
+        }
+        else -> {
+          false
+        }
+      }
+    }
+
+    // tap anywhere (besides the nav bar) to flip the coin
     binding.root.setOnClickListener { viewModel.postAction(MainAction.TapCoin) }
   }
 
