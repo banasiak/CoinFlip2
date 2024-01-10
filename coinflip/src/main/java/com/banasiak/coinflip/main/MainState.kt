@@ -21,11 +21,27 @@ data class MainState(
 ) : Parcelable
 
 sealed class MainAction {
+  data object Pause : MainAction() // for eventual unit testing
+
+  data object Resume : MainAction()
+
+  data object TapAbout : MainAction()
+
   data object TapCoin : MainAction()
+
+  data object TapDiagnostics : MainAction()
+
+  data object TapSettings : MainAction()
 }
 
 sealed class MainEffect {
   data object FlipCoin : MainEffect()
+
+  data object ToAbout : MainEffect()
+
+  data object ToDiagnostics : MainEffect()
+
+  data object ToSettings : MainEffect()
 
   data object ShowRateDialog : MainEffect()
 

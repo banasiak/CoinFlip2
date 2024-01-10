@@ -46,16 +46,16 @@ class MainFragment : Fragment() {
     // setupWithNavController() doesn't respect the animations set in the nav graph, so set up the click listener manually
     binding.navigationBar.setOnItemSelectedListener { item ->
       when (item.itemId) {
+        R.id.aboutMenuItem -> {
+          viewModel.postAction(MainAction.TapAbout)
+          false
+        }
         R.id.diagnosticsMenuItem -> {
-          navigate(R.id.toDiagnostics)
+          viewModel.postAction(MainAction.TapDiagnostics)
           false
         }
         R.id.settingsMenuItem -> {
-          navigate(R.id.toSettings)
-          false
-        }
-        R.id.aboutMenuItem -> {
-          navigate(R.id.toAbout)
+          viewModel.postAction(MainAction.TapSettings)
           false
         }
         else -> {
@@ -83,6 +83,9 @@ class MainFragment : Fragment() {
     Timber.d("onEffect(): $effect")
     when (effect) {
       MainEffect.FlipCoin -> renderAnimation()
+      MainEffect.ToAbout -> navigate(R.id.toAbout)
+      MainEffect.ToDiagnostics -> navigate(R.id.toDiagnostics)
+      MainEffect.ToSettings -> navigate(R.id.toSettings)
       MainEffect.ShowRateDialog -> showRateAppDialog()
       is MainEffect.UpdateStats -> updateStats(effect.headsCount, effect.tailsCount)
     }

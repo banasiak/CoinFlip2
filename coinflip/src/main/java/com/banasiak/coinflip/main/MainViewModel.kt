@@ -53,7 +53,12 @@ class MainViewModel @Inject constructor(
   fun postAction(action: MainAction) {
     Timber.d("postAction(): $action")
     when (action) {
+      MainAction.Pause -> onPause()
+      MainAction.Resume -> onResume()
+      MainAction.TapAbout -> _effectFlow.tryEmit(MainEffect.ToAbout)
       MainAction.TapCoin -> flipCoin()
+      MainAction.TapDiagnostics -> _effectFlow.tryEmit(MainEffect.ToDiagnostics)
+      MainAction.TapSettings -> _effectFlow.tryEmit(MainEffect.ToSettings)
     }
   }
 

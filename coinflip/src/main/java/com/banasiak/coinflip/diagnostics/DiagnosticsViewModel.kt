@@ -40,7 +40,10 @@ class DiagnosticsViewModel @Inject constructor(
 
   private var state =
     savedState.restore()
-      ?: DiagnosticsState(iterations = settings.diagnosticsIterations, turboMode = settings.diagnosticsIterations >= TURBO_MODE_THRESHOLD)
+      ?: DiagnosticsState(
+        iterations = settings.diagnosticsIterations,
+        turboMode = settings.diagnosticsIterations >= TURBO_MODE_THRESHOLD
+      )
   private val _stateFlow = MutableStateFlow<DiagnosticsState>(state)
   val stateFlow: StateFlow<DiagnosticsState> = _stateFlow
 
