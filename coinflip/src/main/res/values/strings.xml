@@ -7,7 +7,7 @@
     to spin the coin again.
     \n\nQuarter-dollar coin images from the United States Mint. Presidential $1 Coin images from the United States Mint.
     \n\nCopyright \u00A9 2024 - Richard Banasiak
-    \n\nIf you like this app, please consider making a donation to the Electronic Frontier Foundation. \u2764
+    \n\nIf you like this app, please consider making a donation to the Electronic Frontier Foundation. &#10084;
     </string>
   <string name="app_name">Coin Flip</string>
   <string name="coin_animation">Coin Animation</string>
@@ -55,12 +55,8 @@
   <string name="tails">TAILS</string>
   <string name="time">TIME</string>
   <string name="total">TOTAL</string>
+  <string name="turbo_mode">Turbo Mode Activated &#127812;</string>
   <string name="undo">Undo</string>
   <string name="version">version %1s (%2d)</string>
   <string name="wikipedia">\u2014 Wikipedia (January 2024)</string>
-
-  <plurals name="iterations">
-    <item quantity="one">iteration</item>
-    <item quantity="other">iterations</item>
-  </plurals>
 </resources>

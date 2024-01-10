@@ -1,5 +1,10 @@
 package com.banasiak.coinflip.diagnostics
 
+import android.os.Parcelable
+import androidx.annotation.StringRes
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class DiagnosticsState(
   val heads: Long = 0,
   val tails: Long = 0,
@@ -13,8 +18,10 @@ data class DiagnosticsState(
   val startTime: Long = 0,
   val elapsedTime: Long = 0,
   val formattedTime: String = "",
-  val iterations: Long = 0
-)
+  val iterations: Long = 0,
+  val finished: Boolean = false,
+  val turboMode: Boolean = false
+) : Parcelable
 
 sealed class DiagnosticsAction {
   data object Wikipedia : DiagnosticsAction()
@@ -22,4 +29,6 @@ sealed class DiagnosticsAction {
 
 sealed class DiagnosticsEffect {
   data class LaunchUrl(val url: String) : DiagnosticsEffect()
+
+  data class ShowToast(@StringRes val text: Int) : DiagnosticsEffect()
 }

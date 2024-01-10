@@ -15,6 +15,8 @@ import com.banasiak.coinflip.settings.SettingsManager
 import com.banasiak.coinflip.ui.AnimationCallback
 import com.banasiak.coinflip.util.AnimationHelper
 import com.banasiak.coinflip.util.SoundHelper
+import com.banasiak.coinflip.util.restore
+import com.banasiak.coinflip.util.save
 import com.squareup.seismic.ShakeDetector
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -169,13 +171,5 @@ class MainViewModel @Inject constructor(
   private fun stopShakeListener() {
     Timber.d("shakeDetector.stop()")
     shakeDetector.stop()
-  }
-
-  private fun SavedStateHandle.save(state: MainState) {
-    this.set("state", state)
-  }
-
-  private fun SavedStateHandle.restore(): MainState? {
-    return this.get<MainState>("state")
   }
 }

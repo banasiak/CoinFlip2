@@ -4,8 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.banasiak.coinflip.R
@@ -18,7 +19,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class DiagnosticsFragment : BottomSheetDialogFragment() {
   private lateinit var binding: FragmentDiagnosticsBinding
-  private lateinit var viewModel: DiagnosticsViewModel
+  private val viewModel: DiagnosticsViewModel by viewModels()
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
     binding = FragmentDiagnosticsBinding.inflate(inflater, container, false)
@@ -28,7 +29,7 @@ class DiagnosticsFragment : BottomSheetDialogFragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-    viewModel = ViewModelProvider(this)[DiagnosticsViewModel::class.java]
+    viewLifecycleOwner.lifecycle.addObserver(viewModel)
     viewLifecycleOwner.lifecycleScope.launch {
       repeatOnLifecycle(Lifecycle.State.STARTED) {
         launch { viewModel.stateFlow.collect { bind(it) } }
@@ -52,6 +53,7 @@ class DiagnosticsFragment : BottomSheetDialogFragment() {
   private fun onEffect(effect: DiagnosticsEffect) {
     when (effect) {
       is DiagnosticsEffect.LaunchUrl -> launchUrl(effect.url)
+      is DiagnosticsEffect.ShowToast -> Toast.makeText(requireContext(), effect.text, Toast.LENGTH_LONG).show()
     }
   }
 }
