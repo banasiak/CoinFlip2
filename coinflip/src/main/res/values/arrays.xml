@@ -54,6 +54,8 @@
     <item>Wisconsin Quarter</item>
     <item>Wyoming Quarter</item>
     <item>JFK Half-Dollar</item>
+    <item>Sacagawea Dollar</item>
+    <item>Two-Face Dollar</item>
     <item>Random Coin</item>
   </string-array>
   <string-array name="coins_values">
@@ -110,6 +112,8 @@
     <item>wi</item>
     <item>wy</item>
     <item>jfk</item>
+    <item>sacagawea</item>
+    <item>twoface</item>
     <item>random</item>
   </string-array>
   <string-array name="force">

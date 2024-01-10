@@ -40,7 +40,7 @@ class DiagnosticsViewModel @Inject constructor(
 
   private var state =
     savedState.restore()
-      ?: DiagnosticsState(iterations = settings.diagnosticsIterations, turboMode = settings.diagnosticsIterations > TURBO_MODE_THRESHOLD)
+      ?: DiagnosticsState(iterations = settings.diagnosticsIterations, turboMode = settings.diagnosticsIterations >= TURBO_MODE_THRESHOLD)
   private val _stateFlow = MutableStateFlow<DiagnosticsState>(state)
   val stateFlow: StateFlow<DiagnosticsState> = _stateFlow
 
@@ -80,7 +80,7 @@ class DiagnosticsViewModel @Inject constructor(
     if (state.turboMode) {
       Timber.d("turbo mode activated!")
       if (settings.soundEnabled) {
-        soundHelper.playSound(SoundHelper.Sound.ONEUP)
+        soundHelper.playSound(SoundHelper.Sound.POWERUP)
       }
       _effectFlow.emit(DiagnosticsEffect.ShowToast(R.string.turbo_mode))
     }
