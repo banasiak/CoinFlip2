@@ -10,19 +10,20 @@ import javax.inject.Singleton
 import kotlin.random.Random
 
 @Singleton
-class Coin @Inject constructor() {
+class Coin @Inject constructor(
+  private val random: Random
+) {
   enum class Value(@StringRes val string: Int) {
     HEADS(R.string.heads),
     TAILS(R.string.tails),
     UNKNOWN(R.string.empty)
   }
 
-  private val generator = Random.Default
   private var currentValue: Value = Value.HEADS
 
   fun flip(): Result {
     val current = currentValue
-    val next = generator.nextValue()
+    val next = random.nextValue()
     currentValue = next
     return Result(next, permutation(current, next))
   }
@@ -37,7 +38,7 @@ class Coin @Inject constructor() {
     }
   }
 
-  private fun Random.Default.nextValue(): Value {
+  private fun Random.nextValue(): Value {
     val next = this.nextBoolean()
     return if (next) Value.HEADS else Value.TAILS
   }

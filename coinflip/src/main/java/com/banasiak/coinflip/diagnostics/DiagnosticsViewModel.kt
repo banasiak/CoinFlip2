@@ -23,10 +23,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
 import timber.log.Timber
+import java.time.Clock
 import javax.inject.Inject
 
 @HiltViewModel
 class DiagnosticsViewModel @Inject constructor(
+  private val clock: Clock,
   private val coin: Coin,
   private val settings: SettingsManager,
   private val soundHelper: SoundHelper,
@@ -89,7 +91,7 @@ class DiagnosticsViewModel @Inject constructor(
     }
 
     // don't update the start time if state has been restored, then you can see how long the loop was "paused" for in wall-clock time
-    if (state.startTime == 0L) state = state.copy(startTime = System.currentTimeMillis())
+    if (state.startTime == 0L) state = state.copy(startTime = clock.millis())
 
     // resume the loop where we left off
     for (i in state.total..state.iterations) {
@@ -103,7 +105,7 @@ class DiagnosticsViewModel @Inject constructor(
         }
 
       if (state.total % 100 == 0L || state.total == state.iterations) {
-        val elapsedTime = System.currentTimeMillis() - state.startTime
+        val elapsedTime = clock.millis() - state.startTime
         state =
           state.copy(
             headsCount = state.heads.formatNumber(),

@@ -12,6 +12,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import java.time.Clock
+import kotlin.random.Random
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -19,6 +21,16 @@ object AppModule {
   @Provides
   fun provideBuildInfo(@ApplicationContext context: Context): BuildInfo {
     return BuildInfo(context.packageName, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
+  }
+
+  @Provides
+  fun provideClock(): Clock {
+    return Clock.systemUTC()
+  }
+
+  @Provides
+  fun provideRandom(): Random {
+    return Random.Default
   }
 
   @Provides
