@@ -1,5 +1,7 @@
 package com.banasiak.coinflip.main
 
+import android.graphics.drawable.AnimationDrawable
+import android.hardware.SensorManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,29 +15,33 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.databinding.FragmentMainBinding
-import com.banasiak.coinflip.ui.CallbackAnimationDrawable
 import com.banasiak.coinflip.util.navigate
 import com.google.android.play.core.ktx.launchReview
 import com.google.android.play.core.ktx.requestReview
 import com.google.android.play.core.review.ReviewManagerFactory
+import com.squareup.seismic.ShakeDetector
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainFragment : Fragment() {
+  @Inject lateinit var sensorManager: SensorManager
+
   private lateinit var binding: FragmentMainBinding
+  private lateinit var shakeDetector: ShakeDetector
   private val viewModel: MainViewModel by viewModels()
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
     binding = FragmentMainBinding.inflate(inflater, container, false)
+    shakeDetector = ShakeDetector { viewModel.postAction(MainAction.Shake) }
     return binding.root
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-    viewLifecycleOwner.lifecycle.addObserver(viewModel)
     viewLifecycleOwner.lifecycleScope.launch {
       repeatOnLifecycle(Lifecycle.State.STARTED) {
         launch { viewModel.stateFlow.collect { bind(it) } }
@@ -68,6 +74,16 @@ class MainFragment : Fragment() {
     binding.root.setOnClickListener { viewModel.postAction(MainAction.TapCoin) }
   }
 
+  override fun onPause() {
+    super.onPause()
+    viewModel.postAction(MainAction.OnPause)
+  }
+
+  override fun onResume() {
+    super.onResume()
+    viewModel.postAction(MainAction.OnResume)
+  }
+
   private fun bind(state: MainState) {
     Timber.d("bind(): $state")
     binding.coinImage.background = state.animation
@@ -77,6 +93,8 @@ class MainFragment : Fragment() {
     binding.resultText.text = getString(state.result.value.string)
     binding.statsContainer.isVisible = state.statsVisible
     // note: don't update the count values based on the stats contained in the state object, they will be updated via an effect
+
+    if (state.shakeEnabled) startShakeDetector(state.shakeSensitivity) else stopShakeDetector()
   }
 
   private fun onEffect(effect: MainEffect) {
@@ -92,9 +110,9 @@ class MainFragment : Fragment() {
   }
 
   private fun renderAnimation() {
-    val animation = binding.coinImage.background as? CallbackAnimationDrawable
-    animation?.stop()
-    animation?.start()
+    val animation = binding.coinImage.background as AnimationDrawable
+    animation.stop()
+    animation.start()
   }
 
   private fun updateStats(headsCount: String, tailsCount: String) {
@@ -108,5 +126,14 @@ class MainFragment : Fragment() {
       val reviewInfo = reviewManager.requestReview()
       reviewManager.launchReview(requireActivity(), reviewInfo)
     }
+  }
+
+  private fun startShakeDetector(sensitivity: Int) {
+    shakeDetector.start(sensorManager, SensorManager.SENSOR_DELAY_GAME)
+    shakeDetector.setSensitivity(sensitivity)
+  }
+
+  private fun stopShakeDetector() {
+    shakeDetector.stop()
   }
 }

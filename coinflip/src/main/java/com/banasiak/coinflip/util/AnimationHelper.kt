@@ -9,7 +9,7 @@ import androidx.annotation.DrawableRes
 import androidx.core.content.res.ResourcesCompat
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.BuildInfo
-import com.banasiak.coinflip.ui.CallbackAnimationDrawable
+import com.banasiak.coinflip.ui.DurationAnimationDrawable
 import com.banasiak.coinflip.util.AnimationHelper.Permutation.HEADS_HEADS
 import com.banasiak.coinflip.util.AnimationHelper.Permutation.HEADS_TAILS
 import com.banasiak.coinflip.util.AnimationHelper.Permutation.TAILS_HEADS
@@ -30,8 +30,8 @@ class AnimationHelper @Inject constructor(
     private const val RANDOM = "random"
   }
 
-  private val _animations = mutableMapOf<Permutation, CallbackAnimationDrawable>()
-  val animations: Map<Permutation, CallbackAnimationDrawable> = _animations
+  private val _animations = mutableMapOf<Permutation, DurationAnimationDrawable>()
+  val animations: Map<Permutation, DurationAnimationDrawable> = _animations
 
   suspend fun loadAnimationsForCoin(prefix: String) {
     val startTime = System.currentTimeMillis()
@@ -125,8 +125,8 @@ class AnimationHelper @Inject constructor(
     b1: BitmapDrawable,
     edge: BitmapDrawable,
     permutation: Permutation
-  ): CallbackAnimationDrawable {
-    val animation = CallbackAnimationDrawable()
+  ): DurationAnimationDrawable {
+    val animation = DurationAnimationDrawable()
     animation.isOneShot = true
 
     when (permutation) {

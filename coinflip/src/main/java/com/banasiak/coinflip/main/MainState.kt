@@ -4,26 +4,31 @@ import android.os.Parcelable
 import androidx.annotation.StringRes
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.Coin
-import com.banasiak.coinflip.ui.CallbackAnimationDrawable
+import com.banasiak.coinflip.ui.DurationAnimationDrawable
 import com.banasiak.coinflip.util.AnimationHelper
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class MainState(
-  @IgnoredOnParcel val animation: CallbackAnimationDrawable? = null,
+  @IgnoredOnParcel val animation: DurationAnimationDrawable? = null,
   @StringRes val instructionsText: Int = R.string.instructions_tap_shake,
+  val paused: Boolean = false,
   val placeholderVisible: Boolean = true,
   val result: Coin.Result = Coin.Result(Coin.Value.UNKNOWN, AnimationHelper.Permutation.UNKNOWN),
   val resultVisible: Boolean = false,
+  val shakeEnabled: Boolean = false,
+  val shakeSensitivity: Int = 0,
   val stats: Map<Coin.Value, Long> = emptyMap(),
   val statsVisible: Boolean = true
 ) : Parcelable
 
 sealed class MainAction {
-  data object Pause : MainAction() // for eventual unit testing
+  data object OnPause : MainAction()
 
-  data object Resume : MainAction()
+  data object OnResume : MainAction()
+
+  data object Shake : MainAction()
 
   data object TapAbout : MainAction()
 

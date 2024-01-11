@@ -1,24 +1,19 @@
 package com.banasiak.coinflip.main
 
-import android.hardware.SensorManager
 import android.os.VibrationEffect
 import android.os.Vibrator
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.Coin
 import com.banasiak.coinflip.settings.SettingsManager
-import com.banasiak.coinflip.ui.AnimationCallback
 import com.banasiak.coinflip.util.AnimationHelper
 import com.banasiak.coinflip.util.SoundHelper
 import com.banasiak.coinflip.util.restore
 import com.banasiak.coinflip.util.save
-import com.squareup.seismic.ShakeDetector
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -31,12 +26,11 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
   private val animationHelper: AnimationHelper,
   private val coin: Coin,
-  private val sensorManager: SensorManager,
   private val settings: SettingsManager,
   private val soundHelper: SoundHelper,
   private val vibrator: Vibrator,
   private val savedState: SavedStateHandle
-) : ViewModel(), LifecycleEventObserver {
+) : ViewModel() {
   companion object {
     private val VIBRATION_EFFECT = VibrationEffect.createOneShot(200, 255)
   }
@@ -48,26 +42,16 @@ class MainViewModel @Inject constructor(
   private val _effectFlow = MutableSharedFlow<MainEffect>(extraBufferCapacity = 1)
   val effectFlow: SharedFlow<MainEffect> = _effectFlow
 
-  private val shakeDetector = ShakeDetector { flipCoin() }
-
   fun postAction(action: MainAction) {
     Timber.d("postAction(): $action")
     when (action) {
-      MainAction.Pause -> onPause()
-      MainAction.Resume -> onResume()
+      MainAction.OnPause -> onPause()
+      MainAction.OnResume -> onResume()
       MainAction.TapAbout -> _effectFlow.tryEmit(MainEffect.ToAbout)
       MainAction.TapCoin -> flipCoin()
+      MainAction.Shake -> flipCoin()
       MainAction.TapDiagnostics -> _effectFlow.tryEmit(MainEffect.ToDiagnostics)
       MainAction.TapSettings -> _effectFlow.tryEmit(MainEffect.ToSettings)
-    }
-  }
-
-  override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-    Timber.d("Lifecycle onStateChanged(): $event")
-    when (event) {
-      Lifecycle.Event.ON_RESUME -> onResume()
-      Lifecycle.Event.ON_PAUSE -> onPause()
-      else -> { }
     }
   }
 
@@ -80,74 +64,84 @@ class MainViewModel @Inject constructor(
       state.copy(
         animation = null,
         instructionsText = instructions,
+        paused = false,
         placeholderVisible = true,
         resultVisible = false,
+        shakeEnabled = settings.shakeEnabled,
+        shakeSensitivity = settings.shakeSensitivity,
         stats = settings.loadStats(),
         statsVisible = settings.showStats
       )
     _stateFlow.tryEmit(state)
 
     _effectFlow.tryEmit(updateStatsEffect(state.stats))
-
-    startShakeListener()
   }
 
   private fun onPause() {
-    stopShakeListener()
+    state = state.copy(paused = true, shakeEnabled = false)
+    _stateFlow.tryEmit(state)
+
     settings.persistStats(state.stats)
-    state.animation?.removeCallbacks()
     savedState.save(state)
   }
 
   private fun flipCoin() {
-    // pause the shake listener while the animation is in progress -- it will be re-enabled by the callback
-    stopShakeListener()
+    viewModelScope.launch {
+      // the heart and soul of this entire endeavor
+      val result = coin.flip()
 
-    val result = coin.flip()
+      val stats = state.stats.toMutableMap()
+      val currentCount = stats.getOrDefault(result.value, 0)
+      stats[result.value] = currentCount + 1
 
-    val stats = state.stats.toMutableMap()
-    val currentCount = stats.getOrDefault(result.value, 0)
-    stats[result.value] = currentCount + 1
+      val animation = animationHelper.animations[result.permutation]
 
-    var total = 0L
-    stats.forEach { (k, v) -> total += v }
+      state =
+        state.copy(
+          animation = animation,
+          placeholderVisible = false,
+          result = result,
+          resultVisible = false,
+          shakeEnabled = false,
+          stats = stats
+        )
+      _stateFlow.emit(state)
+      _effectFlow.emit(MainEffect.FlipCoin)
 
-    val animation = animationHelper.animations[result.permutation]
-    animation?.onFinished = onFlipFinished(total)
+      // an obtuse way of pausing while the animation renders, proceeding 80 ms (4 frames, or 1/2 flip) before completion
+      animation?.duration(withoutLastFrames = 4)?.let {
+        Timber.d("animation delay: $it ms")
+        delay(it)
+      }
 
-    state =
-      state.copy(
-        animation = animation,
-        placeholderVisible = false,
-        result = result,
-        resultVisible = false,
-        stats = stats
-      )
-    _stateFlow.tryEmit(state)
-    _effectFlow.tryEmit(MainEffect.FlipCoin)
+      onFlipFinished()
+    }
   }
 
-  private fun onFlipFinished(total: Long): AnimationCallback {
-    return {
-      state = state.copy(resultVisible = true)
-      _stateFlow.tryEmit(state)
-      _effectFlow.tryEmit(updateStatsEffect(state.stats))
+  private suspend fun onFlipFinished() {
+    state =
+      state.copy(
+        resultVisible = true,
+        shakeEnabled = settings.shakeEnabled && !state.paused
+      )
+    _stateFlow.emit(state)
+    _effectFlow.emit(updateStatsEffect(state.stats))
 
-      if (settings.soundEnabled) {
-        if (total % 100 == 0L) {
-          soundHelper.playSound(SoundHelper.Sound.ONEUP) // Happy Easter, Ryan!
-          _effectFlow.tryEmit(MainEffect.ShowRateDialog) // might as well ask for free internet points while we're at it
-        } else {
-          soundHelper.playSound(SoundHelper.Sound.COIN)
-        }
-      }
+    // keeping it &#128175;...
+    val isOneHundred = state.stats.values.sum() % 100 == 0L
 
-      if (settings.vibrateEnabled) {
-        vibrator.vibrate(VIBRATION_EFFECT)
-      }
+    // ask for free internet points every 100 flips
+    if (isOneHundred) {
+      _effectFlow.emit(MainEffect.ShowRateDialog)
+    }
 
-      // re-enable the shake listener
-      startShakeListener()
+    if (settings.soundEnabled) {
+      val sound = if (isOneHundred) SoundHelper.Sound.ONEUP else SoundHelper.Sound.COIN // Happy Easter, Ryan!
+      soundHelper.playSound(sound)
+    }
+
+    if (settings.vibrateEnabled) {
+      vibrator.vibrate(VIBRATION_EFFECT)
     }
   }
 
@@ -163,18 +157,5 @@ class MainViewModel @Inject constructor(
       headsCount = (stats[Coin.Value.HEADS] ?: 0).toString(),
       tailsCount = (stats[Coin.Value.TAILS] ?: 0).toString()
     )
-  }
-
-  private fun startShakeListener() {
-    if (settings.shakeEnabled) {
-      Timber.d("shakeDetector.start()")
-      shakeDetector.start(sensorManager, SensorManager.SENSOR_DELAY_GAME)
-      shakeDetector.setSensitivity(settings.shakeSensitivity)
-    }
-  }
-
-  private fun stopShakeListener() {
-    Timber.d("shakeDetector.stop()")
-    shakeDetector.stop()
   }
 }
