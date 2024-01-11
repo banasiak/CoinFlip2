@@ -95,8 +95,8 @@ class DiagnosticsViewModel @Inject constructor(
     for (i in state.total..state.iterations) {
       state =
         when (val value = coin.flip().value) {
-          Coin.Value.HEADS -> state.copy(heads = state.heads + 1, total = i)
-          Coin.Value.TAILS -> state.copy(tails = state.tails + 1, total = i)
+          Coin.Value.HEADS -> state.copy(heads = state.heads + 1, total = i + 1)
+          Coin.Value.TAILS -> state.copy(tails = state.tails + 1, total = i + 1)
           else -> {
             throw IllegalStateException("Coin.flip() returned invalid value: $value")
           }

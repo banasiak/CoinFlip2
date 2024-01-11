@@ -14,8 +14,8 @@ android {
     applicationId = "com.banasiak.coinflip"
     minSdk = 26
     targetSdk = 34
-    versionCode = 52
-    versionName = "2024.1.3"
+    versionCode = 53
+    versionName = "2024.1.4"
   }
 
   buildFeatures {
