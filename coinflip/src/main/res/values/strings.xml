@@ -12,7 +12,7 @@
   <string name="app_name">Coin Flip</string>
   <string name="coin_animation">Coin Animation</string>
   <string name="donate">Donate to EFF.org</string>
-  <string name="empty" />
+  <string name="empty" translatable="false" />
   <string name="force_low">Low</string>
   <string name="force_medium">Medium</string>
   <string name="force_high">High</string>
@@ -57,6 +57,6 @@
   <string name="total">TOTAL</string>
   <string name="turbo_mode">Turbo Mode Activated &#127812;</string>
   <string name="undo">Undo</string>
-  <string name="version">version %1s (%2d)</string>
+  <string name="version">version %1$s (%2$d)</string>
   <string name="wikipedia">\u2014 Wikipedia (January 2024)</string>
 </resources>
