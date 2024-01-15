@@ -20,7 +20,8 @@ data class DiagnosticsState(
   val formattedTime: String = "",
   val iterations: Long = 0,
   val finished: Boolean = false,
-  val turboMode: Boolean = false
+  val turboMode: Boolean = false,
+  val turboModeShown: Boolean = false
 ) : Parcelable
 
 sealed class DiagnosticsAction {

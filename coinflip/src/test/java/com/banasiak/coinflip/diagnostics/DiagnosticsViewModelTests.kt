@@ -11,6 +11,7 @@ import com.banasiak.coinflip.util.SoundHelper
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
@@ -147,10 +148,13 @@ class DiagnosticsViewModelTests {
       val vm = viewModel()
       val effects = vm.effectFlow
 
-      vm.postAction(DiagnosticsAction.Wikipedia)
+      // but, why?
+      backgroundScope.launch {
+        vm.postAction(DiagnosticsAction.Wikipedia)
+      }
 
       effects.test {
-        awaitItem() shouldBeEqualTo DiagnosticsEffect.LaunchUrl("https://en.m.wikipedia.org/wiki/Random_number_generation")
+        awaitItem() shouldBeEqualTo DiagnosticsEffect.LaunchUrl("https://w.wiki/3kSY")
         cancel()
       }
     }
@@ -196,6 +200,30 @@ class DiagnosticsViewModelTests {
       effects.test {
         awaitItem() shouldBeEqualTo DiagnosticsEffect.ShowToast(R.string.turbo_mode)
         cancel()
+      }
+
+      verify(exactly = 0) { soundHelper.playSound(SoundHelper.Sound.POWERUP) }
+    }
+
+  @Test
+  fun turbo_mode_notice_already_shown() =
+    runTest {
+      every {
+        savedStateHandle.get<DiagnosticsState>("state")
+      } returns DiagnosticsState(iterations = 1L, turboMode = true, turboModeShown = true)
+      every { settingsManager.soundEnabled } returns true
+
+      val vm = viewModel()
+      val states = vm.stateFlow
+      val effects = vm.effectFlow
+
+      states.test {
+        awaitItem().turboMode.shouldBeTrue()
+        cancel()
+      }
+
+      effects.test {
+        expectNoEvents()
       }
 
       verify(exactly = 0) { soundHelper.playSound(SoundHelper.Sound.POWERUP) }

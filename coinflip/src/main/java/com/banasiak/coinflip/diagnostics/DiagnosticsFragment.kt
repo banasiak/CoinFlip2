@@ -16,6 +16,7 @@ import com.banasiak.coinflip.util.launchUrl
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -55,6 +56,7 @@ class DiagnosticsFragment : BottomSheetDialogFragment() {
   }
 
   private fun onEffect(effect: DiagnosticsEffect) {
+    Timber.d("onEffect(): $effect")
     when (effect) {
       is DiagnosticsEffect.LaunchUrl -> launchUrl(effect.url, colorHelper.getThemedColors())
       is DiagnosticsEffect.ShowToast -> Toast.makeText(requireContext(), effect.text, Toast.LENGTH_LONG).show()

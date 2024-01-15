@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.dropWhile
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
 import timber.log.Timber
@@ -37,7 +38,7 @@ class DiagnosticsViewModel @Inject constructor(
   companion object {
     private const val SMOOTH_DELAY = 5L
     private const val TURBO_MODE_THRESHOLD = 1_000_000L
-    private const val WIKIPEDIA_URL = "https://en.m.wikipedia.org/wiki/Random_number_generation"
+    private const val WIKIPEDIA_URL = "https://w.wiki/3kSY"
   }
 
   private var state =
@@ -49,11 +50,12 @@ class DiagnosticsViewModel @Inject constructor(
   private val _stateFlow = MutableStateFlow<DiagnosticsState>(state)
   val stateFlow: StateFlow<DiagnosticsState> = _stateFlow
 
-  private val _effectFlow = MutableSharedFlow<DiagnosticsEffect>(extraBufferCapacity = 1, replay = 1)
+  private val _effectFlow = MutableSharedFlow<DiagnosticsEffect>(extraBufferCapacity = 1)
   val effectFlow: SharedFlow<DiagnosticsEffect> = _effectFlow
 
   init {
     viewModelScope.launch { runDiagnostics() }
+    viewModelScope.launch { showTurboModeNotice() }
   }
 
   fun postAction(action: DiagnosticsAction) {
@@ -79,15 +81,6 @@ class DiagnosticsViewModel @Inject constructor(
     if (state.finished) {
       _stateFlow.emit(state)
       return
-    }
-
-    // let's goooooooooooooooooooooooo!
-    if (state.turboMode) {
-      Timber.d("turbo mode activated!")
-      if (settings.soundEnabled) {
-        soundHelper.playSound(SoundHelper.Sound.POWERUP)
-      }
-      _effectFlow.emit(DiagnosticsEffect.ShowToast(R.string.turbo_mode))
     }
 
     // don't update the start time if state has been restored, then you can see how long the loop was "paused" for in wall-clock time
@@ -129,6 +122,22 @@ class DiagnosticsViewModel @Inject constructor(
       }
     }
     state = state.copy(finished = true)
+  }
+
+  private suspend fun showTurboModeNotice() {
+    // Can't do this immediately as originally planned, because the effect flow collector isn't ready yet. Setting 'replay=1' seems like
+    // a good idea, but that allows for the LaunchUrl effect to be replayed causing a wikipedia article to turn into Hotel California.
+    // As a workaround, just wait until the effect flow has a subscriber, then play the sound and emit the toast effect...
+    _effectFlow.subscriptionCount.dropWhile { it == 0 }.collect {
+      if (state.turboMode && !state.turboModeShown) {
+        Timber.i("turbo mode activated!")
+        if (settings.soundEnabled) {
+          soundHelper.playSound(SoundHelper.Sound.POWERUP)
+        }
+        _effectFlow.emit(DiagnosticsEffect.ShowToast(R.string.turbo_mode))
+        state = state.copy(turboModeShown = true) // otherwise this starts to get annoying...
+      }
+    }
   }
 
   private fun formatRatio(numerator: Long, denominator: Long): String {

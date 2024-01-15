@@ -15,7 +15,7 @@ android {
     applicationId = "com.banasiak.coinflip"
     minSdk = 26
     targetSdk = 34
-    versionCode = 55
+    versionCode = 56
     versionName = "2024"
   }
 
