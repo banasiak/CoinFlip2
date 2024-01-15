@@ -10,7 +10,13 @@ import androidx.navigation.fragment.findNavController
 import timber.log.Timber
 
 fun Fragment.navigate(@IdRes to: Int) {
-  this.findNavController().navigate(to)
+  try {
+    this.findNavController().navigate(to)
+  } catch (e: IllegalArgumentException) {
+    // you may think this isn't your fault, Google, but it certainly isn't mine...
+    // https://issuetracker.google.com/issues/118975714
+    Timber.w(e, "Caught navigation exception")
+  }
 }
 
 fun Fragment.launchUrl(url: String) {
