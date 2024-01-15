@@ -1,9 +1,10 @@
 package com.banasiak.coinflip.util
 
-import android.content.Intent
 import android.net.Uri
 import android.os.Parcelable
 import androidx.annotation.IdRes
+import androidx.browser.customtabs.CustomTabColorSchemeParams
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.fragment.findNavController
@@ -19,10 +20,26 @@ fun Fragment.navigate(@IdRes to: Int) {
   }
 }
 
-fun Fragment.launchUrl(url: String) {
-  val uri = Uri.parse(url)
-  val intent = Intent(Intent.ACTION_VIEW, uri)
-  startActivity(intent)
+fun Fragment.launchUrl(url: String, colors: ColorHelper.ThemedColors) {
+  val intent =
+    CustomTabsIntent.Builder()
+      .setDefaultColorSchemeParams(
+        CustomTabColorSchemeParams.Builder()
+          .setNavigationBarColor(colors.primary)
+          .setToolbarColor(colors.primary)
+          .build()
+      )
+      .setColorSchemeParams(
+        CustomTabsIntent.COLOR_SCHEME_DARK,
+        CustomTabColorSchemeParams.Builder()
+          .setNavigationBarColor(colors.primaryDark)
+          .setToolbarColor(colors.primaryDark)
+          .build()
+      )
+      .setUrlBarHidingEnabled(true)
+      .build()
+
+  intent.launchUrl(requireContext(), Uri.parse(url))
 }
 
 fun String.formatNumber(): String {

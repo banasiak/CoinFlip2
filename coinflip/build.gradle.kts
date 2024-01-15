@@ -15,8 +15,8 @@ android {
     applicationId = "com.banasiak.coinflip"
     minSdk = 26
     targetSdk = 34
-    versionCode = 54
-    versionName = "2024.1.5"
+    versionCode = 55
+    versionName = "2024"
   }
 
   buildFeatures {
@@ -44,18 +44,19 @@ val ktlint: Configuration by configurations.creating
 
 dependencies {
   implementation(libs.androidx.appcompat)
+  implementation(libs.androidx.browser)
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.lifecycle.viewmodel.ktx)
   implementation(libs.androidx.lifecycle.viewmodel.savedstate)
   implementation(libs.androidx.navigation.fragment.ktx)
   implementation(libs.androidx.navigation.ui.ktx)
   implementation(libs.androidx.preference.ktx)
-  implementation(libs.review.ktx)
-  implementation(libs.material)
   implementation(libs.hilt.android)
-  implementation(libs.timber)
-  implementation(libs.seismic)
   implementation(libs.kotlinx.coroutines.android)
+  implementation(libs.material)
+  implementation(libs.review.ktx)
+  implementation(libs.seismic)
+  implementation(libs.timber)
   ksp(libs.dagger.compiler)
   ksp(libs.hilt.android.compiler)
   testImplementation(libs.junit.api)

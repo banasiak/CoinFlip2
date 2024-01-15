@@ -10,13 +10,17 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.databinding.FragmentAboutBinding
+import com.banasiak.coinflip.util.ColorHelper
 import com.banasiak.coinflip.util.launchUrl
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AboutFragment : BottomSheetDialogFragment() {
+  @Inject lateinit var colorHelper: ColorHelper
+
   private lateinit var binding: FragmentAboutBinding
   private val viewModel: AboutViewModel by viewModels()
 
@@ -50,7 +54,7 @@ class AboutFragment : BottomSheetDialogFragment() {
 
   private fun onEffect(effect: AboutEffect) {
     when (effect) {
-      is AboutEffect.LaunchUrl -> launchUrl(effect.url)
+      is AboutEffect.LaunchUrl -> launchUrl(effect.url, colorHelper.getThemedColors())
     }
   }
 }

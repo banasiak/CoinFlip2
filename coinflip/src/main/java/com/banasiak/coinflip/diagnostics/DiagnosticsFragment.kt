@@ -11,13 +11,17 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.databinding.FragmentDiagnosticsBinding
+import com.banasiak.coinflip.util.ColorHelper
 import com.banasiak.coinflip.util.launchUrl
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class DiagnosticsFragment : BottomSheetDialogFragment() {
+  @Inject lateinit var colorHelper: ColorHelper
+
   private lateinit var binding: FragmentDiagnosticsBinding
   private val viewModel: DiagnosticsViewModel by viewModels()
 
@@ -52,7 +56,7 @@ class DiagnosticsFragment : BottomSheetDialogFragment() {
 
   private fun onEffect(effect: DiagnosticsEffect) {
     when (effect) {
-      is DiagnosticsEffect.LaunchUrl -> launchUrl(effect.url)
+      is DiagnosticsEffect.LaunchUrl -> launchUrl(effect.url, colorHelper.getThemedColors())
       is DiagnosticsEffect.ShowToast -> Toast.makeText(requireContext(), effect.text, Toast.LENGTH_LONG).show()
     }
   }

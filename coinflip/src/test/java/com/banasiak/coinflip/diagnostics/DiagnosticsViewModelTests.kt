@@ -150,7 +150,7 @@ class DiagnosticsViewModelTests {
       vm.postAction(DiagnosticsAction.Wikipedia)
 
       effects.test {
-        awaitItem() shouldBeEqualTo DiagnosticsEffect.LaunchUrl("https://en.wikipedia.org/wiki/Random_number_generation")
+        awaitItem() shouldBeEqualTo DiagnosticsEffect.LaunchUrl("https://en.m.wikipedia.org/wiki/Random_number_generation")
         cancel()
       }
     }

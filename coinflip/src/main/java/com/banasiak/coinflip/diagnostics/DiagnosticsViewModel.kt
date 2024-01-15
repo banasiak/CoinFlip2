@@ -37,7 +37,7 @@ class DiagnosticsViewModel @Inject constructor(
   companion object {
     private const val SMOOTH_DELAY = 5L
     private const val TURBO_MODE_THRESHOLD = 1_000_000L
-    private const val WIKIPEDIA_URL = "https://en.wikipedia.org/wiki/Random_number_generation"
+    private const val WIKIPEDIA_URL = "https://en.m.wikipedia.org/wiki/Random_number_generation"
   }
 
   private var state =
