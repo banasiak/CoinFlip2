@@ -2,45 +2,36 @@
 <resources>
   <string name="about_fragment_title">About Coin Flip</string>
   <string name="about_menu_title">About</string>
-  <string name="about_text">
-    A convenient way to flip a coin, even if you don\'t have one. Simply tap the question mark or shake and view the result. Tap or shake
-    to spin the coin again.
-    \n\nQuarter-dollar coin images from the United States Mint. Presidential $1 Coin images from the United States Mint.
-    \n\nCopyright \u00A9 2024 - Richard Banasiak
-    \n\nIf you like this app, please consider making a donation to the Electronic Frontier Foundation. &#10084;
-    </string>
   <string name="app_name">Coin Flip</string>
   <string name="coin_animation">Coin Animation</string>
-  <string name="donate">Donate to EFF.org</string>
-  <string name="empty" translatable="false" />
-  <string name="force_low">Low</string>
-  <string name="force_medium">Medium</string>
-  <string name="force_high">High</string>
-  <string name="instructions_tap_shake">Tap/Shake to Flip Coin</string>
-  <string name="instructions_tap">Tap to Flip Coin</string>
-  <string name="heads">HEADS</string>
-  <string name="seconds">%1s seconds</string>
-  <string name="rate_app">Rate App on Google Play</string>
-  <string name="rng">
-    Random (or, pseudo-random) number generation is a process by which a sequence of numbers that cannot be reasonably
-    predicted better than by random chance is generated. This means that the particular outcome sequence will contain some patterns
-    detectable in hindsight but impossible to foresee.
-  </string>
   <string name="diagnostics_fragment_title">Diagnostic Test</string>
   <string name="diagnostics_menu_title">Diagnostics</string>
+  <string name="donate">Donate to EFF.org</string>
+  <string name="empty" translatable="false" />
+  <string name="force_high">High</string>
+  <string name="force_low">Low</string>
+  <string name="force_medium">Medium</string>
+  <string name="heads">HEADS</string>
+  <string name="instructions_tap">Tap to Flip Coin</string>
+  <string name="instructions_tap_shake">Tap/Shake to Flip Coin</string>
   <string name="invalid_iterations">Invalid Number of Iterations</string>
+  <string name="rate_app">Rate App on Google Play</string>
+  <string name="reset_stats">Reset Stats</string>
+  <string name="seconds">%1s seconds</string>
   <string name="settings_activity_title">Coin Flip Settings</string>
-  <string name="settings_header_basic_title">Basic Settings</string>
   <string name="settings_header_advanced_title">Advanced Settings</string>
+  <string name="settings_header_basic_title">Basic Settings</string>
   <string name="settings_item_coin_title">Coin Type</string>
+  <string name="settings_item_diagnostics_dialog">Number of Iterations</string>
+  <string name="settings_item_diagnostics_summary">iterations</string>
+  <string name="settings_item_diagnostics_title">Diagnostic Test</string>
   <string name="settings_item_dynamic_colors_summary">Use wallpaper colors (Android 12+)</string>
   <string name="settings_item_dynamic_colors_title">Dynamic Color Theme</string>
   <string name="settings_item_force_summary">Force required to flip coin</string>
   <string name="settings_item_force_title">Shake Sensitivity</string>
+  <string name="settings_item_quick_reset_summary">Show reset button below statistics</string>
+  <string name="settings_item_quick_reset_title">Quick Stats Reset</string>
   <string name="settings_item_reset_stats_title">Reset Statistics</string>
-  <string name="settings_item_diagnostics_title">Diagnostic Test</string>
-  <string name="settings_item_diagnostics_summary">iterations</string>
-  <string name="settings_item_diagnostics_dialog">Number of Iterations</string>
   <string name="settings_item_shake_summary">Shake device to flip coin</string>
   <string name="settings_item_shake_title">Shake</string>
   <string name="settings_item_sound_summary">Play sound after coin flip</string>
@@ -51,7 +42,7 @@
   <string name="settings_item_vibrate_title">Vibrate</string>
   <string name="settings_menu_title">Settings</string>
   <string name="settings_not_set">Not set</string>
-  <string name="stats_reset">Statistics Have Been Reset</string>
+  <string name="stats_reset_message">Statistics Have Been Reset</string>
   <string name="tails">TAILS</string>
   <string name="time">TIME</string>
   <string name="total">TOTAL</string>
@@ -59,4 +50,16 @@
   <string name="undo">Undo</string>
   <string name="version">version %1$s (%2$d)</string>
   <string name="wikipedia">\u2014 Wikipedia (January 2024)</string>
+  <string name="about_text">
+    A convenient way to flip a coin, even if you don\'t have one. Simply tap the question mark or shake and view the result. Tap or shake
+    to spin the coin again.
+    \n\nQuarter-dollar coin images from the United States Mint. Presidential $1 Coin images from the United States Mint.
+    \n\nCopyright \u00A9 2024 - Richard Banasiak
+    \n\nIf you like this app, please consider making a donation to the Electronic Frontier Foundation. &#10084;
+    </string>
+  <string name="rng">
+    Random (or, pseudo-random) number generation is a process by which a sequence of numbers that cannot be reasonably
+    predicted better than by random chance is generated. This means that the particular outcome sequence will contain some patterns
+    detectable in hindsight but impossible to foresee.
+  </string>
 </resources>

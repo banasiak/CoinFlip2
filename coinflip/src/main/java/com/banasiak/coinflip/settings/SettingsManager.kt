@@ -13,6 +13,7 @@ class SettingsManager @Inject constructor(private val prefs: SharedPreferences) 
   val coinPrefix get() = prefs.getString(Settings.COIN.key, Settings.COIN.default as String)!!
   val shakeEnabled get() = prefs.getBoolean(Settings.SHAKE.key, Settings.SHAKE.default as Boolean)
   val soundEnabled get() = prefs.getBoolean(Settings.SOUND.key, Settings.SOUND.default as Boolean)
+  val showQuickReset get() = prefs.getBoolean(Settings.QUICK_RESET.key, Settings.QUICK_RESET.default as Boolean)
   val showStats get() = prefs.getBoolean(Settings.STATS.key, Settings.STATS.default as Boolean)
   val vibrateEnabled get() = prefs.getBoolean(Settings.VIBRATE.key, Settings.VIBRATE.default as Boolean)
   val diagnosticsIterations get() = prefs.getString(Settings.DIAGNOSTICS.key, Settings.DIAGNOSTICS.default as String)!!.toLong()
@@ -71,6 +72,7 @@ class SettingsManager @Inject constructor(private val prefs: SharedPreferences) 
     VIBRATE("vibrate", true),
     DIAGNOSTICS("diagnostics", "100000"), // unfortunately the preference stores this as a string
     DYNAMIC("dynamic", false),
+    QUICK_RESET("quickReset", false),
     FORCE("force", "medium"),
     RESET("resetStats", Unit),
     HEADS("headsCount", 0L),

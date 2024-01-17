@@ -15,6 +15,7 @@ data class MainState(
   @StringRes val instructionsText: Int = R.string.instructions_tap_shake,
   val paused: Boolean = false,
   val placeholderVisible: Boolean = true,
+  val resetVisible: Boolean = false,
   val result: Coin.Result = Coin.Result(Coin.Value.UNKNOWN, AnimationHelper.Permutation.UNKNOWN),
   val resultVisible: Boolean = false,
   val shakeEnabled: Boolean = false,
@@ -27,6 +28,8 @@ sealed class MainAction {
   data object OnPause : MainAction()
 
   data object OnResume : MainAction()
+
+  data object ResetStats : MainAction()
 
   data object Shake : MainAction()
 

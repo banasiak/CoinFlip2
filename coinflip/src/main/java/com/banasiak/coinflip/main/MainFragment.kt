@@ -70,6 +70,8 @@ class MainFragment : Fragment() {
       }
     }
 
+    binding.resetButton.setOnClickListener { viewModel.postAction(MainAction.ResetStats) }
+
     // tap anywhere (besides the nav bar) to flip the coin
     binding.root.setOnClickListener { viewModel.postAction(MainAction.TapCoin) }
   }
@@ -89,6 +91,7 @@ class MainFragment : Fragment() {
     binding.coinImage.background = state.animation
     binding.coinPlaceholder.isVisible = state.placeholderVisible
     binding.instructionsText.text = getString(state.instructionsText)
+    binding.resetButton.isVisible = state.resetVisible
     binding.resultText.isInvisible = !state.resultVisible // invisible, not gone
     binding.resultText.text = getString(state.result.value.string)
     binding.statsContainer.isVisible = state.statsVisible

@@ -32,7 +32,7 @@ class SettingsFragment @Inject constructor() : PreferenceFragmentCompat() {
         val stats = settings.loadStats()
         settings.resetStats()
         Snackbar
-          .make(requireView(), R.string.stats_reset, Snackbar.LENGTH_LONG)
+          .make(requireView(), R.string.stats_reset_message, Snackbar.LENGTH_LONG)
           .setAction(R.string.undo) { settings.persistStats(stats) }
           .show()
         return@OnPreferenceClickListener true

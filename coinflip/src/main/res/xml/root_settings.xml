@@ -54,6 +54,13 @@
       app:persistent="true"
       app:summary="@string/settings_item_dynamic_colors_summary"
       app:title="@string/settings_item_dynamic_colors_title" />
+    <SwitchPreferenceCompat
+      app:defaultValue="false"
+      app:dependency="stats"
+      app:key="quickReset"
+      app:persistent="true"
+      app:summary="@string/settings_item_quick_reset_summary"
+      app:title="@string/settings_item_quick_reset_title" />
     <ListPreference
       app:defaultValue="medium"
       app:entries="@array/force"

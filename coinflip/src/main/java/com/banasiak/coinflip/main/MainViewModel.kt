@@ -47,6 +47,7 @@ class MainViewModel @Inject constructor(
     when (action) {
       MainAction.OnPause -> onPause()
       MainAction.OnResume -> onResume()
+      MainAction.ResetStats -> onResetStats()
       MainAction.TapAbout -> _effectFlow.tryEmit(MainEffect.ToAbout)
       MainAction.TapCoin -> flipCoin()
       MainAction.Shake -> flipCoin()
@@ -66,6 +67,7 @@ class MainViewModel @Inject constructor(
         instructionsText = instructions,
         paused = false,
         placeholderVisible = true,
+        resetVisible = settings.showStats && settings.showQuickReset,
         resultVisible = false,
         shakeEnabled = settings.shakeEnabled,
         shakeSensitivity = settings.shakeSensitivity,
@@ -150,6 +152,13 @@ class MainViewModel @Inject constructor(
       val prefix = settings.coinPrefix
       animationHelper.loadAnimationsForCoin(prefix)
     }
+  }
+
+  private fun onResetStats() {
+    settings.resetStats()
+    val stats = settings.loadStats()
+    state = state.copy(stats = stats)
+    _effectFlow.tryEmit(updateStatsEffect(stats))
   }
 
   private fun updateStatsEffect(stats: Map<Coin.Value, Long>): MainEffect.UpdateStats {
