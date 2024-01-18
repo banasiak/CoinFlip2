@@ -39,6 +39,8 @@
   <string name="settings_item_sound_title">Suono</string>
   <string name="settings_item_stats_summary">Visualizza il totale parziale</string>
   <string name="settings_item_stats_title">Statistiche</string>
+  <string name="settings_item_text_summary">Visualizza TESTE/CODE</string>
+  <string name="settings_item_text_title">Testo</string>
   <string name="settings_item_vibrate_summary">Vibra al lancio della moneta</string>
   <string name="settings_item_vibrate_title">Vibrare</string>
   <string name="settings_menu_title">Impostazioni</string>

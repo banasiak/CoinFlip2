@@ -39,6 +39,8 @@
   <string name="settings_item_sound_title">소리</string>
   <string name="settings_item_stats_summary">누계 표시</string>
   <string name="settings_item_stats_title">통계</string>
+  <string name="settings_item_text_summary">머리/꼬리 표시</string>
+  <string name="settings_item_text_title">텍스트</string>
   <string name="settings_item_vibrate_summary">동전 뒤집기 시 진동</string>
   <string name="settings_item_vibrate_title">떨리다</string>
   <string name="settings_menu_title">설정</string>

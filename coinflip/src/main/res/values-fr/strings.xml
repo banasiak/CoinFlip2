@@ -39,6 +39,8 @@
   <string name="settings_item_sound_title">Son</string>
   <string name="settings_item_stats_summary">Afficher le total cumulé</string>
   <string name="settings_item_stats_title">Statistiques</string>
+  <string name="settings_item_text_summary">Afficher CHEFS/QUEUES</string>
+  <string name="settings_item_text_title">Texte</string>
   <string name="settings_item_vibrate_summary">Vibrer au tirage au sort</string>
   <string name="settings_item_vibrate_title">Vibrer</string>
   <string name="settings_menu_title">Paramètres</string>

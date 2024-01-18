@@ -38,6 +38,8 @@
   <string name="settings_item_sound_title">Sound</string>
   <string name="settings_item_stats_summary">Display running total</string>
   <string name="settings_item_stats_title">Statistics</string>
+  <string name="settings_item_text_summary">Display HEADS/TAILS</string>
+  <string name="settings_item_text_title">Text</string>
   <string name="settings_item_vibrate_summary">Vibrate on coin flip</string>
   <string name="settings_item_vibrate_title">Vibrate</string>
   <string name="settings_menu_title">Settings</string>

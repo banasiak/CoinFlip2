@@ -39,6 +39,8 @@
   <string name="settings_item_sound_title">เสียง</string>
   <string name="settings_item_stats_summary">แสดงผลรวมการทำงาน</string>
   <string name="settings_item_stats_title">สถิติ</string>
+  <string name="settings_item_text_summary">แสดงหัว/หาง</string>
+  <string name="settings_item_text_title">ข้อความ</string>
   <string name="settings_item_vibrate_summary">สั่นเมื่อพลิกเหรียญ</string>
   <string name="settings_item_vibrate_title">สั่น</string>
   <string name="settings_menu_title">การตั้งค่า</string>

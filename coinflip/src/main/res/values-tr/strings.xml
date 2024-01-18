@@ -39,6 +39,8 @@
   <string name="settings_item_sound_title">Ses</string>
   <string name="settings_item_stats_summary">Çalışan toplamı görüntüle</string>
   <string name="settings_item_stats_title">İstatistik</string>
+  <string name="settings_item_text_summary">BAŞLAR/KUYRUKLAR göster</string>
+  <string name="settings_item_text_title">Metin</string>
   <string name="settings_item_vibrate_summary">Yazı-tura atıldığında titreşim</string>
   <string name="settings_item_vibrate_title">Titreşim</string>
   <string name="settings_menu_title">Ayarlar</string>

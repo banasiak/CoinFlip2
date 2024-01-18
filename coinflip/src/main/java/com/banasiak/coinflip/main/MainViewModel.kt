@@ -123,7 +123,7 @@ class MainViewModel @Inject constructor(
   private suspend fun onFlipFinished() {
     state =
       state.copy(
-        resultVisible = true,
+        resultVisible = settings.textEnabled,
         shakeEnabled = settings.shakeEnabled && !state.paused
       )
     _stateFlow.emit(state)

@@ -39,6 +39,8 @@
   <string name="settings_item_sound_title">Klang</string>
   <string name="settings_item_stats_summary">Laufende Summe anzeigen</string>
   <string name="settings_item_stats_title">Statistiken</string>
+  <string name="settings_item_text_summary">KÖPFE/SCHWÄNZE anzeigen</string>
+  <string name="settings_item_text_title">Text</string>
   <string name="settings_item_vibrate_summary">Vibrieren Sie beim Münzwurf</string>
   <string name="settings_item_vibrate_title">Vibrieren</string>
   <string name="settings_menu_title">Einstellungen</string>

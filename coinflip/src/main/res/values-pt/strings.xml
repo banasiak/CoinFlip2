@@ -5,7 +5,7 @@
   <string name="about_text">Uma maneira conveniente de jogar uma moeda, mesmo se você não tiver uma. Basta tocar no ponto de interrogação ou agitar e ver o resultado. Toque ou agite para girar a moeda novamente. \n\nImagens de moedas de um quarto de dólar da Casa da Moeda dos Estados Unidos. Imagens da moeda presidencial de $1 da Casa da Moeda dos Estados Unidos. \n\nCopyright © 2024 - Richard Banasiak\n\nSe você gosta deste aplicativo, considere fazer uma doação para a Electronic Frontier Foundation. ❤</string>
   <string name="app_name">Moeda</string>
   <string name="coin_animation">Animação de Moeda</string>
-  <string name="diagnostics_fragment_title">Teste de diagnostico</string>
+  <string name="diagnostics_fragment_title">Teste de diagnóstico</string>
   <string name="diagnostics_menu_title">Diagnóstico</string>
   <string name="donate">Doe para EFF.org</string>
   <string name="force_high">Alto</string>
@@ -25,7 +25,7 @@
   <string name="settings_item_coin_title">Tipo de moeda</string>
   <string name="settings_item_diagnostics_dialog">Número de Iterações</string>
   <string name="settings_item_diagnostics_summary">iterações</string>
-  <string name="settings_item_diagnostics_title">Teste de diagnostico</string>
+  <string name="settings_item_diagnostics_title">Teste de diagnóstico</string>
   <string name="settings_item_dynamic_colors_summary">Use cores de papel de parede (Android 12+)</string>
   <string name="settings_item_dynamic_colors_title">Tema de cores dinâmicas</string>
   <string name="settings_item_force_summary">Força necessária para lançar uma moeda</string>
@@ -39,6 +39,8 @@
   <string name="settings_item_sound_title">Som</string>
   <string name="settings_item_stats_summary">Exibir total em execução</string>
   <string name="settings_item_stats_title">Estatisticas</string>
+  <string name="settings_item_text_summary">Exibir CABEÇAS/CAUDAS</string>
+  <string name="settings_item_text_title">Texto</string>
   <string name="settings_item_vibrate_summary">Vibrar no lançamento da moeda</string>
   <string name="settings_item_vibrate_title">Vibrar</string>
   <string name="settings_menu_title">Configurações</string>

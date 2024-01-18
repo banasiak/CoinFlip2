@@ -39,6 +39,8 @@
   <string name="settings_item_sound_title">声音</string>
   <string name="settings_item_stats_summary">显示运行总计</string>
   <string name="settings_item_stats_title">统计数据</string>
+  <string name="settings_item_text_summary">显示正面/反面</string>
+  <string name="settings_item_text_title">文本</string>
   <string name="settings_item_vibrate_summary">翻转硬币时振动</string>
   <string name="settings_item_vibrate_title">颤动</string>
   <string name="settings_menu_title">设置</string>

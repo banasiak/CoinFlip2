@@ -39,6 +39,8 @@
   <string name="settings_item_sound_title">Sonido</string>
   <string name="settings_item_stats_summary">Mostrar el total acumulado</string>
   <string name="settings_item_stats_title">Estadísticas</string>
+  <string name="settings_item_text_summary">Mostrar CABEZAS/CRUZ</string>
+  <string name="settings_item_text_title">Texto</string>
   <string name="settings_item_vibrate_summary">Vibrar al lanzar una moneda</string>
   <string name="settings_item_vibrate_title">Vibrar</string>
   <string name="settings_menu_title">Ajustes</string>

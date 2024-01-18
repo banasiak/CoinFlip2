@@ -39,6 +39,8 @@
   <string name="settings_item_sound_title">音</string>
   <string name="settings_item_stats_summary">現在の合計を表示する</string>
   <string name="settings_item_stats_title">統計</string>
+  <string name="settings_item_text_summary">表裏を表示</string>
+  <string name="settings_item_text_title">文章</string>
   <string name="settings_item_vibrate_summary">コイントス時に振動する</string>
   <string name="settings_item_vibrate_title">振動する</string>
   <string name="settings_menu_title">設定</string>

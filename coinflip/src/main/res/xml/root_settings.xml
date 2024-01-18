@@ -33,6 +33,12 @@
       app:title="@string/settings_item_stats_title" />
     <SwitchPreferenceCompat
       app:defaultValue="true"
+      app:key="text"
+      app:persistent="true"
+      app:summary="@string/settings_item_text_summary"
+      app:title="@string/settings_item_text_title" />
+    <SwitchPreferenceCompat
+      app:defaultValue="true"
       app:key="vibrate"
       app:persistent="true"
       app:summary="@string/settings_item_vibrate_summary"
