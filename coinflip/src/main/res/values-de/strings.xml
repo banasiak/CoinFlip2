@@ -22,6 +22,8 @@
   <string name="settings_activity_title">Münzwurfeinstellungen</string>
   <string name="settings_header_advanced_title">Erweiterte Einstellungen</string>
   <string name="settings_header_basic_title">Grundeinstellungen</string>
+  <string name="settings_item_animation_summary">Rendern Sie eine sich drehende Münze</string>
+  <string name="settings_item_animation_title">Animation</string>
   <string name="settings_item_coin_title">Münztyp</string>
   <string name="settings_item_diagnostics_dialog">Anzahl der Iterationen</string>
   <string name="settings_item_diagnostics_summary">Iterationen</string>

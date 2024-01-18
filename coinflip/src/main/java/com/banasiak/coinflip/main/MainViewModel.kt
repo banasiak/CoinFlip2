@@ -108,12 +108,16 @@ class MainViewModel @Inject constructor(
           stats = stats
         )
       _stateFlow.emit(state)
-      _effectFlow.emit(MainEffect.FlipCoin)
 
-      // an obtuse way of pausing while the animation renders, proceeding 80 ms (4 frames, or 1/2 flip) before completion
-      animation?.duration(withoutLastFrames = 4)?.let {
-        Timber.d("animation delay: $it ms")
-        delay(it)
+      val animationEnabled = settings.animationEnabled
+      _effectFlow.emit(MainEffect.FlipCoin(animate = animationEnabled))
+
+      if (animationEnabled) {
+        // an obtuse way of pausing while the animation renders, proceeding 80 ms (4 frames, or 1/2 flip) before completion
+        animation?.duration(withoutLastFrames = 4)?.let {
+          Timber.d("animation delay: $it ms")
+          delay(it)
+        }
       }
 
       onFlipFinished()

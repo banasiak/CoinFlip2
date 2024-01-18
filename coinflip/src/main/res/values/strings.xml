@@ -21,6 +21,8 @@
   <string name="settings_activity_title">Coin Flip Settings</string>
   <string name="settings_header_advanced_title">Advanced Settings</string>
   <string name="settings_header_basic_title">Basic Settings</string>
+  <string name="settings_item_animation_summary">Render spinning coin</string>
+  <string name="settings_item_animation_title">Animation</string>
   <string name="settings_item_coin_title">Coin Type</string>
   <string name="settings_item_diagnostics_dialog">Number of Iterations</string>
   <string name="settings_item_diagnostics_summary">iterations</string>

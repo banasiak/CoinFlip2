@@ -13,6 +13,13 @@
       app:title="@string/settings_item_coin_title" />
     <SwitchPreferenceCompat
       app:defaultValue="true"
+      app:key="animate"
+      app:persistent="true"
+      app:summary="@string/settings_item_animation_summary"
+      app:title="@string/settings_item_animation_title"
+      />
+    <SwitchPreferenceCompat
+      app:defaultValue="true"
       app:key="shake"
       app:persistent="true"
       app:summary="@string/settings_item_shake_summary"

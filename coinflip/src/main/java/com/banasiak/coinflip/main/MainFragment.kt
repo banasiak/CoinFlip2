@@ -1,6 +1,5 @@
 package com.banasiak.coinflip.main
 
-import android.graphics.drawable.AnimationDrawable
 import android.hardware.SensorManager
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.databinding.FragmentMainBinding
+import com.banasiak.coinflip.ui.DurationAnimationDrawable
 import com.banasiak.coinflip.util.navigate
 import com.google.android.play.core.ktx.launchReview
 import com.google.android.play.core.ktx.requestReview
@@ -103,7 +103,7 @@ class MainFragment : Fragment() {
   private fun onEffect(effect: MainEffect) {
     Timber.d("onEffect(): $effect")
     when (effect) {
-      MainEffect.FlipCoin -> renderAnimation()
+      is MainEffect.FlipCoin -> renderAnimation(effect.animate)
       MainEffect.ToAbout -> navigate(R.id.toAbout)
       MainEffect.ToDiagnostics -> navigate(R.id.toDiagnostics)
       MainEffect.ToSettings -> navigate(R.id.toSettings)
@@ -112,10 +112,15 @@ class MainFragment : Fragment() {
     }
   }
 
-  private fun renderAnimation() {
-    val animation = binding.coinImage.background as AnimationDrawable
-    animation.stop()
-    animation.start()
+  private fun renderAnimation(animate: Boolean) {
+    val animation = binding.coinImage.background as DurationAnimationDrawable
+    if (animate) {
+      animation.stop()
+      animation.start()
+    } else {
+      binding.coinImage.background = null
+      binding.coinImage.setImageDrawable(animation.getLastFrame())
+    }
   }
 
   private fun updateStats(headsCount: String, tailsCount: String) {

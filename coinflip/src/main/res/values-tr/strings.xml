@@ -22,6 +22,8 @@
   <string name="settings_activity_title">Yazı-tura ayarları</string>
   <string name="settings_header_advanced_title">Gelişmiş Ayarlar</string>
   <string name="settings_header_basic_title">Temel Ayarlar</string>
+  <string name="settings_item_animation_summary">Dönen parayı renderle</string>
+  <string name="settings_item_animation_title">Animasyon</string>
   <string name="settings_item_coin_title">Madeni Para Türü</string>
   <string name="settings_item_diagnostics_dialog">Tekrar Sayısı</string>
   <string name="settings_item_diagnostics_summary">yinelemeler</string>

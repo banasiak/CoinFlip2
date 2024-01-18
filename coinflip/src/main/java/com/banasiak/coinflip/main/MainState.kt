@@ -43,7 +43,7 @@ sealed class MainAction {
 }
 
 sealed class MainEffect {
-  data object FlipCoin : MainEffect()
+  data class FlipCoin(val animate: Boolean) : MainEffect()
 
   data object ToAbout : MainEffect()
 

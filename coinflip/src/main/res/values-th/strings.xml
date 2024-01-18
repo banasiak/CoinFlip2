@@ -22,6 +22,8 @@
   <string name="settings_activity_title">การตั้งค่าการพลิกเหรียญ</string>
   <string name="settings_header_advanced_title">ตั้งค่าขั้นสูง</string>
   <string name="settings_header_basic_title">การตั้งค่าพื้นฐาน</string>
+  <string name="settings_item_animation_summary">เรนเดอร์เหรียญหมุน</string>
+  <string name="settings_item_animation_title">แอนิเมชั่น</string>
   <string name="settings_item_coin_title">ประเภทเหรียญ</string>
   <string name="settings_item_diagnostics_dialog">จำนวนการวนซ้ำ</string>
   <string name="settings_item_diagnostics_summary">การวนซ้ำ</string>

@@ -11,6 +11,7 @@ import javax.inject.Singleton
 @Singleton
 class SettingsManager @Inject constructor(private val prefs: SharedPreferences) {
   val coinPrefix get() = prefs.getString(Settings.COIN.key, Settings.COIN.default as String)!!
+  val animationEnabled get() = prefs.getBoolean(Settings.ANIMATE.key, Settings.ANIMATE.default as Boolean)
   val shakeEnabled get() = prefs.getBoolean(Settings.SHAKE.key, Settings.SHAKE.default as Boolean)
   val soundEnabled get() = prefs.getBoolean(Settings.SOUND.key, Settings.SOUND.default as Boolean)
   val showQuickReset get() = prefs.getBoolean(Settings.QUICK_RESET.key, Settings.QUICK_RESET.default as Boolean)
@@ -67,6 +68,7 @@ class SettingsManager @Inject constructor(private val prefs: SharedPreferences) 
 
   enum class Settings(val key: String, val default: Any) {
     COIN("coin", "gw"), // George Washington dollar
+    ANIMATE("animate", true),
     SHAKE("shake", true),
     SOUND("sound", true),
     STATS("stats", true),

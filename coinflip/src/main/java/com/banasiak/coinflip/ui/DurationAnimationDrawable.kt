@@ -22,4 +22,8 @@ class DurationAnimationDrawable : AnimationDrawable() {
     Timber.d("duration of last $withoutLastFrames frames = $skippedDuration ms")
     return totalDuration - skippedDuration
   }
+
+  fun getLastFrame(): Drawable {
+    return getFrame(numberOfFrames - 1)
+  }
 }
