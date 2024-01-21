@@ -9,6 +9,7 @@ import androidx.preference.PreferenceFragmentCompat
 import com.banasiak.coinflip.R
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -42,6 +43,20 @@ class SettingsFragment @Inject constructor() : PreferenceFragmentCompat() {
     dynamicColor?.onPreferenceChangeListener =
       Preference.OnPreferenceChangeListener { _, _ ->
         onBackPressedCallback.isEnabled = true
+        return@OnPreferenceChangeListener true
+      }
+
+    // doing this here, because I can't reliably get the view for the snackbar from within NumberPreference
+    val diagnostics = findPreference<Preference>(SettingsManager.Settings.DIAGNOSTICS.key)
+    diagnostics?.onPreferenceChangeListener =
+      Preference.OnPreferenceChangeListener { _, value ->
+        // don't allow the user to set a value that can't be safely converted to a Long in the future
+        val number = (value as? String)?.toLongOrNull()
+        if (number == null || number == 0L) {
+          Timber.w("Not persisting invalid NumberPreference: $value")
+          Snackbar.make(requireView(), R.string.invalid_iterations, Snackbar.LENGTH_LONG).show()
+          return@OnPreferenceChangeListener false
+        }
         return@OnPreferenceChangeListener true
       }
   }
