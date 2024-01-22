@@ -18,11 +18,10 @@ android {
     versionCode = 59
     versionName = "2024"
   }
-
   buildFeatures {
     buildConfig = true
+    viewBinding = true
   }
-
   buildTypes {
     release {
       isMinifyEnabled = false
@@ -34,9 +33,6 @@ android {
   }
   kotlinOptions {
     jvmTarget = JavaVersion.VERSION_17.majorVersion
-  }
-  buildFeatures {
-    viewBinding = true
   }
 }
 

@@ -17,12 +17,14 @@ import com.banasiak.coinflip.util.AnimationHelper.Permutation.TAILS_TAILS
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.time.Clock
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class AnimationHelper @Inject constructor(
   private val buildInfo: BuildInfo,
+  private val clock: Clock,
   private val resources: Resources
 ) {
   companion object {
@@ -34,11 +36,11 @@ class AnimationHelper @Inject constructor(
   val animations: Map<Permutation, DurationAnimationDrawable> = _animations
 
   suspend fun loadAnimationsForCoin(prefix: String) {
-    val startTime = System.currentTimeMillis()
+    val startTime = clock.millis()
     withContext(Dispatchers.IO) {
       val ids = getIdentifiersForPrefix(prefix)
       generateAnimations(ids.first, ids.second)
-      Timber.i("Animations generated in: ${System.currentTimeMillis() - startTime} milliseconds")
+      Timber.i("Animations generated in: ${clock.millis() - startTime} milliseconds")
     }
   }
 
