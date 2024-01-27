@@ -20,6 +20,7 @@ android {
   }
   buildFeatures {
     buildConfig = true
+    compose = true
     viewBinding = true
   }
   buildTypes {
@@ -31,6 +32,9 @@ android {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
   }
+  composeOptions {
+    kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
+  }
   kotlinOptions {
     jvmTarget = JavaVersion.VERSION_17.majorVersion
   }
@@ -41,7 +45,12 @@ val ktlint: Configuration by configurations.creating
 dependencies {
   implementation(libs.androidx.appcompat)
   implementation(libs.androidx.browser)
+  implementation(platform(libs.androidx.compose.bom))
+  implementation(libs.androidx.compose.material3)
+  implementation(libs.androidx.compose.ui.tooling)
   implementation(libs.androidx.core.ktx)
+  implementation(libs.androidx.lifecycle.runtime.compose)
+  implementation(libs.androidx.lifecycle.viewmodel.compose)
   implementation(libs.androidx.lifecycle.viewmodel.ktx)
   implementation(libs.androidx.lifecycle.viewmodel.savedstate)
   implementation(libs.androidx.navigation.fragment.ktx)
