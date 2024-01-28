@@ -3,7 +3,7 @@
   <string name="about_fragment_title">Über Münzwurf</string>
   <string name="about_menu_title">Um</string>
   <string name="about_text">Eine bequeme Möglichkeit, eine Münze zu werfen, auch wenn Sie keine haben. Tippen Sie einfach auf das Fragezeichen oder schütteln Sie es und sehen Sie sich das Ergebnis an. Tippen oder schütteln Sie, um die Münze erneut zu drehen. \n\nBilder von Vierteldollarmünzen der United States Mint. Bilder der Präsidenten-1-Dollar-Münze der United States Mint. \n\nUrheberrecht © 2024 – Richard Banasiak\n\nWenn Ihnen diese App gefällt, denken Sie bitte über eine Spende an die Electronic Frontier Foundation nach. ❤</string>
-  <string name="app_name">Münzwurf</string>
+  <string name="app_name">Münze werfen</string>
   <string name="coin_animation">Münzanimation</string>
   <string name="diagnostics_fragment_title">Diagnosetest</string>
   <string name="diagnostics_menu_title">Diagnose</string>
@@ -11,7 +11,7 @@
   <string name="force_high">Hoch</string>
   <string name="force_low">Niedrig</string>
   <string name="force_medium">Mittel</string>
-  <string name="heads">KÖPFE</string>
+  <string name="heads">KOPF</string>
   <string name="instructions_tap">Tippen Sie, um eine Münze zu werfen</string>
   <string name="instructions_tap_shake">Tippen/Schütteln, um eine Münze zu werfen</string>
   <string name="invalid_iterations">Ungültige Anzahl von Iterationen</string>
@@ -41,14 +41,14 @@
   <string name="settings_item_sound_title">Klang</string>
   <string name="settings_item_stats_summary">Laufende Summe anzeigen</string>
   <string name="settings_item_stats_title">Statistiken</string>
-  <string name="settings_item_text_summary">KÖPFE/SCHWÄNZE anzeigen</string>
+  <string name="settings_item_text_summary">Anzeige KOPF/ZAHL</string>
   <string name="settings_item_text_title">Text</string>
   <string name="settings_item_vibrate_summary">Vibrieren Sie beim Münzwurf</string>
   <string name="settings_item_vibrate_title">Vibrieren</string>
   <string name="settings_menu_title">Einstellungen</string>
   <string name="settings_not_set">Nicht eingestellt</string>
   <string name="stats_reset_message">Statistiken wurden zurückgesetzt</string>
-  <string name="tails">SCHWÄNZE</string>
+  <string name="tails">ZAHL</string>
   <string name="time">ZEIT</string>
   <string name="total">GESAMT</string>
   <string name="turbo_mode">Turbo-Modus aktiviert &#127812;</string>
