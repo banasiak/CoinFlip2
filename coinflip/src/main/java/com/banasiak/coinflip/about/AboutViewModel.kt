@@ -27,6 +27,7 @@ class AboutViewModel @Inject constructor(
   fun postAction(action: AboutAction) {
     Timber.d("postAction(): $action")
     when (action) {
+      is AboutAction.Back -> _effectFlow.tryEmit(AboutEffect.NavBack)
       is AboutAction.Donate -> _effectFlow.tryEmit(AboutEffect.LaunchUrl(donateUrl))
       is AboutAction.RateApp -> _effectFlow.tryEmit(AboutEffect.LaunchUrl(rateUrl))
     }
