@@ -113,13 +113,15 @@ class MainFragment : Fragment() {
   }
 
   private fun renderAnimation(animate: Boolean) {
-    val animation = binding.coinImage.background as DurationAnimationDrawable
-    if (animate) {
-      animation.stop()
-      animation.start()
-    } else {
-      binding.coinImage.background = null
-      binding.coinImage.setImageDrawable(animation.getLastFrame())
+    val animation = binding.coinImage.background as? DurationAnimationDrawable
+    animation?.apply {
+      if (animate) {
+        stop()
+        start()
+      } else {
+        binding.coinImage.background = null
+        binding.coinImage.setImageDrawable(getLastFrame())
+      }
     }
   }
 
@@ -130,9 +132,13 @@ class MainFragment : Fragment() {
 
   private fun showRateAppDialog() {
     lifecycleScope.launch {
-      val reviewManager = ReviewManagerFactory.create(requireContext())
-      val reviewInfo = reviewManager.requestReview()
-      reviewManager.launchReview(requireActivity(), reviewInfo)
+      try {
+        val reviewManager = ReviewManagerFactory.create(requireContext())
+        val reviewInfo = reviewManager.requestReview()
+        reviewManager.launchReview(requireActivity(), reviewInfo)
+      } catch (e: Exception) {
+        Timber.e(e, "All you can do is the best you can with what you have. And this device doesn't have the Google Play Store.")
+      }
     }
   }
 
