@@ -12,6 +12,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import java.security.SecureRandom
 import java.time.Clock
 import kotlin.random.Random
 
@@ -31,6 +32,11 @@ object AppModule {
   @Provides
   fun provideRandom(): Random {
     return Random.Default
+  }
+
+  @Provides
+  fun provideSecureRandom(): SecureRandom {
+    return SecureRandom.getInstanceStrong()
   }
 
   @Provides

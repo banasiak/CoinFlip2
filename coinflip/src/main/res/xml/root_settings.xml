@@ -84,6 +84,12 @@
       app:persistent="true"
       app:summary="@string/settings_item_force_summary"
       app:title="@string/settings_item_force_title" />
+    <SwitchPreferenceCompat
+      app:defaultValue="false"
+      app:key="secureRandom"
+      app:persistent="true"
+      app:summary="@string/settings_item_secure_random_summary"
+      app:title="@string/settings_item_secure_random_title" />
     <Preference
       app:key="resetStats"
       app:title="@string/settings_item_reset_stats_title" />

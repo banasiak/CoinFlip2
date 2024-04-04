@@ -6,6 +6,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.banasiak.coinflip.BuildConfig
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.Coin
 import com.banasiak.coinflip.settings.SettingsManager
@@ -121,6 +122,7 @@ class DiagnosticsViewModel @Inject constructor(
         }
       }
     }
+    printBenchmark()
     state = state.copy(finished = true)
   }
 
@@ -137,6 +139,19 @@ class DiagnosticsViewModel @Inject constructor(
         _effectFlow.emit(DiagnosticsEffect.ShowToast(R.string.turbo_mode))
         state = state.copy(turboModeShown = true) // otherwise this starts to get annoying...
       }
+    }
+  }
+
+  private fun printBenchmark() {
+    if (!BuildConfig.DEBUG) return
+    try {
+      Timber.i("Diagnostic test complete.")
+      Timber.i("SecureRandom: ${coin.isSecure()} | Turbo Mode: ${state.turboMode}")
+      Timber.i("Iterations: ${state.iterations} | Time: ${state.formattedTime} seconds")
+      Timber.i("HEADS: ${state.headsRatio} | TAILS: ${state.tailsRatio}")
+      Timber.i("Benchmark: ${state.iterations / (state.elapsedTime / 1000)} iterations/second")
+    } catch (e: Exception) {
+      // really don't care about divide by zero exceptions (or anything else that might go wrong with this)
     }
   }
 

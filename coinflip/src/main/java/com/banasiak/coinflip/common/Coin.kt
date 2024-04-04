@@ -7,11 +7,10 @@ import com.banasiak.coinflip.util.AnimationHelper
 import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.random.Random
 
 @Singleton
 class Coin @Inject constructor(
-  private val random: Random
+  private val random: RNG
 ) {
   enum class Value(@StringRes val string: Int) {
     HEADS(R.string.heads),
@@ -28,6 +27,10 @@ class Coin @Inject constructor(
     return Result(next, permutation(current, next))
   }
 
+  fun isSecure(): Boolean {
+    return random.useSecureRandom
+  }
+
   private fun permutation(current: Value, next: Value): AnimationHelper.Permutation {
     return when {
       current == Value.HEADS && next == Value.HEADS -> AnimationHelper.Permutation.HEADS_HEADS
@@ -38,7 +41,7 @@ class Coin @Inject constructor(
     }
   }
 
-  private fun Random.nextValue(): Value {
+  private fun RNG.nextValue(): Value {
     val next = this.nextBoolean()
     return if (next) Value.HEADS else Value.TAILS
   }

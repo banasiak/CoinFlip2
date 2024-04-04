@@ -5,10 +5,9 @@ import io.mockk.every
 import io.mockk.mockk
 import org.amshove.kluent.shouldBe
 import org.junit.jupiter.api.Test
-import kotlin.random.Random
 
 class CoinTests {
-  private val rng: Random = mockk()
+  private val rng: RNG = mockk()
 
   @Test
   fun `heads - heads`() {

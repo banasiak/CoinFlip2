@@ -34,6 +34,8 @@
   <string name="settings_item_quick_reset_summary">Show reset button below statistics</string>
   <string name="settings_item_quick_reset_title">Quick Stats Reset</string>
   <string name="settings_item_reset_stats_title">Reset Statistics</string>
+  <string name="settings_item_secure_random_summary">Use a cryptographically secure pseudorandom number generator (CSPRNG)</string>
+  <string name="settings_item_secure_random_title">Random Number Generator</string>
   <string name="settings_item_shake_summary">Shake device to flip coin</string>
   <string name="settings_item_shake_title">Shake</string>
   <string name="settings_item_sound_summary">Play sound after coin flip</string>

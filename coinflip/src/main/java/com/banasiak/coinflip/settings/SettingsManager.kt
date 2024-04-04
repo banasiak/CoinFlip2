@@ -2,6 +2,7 @@ package com.banasiak.coinflip.settings
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import com.banasiak.coinflip.common.Coin
 import com.squareup.seismic.ShakeDetector
 import timber.log.Timber
@@ -21,6 +22,7 @@ class SettingsManager @Inject constructor(private val prefs: SharedPreferences) 
   val diagnosticsIterations get() = prefs.getString(Settings.DIAGNOSTICS.key, Settings.DIAGNOSTICS.default as String)!!.toLong()
   val dynamicColorsEnabled get() = prefs.getBoolean(Settings.DYNAMIC.key, Settings.DYNAMIC.default as Boolean)
   val shakeSensitivity get() = prefs.getString(Settings.FORCE.key, Settings.FORCE.default as String).toSensitivity()
+  val secureRandom get() = prefs.getBoolean(Settings.SECURE_RANDOM.key, Settings.SECURE_RANDOM.default as Boolean)
 
   init {
     validateSchema()
@@ -42,6 +44,10 @@ class SettingsManager @Inject constructor(private val prefs: SharedPreferences) 
 
   fun resetStats() {
     prefs.edit().remove(Settings.HEADS.key).remove(Settings.TAILS.key).apply()
+  }
+
+  fun registerChangeListener(listener: OnSharedPreferenceChangeListener) {
+    prefs.registerOnSharedPreferenceChangeListener(listener)
   }
 
   @SuppressLint("ApplySharedPref")
@@ -78,6 +84,7 @@ class SettingsManager @Inject constructor(private val prefs: SharedPreferences) 
     DYNAMIC("dynamic", false),
     QUICK_RESET("quickReset", false),
     FORCE("force", "medium"),
+    SECURE_RANDOM("secureRandom", false),
     RESET("resetStats", Unit),
     HEADS("headsCount", 0L),
     TAILS("tailsCount", 0L),
