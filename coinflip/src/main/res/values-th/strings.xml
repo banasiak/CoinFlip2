@@ -35,6 +35,7 @@
   <string name="settings_item_quick_reset_summary">แสดงปุ่มรีเซ็ตด้านล่างสถิติ</string>
   <string name="settings_item_quick_reset_title">รีเซ็ตสถิติด่วน</string>
   <string name="settings_item_reset_stats_title">รีเซ็ตสถิติ</string>
+  <string name="settings_item_secure_random_summary">ใช้ตัวสร้างตัวเลขสุ่มเทียมที่ปลอดภัยด้วยการเข้ารหัส</string>
   <string name="settings_item_shake_summary">เขย่าเครื่องเพื่อพลิกเหรียญ</string>
   <string name="settings_item_shake_title">เขย่า</string>
   <string name="settings_item_sound_summary">เล่นเสียงหลังจากโยนเหรียญ</string>
@@ -55,4 +56,5 @@
   <string name="undo">เลิกทำ</string>
   <string name="version">เวอร์ชัน %1$s (%2$d)</string>
   <string name="wikipedia">— วิกิพีเดีย (มกราคม 2024)</string>
+  <string name="settings_item_secure_random_title">เครื่องกำเนิดตัวเลขสุ่ม</string>
 </resources>

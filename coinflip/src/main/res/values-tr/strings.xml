@@ -35,6 +35,7 @@
   <string name="settings_item_quick_reset_summary">İstatistiklerin altında sıfırlama düğmesini göster</string>
   <string name="settings_item_quick_reset_title">Hızlı İstatistik Sıfırlama</string>
   <string name="settings_item_reset_stats_title">İstatistikleri sıfırla</string>
+  <string name="settings_item_secure_random_summary">Kriptografik olarak güvenli bir sözde rastgele sayı üreteci kullanın</string>
   <string name="settings_item_shake_summary">Parayı çevirmek için cihazı sallayın</string>
   <string name="settings_item_shake_title">Sallamak</string>
   <string name="settings_item_sound_summary">Yazı-tura attıktan sonra ses çal</string>
@@ -55,4 +56,5 @@
   <string name="undo">Geri alma</string>
   <string name="version">sürüm %1$s (%2$d)</string>
   <string name="wikipedia">- Vikipedi (Ocak 2024)</string>
+  <string name="settings_item_secure_random_title">Rastgele numara üreticisi</string>
 </resources>

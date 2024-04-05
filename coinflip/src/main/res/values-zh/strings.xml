@@ -35,6 +35,8 @@
   <string name="settings_item_quick_reset_summary">在统计数据下方显示重置按钮</string>
   <string name="settings_item_quick_reset_title">快速统计重置</string>
   <string name="settings_item_reset_stats_title">重置统计数据</string>
+  <string name="settings_item_secure_random_summary">使用加密安全的伪随机数生成器</string>
+  <string name="settings_item_secure_random_title">随机数生成器</string>
   <string name="settings_item_shake_summary">摇动装置即可翻转硬币</string>
   <string name="settings_item_shake_title">摇</string>
   <string name="settings_item_sound_summary">掷硬币后播放声音</string>

@@ -35,6 +35,7 @@
   <string name="settings_item_quick_reset_summary">Mostrar botão de redefinição abaixo das estatísticas</string>
   <string name="settings_item_quick_reset_title">Redefinição rápida de estatísticas</string>
   <string name="settings_item_reset_stats_title">Limpar estatísticas</string>
+  <string name="settings_item_secure_random_summary">Use um gerador de números pseudoaleatórios criptograficamente seguro</string>
   <string name="settings_item_shake_summary">Agite o dispositivo para jogar uma moeda</string>
   <string name="settings_item_shake_title">Sacudir</string>
   <string name="settings_item_sound_summary">Reproduzir som após o lançamento da moeda</string>
@@ -55,4 +56,5 @@
   <string name="undo">Desfazer</string>
   <string name="version">versão %1$s (%2$d)</string>
   <string name="wikipedia">- Wikipédia (janeiro de 2024)</string>
+  <string name="settings_item_secure_random_title">Gerador de números aleatórios</string>
 </resources>

@@ -35,6 +35,7 @@
   <string name="settings_item_quick_reset_summary">Afficher le bouton de réinitialisation sous les statistiques</string>
   <string name="settings_item_quick_reset_title">Réinitialisation rapide des statistiques</string>
   <string name="settings_item_reset_stats_title">Réinitialiser les statistiques</string>
+  <string name="settings_item_secure_random_summary">Utilisez un générateur de nombres pseudo-aléatoires cryptographiquement sécurisé</string>
   <string name="settings_item_shake_summary">Secouez l\'appareil pour lancer une pièce</string>
   <string name="settings_item_shake_title">Secouer</string>
   <string name="settings_item_sound_summary">Jouer le son après le tirage au sort</string>
@@ -55,4 +56,5 @@
   <string name="undo">annuler</string>
   <string name="version">version %1$s (%2$d)</string>
   <string name="wikipedia">— Wikipédia (janvier 2024)</string>
+  <string name="settings_item_secure_random_title">Générateur de nombres aléatoires</string>
 </resources>

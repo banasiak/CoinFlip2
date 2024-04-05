@@ -35,6 +35,7 @@
   <string name="settings_item_quick_reset_summary">統計の下にリセットボタンを表示</string>
   <string name="settings_item_quick_reset_title">統計情報のクイックリセット</string>
   <string name="settings_item_reset_stats_title">統計のリセット</string>
+  <string name="settings_item_secure_random_summary">暗号的に安全な擬似乱数ジェネレータを使用する</string>
   <string name="settings_item_shake_summary">デバイスを振ってコインを投げます</string>
   <string name="settings_item_shake_title">シェイク</string>
   <string name="settings_item_sound_summary">コイン投げ後に音を鳴らす</string>
@@ -55,4 +56,5 @@
   <string name="undo">元に戻す</string>
   <string name="version">バージョン %1$s (%2$d)</string>
   <string name="wikipedia">— ウィキペディア (2024 年 1 月)</string>
+  <string name="settings_item_secure_random_title">乱数ジェネレータ</string>
 </resources>

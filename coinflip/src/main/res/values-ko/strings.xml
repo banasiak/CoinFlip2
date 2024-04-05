@@ -35,6 +35,7 @@
   <string name="settings_item_quick_reset_summary">통계 아래에 재설정 버튼 표시</string>
   <string name="settings_item_quick_reset_title">빠른 통계 재설정</string>
   <string name="settings_item_reset_stats_title">통계 재설정</string>
+  <string name="settings_item_secure_random_summary">암호화된 보안 의사 난수 생성기사용</string>
   <string name="settings_item_shake_summary">장치를 흔들어 동전을 뒤집으세요.</string>
   <string name="settings_item_shake_title">떨림</string>
   <string name="settings_item_sound_summary">동전 뒤집기 후 소리 재생</string>
@@ -55,4 +56,5 @@
   <string name="undo">실행 취소</string>
   <string name="version">버전 %1$s (%2$d)</string>
   <string name="wikipedia">— 위키피디아 (2024년 1월)</string>
+  <string name="settings_item_secure_random_title">난수 생성기</string>
 </resources>
