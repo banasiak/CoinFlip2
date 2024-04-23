@@ -49,6 +49,14 @@
     <item name="android:textSize">72sp</item>
   </style>
 
+  <style name="AppTheme.TextAppearance.Result.Heads">
+    <item name="android:textColor">?attr/colorSecondary</item>
+  </style>
+
+  <style name="AppTheme.TextAppearance.Result.Tails">
+    <item name="android:textColor">?attr/colorTertiary</item>
+  </style>
+
   <style name="AppTheme.TextAppearance.Instructions" parent="TextAppearance.Material3.TitleMedium" />
 
   <style name="AppTheme.TextAppearance.Stats.Heads" parent="TextAppearance.Material3.TitleLarge">
