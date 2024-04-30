@@ -19,8 +19,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.dropWhile
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
@@ -48,11 +48,11 @@ class DiagnosticsViewModel @Inject constructor(
         iterations = settings.diagnosticsIterations,
         turboMode = settings.diagnosticsIterations >= TURBO_MODE_THRESHOLD
       )
-  private val _stateFlow = MutableStateFlow<DiagnosticsState>(state)
-  val stateFlow: StateFlow<DiagnosticsState> = _stateFlow
+  private val _stateFlow = MutableStateFlow(state)
+  val stateFlow = _stateFlow.asStateFlow()
 
   private val _effectFlow = MutableSharedFlow<DiagnosticsEffect>(extraBufferCapacity = 1)
-  val effectFlow: SharedFlow<DiagnosticsEffect> = _effectFlow
+  val effectFlow = _effectFlow.asSharedFlow()
 
   init {
     viewModelScope.launch { runDiagnostics() }

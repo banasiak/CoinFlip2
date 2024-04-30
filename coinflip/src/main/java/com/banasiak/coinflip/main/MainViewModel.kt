@@ -16,8 +16,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -36,11 +36,11 @@ class MainViewModel @Inject constructor(
   }
 
   private var state = savedState.restore() ?: MainState()
-  private val _stateFlow = MutableStateFlow<MainState>(state)
-  val stateFlow: StateFlow<MainState> = _stateFlow
+  private val _stateFlow = MutableStateFlow(state)
+  val stateFlow = _stateFlow.asStateFlow()
 
   private val _effectFlow = MutableSharedFlow<MainEffect>(extraBufferCapacity = 1)
-  val effectFlow: SharedFlow<MainEffect> = _effectFlow
+  val effectFlow = _effectFlow.asSharedFlow()
 
   fun postAction(action: MainAction) {
     Timber.d("postAction(): $action")
