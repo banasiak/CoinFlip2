@@ -21,7 +21,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.dropWhile
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
 import timber.log.Timber
@@ -54,13 +53,12 @@ class DiagnosticsViewModel @Inject constructor(
   private val _effectFlow = MutableSharedFlow<DiagnosticsEffect>(extraBufferCapacity = 1)
   val effectFlow = _effectFlow.asSharedFlow()
 
-  init {
-    viewModelScope.launch { runDiagnostics() }
-    viewModelScope.launch { showTurboModeNotice() }
-  }
-
   fun postAction(action: DiagnosticsAction) {
     when (action) {
+      DiagnosticsAction.Start -> {
+        viewModelScope.launch { runDiagnostics() }
+        viewModelScope.launch { showTurboModeNotice() }
+      }
       DiagnosticsAction.Wikipedia -> _effectFlow.tryEmit(DiagnosticsEffect.LaunchUrl(WIKIPEDIA_URL))
     }
   }
@@ -68,6 +66,7 @@ class DiagnosticsViewModel @Inject constructor(
   override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
     Timber.d("Lifecycle onStateChanged(): $event")
     when (event) {
+      Lifecycle.Event.ON_START -> postAction(DiagnosticsAction.Start)
       Lifecycle.Event.ON_PAUSE -> onPause()
       else -> { }
     }
@@ -127,18 +126,13 @@ class DiagnosticsViewModel @Inject constructor(
   }
 
   private suspend fun showTurboModeNotice() {
-    // Can't do this immediately as originally planned, because the effect flow collector isn't ready yet. Setting 'replay=1' seems like
-    // a good idea, but that allows for the LaunchUrl effect to be replayed causing a wikipedia article to turn into Hotel California.
-    // As a workaround, just wait until the effect flow has a subscriber, then play the sound and emit the toast effect...
-    _effectFlow.subscriptionCount.dropWhile { it == 0 }.collect {
-      if (state.turboMode && !state.turboModeShown) {
-        Timber.i("turbo mode activated!")
-        if (settings.soundEnabled) {
-          soundHelper.playSound(SoundHelper.Sound.POWERUP)
-        }
-        _effectFlow.emit(DiagnosticsEffect.ShowToast(R.string.turbo_mode))
-        state = state.copy(turboModeShown = true) // otherwise this starts to get annoying...
+    if (state.turboMode && !state.turboModeShown) {
+      Timber.i("turbo mode activated!")
+      if (settings.soundEnabled) {
+        soundHelper.playSound(SoundHelper.Sound.POWERUP)
       }
+      _effectFlow.emit(DiagnosticsEffect.ShowToast(R.string.turbo_mode))
+      state = state.copy(turboModeShown = true) // otherwise this starts to get annoying...
     }
   }
 

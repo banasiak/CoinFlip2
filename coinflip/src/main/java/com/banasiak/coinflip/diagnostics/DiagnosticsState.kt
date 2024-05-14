@@ -25,6 +25,8 @@ data class DiagnosticsState(
 ) : Parcelable
 
 sealed class DiagnosticsAction {
+  data object Start : DiagnosticsAction()
+
   data object Wikipedia : DiagnosticsAction()
 }
 

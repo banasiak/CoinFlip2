@@ -14,7 +14,6 @@ import io.mockk.verify
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -47,7 +46,8 @@ class DiagnosticsViewModelTests {
       val vm = viewModel()
       val states = vm.stateFlow
 
-      val expected =
+      val initialState = DiagnosticsState(iterations = 1)
+      val expectedState =
         DiagnosticsState(
           iterations = 1,
           heads = 1,
@@ -64,9 +64,13 @@ class DiagnosticsViewModelTests {
           formattedTime = "1.500"
         )
 
+      backgroundScope.launch {
+        vm.postAction(DiagnosticsAction.Start)
+      }
+
       states.test {
-        awaitItem() shouldBeEqualTo expected
-        cancel()
+        awaitItem() shouldBeEqualTo initialState
+        awaitItem() shouldBeEqualTo expectedState
       }
     }
 
@@ -79,7 +83,8 @@ class DiagnosticsViewModelTests {
       val vm = viewModel()
       val states = vm.stateFlow
 
-      val expected =
+      val initialState = DiagnosticsState(iterations = 1)
+      val expectedState =
         DiagnosticsState(
           iterations = 1,
           heads = 0,
@@ -96,9 +101,13 @@ class DiagnosticsViewModelTests {
           formattedTime = "1.500"
         )
 
+      backgroundScope.launch {
+        vm.postAction(DiagnosticsAction.Start)
+      }
+
       states.test {
-        awaitItem() shouldBeEqualTo expected
-        cancel()
+        awaitItem() shouldBeEqualTo initialState
+        awaitItem() shouldBeEqualTo expectedState
       }
     }
 
@@ -119,7 +128,8 @@ class DiagnosticsViewModelTests {
       val vm = viewModel()
       val states = vm.stateFlow
 
-      val expected =
+      val initialState = DiagnosticsState(iterations = 5)
+      val expectedState =
         DiagnosticsState(
           iterations = 5,
           heads = 2,
@@ -136,9 +146,13 @@ class DiagnosticsViewModelTests {
           formattedTime = "1.500"
         )
 
+      backgroundScope.launch {
+        vm.postAction(DiagnosticsAction.Start)
+      }
+
       states.test {
-        awaitItem() shouldBeEqualTo expected
-        cancel()
+        awaitItem()shouldBeEqualTo initialState
+        awaitItem() shouldBeEqualTo expectedState
       }
     }
 
@@ -148,14 +162,13 @@ class DiagnosticsViewModelTests {
       val vm = viewModel()
       val effects = vm.effectFlow
 
-      // but, why?
       backgroundScope.launch {
+        vm.postAction(DiagnosticsAction.Start)
         vm.postAction(DiagnosticsAction.Wikipedia)
       }
 
       effects.test {
         awaitItem() shouldBeEqualTo DiagnosticsEffect.LaunchUrl("https://w.wiki/3kSY")
-        cancel()
       }
     }
 
@@ -169,14 +182,16 @@ class DiagnosticsViewModelTests {
       val states = vm.stateFlow
       val effects = vm.effectFlow
 
+      backgroundScope.launch {
+        vm.postAction(DiagnosticsAction.Start)
+      }
+
       states.test {
-        awaitItem().turboMode.shouldBeTrue()
-        cancel()
+        awaitItem() shouldBeEqualTo DiagnosticsState(iterations = 1, turboMode = true)
       }
 
       effects.test {
         awaitItem() shouldBeEqualTo DiagnosticsEffect.ShowToast(R.string.turbo_mode)
-        cancel()
       }
 
       verify(exactly = 1) { soundHelper.playSound(SoundHelper.Sound.POWERUP) }
@@ -192,14 +207,16 @@ class DiagnosticsViewModelTests {
       val states = vm.stateFlow
       val effects = vm.effectFlow
 
+      backgroundScope.launch {
+        vm.postAction(DiagnosticsAction.Start)
+      }
+
       states.test {
-        awaitItem().turboMode.shouldBeTrue()
-        cancel()
+        awaitItem() shouldBeEqualTo DiagnosticsState(iterations = 1, turboMode = true)
       }
 
       effects.test {
         awaitItem() shouldBeEqualTo DiagnosticsEffect.ShowToast(R.string.turbo_mode)
-        cancel()
       }
 
       verify(exactly = 0) { soundHelper.playSound(SoundHelper.Sound.POWERUP) }
@@ -217,9 +234,12 @@ class DiagnosticsViewModelTests {
       val states = vm.stateFlow
       val effects = vm.effectFlow
 
+      backgroundScope.launch {
+        vm.postAction(DiagnosticsAction.Start)
+      }
+
       states.test {
-        awaitItem().turboMode.shouldBeTrue()
-        cancel()
+        awaitItem() shouldBeEqualTo DiagnosticsState(iterations = 1L, turboMode = true, turboModeShown = true)
       }
 
       effects.test {
