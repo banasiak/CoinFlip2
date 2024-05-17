@@ -1,7 +1,5 @@
 package com.banasiak.coinflip.main
 
-import android.os.VibrationEffect
-import android.os.Vibrator
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -28,13 +26,8 @@ class MainViewModel @Inject constructor(
   private val coin: Coin,
   private val settings: SettingsManager,
   private val soundHelper: SoundHelper,
-  private val vibrator: Vibrator,
   private val savedState: SavedStateHandle
 ) : ViewModel() {
-  companion object {
-    private val VIBRATION_EFFECT = VibrationEffect.createOneShot(200, 255)
-  }
-
   private var state = savedState.restore() ?: MainState()
     private set(value) {
       field = value
@@ -150,7 +143,7 @@ class MainViewModel @Inject constructor(
     }
 
     if (settings.vibrateEnabled) {
-      vibrator.vibrate(VIBRATION_EFFECT)
+      _effectFlow.emit(MainEffect.Vibrate)
     }
   }
 
