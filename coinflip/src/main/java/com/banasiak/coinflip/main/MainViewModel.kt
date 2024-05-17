@@ -36,6 +36,13 @@ class MainViewModel @Inject constructor(
   }
 
   private var state = savedState.restore() ?: MainState()
+    private set(value) {
+      field = value
+      // emit the new state when it changes
+      Timber.d("emitState(): $value")
+      _stateFlow.tryEmit(value)
+    }
+
   private val _stateFlow = MutableStateFlow(state)
   val stateFlow = _stateFlow.asStateFlow()
 
@@ -74,14 +81,12 @@ class MainViewModel @Inject constructor(
         stats = settings.loadStats(),
         statsVisible = settings.showStats
       )
-    _stateFlow.tryEmit(state)
 
     _effectFlow.tryEmit(updateStatsEffect(state.stats))
   }
 
   private fun onPause() {
     state = state.copy(paused = true, shakeEnabled = false)
-    _stateFlow.tryEmit(state)
 
     settings.persistStats(state.stats)
     savedState.save(state)
@@ -107,7 +112,6 @@ class MainViewModel @Inject constructor(
           shakeEnabled = false,
           stats = stats
         )
-      _stateFlow.emit(state)
 
       val animationEnabled = settings.animationEnabled
       _effectFlow.emit(MainEffect.FlipCoin(animate = animationEnabled))
@@ -130,7 +134,6 @@ class MainViewModel @Inject constructor(
         resultVisible = settings.textEnabled,
         shakeEnabled = settings.shakeEnabled && !state.paused
       )
-    _stateFlow.emit(state)
     _effectFlow.emit(updateStatsEffect(state.stats))
 
     // keeping it &#128175;...

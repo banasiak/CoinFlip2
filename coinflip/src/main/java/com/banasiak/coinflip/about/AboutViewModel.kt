@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,6 +18,13 @@ class AboutViewModel @Inject constructor(
   private val rateUrl = "market://details?id=${buildInfo.packageName}"
 
   private var state = AboutState(buildInfo.versionName, buildInfo.versionCode)
+    private set(value) {
+      field = value
+      // emit the new state when it changes
+      Timber.d("emitState(): $value")
+      _stateFlow.tryEmit(value)
+    }
+
   private val _stateFlow = MutableStateFlow(state)
   val stateFlow = _stateFlow.asStateFlow()
 
