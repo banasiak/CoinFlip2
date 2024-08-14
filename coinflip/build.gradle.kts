@@ -1,10 +1,10 @@
 plugins {
   id("com.android.application")
+  id("com.google.dagger.hilt.android")
+  id("com.google.devtools.ksp")
+  id("de.mannodermaus.android-junit5")
   id("org.jetbrains.kotlin.android")
   id("org.jetbrains.kotlin.plugin.parcelize")
-  id("com.google.devtools.ksp")
-  id("com.google.dagger.hilt.android")
-  id("de.mannodermaus.android-junit5")
 }
 
 android {
@@ -56,12 +56,12 @@ dependencies {
   ksp(libs.dagger.compiler)
   ksp(libs.hilt.android.compiler)
   testImplementation(libs.junit.api)
-  testRuntimeOnly(libs.junit.engine)
   testImplementation(libs.kluent.android)
   testImplementation(libs.kotlinx.coroutines.test)
   testImplementation(libs.mockk.agent)
   testImplementation(libs.mockk.android)
   testImplementation(libs.turbine)
+  testRuntimeOnly(libs.junit.engine)
 
   ktlint("com.pinterest.ktlint:ktlint-cli:1.1.0") {
     attributes {

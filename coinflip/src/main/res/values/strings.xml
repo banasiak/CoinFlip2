@@ -55,7 +55,7 @@
   <string name="turbo_mode">Turbo Mode Activated &#127812;</string>
   <string name="undo">Undo</string>
   <string name="version">version %1$s (%2$d)</string>
-  <string name="wikipedia">\u2014 Wikipedia (January 2024)</string>
+  <string name="wikipedia">\u2014 Wikipedia (January, 2024)</string>
   <string name="about_text">
     A convenient way to flip a coin, even if you don\'t have one. Simply tap the question mark or shake and view the result. Tap or shake
     to spin the coin again.

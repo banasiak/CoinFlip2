@@ -8,9 +8,13 @@
   >
 
   <androidx.constraintlayout.widget.ConstraintLayout
+    style="@style/Animation.Design.BottomSheetDialog"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/spacing_large"
+    android:paddingTop="@dimen/spacing_large"
+    android:paddingBottom="@dimen/spacing_large"
+    android:paddingStart="@dimen/spacing_medium"
+    android:paddingEnd="@dimen/spacing_medium"
     tools:context=".diagnostics.DiagnosticsFragment"
     >
 

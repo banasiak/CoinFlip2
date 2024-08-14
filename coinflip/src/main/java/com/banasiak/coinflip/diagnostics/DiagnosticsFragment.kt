@@ -1,5 +1,6 @@
 package com.banasiak.coinflip.diagnostics
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,8 @@ import com.banasiak.coinflip.R
 import com.banasiak.coinflip.databinding.FragmentDiagnosticsBinding
 import com.banasiak.coinflip.util.ColorHelper
 import com.banasiak.coinflip.util.launchUrl
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -29,6 +32,12 @@ class DiagnosticsFragment : BottomSheetDialogFragment() {
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
     binding = FragmentDiagnosticsBinding.inflate(inflater, container, false)
     return binding.root
+  }
+
+  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    val dialog = super.onCreateDialog(savedInstanceState)
+    (dialog as BottomSheetDialog).behavior.state = BottomSheetBehavior.STATE_EXPANDED
+    return dialog
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

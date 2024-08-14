@@ -11,7 +11,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="@dimen/spacing_large"
+    android:paddingTop="@dimen/spacing_large"
+    android:paddingBottom="@dimen/spacing_large"
+    android:paddingStart="@dimen/spacing_medium"
+    android:paddingEnd="@dimen/spacing_medium"
     tools:context=".about.AboutFragment"
     >
 
@@ -36,6 +39,7 @@
       style="@style/MaterialAlertDialog.Material3.Body.Text"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:justificationMode="inter_word"
       android:layout_marginBottom="@dimen/spacing_large"
       android:text="@string/about_text"
       />

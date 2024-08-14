@@ -55,6 +55,8 @@
     <item>Wyoming Quarter</item>
     <item>JFK Half-Dollar</item>
     <item>Sacagawea Dollar</item>
+    <item>Canadian Loonie</item>
+    <item>Canadian Toonie</item>
     <item>Two-Face Dollar</item>
     <item>Random Coin</item>
   </string-array>
@@ -113,6 +115,8 @@
     <item>wy</item>
     <item>jfk</item>
     <item>sacagawea</item>
+    <item>loonie</item>
+    <item>toonie</item>
     <item>twoface</item>
     <item>random</item>
   </string-array>
@@ -126,5 +130,4 @@
     <item>medium</item>
     <item>high</item>
   </string-array>
-
 </resources>
