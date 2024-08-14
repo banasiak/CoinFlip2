@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+  <Preference
+    app:key="topPaddingHack"
+    app:title=""
+    app:enabled="false"
+    />
   <PreferenceCategory
     app:iconSpaceReserved="false"
-    app:title="@string/settings_header_basic_title">
+    app:title="@string/settings_header_basic_title"
+    app:allowDividerAbove="false"
+    >
     <ListPreference
       app:defaultValue="gw"
       app:entries="@array/coins"
@@ -10,7 +17,8 @@
       app:key="coin"
       app:persistent="true"
       app:useSimpleSummaryProvider="true"
-      app:title="@string/settings_item_coin_title" />
+      app:title="@string/settings_item_coin_title"
+      />
     <SwitchPreferenceCompat
       app:defaultValue="true"
       app:key="animate"
@@ -37,49 +45,57 @@
       app:key="stats"
       app:persistent="true"
       app:summary="@string/settings_item_stats_summary"
-      app:title="@string/settings_item_stats_title" />
+      app:title="@string/settings_item_stats_title"
+      />
     <SwitchPreferenceCompat
       app:defaultValue="true"
       app:key="text"
       app:persistent="true"
       app:summary="@string/settings_item_text_summary"
-      app:title="@string/settings_item_text_title" />
+      app:title="@string/settings_item_text_title"
+      />
     <SwitchPreferenceCompat
       app:defaultValue="true"
       app:key="vibrate"
       app:persistent="true"
       app:summary="@string/settings_item_vibrate_summary"
-      app:title="@string/settings_item_vibrate_title" />
+      app:title="@string/settings_item_vibrate_title"
+      />
   </PreferenceCategory>
   <PreferenceCategory
     app:iconSpaceReserved="false"
-    app:title="@string/settings_header_advanced_title">
+    app:title="@string/settings_header_advanced_title"
+    >
     <com.banasiak.coinflip.ui.NumberPreference
       app:defaultValue="100000"
       app:dialogMessage="@string/settings_item_diagnostics_dialog"
       app:key="diagnostics"
       app:persistent="true"
       app:summary="@string/settings_item_diagnostics_summary"
-      app:title="@string/settings_item_diagnostics_title" />
+      app:title="@string/settings_item_diagnostics_title"
+      />
     <SwitchPreferenceCompat
       app:defaultValue="false"
       app:key="dynamic"
       app:persistent="true"
       app:summary="@string/settings_item_dynamic_colors_summary"
-      app:title="@string/settings_item_dynamic_colors_title" />
+      app:title="@string/settings_item_dynamic_colors_title"
+      />
     <SwitchPreferenceCompat
       app:defaultValue="false"
       app:dependency="stats"
       app:key="quickReset"
       app:persistent="true"
       app:summary="@string/settings_item_quick_reset_summary"
-      app:title="@string/settings_item_quick_reset_title" />
+      app:title="@string/settings_item_quick_reset_title"
+      />
     <SwitchPreferenceCompat
       app:defaultValue="false"
       app:key="secureRandom"
       app:persistent="true"
       app:summary="@string/settings_item_secure_random_summary"
-      app:title="@string/settings_item_secure_random_title" />
+      app:title="@string/settings_item_secure_random_title"
+      />
     <ListPreference
       app:defaultValue="medium"
       app:entries="@array/force"
@@ -89,9 +105,16 @@
       app:min="1"
       app:persistent="true"
       app:summary="@string/settings_item_force_summary"
-      app:title="@string/settings_item_force_title" />
+      app:title="@string/settings_item_force_title"
+      />
     <Preference
       app:key="resetStats"
-      app:title="@string/settings_item_reset_stats_title" />
+      app:title="@string/settings_item_reset_stats_title"
+      />
+    <Preference
+      app:key="bottomPaddingHack"
+      app:title=""
+      app:enabled="false"
+      />
   </PreferenceCategory>
 </PreferenceScreen>
