@@ -1,6 +1,7 @@
 [versions]
 agp = "8.5.2"
 android-junit = "1.11.0.0"
+androidx-activity = "1.9.1"
 androidx-appcompat = "1.7.0"
 androidx-browser = "1.8.0"
 androidx-core = "1.13.1"
@@ -13,6 +14,7 @@ kluent = "1.73"
 kotlin = "2.0.10"
 kotlinx-coroutines = "1.8.1"
 ksp = "2.0.10-1.0.24"
+ktlint = "1.1.0"
 material = "1.12.0"
 mockk = "1.13.12"
 review = "2.0.1"
@@ -22,6 +24,7 @@ turbine = "1.1.0"
 versions = "0.51.0"
 
 [libraries]
+androidx-activity = { module = "androidx.activity:activity-ktx", version.ref="androidx-activity" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
 androidx-browser = { module = "androidx.browser:browser", version.ref = "androidx-browser" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
@@ -38,6 +41,7 @@ junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref 
 kluent-android = { module = "org.amshove.kluent:kluent-android", version.ref = "kluent" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+ktlint = {module = "com.pinterest.ktlint:ktlint-cli", version.ref = "ktlint" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
 mockk-agent = { module = "io.mockk:mockk-agent", version.ref = "mockk" }
 mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockk" }

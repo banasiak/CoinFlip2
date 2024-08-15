@@ -15,7 +15,7 @@ android {
     applicationId = "com.banasiak.coinflip"
     minSdk = 26
     targetSdk = 35
-    versionCode = 63
+    versionCode = 65
     versionName = "2024.08"
   }
   buildFeatures {
@@ -39,6 +39,7 @@ android {
 val ktlint: Configuration by configurations.creating
 
 dependencies {
+  implementation(libs.androidx.activity)
   implementation(libs.androidx.appcompat)
   implementation(libs.androidx.browser)
   implementation(libs.androidx.core.ktx)
@@ -63,7 +64,7 @@ dependencies {
   testImplementation(libs.turbine)
   testRuntimeOnly(libs.junit.engine)
 
-  ktlint("com.pinterest.ktlint:ktlint-cli:1.1.0") {
+  ktlint(libs.ktlint) {
     attributes {
       attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
     }

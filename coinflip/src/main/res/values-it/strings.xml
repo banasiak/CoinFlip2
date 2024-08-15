@@ -22,6 +22,7 @@
   <string name="settings_activity_title">Impostazioni del lancio della moneta</string>
   <string name="settings_header_advanced_title">Impostazioni avanzate</string>
   <string name="settings_header_basic_title">Impostazioni di base</string>
+  <string name="settings_header_statistics_title">Impostazioni statistiche</string>
   <string name="settings_item_animation_summary">Renderizza la moneta che gira</string>
   <string name="settings_item_animation_title">Animazione</string>
   <string name="settings_item_coin_title">Tipo di moneta</string>

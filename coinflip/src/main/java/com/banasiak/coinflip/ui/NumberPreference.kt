@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import com.banasiak.coinflip.R
-import com.banasiak.coinflip.util.formatNumber
+import com.banasiak.coinflip.extensions.formatNumber
 
 // For the record, I resent having to implement this...
 class NumberPreference(context: Context, attrs: AttributeSet?) : EditTextPreference(context, attrs) {

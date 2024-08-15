@@ -7,6 +7,7 @@ import androidx.activity.addCallback
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.banasiak.coinflip.R
+import com.banasiak.coinflip.extensions.applySystemBarInsets
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -20,6 +21,8 @@ class SettingsFragment @Inject constructor() : PreferenceFragmentCompat() {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    view.applySystemBarInsets()
+
     onBackPressedCallback = requireActivity().onBackPressedDispatcher.addCallback(this) { restartActivity() }
     onBackPressedCallback.isEnabled = false
   }

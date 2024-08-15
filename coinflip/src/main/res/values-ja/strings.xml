@@ -22,6 +22,7 @@
   <string name="settings_activity_title">コイン投げの設定</string>
   <string name="settings_header_advanced_title">高度な設定</string>
   <string name="settings_header_basic_title">基本設定</string>
+  <string name="settings_header_statistics_title">統計設定</string>
   <string name="settings_item_animation_summary">回転するコインをレンダリングする</string>
   <string name="settings_item_animation_title">アニメーション</string>
   <string name="settings_item_coin_title">コインの種類</string>

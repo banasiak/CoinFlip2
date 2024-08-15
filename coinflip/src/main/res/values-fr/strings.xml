@@ -22,6 +22,7 @@
   <string name="settings_activity_title">Paramètres de tirage de pièces</string>
   <string name="settings_header_advanced_title">Réglages avancés</string>
   <string name="settings_header_basic_title">Paramètres de base</string>
+  <string name="settings_header_statistics_title">Paramètres de statistiques</string>
   <string name="settings_item_animation_summary">Rendre la pièce en rotation</string>
   <string name="settings_item_animation_title">Animation</string>
   <string name="settings_item_coin_title">Type de pièce</string>

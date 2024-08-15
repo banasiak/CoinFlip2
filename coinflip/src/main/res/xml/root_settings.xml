@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
-  <Preference
-    app:key="topPaddingHack"
-    app:title=""
-    app:enabled="false"
-    />
   <PreferenceCategory
     app:iconSpaceReserved="false"
     app:title="@string/settings_header_basic_title"
-    app:allowDividerAbove="false"
     >
     <ListPreference
       app:defaultValue="gw"
@@ -42,13 +36,6 @@
       />
     <SwitchPreferenceCompat
       app:defaultValue="true"
-      app:key="stats"
-      app:persistent="true"
-      app:summary="@string/settings_item_stats_summary"
-      app:title="@string/settings_item_stats_title"
-      />
-    <SwitchPreferenceCompat
-      app:defaultValue="true"
       app:key="text"
       app:persistent="true"
       app:summary="@string/settings_item_text_summary"
@@ -60,6 +47,30 @@
       app:persistent="true"
       app:summary="@string/settings_item_vibrate_summary"
       app:title="@string/settings_item_vibrate_title"
+      />
+  </PreferenceCategory>
+  <PreferenceCategory
+    app:iconSpaceReserved="false"
+    app:title="@string/settings_header_statistics_title"
+    >
+    <SwitchPreferenceCompat
+      app:defaultValue="true"
+      app:key="stats"
+      app:persistent="true"
+      app:summary="@string/settings_item_stats_summary"
+      app:title="@string/settings_item_stats_title"
+      />
+    <SwitchPreferenceCompat
+      app:defaultValue="false"
+      app:dependency="stats"
+      app:key="quickReset"
+      app:persistent="true"
+      app:summary="@string/settings_item_quick_reset_summary"
+      app:title="@string/settings_item_quick_reset_title"
+      />
+    <Preference
+      app:key="resetStats"
+      app:title="@string/settings_item_reset_stats_title"
       />
   </PreferenceCategory>
   <PreferenceCategory
@@ -83,14 +94,6 @@
       />
     <SwitchPreferenceCompat
       app:defaultValue="false"
-      app:dependency="stats"
-      app:key="quickReset"
-      app:persistent="true"
-      app:summary="@string/settings_item_quick_reset_summary"
-      app:title="@string/settings_item_quick_reset_title"
-      />
-    <SwitchPreferenceCompat
-      app:defaultValue="false"
       app:key="secureRandom"
       app:persistent="true"
       app:summary="@string/settings_item_secure_random_summary"
@@ -106,15 +109,6 @@
       app:persistent="true"
       app:summary="@string/settings_item_force_summary"
       app:title="@string/settings_item_force_title"
-      />
-    <Preference
-      app:key="resetStats"
-      app:title="@string/settings_item_reset_stats_title"
-      />
-    <Preference
-      app:key="bottomPaddingHack"
-      app:title=""
-      app:enabled="false"
       />
   </PreferenceCategory>
 </PreferenceScreen>

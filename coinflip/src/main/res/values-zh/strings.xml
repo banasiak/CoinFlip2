@@ -22,6 +22,7 @@
   <string name="settings_activity_title">硬币翻转设置</string>
   <string name="settings_header_advanced_title">高级设置</string>
   <string name="settings_header_basic_title">基本设置</string>
+  <string name="settings_header_statistics_title">统计设置</string>
   <string name="settings_item_animation_summary">渲染旋转硬币</string>
   <string name="settings_item_animation_title">动画片</string>
   <string name="settings_item_coin_title">硬币类型</string>

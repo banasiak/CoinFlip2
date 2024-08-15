@@ -9,12 +9,12 @@ import androidx.lifecycle.viewModelScope
 import com.banasiak.coinflip.BuildConfig
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.Coin
+import com.banasiak.coinflip.extensions.formatMilliseconds
+import com.banasiak.coinflip.extensions.formatNumber
+import com.banasiak.coinflip.extensions.restore
+import com.banasiak.coinflip.extensions.save
 import com.banasiak.coinflip.settings.SettingsManager
 import com.banasiak.coinflip.util.SoundHelper
-import com.banasiak.coinflip.util.formatMilliseconds
-import com.banasiak.coinflip.util.formatNumber
-import com.banasiak.coinflip.util.restore
-import com.banasiak.coinflip.util.save
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
