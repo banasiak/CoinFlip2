@@ -12,9 +12,9 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class MainState(
   @IgnoredOnParcel val animation: DurationAnimationDrawable? = null,
+  val coinImageType: CoinImageType = CoinImageType.PLACEHOLDER,
   @StringRes val instructionsText: Int = R.string.instructions_tap_shake,
   val paused: Boolean = false,
-  val placeholderVisible: Boolean = true,
   val resetVisible: Boolean = false,
   val result: Coin.Result = Coin.Result(Coin.Value.UNKNOWN, AnimationHelper.Permutation.UNKNOWN),
   val resultVisible: Boolean = false,
@@ -43,7 +43,7 @@ sealed class MainAction {
 }
 
 sealed class MainEffect {
-  data class FlipCoin(val animate: Boolean) : MainEffect()
+  data object FlipCoin : MainEffect()
 
   data object ToAbout : MainEffect()
 
@@ -56,4 +56,10 @@ sealed class MainEffect {
   data class UpdateStats(val headsCount: String, val tailsCount: String) : MainEffect()
 
   data object Vibrate : MainEffect()
+}
+
+enum class CoinImageType {
+  ANIMATION,
+  IMAGE,
+  PLACEHOLDER
 }

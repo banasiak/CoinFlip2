@@ -64,9 +64,9 @@ class MainViewModel @Inject constructor(
     state =
       state.copy(
         animation = null,
+        coinImageType = CoinImageType.PLACEHOLDER,
         instructionsText = instructions,
         paused = false,
-        placeholderVisible = true,
         resetVisible = settings.showStats && settings.showQuickReset,
         resultVisible = false,
         shakeEnabled = settings.shakeEnabled,
@@ -94,20 +94,19 @@ class MainViewModel @Inject constructor(
       val currentCount = stats.getOrDefault(result.value, 0)
       stats[result.value] = currentCount + 1
 
+      val animationEnabled = settings.animationEnabled
       val animation = animationHelper.animations[result.permutation]
 
       state =
         state.copy(
           animation = animation,
-          placeholderVisible = false,
+          coinImageType = if (animationEnabled) CoinImageType.ANIMATION else CoinImageType.IMAGE,
           result = result,
           resultVisible = false,
           shakeEnabled = false,
           stats = stats
         )
-
-      val animationEnabled = settings.animationEnabled
-      _effectFlow.emit(MainEffect.FlipCoin(animate = animationEnabled))
+      _effectFlow.emit(MainEffect.FlipCoin)
 
       if (animationEnabled) {
         // an obtuse way of pausing while the animation renders, proceeding 80 ms (4 frames, or 1/2 flip) before completion

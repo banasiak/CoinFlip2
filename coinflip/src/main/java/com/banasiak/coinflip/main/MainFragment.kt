@@ -106,8 +106,34 @@ class MainFragment : Fragment() {
 
   private fun bind(state: MainState) {
     Timber.d("bind(): $state")
-    binding.coinImage.background = state.animation
-    binding.coinPlaceholder.isVisible = state.placeholderVisible
+
+    when (state.coinImageType) {
+      CoinImageType.ANIMATION -> {
+        binding.coinImage.apply {
+          setImageDrawable(null)
+          background = state.animation
+          isVisible = true
+        }
+        binding.coinPlaceholder.isVisible = false
+      }
+      CoinImageType.IMAGE -> {
+        binding.coinImage.apply {
+          setImageDrawable(state.animation?.getLastFrame())
+          background = null
+          isVisible = true
+        }
+        binding.coinPlaceholder.isVisible = false
+      }
+      CoinImageType.PLACEHOLDER -> {
+        binding.coinImage.apply {
+          setImageDrawable(null)
+          background = null
+          isVisible = false
+        }
+        binding.coinPlaceholder.isVisible = true
+      }
+    }
+
     binding.instructionsText.text = getString(state.instructionsText)
     binding.resetButton.isVisible = state.resetVisible
     binding.resultText.isInvisible = !state.resultVisible // invisible, not gone
@@ -122,7 +148,7 @@ class MainFragment : Fragment() {
   private fun onEffect(effect: MainEffect) {
     Timber.d("onEffect(): $effect")
     when (effect) {
-      is MainEffect.FlipCoin -> renderAnimation(effect.animate)
+      MainEffect.FlipCoin -> renderAnimation()
       MainEffect.ToAbout -> navigate(R.id.toAbout)
       MainEffect.ToDiagnostics -> navigate(R.id.toDiagnostics)
       MainEffect.ToSettings -> navigate(R.id.toSettings)
@@ -132,16 +158,11 @@ class MainFragment : Fragment() {
     }
   }
 
-  private fun renderAnimation(animate: Boolean) {
+  private fun renderAnimation() {
     val animation = binding.coinImage.background as? DurationAnimationDrawable
     animation?.apply {
-      if (animate) {
-        stop()
-        start()
-      } else {
-        binding.coinImage.background = null
-        binding.coinImage.setImageDrawable(getLastFrame())
-      }
+      stop()
+      start()
     }
   }
 
