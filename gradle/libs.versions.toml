@@ -1,5 +1,5 @@
 [versions]
-agp = "8.5.2"
+agp = "8.6.0"
 android-junit = "1.11.0.0"
 androidx-activity = "1.9.1"
 androidx-appcompat = "1.7.0"
