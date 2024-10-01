@@ -1,10 +1,9 @@
 plugins {
-  id("com.android.application")
-  id("com.google.dagger.hilt.android")
-  id("com.google.devtools.ksp")
-  id("de.mannodermaus.android-junit5")
-  id("org.jetbrains.kotlin.android")
-  id("org.jetbrains.kotlin.plugin.parcelize")
+  alias(libs.plugins.android.application)
+  alias(libs.plugins.kotlin.android)
+  alias(libs.plugins.kotlin.parcelize)
+  alias(libs.plugins.hilt.android)
+  alias(libs.plugins.ksp)
 }
 
 android {
