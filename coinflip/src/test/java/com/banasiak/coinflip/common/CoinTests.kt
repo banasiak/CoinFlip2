@@ -27,7 +27,7 @@ class CoinTests {
   @Test
   fun `heads - tails`() {
     // given
-    every { rng.nextBoolean() } returnsMany listOf(true, false) // tails, heads
+    every { rng.nextBoolean() } returnsMany listOf(true, false) // heads, tails
     val coin = Coin(rng)
     coin.flip()
 
