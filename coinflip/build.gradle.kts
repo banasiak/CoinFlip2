@@ -8,14 +8,14 @@ plugins {
 
 android {
   namespace = "com.banasiak.coinflip"
-  compileSdk = 35
+  compileSdk = 36
 
   defaultConfig {
     applicationId = "com.banasiak.coinflip"
     minSdk = 26
-    targetSdk = 35
-    versionCode = 67
-    versionName = "2024/08"
+    targetSdk = 36
+    versionCode = 68
+    versionName = "2025/05"
   }
   buildFeatures {
     buildConfig = true
