@@ -2,11 +2,14 @@
 <resources>
   <string name="about_fragment_title">About Coin Flip</string>
   <string name="about_menu_title">About</string>
+  <string name="about_text">A convenient way to flip a coin, even if you don\'t have one. Simply tap the question mark or shake and view the result. Tap or shake to spin the coin again.\n\nQuarter-dollar coin images from the United States Mint. Presidential $1 Coin images from the United States Mint.</string>
   <string name="app_name">Coin Flip</string>
   <string name="coin_animation">Coin Animation</string>
+  <string name="copyright_text" translatable="false">Copyright &#169; 2025 &#8212; Richard Banasiak</string>
   <string name="diagnostics_fragment_title">Diagnostic Test</string>
   <string name="diagnostics_menu_title">Diagnostics</string>
   <string name="donate">Donate to EFF.org</string>
+  <string name="donate_text">If you like this app, please consider making a donation to the Electronic Frontier Foundation. &#10084;</string>
   <string name="empty" translatable="false" />
   <string name="force_high">High</string>
   <string name="force_low">Low</string>
@@ -17,6 +20,7 @@
   <string name="invalid_iterations">Invalid Number of Iterations</string>
   <string name="rate_app">Rate App on Google Play</string>
   <string name="reset_stats">Reset Stats</string>
+  <string name="rng">Random number generation is a process by which, often by means of a pseudo-random number generator, a sequence of numbers is generated that cannot be reasonably predicted better than by random chance. This means that the particular outcome sequence will contain some patterns detectable in hindsight but impossible to foresee.</string>
   <string name="seconds">%1s seconds</string>
   <string name="settings_activity_title">Coin Flip Settings</string>
   <string name="settings_header_advanced_title">Advanced Settings</string>
@@ -56,17 +60,5 @@
   <string name="turbo_mode">Turbo Mode Activated &#127812;</string>
   <string name="undo">Undo</string>
   <string name="version">version %1$s (%2$d)</string>
-  <string name="wikipedia">\u2014 Wikipedia (January, 2024)</string>
-  <string name="about_text">
-    A convenient way to flip a coin, even if you don\'t have one. Simply tap the question mark or shake and view the result. Tap or shake
-    to spin the coin again.
-    \n\nQuarter-dollar coin images from the United States Mint. Presidential $1 Coin images from the United States Mint.
-    \n\nCopyright \u00A9 2024 - Richard Banasiak
-    \n\nIf you like this app, please consider making a donation to the Electronic Frontier Foundation. &#10084;
-    </string>
-  <string name="rng">
-    Random (or, pseudo-random) number generation is a process by which a sequence of numbers that cannot be reasonably
-    predicted better than by random chance is generated. This means that the particular outcome sequence will contain some patterns
-    detectable in hindsight but impossible to foresee.
-  </string>
+  <string name="wikipedia">&#8212; Wikipedia</string>
 </resources>

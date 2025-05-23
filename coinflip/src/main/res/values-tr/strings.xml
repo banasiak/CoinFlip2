@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="about_fragment_title">Yazı-tura hakkında</string>
   <string name="about_menu_title">Hakkında</string>
-  <string name="about_text">Yazı tura atmanın kullanışlı bir yolu, elinizde olmasa bile. Soru işaretine dokunmanız veya sallamanız ve sonucu görüntülemeniz yeterlidir. Parayı tekrar döndürmek için dokunun veya sallayın. \n\nAmerika Birleşik Devletleri Darphanesinden çeyrek dolarlık madeni para görüntüleri. Amerika Birleşik Devletleri Darphanesinden Başkanlık 1 Dolarlık Para görselleri. \n\nTelif Hakkı © 2024 - Richard Banasiak\n\nBu uygulamayı beğendiyseniz lütfen Electronic Frontier Foundation\'a bağış yapmayı düşünün. ❤</string>
+  <string name="about_text">Madeni paranız olmasa bile yazı tura atmanın kolay bir yolu. Soru işaretine dokunmanız veya sallamanız yeterli ve sonucu görebilirsiniz. Madeni parayı tekrar döndürmek için dokunun veya sallayın.\n\nABD Darphanesi\'nden çeyrek dolarlık madeni para görselleri. ABD Darphanesi\'nden Başkanlık 1 Dolarlık Madeni Para görselleri.</string>
   <string name="app_name">Yazı tura</string>
   <string name="coin_animation">Para Animasyonu</string>
+  <string name="copyright_text" translatable="false">Copyright © 2025 — Richard Banasiak</string>
   <string name="diagnostics_fragment_title">Teşhis Testi</string>
   <string name="diagnostics_menu_title">Teşhis</string>
   <string name="donate">EFF.org\'a bağış yapın</string>
+  <string name="donate_text">Bu uygulamayı beğendiyseniz, lütfen Electronic Frontier Foundation\'a bağış yapmayı düşünün. ❤</string>
+  <string name="empty" translatable="false"/>
   <string name="force_high">Yüksek</string>
   <string name="force_low">Düşük</string>
   <string name="force_medium">Orta</string>
@@ -17,7 +20,7 @@
   <string name="invalid_iterations">Geçersiz Yineleme Sayısı</string>
   <string name="rate_app">Google Play\'de Uygulamayı Değerlendirin</string>
   <string name="reset_stats">İstatistikleri Sıfırla</string>
-  <string name="rng">Rastgele (veya sözde rastgele) sayı üretimi, rastgele şansa göre daha iyi tahmin edilemeyen bir sayı dizisinin üretildiği bir süreçtir. Bu, belirli sonuç dizisinin sonradan bakıldığında tespit edilebilecek ancak öngörülmesi imkansız bazı modeller içereceği anlamına gelir.</string>
+  <string name="rng">Rastgele sayı üretimi, çoğunlukla sözde rastgele sayı üreteci aracılığıyla, makul bir şekilde rastgele şanstan daha iyi tahmin edilemeyen bir sayı dizisinin üretilmesi sürecidir. Bu, belirli sonuç dizisinin, geriye dönüp bakıldığında tespit edilebilen ancak önceden tahmin edilmesi imkansız bazı kalıplar içereceği anlamına gelir.</string>
   <string name="seconds">%1s saniye</string>
   <string name="settings_activity_title">Yazı-tura ayarları</string>
   <string name="settings_header_advanced_title">Gelişmiş Ayarlar</string>
@@ -37,6 +40,7 @@
   <string name="settings_item_quick_reset_title">Hızlı İstatistik Sıfırlama</string>
   <string name="settings_item_reset_stats_title">İstatistikleri sıfırla</string>
   <string name="settings_item_secure_random_summary">Kriptografik olarak güvenli bir sözde rastgele sayı üreteci kullanın</string>
+  <string name="settings_item_secure_random_title">Rastgele numara üreticisi</string>
   <string name="settings_item_shake_summary">Parayı çevirmek için cihazı sallayın</string>
   <string name="settings_item_shake_title">Sallamak</string>
   <string name="settings_item_sound_summary">Yazı-tura attıktan sonra ses çal</string>
@@ -56,6 +60,5 @@
   <string name="turbo_mode">Turbo Modu Etkinleştirildi &#127812;</string>
   <string name="undo">Geri alma</string>
   <string name="version">sürüm %1$s (%2$d)</string>
-  <string name="wikipedia">- Vikipedi (Ocak 2024)</string>
-  <string name="settings_item_secure_random_title">Rastgele numara üreticisi</string>
+  <string name="wikipedia">— Vikipedi</string>
 </resources>

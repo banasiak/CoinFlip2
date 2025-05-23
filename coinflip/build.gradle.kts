@@ -53,7 +53,6 @@ dependencies {
   implementation(libs.review.ktx)
   implementation(libs.seismic)
   implementation(libs.timber)
-  ksp(libs.dagger.compiler)
   ksp(libs.hilt.android.compiler)
   testImplementation(libs.junit.api)
   testImplementation(libs.kluent.android)

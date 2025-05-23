@@ -39,9 +39,25 @@
       style="@style/MaterialAlertDialog.Material3.Body.Text"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:justificationMode="inter_word"
-      android:layout_marginBottom="@dimen/spacing_large"
       android:text="@string/about_text"
+      />
+
+    <TextView
+      android:id="@+id/copyright"
+      style="@style/MaterialAlertDialog.Material3.Body.Text"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_medium"
+      android:layout_marginBottom="@dimen/spacing_medium"
+      android:text="@string/copyright_text"
+      />
+
+    <TextView
+      style="@style/MaterialAlertDialog.Material3.Body.Text"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="@dimen/spacing_large"
+      android:text="@string/donate_text"
       />
 
     <Button

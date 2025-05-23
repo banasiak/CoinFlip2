@@ -1,6 +1,7 @@
 package com.banasiak.coinflip.about
 
 import androidx.lifecycle.ViewModel
+import com.banasiak.coinflip.about.AboutEffect.LaunchUrl
 import com.banasiak.coinflip.common.BuildInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -16,9 +17,10 @@ class AboutViewModel @Inject constructor(
 ) : ViewModel() {
   private val donateUrl = "https://eff.org/donate"
   private val rateUrl = "market://details?id=${buildInfo.packageName}"
+  private val websiteUrl = "https://www.banasiak.com"
 
   private var state = AboutState(buildInfo.versionName, buildInfo.versionCode)
-    private set(value) {
+    set(value) {
       field = value
       // emit the new state when it changes
       Timber.d("emitState(): $value")
@@ -33,8 +35,9 @@ class AboutViewModel @Inject constructor(
 
   fun postAction(action: AboutAction) {
     when (action) {
-      is AboutAction.Donate -> _effectFlow.tryEmit(AboutEffect.LaunchUrl(donateUrl))
-      is AboutAction.RateApp -> _effectFlow.tryEmit(AboutEffect.LaunchUrl(rateUrl))
+      AboutAction.Donate -> _effectFlow.tryEmit(LaunchUrl(donateUrl))
+      AboutAction.RateApp -> _effectFlow.tryEmit(LaunchUrl(rateUrl))
+      AboutAction.Website -> _effectFlow.tryEmit(LaunchUrl(websiteUrl))
     }
   }
 }

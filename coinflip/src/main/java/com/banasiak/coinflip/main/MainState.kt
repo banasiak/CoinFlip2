@@ -26,35 +26,22 @@ data class MainState(
 
 sealed class MainAction {
   data object OnPause : MainAction()
-
   data object OnResume : MainAction()
-
   data object ResetStats : MainAction()
-
   data object Shake : MainAction()
-
   data object TapAbout : MainAction()
-
   data object TapCoin : MainAction()
-
   data object TapDiagnostics : MainAction()
-
   data object TapSettings : MainAction()
 }
 
 sealed class MainEffect {
   data object FlipCoin : MainEffect()
-
   data object ToAbout : MainEffect()
-
   data object ToDiagnostics : MainEffect()
-
   data object ToSettings : MainEffect()
-
   data object ShowRateDialog : MainEffect()
-
   data class UpdateStats(val headsCount: String, val tailsCount: String) : MainEffect()
-
   data object Vibrate : MainEffect()
 }
 

@@ -26,12 +26,10 @@ data class DiagnosticsState(
 
 sealed class DiagnosticsAction {
   data object Start : DiagnosticsAction()
-
   data object Wikipedia : DiagnosticsAction()
 }
 
 sealed class DiagnosticsEffect {
   data class LaunchUrl(val url: String) : DiagnosticsEffect()
-
   data class ShowToast(@StringRes val text: Int) : DiagnosticsEffect()
 }

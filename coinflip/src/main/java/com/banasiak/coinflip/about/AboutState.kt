@@ -7,8 +7,8 @@ data class AboutState(
 
 sealed class AboutAction {
   data object Donate : AboutAction()
-
   data object RateApp : AboutAction()
+  data object Website : AboutAction()
 }
 
 sealed class AboutEffect {

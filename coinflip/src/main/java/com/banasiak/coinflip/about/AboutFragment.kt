@@ -49,12 +49,12 @@ class AboutFragment : BottomSheetDialogFragment() {
     }
 
     setupActions()
-    binding.rateButton.setOnClickListener { viewModel.postAction(AboutAction.RateApp) }
   }
 
   private fun setupActions() {
     binding.rateButton.setOnClickListener { viewModel.postAction(AboutAction.RateApp) }
     binding.donateButton.setOnClickListener { viewModel.postAction(AboutAction.Donate) }
+    binding.copyright.setOnClickListener { viewModel.postAction(AboutAction.Website) }
   }
 
   private fun bind(state: AboutState) {

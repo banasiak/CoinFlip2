@@ -1,13 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="about_fragment_title">À propos de Coin Flip</string>
   <string name="about_menu_title">À propos</string>
-  <string name="about_text">Un moyen pratique de lancer une pièce, même si vous n\'en avez pas. Appuyez simplement sur le point d\'interrogation ou secouez-le et visualisez le résultat. Appuyez ou secouez pour faire tourner à nouveau la pièce. \n\nImages de pièces d\'un quart de dollar de la Monnaie des États-Unis. Images de pièces présidentielles de 1 $de la Monnaie des États-Unis. \n\nCopyright © 2024 - Richard Banasiak\n\nSi vous aimez cette application, pensez à faire un don à l\'Electronic Frontier Foundation. ❤</string>
+  <string name="about_text">Un moyen pratique de lancer une pièce, même si vous n\'en avez pas. Appuyez simplement sur le point d\'interrogation ou secouez et visualisez le résultat. Appuyez ou secouez pour faire tourner à nouveau la pièce.\n\nImages de pièces d\'un quart de dollar de la Monnaie des États-Unis. Images de la pièce présidentielle de 1 $de la Monnaie des États-Unis.</string>
   <string name="app_name">Lancement de pièces</string>
   <string name="coin_animation">Animation de pièces de monnaie</string>
   <string name="diagnostics_fragment_title">Test diagnostique</string>
   <string name="diagnostics_menu_title">Diagnostique</string>
   <string name="donate">Faire un don à EFF.org</string>
+  <string name="donate_text">Si vous aimez cette application, pensez à faire un don à l\'Electronic Frontier Foundation. ❤</string>
+  <string name="empty" translatable="false"/>
   <string name="force_high">Haut</string>
   <string name="force_low">Faible</string>
   <string name="force_medium">Moyen</string>
@@ -17,7 +19,7 @@
   <string name="invalid_iterations">Nombre d\'itérations invalide</string>
   <string name="rate_app">Évaluez l\'application sur Google Play</string>
   <string name="reset_stats">Réinitialiser les statistiques</string>
-  <string name="rng">La génération de nombres aléatoires (ou pseudo-aléatoires) est un processus par lequel une séquence de nombres qui ne peut pas être raisonnablement prédite mieux que par hasard est générée. Cela signifie que la séquence de résultats particulière contiendra certains modèles détectables a posteriori mais impossibles à prévoir.</string>
+  <string name="rng">La génération de nombres aléatoires est un processus par lequel, souvent au moyen d\'un générateur de nombres pseudo-aléatoires, une séquence de nombres est générée qui ne peut être raisonnablement prédite que par le hasard. Cela signifie que la séquence de résultats particulière contiendra certains modèles détectables avec le recul, mais impossibles à prévoir.</string>
   <string name="seconds">%1s secondes</string>
   <string name="settings_activity_title">Paramètres de tirage de pièces</string>
   <string name="settings_header_advanced_title">Réglages avancés</string>
@@ -37,6 +39,7 @@
   <string name="settings_item_quick_reset_title">Réinitialisation rapide des statistiques</string>
   <string name="settings_item_reset_stats_title">Réinitialiser les statistiques</string>
   <string name="settings_item_secure_random_summary">Utilisez un générateur de nombres pseudo-aléatoires cryptographiquement sécurisé</string>
+  <string name="settings_item_secure_random_title">Générateur de nombres aléatoires</string>
   <string name="settings_item_shake_summary">Secouez l\'appareil pour lancer une pièce</string>
   <string name="settings_item_shake_title">Secouer</string>
   <string name="settings_item_sound_summary">Jouer le son après le tirage au sort</string>
@@ -55,7 +58,6 @@
   <string name="total">TOTAL</string>
   <string name="turbo_mode">Mode Turbo activé &#127812;</string>
   <string name="undo">annuler</string>
-  <string name="version">version %1$s (%2$d)</string>
-  <string name="wikipedia">— Wikipédia (janvier 2024)</string>
-  <string name="settings_item_secure_random_title">Générateur de nombres aléatoires</string>
+  <string name="version">version %1$s (%2$d)</string>
+  <string name="wikipedia">— Wikipédia</string>
 </resources>

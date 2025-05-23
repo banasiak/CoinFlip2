@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="about_fragment_title">เกี่ยวกับเหรียญพลิก</string>
   <string name="about_menu_title">เกี่ยวกับ</string>
-  <string name="about_text">วิธีที่สะดวกในการพลิกเหรียญแม้ว่าคุณจะไม่มีก็ตาม เพียงแตะเครื่องหมายคำถามหรือเขย่าแล้วดูผลลัพธ์ แตะหรือเขย่าเพื่อหมุนเหรียญอีกครั้ง \n\nภาพเหรียญควอเตอร์ดอลล่าร์จากโรงกษาปณ์สหรัฐ ภาพเหรียญ 1 ดอลลาร์ประธานาธิบดีจากโรงกษาปณ์สหรัฐ \n\nลิขสิทธิ์ © 2024 - Richard Banasiak\n\nหากคุณชอบแอพนี้ โปรดบริจาคเงินให้กับมูลนิธิ Electronic Frontier ❤</string>
+  <string name="about_text">วิธีที่สะดวกในการโยนเหรียญ แม้ว่าคุณจะไม่มีเหรียญก็ตาม เพียงแตะเครื่องหมายคำถามหรือเขย่าเพื่อดูผลลัพธ์ แตะหรือเขย่าเพื่อหมุนเหรียญอีกครั้ง\n\nภาพเหรียญ 25 ล้านดอลลาร์จากกองกษาปณ์สหรัฐอเมริกา ภาพเหรียญประธานาธิบดีมูลค่า 1 ดอลลาร์จากโรงกษาปณ์สหรัฐอเมริกา</string>
   <string name="app_name">พลิกเหรียญ</string>
   <string name="coin_animation">ภาพเคลื่อนไหวเหรียญ</string>
+  <string name="copyright_text" translatable="false">Copyright © 2025 — Richard Banasiak</string>
   <string name="diagnostics_fragment_title">ทดสอบการวินิจฉัย</string>
   <string name="diagnostics_menu_title">การวินิจฉัย</string>
   <string name="donate">บริจาคให้กับ EFF.org</string>
+  <string name="donate_text">หากคุณชอบแอปนี้ โปรดพิจารณาบริจาคให้กับ Electronic Frontier Foundation </string>
+  <string name="empty" translatable="false"/>
   <string name="force_high">สูง</string>
   <string name="force_low">ต่ำ</string>
   <string name="force_medium">ปานกลาง</string>
@@ -17,7 +20,7 @@
   <string name="invalid_iterations">จำนวนการวนซ้ำไม่ถูกต้อง</string>
   <string name="rate_app">ให้คะแนนแอปบน Google Play</string>
   <string name="reset_stats">รีเซ็ตสถิติ</string>
-  <string name="rng">การสร้างตัวเลขสุ่ม (หรือการสุ่มหลอก) เป็นกระบวนการที่สร้างลำดับของตัวเลขที่ไม่สามารถคาดเดาได้อย่างสมเหตุสมผลได้ดีไปกว่าการสุ่มโดยบังเอิญ ซึ่งหมายความว่าลำดับผลลัพธ์เฉพาะจะมีรูปแบบบางอย่างที่สามารถตรวจพบได้เมื่อเข้าใจถึงเหตุการณ์หลังเหตุการณ์แต่ไม่สามารถคาดเดาได้</string>
+  <string name="rng">การสร้างตัวเลขสุ่มเป็นกระบวนการซึ่งมักจะใช้เครื่องสร้างตัวเลขสุ่มเทียมเพื่อสร้างลำดับตัวเลขที่ไม่สามารถคาดเดาได้ดีกว่าโอกาสแบบสุ่ม ซึ่งหมายความว่าลำดับผลลัพธ์โดยเฉพาะจะมีรูปแบบบางอย่างที่สามารถตรวจจับได้ในภายหลังแต่ไม่สามารถคาดการณ์ได้</string>
   <string name="seconds">%1s วินาที</string>
   <string name="settings_activity_title">การตั้งค่าการพลิกเหรียญ</string>
   <string name="settings_header_advanced_title">ตั้งค่าขั้นสูง</string>
@@ -37,6 +40,7 @@
   <string name="settings_item_quick_reset_title">รีเซ็ตสถิติด่วน</string>
   <string name="settings_item_reset_stats_title">รีเซ็ตสถิติ</string>
   <string name="settings_item_secure_random_summary">ใช้ตัวสร้างตัวเลขสุ่มเทียมที่ปลอดภัยด้วยการเข้ารหัส</string>
+  <string name="settings_item_secure_random_title">เครื่องกำเนิดตัวเลขสุ่ม</string>
   <string name="settings_item_shake_summary">เขย่าเครื่องเพื่อพลิกเหรียญ</string>
   <string name="settings_item_shake_title">เขย่า</string>
   <string name="settings_item_sound_summary">เล่นเสียงหลังจากโยนเหรียญ</string>
@@ -56,6 +60,5 @@
   <string name="turbo_mode">เปิดใช้งานโหมดเทอร์โบ &#127812;</string>
   <string name="undo">เลิกทำ</string>
   <string name="version">เวอร์ชัน %1$s (%2$d)</string>
-  <string name="wikipedia">— วิกิพีเดีย (มกราคม 2024)</string>
-  <string name="settings_item_secure_random_title">เครื่องกำเนิดตัวเลขสุ่ม</string>
+  <string name="wikipedia">— วิกิพีเดีย</string>
 </resources>

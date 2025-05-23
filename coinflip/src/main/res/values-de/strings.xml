@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="about_fragment_title">Über Münzwurf</string>
   <string name="about_menu_title">Um</string>
-  <string name="about_text">Eine bequeme Möglichkeit, eine Münze zu werfen, auch wenn Sie keine haben. Tippen Sie einfach auf das Fragezeichen oder schütteln Sie es und sehen Sie sich das Ergebnis an. Tippen oder schütteln Sie, um die Münze erneut zu drehen. \n\nBilder von Vierteldollarmünzen der United States Mint. Bilder der Präsidenten-1-Dollar-Münze der United States Mint. \n\nUrheberrecht © 2024 – Richard Banasiak\n\nWenn Ihnen diese App gefällt, denken Sie bitte über eine Spende an die Electronic Frontier Foundation nach. ❤</string>
+  <string name="about_text">Eine bequeme Möglichkeit, eine Münze zu werfen, auch wenn Sie keine haben. Tippen Sie einfach auf das Fragezeichen oder schütteln Sie es und sehen Sie sich das Ergebnis an. Tippen oder schütteln, um die Münze erneut zu drehen.\n\nBilder von Vierteldollarmünzen der United States Mint. Bilder der 1-Dollar-Präsidentenmünze der United States Mint.</string>
   <string name="app_name">Münze werfen</string>
   <string name="coin_animation">Münzanimation</string>
+  <string name="copyright_text" translatable="false">Copyright © 2025 — Richard Banasiak</string>
   <string name="diagnostics_fragment_title">Diagnosetest</string>
   <string name="diagnostics_menu_title">Diagnose</string>
   <string name="donate">Spenden Sie an EFF.org</string>
+  <string name="donate_text">Wenn Ihnen diese App gefällt, denken Sie bitte über eine Spende an die Electronic Frontier Foundation nach. ❤</string>
+  <string name="empty" translatable="false"/>
   <string name="force_high">Hoch</string>
   <string name="force_low">Niedrig</string>
   <string name="force_medium">Mittel</string>
@@ -17,7 +20,7 @@
   <string name="invalid_iterations">Ungültige Anzahl von Iterationen</string>
   <string name="rate_app">Bewerten Sie die App bei Google Play</string>
   <string name="reset_stats">Statistiken zurücksetzen</string>
-  <string name="rng">Bei der Generierung von Zufallszahlen (oder Pseudozufallszahlen) handelt es sich um einen Prozess, bei dem eine Folge von Zahlen erzeugt wird, die nicht vernünftigerweise besser als durch Zufall vorhergesagt werden kann. Dies bedeutet, dass die jeweilige Ergebnissequenz einige Muster enthält, die im Nachhinein erkennbar, aber nicht vorhersehbar sind.</string>
+  <string name="rng">Bei der Generierung von Zufallszahlen handelt es sich um einen Prozess, bei dem – häufig mithilfe eines Pseudozufallszahlengenerators – eine Zahlenfolge erzeugt wird, die vernünftigerweise nicht besser als durch Zufall vorhergesagt werden kann. Dies bedeutet, dass die jeweilige Ergebnissequenz einige Muster enthält, die im Nachhinein erkennbar, aber nicht vorhersehbar sind.</string>
   <string name="seconds">%1s Sekunden</string>
   <string name="settings_activity_title">Münzwurfeinstellungen</string>
   <string name="settings_header_advanced_title">Erweiterte Einstellungen</string>
@@ -37,6 +40,7 @@
   <string name="settings_item_quick_reset_title">Schnelles Zurücksetzen der Statistiken</string>
   <string name="settings_item_reset_stats_title">Statistik Zurücksetzen</string>
   <string name="settings_item_secure_random_summary">Verwenden Sie einen kryptografisch sicheren Pseudozufallszahlengenerator</string>
+  <string name="settings_item_secure_random_title">Zufallszahlengenerator</string>
   <string name="settings_item_shake_summary">Schütteln Sie das Gerät, um die Münze zu werfen</string>
   <string name="settings_item_shake_title">Shake</string>
   <string name="settings_item_sound_summary">Nach dem Münzwurf wird ein Ton abgespielt</string>
@@ -56,6 +60,5 @@
   <string name="turbo_mode">Turbo-Modus aktiviert &#127812;</string>
   <string name="undo">Rückgängig machen</string>
   <string name="version">Version %1$s (%2$d)</string>
-  <string name="wikipedia">— Wikipedia (Januar 2024)</string>
-  <string name="settings_item_secure_random_title">Zufallszahlengenerator</string>
+  <string name="wikipedia">— Wikipedia</string>
 </resources>

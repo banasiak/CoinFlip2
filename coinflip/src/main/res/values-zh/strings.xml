@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="about_fragment_title">关于抛硬币</string>
   <string name="about_menu_title">关于</string>
-  <string name="about_text">即使您没有硬币，也是一种便捷的抛硬币方式。只需点击问号或摇动即可查看结果。点击或摇晃以再次旋转硬币。\n\n美国造币厂的 25 美元硬币图像。美国造币厂的 1 美元总统硬币图像。\n\n版权所有 © 2024 - 理查德·巴纳西亚克\n\n如果您喜欢这个应用程序，请考虑向电子前沿基金会捐款。❤</string>
+  <string name="about_text">这是一种抛硬币的便捷方法，即使您没有硬币。只需点击问号或摇晃即可查看结果。轻敲或摇晃即可再次旋转硬币。\n\n美国铸币局的四分之一美元硬币图像。美国铸币局的总统 1 美元硬币图片。</string>
   <string name="app_name">抛硬币</string>
   <string name="coin_animation">硬币动画</string>
+  <string name="copyright_text" translatable="false">Copyright © 2025 — Richard Banasiak</string>
   <string name="diagnostics_fragment_title">诊断测试</string>
   <string name="diagnostics_menu_title">诊断</string>
   <string name="donate">捐赠给 EFF.org</string>
+  <string name="donate_text">如果您喜欢这个应用程序，请考虑向电子前沿基金会捐款。❤</string>
+  <string name="empty" translatable="false"/>
   <string name="force_high">高的</string>
   <string name="force_low">低的</string>
   <string name="force_medium">中等的</string>
@@ -17,7 +20,7 @@
   <string name="invalid_iterations">无效的迭代次数</string>
   <string name="rate_app">在 Google Play 上评价应用程序</string>
   <string name="reset_stats">重置统计数据</string>
-  <string name="rng">随机（或伪随机）数字生成是生成无法比随机机会更好地合理预测的数字序列的过程。这意味着特定的结果序列将包含一些事后可检测到但无法预见的模式。</string>
+  <string name="rng">随机数生成是一个过程，通常使用伪随机数生成器来生成一系列数字，这些数字无法比随机机会更好地合理预测。这意味着特定的结果序列将包含一些事后可检测但无法预见的模式。</string>
   <string name="seconds">%1s 秒</string>
   <string name="settings_activity_title">硬币翻转设置</string>
   <string name="settings_header_advanced_title">高级设置</string>
@@ -57,5 +60,5 @@
   <string name="turbo_mode">Turbo 模式已激活&#127812;?</string>
   <string name="undo">撤消</string>
   <string name="version">版本 %1$s (%2$d)</string>
-  <string name="wikipedia">— 维基百科（2024 年 1 月）</string>
+  <string name="wikipedia">— 维基百科</string>
 </resources>

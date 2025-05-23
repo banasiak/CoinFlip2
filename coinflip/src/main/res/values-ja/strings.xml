@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="about_fragment_title">コイントスについて</string>
   <string name="about_menu_title">について</string>
-  <string name="about_text">コインを持っていない場合でも、コインを投げる便利な方法です。クエスチョンマークをタップするか振るだけで結果が表示されます。タップまたはシェイクすると、コインが再び回転します。\n\n米国造幣局の 4 分の 1 ドル硬貨の画像。米国造幣局の大統領 1 ドル硬貨の画像。\n\n著作権 © 2024 - リチャード・バナシアック\n\nこのアプリを気に入っていただけましたら、電子フロンティア財団への寄付をご検討ください。❤</string>
+  <string name="about_text">コインを持っていなくても、コインを投げる便利な方法です。疑問符をタップするか、振るだけで結果が表示されます。タップまたはシェイクするとコインが再び回転します。\n\nアメリカ造幣局発行の 25 ドル硬貨の画像。アメリカ造幣局発行の大統領 1 ドル硬貨の画像。</string>
   <string name="app_name">コイン投げ</string>
   <string name="coin_animation">コインアニメーション</string>
+  <string name="copyright_text" translatable="false">Copyright © 2025 — Richard Banasiak</string>
   <string name="diagnostics_fragment_title">診断テスト</string>
   <string name="diagnostics_menu_title">診断</string>
   <string name="donate">EFF.org に寄付する</string>
+  <string name="donate_text">このアプリが気に入ったら、電子フロンティア財団への寄付をご検討ください。❤</string>
+  <string name="empty" translatable="false"/>
   <string name="force_high">高い</string>
   <string name="force_low">低い</string>
   <string name="force_medium">中くらい</string>
@@ -17,8 +20,8 @@
   <string name="invalid_iterations">無効な反復数</string>
   <string name="rate_app">Google Play でアプリを評価する</string>
   <string name="reset_stats">統計のリセット</string>
-  <string name="rng">乱数 (または擬似乱数) 生成は、ランダムな偶然よりも合理的に予測できない一連の数値を生成するプロセスです。これは、特定の結果シーケンスには、後から考えれば検出できるが、予測することは不可能ないくつかのパターンが含まれていることを意味します。</string>
-  <string name="seconds">%1s 秒</string>
+  <string name="rng">乱数生成は、多くの場合疑似乱数ジェネレーターを使用して、ランダムな偶然よりも合理的に予測できない一連の数字を生成するプロセスです。これは、特定の結果シーケンスには、後から見れば検出できるが、予見することは不可能ないくつかのパターンが含まれることを意味します。</string>
+  <string name="seconds">%1s秒</string>
   <string name="settings_activity_title">コイン投げの設定</string>
   <string name="settings_header_advanced_title">高度な設定</string>
   <string name="settings_header_basic_title">基本設定</string>
@@ -37,6 +40,7 @@
   <string name="settings_item_quick_reset_title">統計情報のクイックリセット</string>
   <string name="settings_item_reset_stats_title">統計のリセット</string>
   <string name="settings_item_secure_random_summary">暗号的に安全な擬似乱数ジェネレータを使用する</string>
+  <string name="settings_item_secure_random_title">乱数ジェネレータ</string>
   <string name="settings_item_shake_summary">デバイスを振ってコインを投げます</string>
   <string name="settings_item_shake_title">シェイク</string>
   <string name="settings_item_sound_summary">コイン投げ後に音を鳴らす</string>
@@ -55,7 +59,6 @@
   <string name="total">合計</string>
   <string name="turbo_mode">ターボモードが有効化されました &#127812;?</string>
   <string name="undo">元に戻す</string>
-  <string name="version">バージョン %1$s (%2$d)</string>
-  <string name="wikipedia">— ウィキペディア (2024 年 1 月)</string>
-  <string name="settings_item_secure_random_title">乱数ジェネレータ</string>
+  <string name="version">バージョン%1$s（%2$d ）</string>
+  <string name="wikipedia">— ウィキペディア</string>
 </resources>

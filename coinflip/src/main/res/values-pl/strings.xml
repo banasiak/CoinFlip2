@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="about_fragment_title">O grze Coin Flip</string>
+  <string name="about_menu_title">O</string>
+  <string name="about_text">Wygodny sposób na rzucanie monetą, nawet jeśli jej nie masz. Po prostu dotknij znaku zapytania lub potrząśnij urządzeniem, aby zobaczyć wynik. Dotknij lub potrząśnij, aby ponownie zakręcić monetą.\n\nWizerunki monet ćwierćdolarowych z Mennicy Stanów Zjednoczonych. Wizerunki monety prezydenckiej 1 dolarowej z Mennicy Stanów Zjednoczonych.</string>
+  <string name="app_name">Rzut monetą</string>
+  <string name="coin_animation">Animacja monety</string>
+  <string name="copyright_text" translatable="false">Copyright © 2025 — Richard Banasiak</string>
+  <string name="diagnostics_fragment_title">Test diagnostyczny</string>
+  <string name="diagnostics_menu_title">Diagnostyka</string>
+  <string name="donate">Przekaż darowiznę na rzecz EFF.org</string>
+  <string name="donate_text">Jeśli podoba Ci się ta aplikacja, rozważ przekazanie darowizny na rzecz fundacji Electronic Frontier Foundation. ❤</string>
+  <string name="empty" translatable="false"/>
+  <string name="force_high">Wysoki</string>
+  <string name="force_low">Niski</string>
+  <string name="force_medium">Średni</string>
+  <string name="heads">GŁOWY</string>
+  <string name="instructions_tap">Dotknij, aby rzucić monetą</string>
+  <string name="instructions_tap_shake">Dotknij/potrząśnij, aby rzucić monetą</string>
+  <string name="invalid_iterations">Nieprawidłowa liczba iteracji</string>
+  <string name="rate_app">Oceń aplikację w Google Play</string>
+  <string name="reset_stats">Zresetuj statystyki</string>
+  <string name="rng">Generowanie liczb losowych to proces, w którym, często za pomocą generatora liczb pseudolosowych, generowany jest ciąg liczb, którego nie da się przewidzieć lepiej niż metodą losową. Oznacza to, że konkretna sekwencja wyników będzie zawierać pewne wzorce, które można wykryć z perspektywy czasu, ale których nie da się przewidzieć.</string>
+  <string name="seconds">%1stowary drugiej jakości</string>
+  <string name="settings_activity_title">Ustawienia rzucania monetą</string>
+  <string name="settings_header_advanced_title">Ustawienia zaawansowane</string>
+  <string name="settings_header_basic_title">Ustawienia podstawowe</string>
+  <string name="settings_header_statistics_title">Ustawienia statystyk</string>
+  <string name="settings_item_animation_summary">Wyrenderuj wirującą monetę</string>
+  <string name="settings_item_animation_title">Ożywienie</string>
+  <string name="settings_item_coin_title">Typ monety</string>
+  <string name="settings_item_diagnostics_dialog">Liczba iteracji</string>
+  <string name="settings_item_diagnostics_summary">iteracje</string>
+  <string name="settings_item_diagnostics_title">Test diagnostyczny</string>
+  <string name="settings_item_dynamic_colors_summary">Użyj kolorów tapety (Android 12+)</string>
+  <string name="settings_item_dynamic_colors_title">Dynamiczny motyw kolorów</string>
+  <string name="settings_item_force_summary">Siła potrzebna do rzucenia monetą</string>
+  <string name="settings_item_force_title">Wstrząsanie wrażliwością</string>
+  <string name="settings_item_quick_reset_summary">Pokaż przycisk resetowania poniżej statystyk</string>
+  <string name="settings_item_quick_reset_title">Szybkie resetowanie statystyk</string>
+  <string name="settings_item_reset_stats_title">Zresetuj statystyki</string>
+  <string name="settings_item_secure_random_summary">Użyj kryptograficznie bezpiecznego generatora liczb pseudolosowych (CSPRNG)</string>
+  <string name="settings_item_secure_random_title">Generator liczb losowych</string>
+  <string name="settings_item_shake_summary">Wstrząśnij urządzeniem, aby rzucić monetą</string>
+  <string name="settings_item_shake_title">Potrząsnąć</string>
+  <string name="settings_item_sound_summary">Odtwórz dźwięk po rzucie monetą</string>
+  <string name="settings_item_sound_title">Dźwięk</string>
+  <string name="settings_item_stats_summary">Wyświetl sumę bieżącą</string>
+  <string name="settings_item_stats_title">Statystyka</string>
+  <string name="settings_item_text_summary">Wyświetl orły/reszki</string>
+  <string name="settings_item_text_title">Tekst</string>
+  <string name="settings_item_vibrate_summary">Wibracja przy rzucie monetą</string>
+  <string name="settings_item_vibrate_title">Wibrować</string>
+  <string name="settings_menu_title">Ustawienia</string>
+  <string name="settings_not_set">Nie ustawiono</string>
+  <string name="stats_reset_message">Statystyki zostały zresetowane</string>
+  <string name="tails">OGONY</string>
+  <string name="time">CZAS</string>
+  <string name="total">CAŁKOWITY</string>
+  <string name="turbo_mode">Tryb Turbo aktywowany &#127812;</string>
+  <string name="undo">Anulować</string>
+  <string name="version">wersja %1$s (%2$d)</string>
+  <string name="wikipedia">— Wikipedia</string>
+</resources>
