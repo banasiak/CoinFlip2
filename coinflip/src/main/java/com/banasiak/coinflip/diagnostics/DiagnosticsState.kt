@@ -31,5 +31,5 @@ sealed class DiagnosticsAction {
 
 sealed class DiagnosticsEffect {
   data class LaunchUrl(val url: String) : DiagnosticsEffect()
-  data class ShowToast(@StringRes val text: Int) : DiagnosticsEffect()
+  data class ShowToast(@param:StringRes val text: Int) : DiagnosticsEffect()
 }

@@ -13,7 +13,7 @@ import kotlinx.parcelize.Parcelize
 data class MainState(
   @IgnoredOnParcel val animation: DurationAnimationDrawable? = null,
   val coinImageType: CoinImageType = CoinImageType.PLACEHOLDER,
-  @StringRes val instructionsText: Int = R.string.instructions_tap_shake,
+  @param:StringRes val instructionsText: Int = R.string.instructions_tap_shake,
   val paused: Boolean = false,
   val resetVisible: Boolean = false,
   val result: Coin.Result = Coin.Result(Coin.Value.UNKNOWN, AnimationHelper.Permutation.UNKNOWN),

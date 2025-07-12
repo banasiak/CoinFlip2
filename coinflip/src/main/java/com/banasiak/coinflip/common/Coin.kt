@@ -13,7 +13,7 @@ import javax.inject.Singleton
 class Coin @Inject constructor(
   private val random: RNG
 ) {
-  enum class Value(@StringRes val string: Int, @StyleRes val style: Int) {
+  enum class Value(@param:StringRes val string: Int, @param:StyleRes val style: Int) {
     HEADS(R.string.heads, R.style.AppTheme_TextAppearance_Result_Heads),
     TAILS(R.string.tails, R.style.AppTheme_TextAppearance_Result_Tails),
     UNKNOWN(R.string.empty, R.style.AppTheme_TextAppearance_Result)

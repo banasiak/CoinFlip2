@@ -1,26 +1,26 @@
 [versions]
-agp = "8.10.0"
-android-junit = "1.11.3.0"
+agp = "8.11.1"
+android-junit = "1.13.1.0"
 androidx-activity = "1.10.1"
-androidx-appcompat = "1.7.0"
+androidx-appcompat = "1.7.1"
 androidx-browser = "1.8.0"
 androidx-core = "1.16.0"
-androidx-lifecycle = "2.9.0"
-androidx-navigation = "2.9.0"
+androidx-lifecycle = "2.9.1"
+androidx-navigation = "2.9.1"
 androidx-preference = "1.2.1"
-dagger = "2.55"
-junit = "5.11.4"
+dagger = "2.56.2"
+junit = "5.13.3"
 kluent = "1.73"
-kotlin = "2.0.10"
-kotlinx-coroutines = "1.10.1"
-ksp = "2.0.10-1.0.24"
+kotlin = "2.2.0"
+kotlinx-coroutines = "1.10.2"
+ksp = "2.2.0-2.0.2"
 ktlint = "1.1.0"
 material = "1.12.0"
-mockk = "1.13.16"
+mockk = "1.14.4"
 review = "2.0.2"
 seismic = "1.0.3"
 timber = "5.0.1"
-turbine = "1.2.0"
+turbine = "1.2.1"
 versions = "0.52.0"
 
 [libraries]
@@ -33,11 +33,10 @@ androidx-lifecycle-viewmodel-savedstate = { module = "androidx.lifecycle:lifecyc
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "androidx-navigation" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "androidx-navigation" }
 androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "androidx-preference" }
-dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "dagger" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "dagger" }
-junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
-junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 kluent-android = { module = "org.amshove.kluent:kluent-android", version.ref = "kluent" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }

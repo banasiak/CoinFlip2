@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 @ActivityScoped
 class ColorHelper @Inject constructor(
-  @ActivityContext private val context: Context,
+  @param:ActivityContext private val context: Context,
   private val settings: SettingsManager
 ) {
   @SuppressLint("ResourceType")
@@ -25,5 +25,5 @@ class ColorHelper @Inject constructor(
     return ThemedColors(colorPrimary, colorPrimaryDark)
   }
 
-  data class ThemedColors(@ColorInt val primary: Int, @ColorInt val primaryDark: Int)
+  data class ThemedColors(@param:ColorInt val primary: Int, @param:ColorInt val primaryDark: Int)
 }

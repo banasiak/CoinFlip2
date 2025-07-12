@@ -29,7 +29,7 @@ class SoundHelper @Inject constructor(
     soundPool.play(soundId, 1.0f, 1.0f, sound.priority, 0, 1.0f)
   }
 
-  enum class Sound(@RawRes val resId: Int, val priority: Int) {
+  enum class Sound(@param:RawRes val resId: Int, val priority: Int) {
     COIN(R.raw.coin, 0),
     POWERUP(R.raw.powerup, 0),
     ONEUP(R.raw.oneup, 1) // always make sure this special sound plays :)

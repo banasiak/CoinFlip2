@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.android)
@@ -30,8 +32,16 @@ android {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
   }
-  kotlinOptions {
-    jvmTarget = JavaVersion.VERSION_17.majorVersion
+  testOptions {
+    unitTests.all {
+      it.useJUnitPlatform()
+    }
+  }
+}
+
+kotlin {
+  compilerOptions {
+    jvmTarget = JvmTarget.JVM_17
   }
 }
 
@@ -54,13 +64,13 @@ dependencies {
   implementation(libs.seismic)
   implementation(libs.timber)
   ksp(libs.hilt.android.compiler)
-  testImplementation(libs.junit.api)
+  testImplementation(libs.junit.jupiter)
   testImplementation(libs.kluent.android)
   testImplementation(libs.kotlinx.coroutines.test)
   testImplementation(libs.mockk.agent)
   testImplementation(libs.mockk.android)
   testImplementation(libs.turbine)
-  testRuntimeOnly(libs.junit.engine)
+  testRuntimeOnly(libs.junit.platform.launcher)
 
   ktlint(libs.ktlint) {
     attributes {
