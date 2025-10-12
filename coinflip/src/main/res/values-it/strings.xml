@@ -5,12 +5,10 @@
   <string name="about_text">Un modo comodo per lanciare una moneta, anche se non ne hai una. Basta toccare il punto interrogativo o agitarlo per visualizzare il risultato. Tocca o agita per far girare di nuovo la moneta.\n\nImmagini di monete da un quarto di dollaro della Zecca degli Stati Uniti. Immagini della moneta presidenziale da 1 dollaro della Zecca degli Stati Uniti.</string>
   <string name="app_name">Testa o croce</string>
   <string name="coin_animation">Animazione delle monete</string>
-  <string name="copyright_text" translatable="false">Copyright © 2025 — Richard Banasiak</string>
   <string name="diagnostics_fragment_title">Test diagnostico</string>
   <string name="diagnostics_menu_title">Diagnostica</string>
   <string name="donate">Fai una donazione a EFF.org</string>
   <string name="donate_text">Se ti piace questa app, ti preghiamo di considerare di fare una donazione alla Electronic Frontier Foundation. ❤</string>
-  <string name="empty" translatable="false"/>
   <string name="force_high">Alto</string>
   <string name="force_low">Basso</string>
   <string name="force_medium">medio</string>
@@ -40,6 +38,7 @@
   <string name="settings_item_quick_reset_title">Ripristino rapido delle statistiche</string>
   <string name="settings_item_reset_stats_title">Reimposta statistiche</string>
   <string name="settings_item_secure_random_summary">Utilizzare un generatore di numeri pseudocasuali crittograficamente sicuro</string>
+  <string name="settings_item_secure_random_title">Generatore di numeri casuali</string>
   <string name="settings_item_shake_summary">Agitare il dispositivo per lanciare la moneta</string>
   <string name="settings_item_shake_title">Scuotere</string>
   <string name="settings_item_sound_summary">Riproduci il suono dopo il lancio della moneta</string>

@@ -1,65 +1,48 @@
 [versions]
-agp = "8.4.0"
-android-junit = "1.10.0.0"
-appcompat = "1.6.1"
-browser = "1.8.0"
-compose-bom = "2024.05.00"
-compose-compiler = "1.5.8"
-core-ktx = "1.13.0"
-hilt-android = "2.50"
-junit = "5.10.0"
-agp = "8.12.0"
-android-junit = "1.13.1.0"
-androidx-activity = "1.10.1"
+agp = "8.13.0"
+android-junit = "1.14.0.0"
+androidx-activity = "1.11.0"
 androidx-appcompat = "1.7.1"
 androidx-browser = "1.9.0"
-androidx-core = "1.16.0"
-androidx-lifecycle = "2.9.2"
-androidx-navigation = "2.9.3"
+androidx-core = "1.17.0"
+androidx-lifecycle = "2.9.4"
+androidx-navigation = "2.9.5"
 androidx-preference = "1.2.1"
-dagger = "2.57"
+compose-bom = "2025.10.00"
+dagger = "2.57.2"
 junit = "5.13.4"
 kluent = "1.73"
-kotlin = "2.2.0"
+kotlin = "2.2.20"
 kotlinx-coroutines = "1.10.2"
-ksp = "2.2.0-2.0.2"
-ktlint = "1.1.0"
-material = "1.12.0"
-mockk = "1.14.5"
-review = "2.0.2"
+ksp = "2.2.20-2.0.4"
+google-material = "1.12.0"
+mockk = "1.14.6"
+google-review = "2.0.2"
 seismic = "1.0.3"
 timber = "5.0.1"
 turbine = "1.2.1"
-versions = "0.52.0"
+versions = "0.53.0"
+
+#noinspection NewerVersionAvailable
+ktlint = "1.1.0"
 
 [libraries]
-androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
-androidx-browser = { module = "androidx.browser:browser", version.ref = "browser" }
-androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
-androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
-androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
-androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
-androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle-viewmodel" }
-androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle-viewmodel" }
-androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle-viewmodel" }
-androidx-lifecycle-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "lifecycle-viewmodel"}
-androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigation-fragment-ktx" }
-androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation-fragment-ktx" }
-androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "preference-ktx" }
-dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "hilt-android" }
-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt-android" }
-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt-android" }
-junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
-junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
 androidx-activity = { module = "androidx.activity:activity-ktx", version.ref="androidx-activity" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
 androidx-browser = { module = "androidx.browser:browser", version.ref = "androidx-browser" }
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
+androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
+androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle" }
-androidx-lifecycle-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "androidx-lifecycle"}
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "androidx-navigation" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "androidx-navigation" }
 androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "androidx-preference" }
+google-material = { module = "com.google.android.material:material", version.ref = "google-material" }
+google-review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "google-review" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "dagger" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "dagger" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
@@ -68,10 +51,8 @@ kluent-android = { module = "org.amshove.kluent:kluent-android", version.ref = "
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 ktlint = {module = "com.pinterest.ktlint:ktlint-cli", version.ref = "ktlint" }
-material = { module = "com.google.android.material:material", version.ref = "material" }
 mockk-agent = { module = "io.mockk:mockk-agent", version.ref = "mockk" }
 mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockk" }
-review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "review" }
 seismic = { module = "com.squareup:seismic", version.ref = "seismic" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
@@ -81,6 +62,7 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 android-junit = { id = "de.mannodermaus.android-junit5", version.ref = "android-junit" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 versions = { id = "com.github.ben-manes.versions", version.ref = "versions" }

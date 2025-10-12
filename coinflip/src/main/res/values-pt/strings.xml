@@ -5,12 +5,10 @@
   <string name="about_text">Uma maneira conveniente de lançar uma moeda, mesmo que você não tenha uma. Basta tocar no ponto de interrogação ou agitar e ver o resultado. Toque ou agite para girar a moeda novamente.\n\nImagens de moedas de um quarto de dólar da Casa da Moeda dos Estados Unidos. Imagens da moeda presidencial de US $1 da Casa da Moeda dos Estados Unidos.</string>
   <string name="app_name">Moeda</string>
   <string name="coin_animation">Animação de Moeda</string>
-  <string name="copyright_text" translatable="false">Copyright © 2025 — Richard Banasiak</string>
   <string name="diagnostics_fragment_title">Teste de diagnóstico</string>
   <string name="diagnostics_menu_title">Diagnóstico</string>
   <string name="donate">Doe para EFF.org</string>
   <string name="donate_text">Se você gosta deste aplicativo, considere fazer uma doação para a Electronic Frontier Foundation. ❤</string>
-  <string name="empty" translatable="false"/>
   <string name="force_high">Alto</string>
   <string name="force_low">Baixo</string>
   <string name="force_medium">Médio</string>

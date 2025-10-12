@@ -1,7 +1,6 @@
 package com.banasiak.coinflip.about
 
 import androidx.lifecycle.ViewModel
-import com.banasiak.coinflip.about.AboutEffect.LaunchUrl
 import com.banasiak.coinflip.common.BuildInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -30,7 +29,7 @@ class AboutViewModel @Inject constructor(
       is AboutAction.Back -> _effectFlow.tryEmit(AboutEffect.NavBack)
       is AboutAction.Donate -> _effectFlow.tryEmit(AboutEffect.LaunchUrl(donateUrl))
       is AboutAction.RateApp -> _effectFlow.tryEmit(AboutEffect.LaunchUrl(rateUrl))
-      is AboutAction.Website -> _effectFlow.tryEmit(LaunchUrl(websiteUrl))
+      is AboutAction.Website -> _effectFlow.tryEmit(AboutEffect.LaunchUrl(websiteUrl))
     }
   }
 }

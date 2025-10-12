@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.android)
+  alias(libs.plugins.kotlin.compose)
   alias(libs.plugins.kotlin.parcelize)
   alias(libs.plugins.hilt.android)
   alias(libs.plugins.ksp)
@@ -43,21 +44,16 @@ android {
 kotlin {
   compilerOptions {
     jvmTarget = JvmTarget.JVM_17
-  composeOptions {
-    kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-  }
-  kotlinOptions {
-    jvmTarget = JavaVersion.VERSION_17.majorVersion
   }
 }
 
 val ktlint: Configuration by configurations.creating
 
 dependencies {
+  implementation(platform(libs.androidx.compose.bom))
   implementation(libs.androidx.activity)
   implementation(libs.androidx.appcompat)
   implementation(libs.androidx.browser)
-  implementation(platform(libs.androidx.compose.bom))
   implementation(libs.androidx.compose.material3)
   implementation(libs.androidx.compose.ui.tooling)
   implementation(libs.androidx.core.ktx)
@@ -68,10 +64,10 @@ dependencies {
   implementation(libs.androidx.navigation.fragment.ktx)
   implementation(libs.androidx.navigation.ui.ktx)
   implementation(libs.androidx.preference.ktx)
+  implementation(libs.google.material)
+  implementation(libs.google.review.ktx)
   implementation(libs.hilt.android)
   implementation(libs.kotlinx.coroutines.android)
-  implementation(libs.material)
-  implementation(libs.review.ktx)
   implementation(libs.seismic)
   implementation(libs.timber)
   ksp(libs.hilt.android.compiler)

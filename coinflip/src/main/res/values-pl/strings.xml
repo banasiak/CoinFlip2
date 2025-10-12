@@ -5,12 +5,10 @@
   <string name="about_text">Wygodny sposób na rzucanie monetą, nawet jeśli jej nie masz. Po prostu dotknij znaku zapytania lub potrząśnij urządzeniem, aby zobaczyć wynik. Dotknij lub potrząśnij, aby ponownie zakręcić monetą.\n\nWizerunki monet ćwierćdolarowych z Mennicy Stanów Zjednoczonych. Wizerunki monety prezydenckiej 1 dolarowej z Mennicy Stanów Zjednoczonych.</string>
   <string name="app_name">Rzut monetą</string>
   <string name="coin_animation">Animacja monety</string>
-  <string name="copyright_text" translatable="false">Copyright © 2025 — Richard Banasiak</string>
-  <string name="diagnostics_fragment_title">Test diagnostyczny</string>
+    <string name="diagnostics_fragment_title">Test diagnostyczny</string>
   <string name="diagnostics_menu_title">Diagnostyka</string>
   <string name="donate">Przekaż darowiznę na rzecz EFF.org</string>
   <string name="donate_text">Jeśli podoba Ci się ta aplikacja, rozważ przekazanie darowizny na rzecz fundacji Electronic Frontier Foundation. ❤</string>
-  <string name="empty" translatable="false"/>
   <string name="force_high">Wysoki</string>
   <string name="force_low">Niski</string>
   <string name="force_medium">Średni</string>

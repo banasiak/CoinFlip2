@@ -5,12 +5,10 @@
   <string name="about_text">这是一种抛硬币的便捷方法，即使您没有硬币。只需点击问号或摇晃即可查看结果。轻敲或摇晃即可再次旋转硬币。\n\n美国铸币局的四分之一美元硬币图像。美国铸币局的总统 1 美元硬币图片。</string>
   <string name="app_name">抛硬币</string>
   <string name="coin_animation">硬币动画</string>
-  <string name="copyright_text" translatable="false">Copyright © 2025 — Richard Banasiak</string>
   <string name="diagnostics_fragment_title">诊断测试</string>
   <string name="diagnostics_menu_title">诊断</string>
   <string name="donate">捐赠给 EFF.org</string>
   <string name="donate_text">如果您喜欢这个应用程序，请考虑向电子前沿基金会捐款。❤</string>
-  <string name="empty" translatable="false"/>
   <string name="force_high">高的</string>
   <string name="force_low">低的</string>
   <string name="force_medium">中等的</string>

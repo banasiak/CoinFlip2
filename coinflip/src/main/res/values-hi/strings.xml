@@ -4,12 +4,10 @@
   <string name="about_menu_title">के बारे में</string>
   <string name="app_name">सिक्का उछालना</string>
   <string name="coin_animation">सिक्का एनीमेशन</string>
-  <string name="copyright_text" translatable="false">Copyright © 2025 — Richard Banasiak</string>
-  <string name="diagnostics_fragment_title">नैदानिक ​​परीक्षण</string>
+    <string name="diagnostics_fragment_title">नैदानिक ​​परीक्षण</string>
   <string name="diagnostics_menu_title">निदान</string>
   <string name="donate">EFF.org को दान करें</string>
   <string name="donate_text">यदि आपको यह ऐप पसंद है, तो कृपया इलेक्ट्रॉनिक फ्रंटियर फाउंडेशन को दान देने पर विचार करें. ❤</string>
-  <string name="empty" translatable="false"/>
   <string name="force_high">उच्च</string>
   <string name="force_low">कम</string>
   <string name="force_medium">मध्यम</string>

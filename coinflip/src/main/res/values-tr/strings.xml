@@ -5,12 +5,10 @@
   <string name="about_text">Madeni paranız olmasa bile yazı tura atmanın kolay bir yolu. Soru işaretine dokunmanız veya sallamanız yeterli ve sonucu görebilirsiniz. Madeni parayı tekrar döndürmek için dokunun veya sallayın.\n\nABD Darphanesi\'nden çeyrek dolarlık madeni para görselleri. ABD Darphanesi\'nden Başkanlık 1 Dolarlık Madeni Para görselleri.</string>
   <string name="app_name">Yazı tura</string>
   <string name="coin_animation">Para Animasyonu</string>
-  <string name="copyright_text" translatable="false">Copyright © 2025 — Richard Banasiak</string>
   <string name="diagnostics_fragment_title">Teşhis Testi</string>
   <string name="diagnostics_menu_title">Teşhis</string>
   <string name="donate">EFF.org\'a bağış yapın</string>
   <string name="donate_text">Bu uygulamayı beğendiyseniz, lütfen Electronic Frontier Foundation\'a bağış yapmayı düşünün. ❤</string>
-  <string name="empty" translatable="false"/>
   <string name="force_high">Yüksek</string>
   <string name="force_low">Düşük</string>
   <string name="force_medium">Orta</string>

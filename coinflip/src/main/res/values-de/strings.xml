@@ -5,12 +5,10 @@
   <string name="about_text">Eine bequeme Möglichkeit, eine Münze zu werfen, auch wenn Sie keine haben. Tippen Sie einfach auf das Fragezeichen oder schütteln Sie es und sehen Sie sich das Ergebnis an. Tippen oder schütteln, um die Münze erneut zu drehen.\n\nBilder von Vierteldollarmünzen der United States Mint. Bilder der 1-Dollar-Präsidentenmünze der United States Mint.</string>
   <string name="app_name">Münze werfen</string>
   <string name="coin_animation">Münzanimation</string>
-  <string name="copyright_text" translatable="false">Copyright © 2025 — Richard Banasiak</string>
   <string name="diagnostics_fragment_title">Diagnosetest</string>
   <string name="diagnostics_menu_title">Diagnose</string>
   <string name="donate">Spenden Sie an EFF.org</string>
   <string name="donate_text">Wenn Ihnen diese App gefällt, denken Sie bitte über eine Spende an die Electronic Frontier Foundation nach. ❤</string>
-  <string name="empty" translatable="false"/>
   <string name="force_high">Hoch</string>
   <string name="force_low">Niedrig</string>
   <string name="force_medium">Mittel</string>

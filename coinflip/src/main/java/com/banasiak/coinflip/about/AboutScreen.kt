@@ -1,5 +1,6 @@
 package com.banasiak.coinflip.about
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -66,6 +67,18 @@ fun AboutView(state: AboutState, postAction: (AboutAction) -> Unit = { }) {
         Text(
           modifier = Modifier.padding(top = Dimen.large),
           text = stringResource(R.string.about_text),
+          style = MaterialTheme.typography.bodyMedium
+        )
+        Text(
+          modifier = Modifier
+            .padding(top = Dimen.large)
+            .clickable(onClick = { postAction(AboutAction.Website) }),
+          text = stringResource(R.string.copyright_text),
+          style = MaterialTheme.typography.bodyMedium
+        )
+        Text(
+          modifier = Modifier.padding(top = Dimen.medium),
+          text = stringResource(R.string.donate_text),
           style = MaterialTheme.typography.bodyMedium
         )
         FilledTonalButton(

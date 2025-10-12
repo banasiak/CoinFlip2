@@ -5,12 +5,10 @@
   <string name="about_text">Una forma cómoda de lanzar una moneda, incluso si no tienes una. Simplemente toque el signo de interrogación o agítelo y vea el resultado. Toque o agite para girar la moneda nuevamente.\n\nImágenes de monedas de un cuarto de dólar de la Casa de la Moneda de los Estados Unidos. Imágenes de monedas presidenciales de $1 de la Casa de la Moneda de los Estados Unidos.</string>
   <string name="app_name">Lanzamiento de moneda</string>
   <string name="coin_animation">Animación de monedas</string>
-  <string name="copyright_text" translatable="false">Copyright © 2025 — Richard Banasiak</string>
   <string name="diagnostics_fragment_title">Prueba de diagnóstico</string>
   <string name="diagnostics_menu_title">Diagnóstico</string>
   <string name="donate">Donar a EFF.org</string>
   <string name="donate_text">Si te gusta esta aplicación, considera hacer una donación a la Electronic Frontier Foundation. ❤</string>
-  <string name="empty" translatable="false"/>
   <string name="force_high">Alto</string>
   <string name="force_low">Bajo</string>
   <string name="force_medium">Medio</string>

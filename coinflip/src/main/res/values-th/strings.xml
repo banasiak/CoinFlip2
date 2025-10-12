@@ -5,12 +5,10 @@
   <string name="about_text">วิธีที่สะดวกในการโยนเหรียญ แม้ว่าคุณจะไม่มีเหรียญก็ตาม เพียงแตะเครื่องหมายคำถามหรือเขย่าเพื่อดูผลลัพธ์ แตะหรือเขย่าเพื่อหมุนเหรียญอีกครั้ง\n\nภาพเหรียญ 25 ล้านดอลลาร์จากกองกษาปณ์สหรัฐอเมริกา ภาพเหรียญประธานาธิบดีมูลค่า 1 ดอลลาร์จากโรงกษาปณ์สหรัฐอเมริกา</string>
   <string name="app_name">พลิกเหรียญ</string>
   <string name="coin_animation">ภาพเคลื่อนไหวเหรียญ</string>
-  <string name="copyright_text" translatable="false">Copyright © 2025 — Richard Banasiak</string>
   <string name="diagnostics_fragment_title">ทดสอบการวินิจฉัย</string>
   <string name="diagnostics_menu_title">การวินิจฉัย</string>
   <string name="donate">บริจาคให้กับ EFF.org</string>
   <string name="donate_text">หากคุณชอบแอปนี้ โปรดพิจารณาบริจาคให้กับ Electronic Frontier Foundation </string>
-  <string name="empty" translatable="false"/>
   <string name="force_high">สูง</string>
   <string name="force_low">ต่ำ</string>
   <string name="force_medium">ปานกลาง</string>

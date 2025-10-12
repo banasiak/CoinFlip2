@@ -9,9 +9,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.banasiak.coinflip.extensions.launchUrl
+import com.banasiak.coinflip.extensions.navigateBack
 import com.banasiak.coinflip.util.ColorHelper
-import com.banasiak.coinflip.util.launchUrl
-import com.banasiak.coinflip.util.navigateBack
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch

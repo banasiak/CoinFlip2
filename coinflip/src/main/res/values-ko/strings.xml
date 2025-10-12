@@ -5,12 +5,10 @@
   <string name="about_text">동전이 없더라도 편리하게 동전을 던질 수 있는 방법입니다. 물음표를 탭하거나 흔들면 결과를 볼 수 있습니다. 동전을 다시 돌리려면 탭하거나 흔들어주세요.\n\n미국 조폐국에서 발행한 25센트 동전 이미지. 미국 조폐국이 소장한 대통령 1달러 동전 이미지.</string>
   <string name="app_name">동전 던지기</string>
   <string name="coin_animation">코인 애니메이션</string>
-  <string name="copyright_text" translatable="false">Copyright © 2025 — Richard Banasiak</string>
   <string name="diagnostics_fragment_title">진단 검사</string>
   <string name="diagnostics_menu_title">진단</string>
   <string name="donate">EFF.org에 기부하세요</string>
   <string name="donate_text">이 앱이 마음에 드신다면 Electronic Frontier Foundation에 기부해 주시기 바랍니다. ❤</string>
-  <string name="empty" translatable="false"/>
   <string name="force_high">높은</string>
   <string name="force_low">낮은</string>
   <string name="force_medium">중간</string>

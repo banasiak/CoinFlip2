@@ -7,7 +7,6 @@ data class AboutState(
 
 sealed class AboutAction {
   data object Back : AboutAction()
-
   data object Donate : AboutAction()
   data object RateApp : AboutAction()
   data object Website : AboutAction()
@@ -15,6 +14,5 @@ sealed class AboutAction {
 
 sealed class AboutEffect {
   data class LaunchUrl(val url: String) : AboutEffect()
-
   data object NavBack : AboutEffect()
 }

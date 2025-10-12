@@ -5,12 +5,10 @@
   <string name="about_text">コインを持っていなくても、コインを投げる便利な方法です。疑問符をタップするか、振るだけで結果が表示されます。タップまたはシェイクするとコインが再び回転します。\n\nアメリカ造幣局発行の 25 ドル硬貨の画像。アメリカ造幣局発行の大統領 1 ドル硬貨の画像。</string>
   <string name="app_name">コイン投げ</string>
   <string name="coin_animation">コインアニメーション</string>
-  <string name="copyright_text" translatable="false">Copyright © 2025 — Richard Banasiak</string>
   <string name="diagnostics_fragment_title">診断テスト</string>
   <string name="diagnostics_menu_title">診断</string>
   <string name="donate">EFF.org に寄付する</string>
   <string name="donate_text">このアプリが気に入ったら、電子フロンティア財団への寄付をご検討ください。❤</string>
-  <string name="empty" translatable="false"/>
   <string name="force_high">高い</string>
   <string name="force_low">低い</string>
   <string name="force_medium">中くらい</string>
