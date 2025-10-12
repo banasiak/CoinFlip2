@@ -19,6 +19,14 @@ fun Fragment.navigate(@IdRes to: Int) {
   }
 }
 
+fun Fragment.navigateBack() {
+  try {
+    this.findNavController().popBackStack()
+  } catch (e: IllegalArgumentException) {
+    Timber.w(e, "Caught navigation exception")
+  }
+}
+
 fun Fragment.launchUrl(url: String, colors: ColorHelper.ThemedColors) {
   val intent =
     CustomTabsIntent.Builder()

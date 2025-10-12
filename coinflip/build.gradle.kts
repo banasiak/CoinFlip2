@@ -21,6 +21,7 @@ android {
   }
   buildFeatures {
     buildConfig = true
+    compose = true
     viewBinding = true
   }
   buildTypes {
@@ -42,6 +43,11 @@ android {
 kotlin {
   compilerOptions {
     jvmTarget = JvmTarget.JVM_17
+  composeOptions {
+    kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
+  }
+  kotlinOptions {
+    jvmTarget = JavaVersion.VERSION_17.majorVersion
   }
 }
 
@@ -51,7 +57,12 @@ dependencies {
   implementation(libs.androidx.activity)
   implementation(libs.androidx.appcompat)
   implementation(libs.androidx.browser)
+  implementation(platform(libs.androidx.compose.bom))
+  implementation(libs.androidx.compose.material3)
+  implementation(libs.androidx.compose.ui.tooling)
   implementation(libs.androidx.core.ktx)
+  implementation(libs.androidx.lifecycle.runtime.compose)
+  implementation(libs.androidx.lifecycle.viewmodel.compose)
   implementation(libs.androidx.lifecycle.viewmodel.ktx)
   implementation(libs.androidx.lifecycle.viewmodel.savedstate)
   implementation(libs.androidx.navigation.fragment.ktx)

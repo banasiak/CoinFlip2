@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,24 +19,18 @@ class AboutViewModel @Inject constructor(
   private val websiteUrl = "https://www.banasiak.com"
 
   private var state = AboutState(buildInfo.versionName, buildInfo.versionCode)
-    set(value) {
-      field = value
-      // emit the new state when it changes
-      Timber.d("emitState(): $value")
-      _stateFlow.tryEmit(value)
-    }
-
   private val _stateFlow = MutableStateFlow(state)
   val stateFlow = _stateFlow.asStateFlow()
 
   private val _effectFlow = MutableSharedFlow<AboutEffect>(extraBufferCapacity = 1)
-  val effectFlow = _effectFlow.asSharedFlow()
+  val effectFlow= _effectFlow.asSharedFlow()
 
   fun postAction(action: AboutAction) {
     when (action) {
-      AboutAction.Donate -> _effectFlow.tryEmit(LaunchUrl(donateUrl))
-      AboutAction.RateApp -> _effectFlow.tryEmit(LaunchUrl(rateUrl))
-      AboutAction.Website -> _effectFlow.tryEmit(LaunchUrl(websiteUrl))
+      is AboutAction.Back -> _effectFlow.tryEmit(AboutEffect.NavBack)
+      is AboutAction.Donate -> _effectFlow.tryEmit(AboutEffect.LaunchUrl(donateUrl))
+      is AboutAction.RateApp -> _effectFlow.tryEmit(AboutEffect.LaunchUrl(rateUrl))
+      is AboutAction.Website -> _effectFlow.tryEmit(LaunchUrl(websiteUrl))
     }
   }
 }

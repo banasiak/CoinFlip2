@@ -958,6 +958,7 @@ ktlint_standard_blank-line-before-declaration = disabled
 ktlint_standard_function-signature = disabled
 ktlint_standard_parameter-list-wrapping = disabled
 ktlint_standard_spacing-between-declarations-with-annotations = disabled
+ktlint_function_naming_ignore_when_annotated_with = Composable
 
 [{*.markdown,*.md}]
 ij_markdown_force_one_space_after_blockquote_symbol = true
