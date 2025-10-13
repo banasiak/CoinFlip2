@@ -37,7 +37,6 @@
     android:id="@+id/diagnosticsFragment"
     android:name="com.banasiak.coinflip.diagnostics.DiagnosticsFragment"
     android:label="fragment_diagnostics"
-    tools:layout="@layout/fragment_diagnostics"
     />
   <dialog
     android:id="@+id/aboutFragment"

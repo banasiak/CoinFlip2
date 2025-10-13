@@ -20,7 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.ui.theme.AppTheme
@@ -104,7 +104,7 @@ fun AboutView(state: AboutState, postAction: (AboutAction) -> Unit = { }) {
   }
 }
 
-@Preview
+@PreviewLightDark
 @Composable
 fun AboutViewPreview() {
   val state = AboutState(versionName = "2024", versionCode = 99)
