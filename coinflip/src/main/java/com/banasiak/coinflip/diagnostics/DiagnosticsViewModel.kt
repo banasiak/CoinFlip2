@@ -1,5 +1,8 @@
 package com.banasiak.coinflip.diagnostics
 
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,6 +12,7 @@ import com.banasiak.coinflip.common.Coin
 import com.banasiak.coinflip.extensions.formatMilliseconds
 import com.banasiak.coinflip.extensions.formatNumber
 import com.banasiak.coinflip.extensions.restore
+import com.banasiak.coinflip.extensions.save
 import com.banasiak.coinflip.settings.SettingsManager
 import com.banasiak.coinflip.util.SoundHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,8 +33,8 @@ class DiagnosticsViewModel @Inject constructor(
   private val coin: Coin,
   private val settings: SettingsManager,
   private val soundHelper: SoundHelper,
-  savedState: SavedStateHandle
-) : ViewModel() {
+  private val savedState: SavedStateHandle
+) : ViewModel(), LifecycleEventObserver {
   companion object {
     private const val SMOOTH_DELAY = 5L
     private const val TURBO_MODE_THRESHOLD = 1_000_000L
@@ -56,8 +60,22 @@ class DiagnosticsViewModel @Inject constructor(
         viewModelScope.launch { runDiagnostics() }
         viewModelScope.launch { showTurboModeNotice() }
       }
+
       DiagnosticsAction.Wikipedia -> _effectFlow.tryEmit(DiagnosticsEffect.LaunchUrl(WIKIPEDIA_URL))
     }
+  }
+
+  override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+    Timber.d("Lifecycle onStateChanged(): $event")
+    when (event) {
+      Lifecycle.Event.ON_START -> postAction(DiagnosticsAction.Start)
+      Lifecycle.Event.ON_PAUSE -> onPause()
+      else -> { }
+    }
+  }
+
+  private fun onPause() {
+    savedState.save(state)
   }
 
   private suspend fun runDiagnostics() {

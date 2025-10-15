@@ -17,7 +17,7 @@ class ColorHelper @Inject constructor(
   @SuppressLint("ResourceType")
   fun getThemedColors(): ThemedColors {
     val context = if (settings.dynamicColorsEnabled) DynamicColors.wrapContextIfAvailable(context) else context
-    val colors = intArrayOf(com.google.android.material.R.attr.colorPrimary, com.google.android.material.R.attr.colorPrimaryDark)
+    val colors = intArrayOf(android.R.attr.colorPrimary, android.R.attr.colorPrimaryDark)
     val attributes = context.obtainStyledAttributes(colors)
     val colorPrimary = attributes.getColor(0, 0)
     val colorPrimaryDark = attributes.getColor(1, 0)
