@@ -4,6 +4,7 @@ import android.os.Parcelable
 import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import com.banasiak.coinflip.R
+import com.banasiak.coinflip.settings.SettingsManager
 import com.banasiak.coinflip.util.AnimationHelper
 import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
@@ -11,12 +12,21 @@ import javax.inject.Singleton
 
 @Singleton
 class Coin @Inject constructor(
-  private val random: RNG
+  private val random: RNG,
+  private val settings: SettingsManager
 ) {
   enum class Value(@param:StringRes val string: Int, @param:StyleRes val style: Int) {
     HEADS(R.string.heads, R.style.AppTheme_TextAppearance_Result_Heads),
     TAILS(R.string.tails, R.style.AppTheme_TextAppearance_Result_Tails),
-    UNKNOWN(R.string.empty, R.style.AppTheme_TextAppearance_Result)
+    UNKNOWN(R.string.empty, R.style.AppTheme_TextAppearance_Result);
+
+    fun customLabel(settingsManager: SettingsManager): String? {
+      return when (this) {
+        HEADS -> settingsManager.customHeadsText
+        TAILS -> settingsManager.customTailsText
+        else -> null
+      }
+    }
   }
 
   private var currentValue: Value = Value.HEADS
@@ -25,7 +35,7 @@ class Coin @Inject constructor(
     val current = currentValue
     val next = random.nextValue()
     currentValue = next
-    return Result(next, permutation(current, next))
+    return Result(next, permutation(current, next), next.customLabel(settings))
   }
 
   fun isSecure(): Boolean {
@@ -48,5 +58,5 @@ class Coin @Inject constructor(
   }
 
   @Parcelize
-  data class Result(val value: Value, val permutation: AnimationHelper.Permutation) : Parcelable
+  data class Result(val value: Value, val permutation: AnimationHelper.Permutation, val customLabel: String? = null) : Parcelable
 }

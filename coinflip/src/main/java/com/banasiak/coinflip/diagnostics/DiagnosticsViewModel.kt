@@ -79,6 +79,9 @@ class DiagnosticsViewModel @Inject constructor(
   }
 
   private suspend fun runDiagnostics() {
+    // load custom labels
+    state = state.copy(labels = Pair(settings.customHeadsText, settings.customTailsText))
+
     // the state may have been restored, only resume the loop if it hasn't finished running, otherwise just update the UI
     if (state.finished) {
       _stateFlow.emit(state)

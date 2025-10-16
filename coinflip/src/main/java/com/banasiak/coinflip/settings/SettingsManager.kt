@@ -3,6 +3,7 @@ package com.banasiak.coinflip.settings
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
+import androidx.core.content.edit
 import com.banasiak.coinflip.common.Coin
 import com.squareup.seismic.ShakeDetector
 import timber.log.Timber
@@ -11,7 +12,9 @@ import javax.inject.Singleton
 
 @Singleton
 class SettingsManager @Inject constructor(private val prefs: SharedPreferences) {
-  val coinPrefix get() = prefs.getString(Settings.COIN.key, Settings.COIN.default as String)!!
+  val coinPrefix get() = prefs.getString(Settings.COIN.key, Settings.COIN.default as String)!! // pinky swear
+  val customHeadsText get() = prefs.getString(Settings.CUSTOM_HEADS_TEXT.key, Settings.CUSTOM_HEADS_TEXT.default as String?)
+  val customTailsText get() = prefs.getString(Settings.CUSTOM_TAILS_TEXT.key, Settings.CUSTOM_TAILS_TEXT.default as String?)
   val animationEnabled get() = prefs.getBoolean(Settings.ANIMATE.key, Settings.ANIMATE.default as Boolean)
   val shakeEnabled get() = prefs.getBoolean(Settings.SHAKE.key, Settings.SHAKE.default as Boolean)
   val soundEnabled get() = prefs.getBoolean(Settings.SOUND.key, Settings.SOUND.default as Boolean)
@@ -36,14 +39,14 @@ class SettingsManager @Inject constructor(private val prefs: SharedPreferences) 
   }
 
   fun persistStats(stats: Map<Coin.Value, Long>) {
-    val editor = prefs.edit()
-    editor.putLong(Settings.HEADS.key, stats.getOrDefault(Coin.Value.HEADS, 0))
-    editor.putLong(Settings.TAILS.key, stats.getOrDefault(Coin.Value.TAILS, 0))
-    editor.apply()
+    prefs.edit {
+      putLong(Settings.HEADS.key, stats.getOrDefault(Coin.Value.HEADS, 0))
+      putLong(Settings.TAILS.key, stats.getOrDefault(Coin.Value.TAILS, 0))
+    }
   }
 
   fun resetStats() {
-    prefs.edit().remove(Settings.HEADS.key).remove(Settings.TAILS.key).apply()
+    prefs.edit { remove(Settings.HEADS.key).remove(Settings.TAILS.key) }
   }
 
   fun registerChangeListener(listener: OnSharedPreferenceChangeListener) {
@@ -56,10 +59,11 @@ class SettingsManager @Inject constructor(private val prefs: SharedPreferences) 
     val schemaVersion = prefs.getInt(Settings.SCHEMA.key, Settings.SCHEMA.default as Int)
     if (schemaVersion != Settings.SCHEMA.default) {
       Timber.w("Old schema detected. Clearing all values from SharedPreferences!")
-      val editor = prefs.edit()
-      editor.clear()
-      editor.putInt(Settings.SCHEMA.key, Settings.SCHEMA.default)
-      editor.commit() // this needs to happen ASAP, otherwise the app may crash if it attempts to load data from a previous version
+      // this needs to happen ASAP, otherwise the app may crash if it attempts to load data from a previous version
+      prefs.edit(commit = true) {
+        clear()
+        putInt(Settings.SCHEMA.key, Settings.SCHEMA.default)
+      }
     }
   }
 
@@ -72,8 +76,10 @@ class SettingsManager @Inject constructor(private val prefs: SharedPreferences) 
     }
   }
 
-  enum class Settings(val key: String, val default: Any) {
+  enum class Settings(val key: String, val default: Any?) {
     COIN("coin", "gw"), // George Washington dollar
+    CUSTOM_HEADS_TEXT("customHeadsText", null),
+    CUSTOM_TAILS_TEXT("customTailsText", null),
     ANIMATE("animate", true),
     SHAKE("shake", true),
     SOUND("sound", true),

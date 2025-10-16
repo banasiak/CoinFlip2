@@ -29,6 +29,8 @@
   <string name="settings_item_animation_summary">Render spinning coin</string>
   <string name="settings_item_animation_title">Animation</string>
   <string name="settings_item_coin_title">Coin Type</string>
+  <string name="settings_item_custom_heads_title">Custom HEADS Text</string>
+  <string name="settings_item_custom_tails_title">Custom TAILS Text</string>
   <string name="settings_item_diagnostics_dialog">Number of Iterations</string>
   <string name="settings_item_diagnostics_summary">iterations</string>
   <string name="settings_item_diagnostics_title">Diagnostic Test</string>

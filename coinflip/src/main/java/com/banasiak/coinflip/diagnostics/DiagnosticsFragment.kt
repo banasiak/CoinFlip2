@@ -61,6 +61,8 @@ class DiagnosticsFragment : BottomSheetDialogFragment() {
   }
 
   private fun bind(state: DiagnosticsState) {
+    binding.heads.text = state.labels.first ?: getString(R.string.heads)
+    binding.tails.text = state.labels.second ?: getString(R.string.tails)
     binding.headsCount.text = state.headsCount
     binding.headsRatio.text = state.headsRatio
     binding.tailsCount.text = state.tailsCount

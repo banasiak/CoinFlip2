@@ -35,6 +35,10 @@ class DiagnosticsViewModelTests {
   fun beforeEach() {
     every { savedStateHandle.get<DiagnosticsState>("state") } returns null
     every { clock.millis() } returnsMany listOf(1000L, 2500L)
+
+    // not *that* relaxed, mockk
+    every { settingsManager.customHeadsText } returns null
+    every { settingsManager.customTailsText } returns null
   }
 
   @Test
@@ -154,6 +158,30 @@ class DiagnosticsViewModelTests {
         awaitItem()shouldBeEqualTo initialState
         awaitItem() shouldBeEqualTo expectedState
       }
+    }
+
+  @Test
+  fun custom_labels() =
+    runTest {
+      every { savedStateHandle.get<DiagnosticsState>("state") } returns DiagnosticsState(finished = true)
+
+      every { settingsManager.customHeadsText } returns "HEADS"
+      every { settingsManager.customTailsText } returns "TAILS"
+      val vm = viewModel()
+      val states = vm.stateFlow
+
+      val initialState = DiagnosticsState(finished = true)
+      val expectedState = DiagnosticsState(finished = true, labels = Pair("HEADS", "TAILS"))
+
+      backgroundScope.launch {
+        vm.postAction(DiagnosticsAction.Start)
+      }
+
+      states.test {
+        awaitItem() shouldBeEqualTo initialState
+        awaitItem() shouldBeEqualTo expectedState
+      }
+
     }
 
   @Test

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
+import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.banasiak.coinflip.R
@@ -30,38 +31,63 @@ class SettingsFragment @Inject constructor() : PreferenceFragmentCompat() {
   override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
     setPreferencesFromResource(R.xml.root_settings, rootKey)
 
-    val resetStats = findPreference<Preference>(SettingsManager.Settings.RESET.key)
-    resetStats?.onPreferenceClickListener =
-      Preference.OnPreferenceClickListener {
-        val stats = settings.loadStats()
-        settings.resetStats()
-        Snackbar
-          .make(requireView(), R.string.stats_reset_message, Snackbar.LENGTH_LONG)
-          .setAction(R.string.undo) { settings.persistStats(stats) }
-          .show()
-        return@OnPreferenceClickListener true
-      }
+    findPreference<Preference>(SettingsManager.Settings.RESET.key)?.apply {
+      onPreferenceClickListener =
+        Preference.OnPreferenceClickListener {
+          val stats = settings.loadStats()
+          settings.resetStats()
+          Snackbar
+            .make(requireView(), R.string.stats_reset_message, Snackbar.LENGTH_LONG)
+            .setAction(R.string.undo) { settings.persistStats(stats) }
+            .show()
+          return@OnPreferenceClickListener true
+        }
+    }
 
-    val dynamicColor = findPreference<Preference>(SettingsManager.Settings.DYNAMIC.key)
-    dynamicColor?.onPreferenceChangeListener =
-      Preference.OnPreferenceChangeListener { _, _ ->
-        onBackPressedCallback.isEnabled = true
-        return@OnPreferenceChangeListener true
-      }
+    findPreference<Preference>(SettingsManager.Settings.DYNAMIC.key)?.apply {
+      onPreferenceChangeListener =
+        Preference.OnPreferenceChangeListener { _, _ ->
+          onBackPressedCallback.isEnabled = true
+          return@OnPreferenceChangeListener true
+        }
+    }
 
-    // doing this here, because I can't reliably get the view for the snackbar from within NumberPreference
-    val diagnostics = findPreference<Preference>(SettingsManager.Settings.DIAGNOSTICS.key)
-    diagnostics?.onPreferenceChangeListener =
-      Preference.OnPreferenceChangeListener { _, value ->
-        // don't allow the user to set a value that can't be safely converted to a Long in the future
-        val number = (value as? String)?.toLongOrNull()
-        if (number == null || number == 0L) {
-          Timber.w("Not persisting invalid NumberPreference: $value")
-          Snackbar.make(requireView(), R.string.invalid_iterations, Snackbar.LENGTH_LONG).show()
+
+    findPreference<EditTextPreference>(SettingsManager.Settings.CUSTOM_HEADS_TEXT.key)?.apply {
+      onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, value ->
+        if ((value as? String).isNullOrEmpty()) {
+          this.text = getText(R.string.heads).toString()
           return@OnPreferenceChangeListener false
         }
         return@OnPreferenceChangeListener true
       }
+    }
+
+    findPreference<EditTextPreference>(SettingsManager.Settings.CUSTOM_TAILS_TEXT.key)?.apply {
+      onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, value ->
+        if ((value as? String).isNullOrEmpty()) {
+          this.text = getText(R.string.tails).toString()
+          return@OnPreferenceChangeListener false
+        }
+        return@OnPreferenceChangeListener true
+      }
+    }
+
+    // doing this here, because I can't reliably get the view for the snackbar from within NumberPreference
+    findPreference<Preference>(SettingsManager.Settings.DIAGNOSTICS.key)?.apply {
+      onPreferenceChangeListener =
+        Preference.OnPreferenceChangeListener { _, value ->
+          // don't allow the user to set a value that can't be safely converted to a Long in the future
+          val number = (value as? String)?.toLongOrNull()
+          if (number == null || number == 0L) {
+            Timber.w("Not persisting invalid NumberPreference: $value")
+            Snackbar.make(requireView(), R.string.invalid_iterations, Snackbar.LENGTH_LONG).show()
+            return@OnPreferenceChangeListener false
+          }
+          return@OnPreferenceChangeListener true
+        }
+    }
+
   }
 
   private fun restartActivity() {

@@ -19,6 +19,7 @@ data class DiagnosticsState(
   val elapsedTime: Long = 0,
   val formattedTime: String = "",
   val iterations: Long = 0,
+  val labels: Pair<String?, String?> = Pair(null, null),
   val finished: Boolean = false,
   val turboMode: Boolean = false,
   val turboModeShown: Boolean = false

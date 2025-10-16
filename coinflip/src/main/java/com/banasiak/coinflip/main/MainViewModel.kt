@@ -66,6 +66,7 @@ class MainViewModel @Inject constructor(
         animation = null,
         coinImageType = CoinImageType.PLACEHOLDER,
         instructionsText = instructions,
+        labels = Pair(settings.customHeadsText, settings.customTailsText),
         paused = false,
         resetVisible = settings.showStats && settings.showQuickReset,
         resultVisible = false,

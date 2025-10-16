@@ -9,7 +9,6 @@
   <string name="diagnostics_menu_title">Diagnostique</string>
   <string name="donate">Faire un don à EFF.org</string>
   <string name="donate_text">Si vous aimez cette application, pensez à faire un don à l\'Electronic Frontier Foundation. ❤</string>
-  <string name="empty" translatable="false"/>
   <string name="force_high">Haut</string>
   <string name="force_low">Faible</string>
   <string name="force_medium">Moyen</string>

@@ -17,12 +17,12 @@ android {
     applicationId = "com.banasiak.coinflip"
     minSdk = 26
     targetSdk = 36
-    versionCode = 68
-    versionName = "2025/05"
+    versionCode = 69
+    versionName = "2025/10"
   }
   buildFeatures {
     buildConfig = true
-    compose = true
+    compose = false
     viewBinding = true
   }
   buildTypes {

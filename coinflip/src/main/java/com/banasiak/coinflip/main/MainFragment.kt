@@ -134,10 +134,12 @@ class MainFragment : Fragment() {
       }
     }
 
+    binding.headsLabel.text = state.labels.first ?: getString(R.string.heads)
+    binding.tailsLabel.text = state.labels.second ?: getString(R.string.tails)
     binding.instructionsText.text = getString(state.instructionsText)
     binding.resetButton.isVisible = state.resetVisible
     binding.resultText.isInvisible = !state.resultVisible // invisible, not gone
-    binding.resultText.text = getString(state.result.value.string)
+    binding.resultText.text = state.result.customLabel ?: getString(state.result.value.string)
     binding.resultText.setTextAppearance(state.result.value.style)
     binding.statsContainer.isVisible = state.statsVisible
     // note: don't update the count values based on the stats contained in the state object, they will be updated via an effect
