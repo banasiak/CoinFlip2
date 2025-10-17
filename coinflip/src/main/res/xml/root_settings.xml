@@ -81,14 +81,12 @@
       app:defaultValue="@string/heads"
       app:key="customHeadsText"
       app:persistent="true"
-      app:dependency="text"
       app:title="@string/settings_item_custom_heads_title"
       app:useSimpleSummaryProvider="true" />
     <EditTextPreference
       app:defaultValue="@string/tails"
       app:key="customTailsText"
       app:persistent="true"
-      app:dependency="text"
       app:title="@string/settings_item_custom_tails_title"
       app:useSimpleSummaryProvider="true" />
     <com.banasiak.coinflip.ui.NumberPreference
