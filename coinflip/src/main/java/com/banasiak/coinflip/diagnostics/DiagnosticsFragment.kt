@@ -78,7 +78,6 @@ class DiagnosticsFragment : BottomSheetDialogFragment() {
       is DiagnosticsEffect.LaunchUrl -> launchUrl(effect.url, colorHelper.getThemedColors())
       is DiagnosticsEffect.NavBack -> navigateBack()
       is DiagnosticsEffect.ShowToast -> Toast.makeText(requireContext(), effect.text, Toast.LENGTH_LONG).show()
-
     }
   }
 }

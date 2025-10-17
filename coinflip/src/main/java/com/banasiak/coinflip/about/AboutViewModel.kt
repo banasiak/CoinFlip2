@@ -22,7 +22,7 @@ class AboutViewModel @Inject constructor(
   val stateFlow = _stateFlow.asStateFlow()
 
   private val _effectFlow = MutableSharedFlow<AboutEffect>(extraBufferCapacity = 1)
-  val effectFlow= _effectFlow.asSharedFlow()
+  val effectFlow = _effectFlow.asSharedFlow()
 
   fun postAction(action: AboutAction) {
     when (action) {

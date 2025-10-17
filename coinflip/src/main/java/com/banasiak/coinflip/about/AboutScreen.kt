@@ -70,9 +70,10 @@ fun AboutView(state: AboutState, postAction: (AboutAction) -> Unit = { }) {
           style = MaterialTheme.typography.bodyMedium
         )
         Text(
-          modifier = Modifier
-            .padding(top = Dimen.large)
-            .clickable(onClick = { postAction(AboutAction.Website) }),
+          modifier =
+            Modifier
+              .padding(top = Dimen.large)
+              .clickable(onClick = { postAction(AboutAction.Website) }),
           text = stringResource(R.string.copyright_text),
           style = MaterialTheme.typography.bodyMedium
         )

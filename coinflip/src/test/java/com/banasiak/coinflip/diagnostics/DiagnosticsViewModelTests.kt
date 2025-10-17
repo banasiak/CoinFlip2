@@ -181,7 +181,6 @@ class DiagnosticsViewModelTests {
         awaitItem() shouldBeEqualTo initialState
         awaitItem() shouldBeEqualTo expectedState
       }
-
     }
 
   @Test

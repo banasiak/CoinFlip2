@@ -45,12 +45,13 @@ fun DiagnosticsView(state: DiagnosticsState, postAction: (DiagnosticsAction) -> 
       sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     ) {
       Column(
-        modifier = Modifier
-          .verticalScroll(rememberScrollState())
-          .padding(
-            horizontal = Dimen.medium,
-            vertical = Dimen.large
-          )
+        modifier =
+          Modifier
+            .verticalScroll(rememberScrollState())
+            .padding(
+              horizontal = Dimen.medium,
+              vertical = Dimen.large
+            )
       ) {
         Text(
           text = stringResource(R.string.diagnostics_fragment_title),
@@ -109,14 +110,16 @@ fun DiagnosticsView(state: DiagnosticsState, postAction: (DiagnosticsAction) -> 
         Spacer(modifier = Modifier.height(Dimen.small))
 
         Text(
-          modifier = Modifier
-            .align(Alignment.End)
-            .clickable(onClick = { postAction(DiagnosticsAction.Wikipedia) }),
+          modifier =
+            Modifier
+              .align(Alignment.End)
+              .clickable(onClick = { postAction(DiagnosticsAction.Wikipedia) }),
           text = stringResource(id = R.string.wikipedia),
-          style = MaterialTheme.typography.bodyMedium.copy(
-            fontStyle = FontStyle.Italic,
-            color = MaterialTheme.colorScheme.primary
-          )
+          style =
+            MaterialTheme.typography.bodyMedium.copy(
+              fontStyle = FontStyle.Italic,
+              color = MaterialTheme.colorScheme.primary
+            )
         )
       }
     }
@@ -128,16 +131,18 @@ private fun StatsRow(
   label: String,
   count: String,
   ratio: String = "",
-  color: Color = MaterialTheme.colorScheme.onSurface,
+  color: Color = MaterialTheme.colorScheme.onSurface
 ) {
   val titleMedium = MaterialTheme.typography.titleMedium
-  val mediumStyle = remember(color, titleMedium) {
-    titleMedium.copy(color = color)
-  }
+  val mediumStyle =
+    remember(color, titleMedium) {
+      titleMedium.copy(color = color)
+    }
   val titleSmall = MaterialTheme.typography.titleSmall
-  val smallStyle = remember(color, titleSmall) {
-    titleSmall.copy(color = color)
-  }
+  val smallStyle =
+    remember(color, titleSmall) {
+      titleSmall.copy(color = color)
+    }
   Row(
     modifier = Modifier.fillMaxWidth(0.75f),
     verticalAlignment = Alignment.CenterVertically
@@ -163,17 +168,18 @@ private fun StatsRow(
 @PreviewLightDark
 @Composable
 fun DiagnosticsViewPreview() {
-  val state = DiagnosticsState(
-    heads = 10,
-    tails = 5,
-    total = 15,
-    headsCount = "10",
-    headsRatio = "[66.6%]",
-    tailsCount = "5",
-    tailsRatio = "[33.3%]",
-    totalCount = "15",
-    totalRatio = "[100%]",
-    formattedTime = "99"
-  )
+  val state =
+    DiagnosticsState(
+      heads = 10,
+      tails = 5,
+      total = 15,
+      headsCount = "10",
+      headsRatio = "[66.6%]",
+      tailsCount = "5",
+      tailsRatio = "[33.3%]",
+      totalCount = "15",
+      totalRatio = "[100%]",
+      formattedTime = "99"
+    )
   DiagnosticsView(state)
 }

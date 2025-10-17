@@ -52,25 +52,26 @@ class SettingsFragment @Inject constructor() : PreferenceFragmentCompat() {
         }
     }
 
-
     findPreference<EditTextPreference>(SettingsManager.Settings.CUSTOM_HEADS_TEXT.key)?.apply {
-      onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, value ->
-        if ((value as? String).isNullOrEmpty()) {
-          this.text = getText(R.string.heads).toString()
-          return@OnPreferenceChangeListener false
+      onPreferenceChangeListener =
+        Preference.OnPreferenceChangeListener { _, value ->
+          if ((value as? String).isNullOrEmpty()) {
+            this.text = getText(R.string.heads).toString()
+            return@OnPreferenceChangeListener false
+          }
+          return@OnPreferenceChangeListener true
         }
-        return@OnPreferenceChangeListener true
-      }
     }
 
     findPreference<EditTextPreference>(SettingsManager.Settings.CUSTOM_TAILS_TEXT.key)?.apply {
-      onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, value ->
-        if ((value as? String).isNullOrEmpty()) {
-          this.text = getText(R.string.tails).toString()
-          return@OnPreferenceChangeListener false
+      onPreferenceChangeListener =
+        Preference.OnPreferenceChangeListener { _, value ->
+          if ((value as? String).isNullOrEmpty()) {
+            this.text = getText(R.string.tails).toString()
+            return@OnPreferenceChangeListener false
+          }
+          return@OnPreferenceChangeListener true
         }
-        return@OnPreferenceChangeListener true
-      }
     }
 
     // doing this here, because I can't reliably get the view for the snackbar from within NumberPreference
@@ -87,7 +88,6 @@ class SettingsFragment @Inject constructor() : PreferenceFragmentCompat() {
           return@OnPreferenceChangeListener true
         }
     }
-
   }
 
   private fun restartActivity() {
