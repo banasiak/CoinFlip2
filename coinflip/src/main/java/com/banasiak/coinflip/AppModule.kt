@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.hardware.SensorManager
+import android.os.Build
 import android.os.Vibrator
+import android.os.VibratorManager
 import androidx.preference.PreferenceManager
 import com.banasiak.coinflip.common.BuildInfo
 import dagger.Module
@@ -21,7 +23,12 @@ import kotlin.random.Random
 object AppModule {
   @Provides
   fun provideBuildInfo(@ApplicationContext context: Context): BuildInfo {
-    return BuildInfo(context.packageName, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
+    return BuildInfo(
+      Build.VERSION.SDK_INT,
+      context.packageName,
+      BuildConfig.VERSION_NAME,
+      BuildConfig.VERSION_CODE
+    )
   }
 
   @Provides
@@ -54,9 +61,14 @@ object AppModule {
     return PreferenceManager.getDefaultSharedPreferences(context)
   }
 
-  @Suppress("DEPRECATION") // VibratorManager requires API 31
   @Provides
-  fun provideVibrator(@ApplicationContext context: Context): Vibrator {
-    return context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+  fun provideVibrator(@ApplicationContext context: Context, buildInfo: BuildInfo): Vibrator {
+    return if (buildInfo.isSnowCone()) {
+      val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+      return vibratorManager.defaultVibrator
+    } else {
+      @Suppress("DEPRECATION")
+      context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+    }
   }
 }

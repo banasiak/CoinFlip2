@@ -133,9 +133,7 @@ class DiagnosticsViewModel @Inject constructor(
   private suspend fun showTurboModeNotice() {
     if (state.turboMode && !state.turboModeShown) {
       Timber.i("turbo mode activated!")
-      if (settings.soundEnabled) {
-        soundHelper.playSound(SoundHelper.Sound.POWERUP)
-      }
+      soundHelper.playSound(SoundHelper.Sound.POWERUP)
       _effectFlow.emit(DiagnosticsEffect.ShowToast(R.string.turbo_mode))
       state = state.copy(turboModeShown = true) // otherwise this starts to get annoying...
     }

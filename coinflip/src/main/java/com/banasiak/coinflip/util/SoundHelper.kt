@@ -5,13 +5,15 @@ import android.media.AudioManager
 import android.media.SoundPool
 import androidx.annotation.RawRes
 import com.banasiak.coinflip.R
+import com.banasiak.coinflip.settings.SettingsManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class SoundHelper @Inject constructor(
-  @ApplicationContext context: Context
+  @ApplicationContext context: Context,
+  private val settings: SettingsManager
 ) {
   @Suppress("DEPRECATION") // SoundPool.Builder requires API 34
   private val soundPool = SoundPool(1, AudioManager.STREAM_MUSIC, 100)
@@ -20,6 +22,8 @@ class SoundHelper @Inject constructor(
   private val oneUpSound = soundPool.load(context, Sound.ONEUP.resId, 1)
 
   fun playSound(sound: Sound) {
+    if (!settings.soundEnabled) return
+
     val soundId =
       when (sound) {
         Sound.COIN -> coinSound

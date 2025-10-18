@@ -43,7 +43,6 @@ sealed class MainEffect {
   data object ToSettings : MainEffect()
   data object ShowRateDialog : MainEffect()
   data class UpdateStats(val headsCount: String, val tailsCount: String) : MainEffect()
-  data object Vibrate : MainEffect()
 }
 
 enum class CoinImageType {

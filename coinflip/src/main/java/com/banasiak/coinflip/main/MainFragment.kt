@@ -2,8 +2,6 @@ package com.banasiak.coinflip.main
 
 import android.hardware.SensorManager
 import android.os.Bundle
-import android.os.VibrationEffect
-import android.os.Vibrator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,12 +31,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainFragment : Fragment() {
-  companion object {
-    private val VIBRATION_EFFECT = VibrationEffect.createOneShot(200, 255)
-  }
-
   @Inject lateinit var sensorManager: SensorManager
-  @Inject lateinit var vibrator: Vibrator
 
   private lateinit var binding: FragmentMainBinding
   private lateinit var shakeDetector: ShakeDetector
@@ -156,7 +149,6 @@ class MainFragment : Fragment() {
       MainEffect.ToSettings -> navigate(R.id.toSettings)
       MainEffect.ShowRateDialog -> showRateAppDialog()
       is MainEffect.UpdateStats -> updateStats(effect.headsCount, effect.tailsCount)
-      MainEffect.Vibrate -> vibrator.vibrate(VIBRATION_EFFECT)
     }
   }
 

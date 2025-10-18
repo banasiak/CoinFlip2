@@ -10,6 +10,7 @@ import com.banasiak.coinflip.extensions.save
 import com.banasiak.coinflip.settings.SettingsManager
 import com.banasiak.coinflip.util.AnimationHelper
 import com.banasiak.coinflip.util.SoundHelper
+import com.banasiak.coinflip.util.VibrationHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -19,6 +20,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.concurrent.atomics.AtomicBoolean
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -26,6 +29,7 @@ class MainViewModel @Inject constructor(
   private val coin: Coin,
   private val settings: SettingsManager,
   private val soundHelper: SoundHelper,
+  private val vibrationHelper: VibrationHelper,
   private val savedState: SavedStateHandle
 ) : ViewModel() {
   private var state = savedState.restore() ?: MainState()
@@ -41,6 +45,9 @@ class MainViewModel @Inject constructor(
 
   private val _effectFlow = MutableSharedFlow<MainEffect>(extraBufferCapacity = 1)
   val effectFlow = _effectFlow.asSharedFlow()
+
+  @OptIn(ExperimentalAtomicApi::class)
+  private val isFlipping = AtomicBoolean(false)
 
   fun postAction(action: MainAction) {
     Timber.d("postAction(): $action")
@@ -86,8 +93,16 @@ class MainViewModel @Inject constructor(
     savedState.save(state)
   }
 
+  @OptIn(ExperimentalAtomicApi::class)
   private fun flipCoin() {
+    if (isFlipping.load()) {
+      Timber.d("flipCoin() already in progress. Ignoring.")
+      return
+    }
+
     viewModelScope.launch {
+      isFlipping.store(true)
+
       // the heart and soul of this entire endeavor
       val result = coin.flip()
 
@@ -113,11 +128,15 @@ class MainViewModel @Inject constructor(
         // an obtuse way of pausing while the animation renders, proceeding 80 ms (4 frames, or 1/2 flip) before completion
         animation?.duration(withoutLastFrames = 4)?.let {
           Timber.d("animation delay: $it ms")
+          // vibrate while animating
+          vibrationHelper.vibrate(VibrationHelper.Vibration.SPIN)
           delay(it)
+          vibrationHelper.stop()
         }
       }
 
       onFlipFinished()
+      isFlipping.store(false)
     }
   }
 
@@ -137,14 +156,10 @@ class MainViewModel @Inject constructor(
       _effectFlow.emit(MainEffect.ShowRateDialog)
     }
 
-    if (settings.soundEnabled) {
-      val sound = if (isOneHundred) SoundHelper.Sound.ONEUP else SoundHelper.Sound.COIN // Happy Easter, Ryan!
-      soundHelper.playSound(sound)
-    }
+    val sound = if (isOneHundred) SoundHelper.Sound.ONEUP else SoundHelper.Sound.COIN // Happy Easter, Ryan!
+    soundHelper.playSound(sound)
 
-    if (settings.vibrateEnabled) {
-      _effectFlow.emit(MainEffect.Vibrate)
-    }
+    vibrationHelper.vibrate(VibrationHelper.Vibration.THUD)
   }
 
   private fun generateAnimations() {

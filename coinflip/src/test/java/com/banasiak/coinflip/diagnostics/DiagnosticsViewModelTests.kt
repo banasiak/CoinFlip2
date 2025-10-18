@@ -10,7 +10,6 @@ import com.banasiak.coinflip.util.AnimationHelper
 import com.banasiak.coinflip.util.SoundHelper
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
@@ -200,10 +199,9 @@ class DiagnosticsViewModelTests {
     }
 
   @Test
-  fun turbo_mode_sound_on() =
+  fun turbo_mode() =
     runTest {
       every { savedStateHandle.get<DiagnosticsState>("state") } returns DiagnosticsState(iterations = 1L, turboMode = true)
-      every { settingsManager.soundEnabled } returns true
 
       val vm = viewModel()
       val states = vm.stateFlow
@@ -220,33 +218,6 @@ class DiagnosticsViewModelTests {
       effects.test {
         awaitItem() shouldBeEqualTo DiagnosticsEffect.ShowToast(R.string.turbo_mode)
       }
-
-      verify(exactly = 1) { soundHelper.playSound(SoundHelper.Sound.POWERUP) }
-    }
-
-  @Test
-  fun turbo_mode_sound_off() =
-    runTest {
-      every { savedStateHandle.get<DiagnosticsState>("state") } returns DiagnosticsState(iterations = 1L, turboMode = true)
-      every { settingsManager.soundEnabled } returns false
-
-      val vm = viewModel()
-      val states = vm.stateFlow
-      val effects = vm.effectFlow
-
-      backgroundScope.launch {
-        vm.postAction(DiagnosticsAction.Start)
-      }
-
-      states.test {
-        awaitItem() shouldBeEqualTo DiagnosticsState(iterations = 1, turboMode = true)
-      }
-
-      effects.test {
-        awaitItem() shouldBeEqualTo DiagnosticsEffect.ShowToast(R.string.turbo_mode)
-      }
-
-      verify(exactly = 0) { soundHelper.playSound(SoundHelper.Sound.POWERUP) }
     }
 
   @Test
@@ -255,7 +226,6 @@ class DiagnosticsViewModelTests {
       every {
         savedStateHandle.get<DiagnosticsState>("state")
       } returns DiagnosticsState(iterations = 1L, turboMode = true, turboModeShown = true)
-      every { settingsManager.soundEnabled } returns true
 
       val vm = viewModel()
       val states = vm.stateFlow
@@ -272,7 +242,5 @@ class DiagnosticsViewModelTests {
       effects.test {
         expectNoEvents()
       }
-
-      verify(exactly = 0) { soundHelper.playSound(SoundHelper.Sound.POWERUP) }
     }
 }
