@@ -27,6 +27,8 @@
   <string name="settings_item_animation_summary">回転するコインをレンダリングする</string>
   <string name="settings_item_animation_title">アニメーション</string>
   <string name="settings_item_coin_title">コインの種類</string>
+  <string name="settings_item_custom_heads_title">カスタムヘッズテキスト</string>
+  <string name="settings_item_custom_tails_title">カスタムテイルズテキスト</string>
   <string name="settings_item_diagnostics_dialog">反復回数</string>
   <string name="settings_item_diagnostics_summary">反復</string>
   <string name="settings_item_diagnostics_title">診断テスト</string>

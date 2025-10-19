@@ -27,6 +27,8 @@
   <string name="settings_item_animation_summary">Dönen parayı renderle</string>
   <string name="settings_item_animation_title">Animasyon</string>
   <string name="settings_item_coin_title">Madeni Para Türü</string>
+  <string name="settings_item_custom_heads_title">Özel BAŞLAR Metni</string>
+  <string name="settings_item_custom_tails_title">Özel KUYRUKLAR Metni</string>
   <string name="settings_item_diagnostics_dialog">Tekrar Sayısı</string>
   <string name="settings_item_diagnostics_summary">yinelemeler</string>
   <string name="settings_item_diagnostics_title">Teşhis Testi</string>

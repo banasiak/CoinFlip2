@@ -27,6 +27,8 @@
   <string name="settings_item_animation_summary">Wyrenderuj wirującą monetę</string>
   <string name="settings_item_animation_title">Ożywienie</string>
   <string name="settings_item_coin_title">Typ monety</string>
+  <string name="settings_item_custom_heads_title">Niestandardowy tekst GŁOWY</string>
+  <string name="settings_item_custom_tails_title">Niestandardowy tekst OGONY</string>
   <string name="settings_item_diagnostics_dialog">Liczba iteracji</string>
   <string name="settings_item_diagnostics_summary">iteracje</string>
   <string name="settings_item_diagnostics_title">Test diagnostyczny</string>

@@ -27,6 +27,7 @@
   <string name="settings_item_animation_summary">Rendre la pièce en rotation</string>
   <string name="settings_item_animation_title">Animation</string>
   <string name="settings_item_coin_title">Type de pièce</string>
+  <string name="settings_item_custom_tails_title">Texte QUEUES personnalisé</string>
   <string name="settings_item_diagnostics_dialog">Nombre d\'itérations</string>
   <string name="settings_item_diagnostics_summary">itérations</string>
   <string name="settings_item_diagnostics_title">Test diagnostique</string>
@@ -59,4 +60,5 @@
   <string name="undo">annuler</string>
   <string name="version">version %1$s (%2$d)</string>
   <string name="wikipedia">— Wikipédia</string>
+  <string name="settings_item_custom_heads_title">Texte CHEFS personnalisé</string>
 </resources>

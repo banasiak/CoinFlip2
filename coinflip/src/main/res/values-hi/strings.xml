@@ -25,6 +25,7 @@
   <string name="settings_item_animation_summary">घूमता हुआ सिक्का प्रस्तुत करें</string>
   <string name="settings_item_animation_title">एनिमेशन</string>
   <string name="settings_item_coin_title">सिक्के का प्रकार</string>
+  <string name="settings_item_custom_tails_title">कस्टम टेल्स टेक्स्ट</string>
   <string name="settings_item_diagnostics_dialog">पुनरावृत्तियों की संख्या</string>
   <string name="settings_item_diagnostics_summary">पुनरावृत्तियों</string>
   <string name="settings_item_diagnostics_title">नैदानिक ​​परीक्षण</string>
@@ -59,4 +60,5 @@
   <string name="wikipedia">— विकिपीडिया</string>
   <string name="about_text">सिक्का उछालने का एक सुविधाजनक तरीका, भले ही आपके पास सिक्का न हो. बस प्रश्न चिह्न पर टैप करें या हिलाएं और परिणाम देखें. सिक्के को पुनः घुमाने के लिए उसे टैप करें या हिलाएं.\n\nसंयुक्त राज्य अमेरिका टकसाल से क्वार्टर-डॉलर सिक्के की छवियाँ. संयुक्त राज्य अमेरिका टकसाल से राष्ट्रपति $1 सिक्के की छवियाँ.</string>
   <string name="rng">यादृच्छिक संख्या जनरेशन एक ऐसी प्रक्रिया है जिसके द्वारा, अक्सर छद्म यादृच्छिक संख्या जनरेटर के माध्यम से, संख्याओं का एक अनुक्रम उत्पन्न किया जाता है, जिसका यादृच्छिक संयोग से बेहतर पूर्वानुमान नहीं लगाया जा सकता है. इसका अर्थ यह है कि विशेष परिणाम अनुक्रम में कुछ ऐसे पैटर्न होंगे जिन्हें बाद में तो पहचाना जा सकता है, लेकिन उनका पूर्वानुमान लगाना असंभव होगा.</string>
+  <string name="settings_item_custom_heads_title">कस्टम हेड्स टेक्स्ट</string>
 </resources>

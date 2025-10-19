@@ -27,6 +27,7 @@
   <string name="settings_item_animation_summary">渲染旋转硬币</string>
   <string name="settings_item_animation_title">动画片</string>
   <string name="settings_item_coin_title">硬币类型</string>
+  <string name="settings_item_custom_tails_title">自定义尾巴文本</string>
   <string name="settings_item_diagnostics_dialog">迭代次数</string>
   <string name="settings_item_diagnostics_summary">迭代</string>
   <string name="settings_item_diagnostics_title">诊断测试</string>
@@ -59,4 +60,5 @@
   <string name="undo">撤消</string>
   <string name="version">版本 %1$s (%2$d)</string>
   <string name="wikipedia">— 维基百科</string>
+  <string name="settings_item_custom_heads_title">自定义头文本</string>
 </resources>

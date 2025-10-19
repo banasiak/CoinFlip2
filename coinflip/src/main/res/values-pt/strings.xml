@@ -27,6 +27,8 @@
   <string name="settings_item_animation_summary">Renderizar moeda giratória</string>
   <string name="settings_item_animation_title">Animação</string>
   <string name="settings_item_coin_title">Tipo de moeda</string>
+  <string name="settings_item_custom_heads_title">Texto CABEÇAS personalizado</string>
+  <string name="settings_item_custom_tails_title">Texto CAUDAS personalizado</string>
   <string name="settings_item_diagnostics_dialog">Número de Iterações</string>
   <string name="settings_item_diagnostics_summary">iterações</string>
   <string name="settings_item_diagnostics_title">Teste de diagnóstico</string>

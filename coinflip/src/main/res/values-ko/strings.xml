@@ -27,6 +27,8 @@
   <string name="settings_item_animation_summary">회전하는 동전 렌더링</string>
   <string name="settings_item_animation_title">생기</string>
   <string name="settings_item_coin_title">코인 종류</string>
+  <string name="settings_item_custom_heads_title">사용자 정의 머리 텍스트</string>
+  <string name="settings_item_custom_tails_title">사용자 정의 꼬리 텍스트</string>
   <string name="settings_item_diagnostics_dialog">반복 횟수</string>
   <string name="settings_item_diagnostics_summary">반복</string>
   <string name="settings_item_diagnostics_title">진단 검사</string>

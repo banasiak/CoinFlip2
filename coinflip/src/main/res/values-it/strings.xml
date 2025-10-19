@@ -27,6 +27,8 @@
   <string name="settings_item_animation_summary">Renderizza la moneta che gira</string>
   <string name="settings_item_animation_title">Animazione</string>
   <string name="settings_item_coin_title">Tipo di moneta</string>
+  <string name="settings_item_custom_heads_title">Testo TESTE personalizzato</string>
+  <string name="settings_item_custom_tails_title">Testo CODE personalizzato</string>
   <string name="settings_item_diagnostics_dialog">Numero di iterazioni</string>
   <string name="settings_item_diagnostics_summary">iterazioni</string>
   <string name="settings_item_diagnostics_title">Test diagnostico</string>

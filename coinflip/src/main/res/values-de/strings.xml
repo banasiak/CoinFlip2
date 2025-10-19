@@ -27,6 +27,7 @@
   <string name="settings_item_animation_summary">Rendern Sie eine sich drehende Münze</string>
   <string name="settings_item_animation_title">Animation</string>
   <string name="settings_item_coin_title">Münztyp</string>
+  <string name="settings_item_custom_tails_title">Benutzerdefinierter ZAHL Text</string>
   <string name="settings_item_diagnostics_dialog">Anzahl der Iterationen</string>
   <string name="settings_item_diagnostics_summary">Iterationen</string>
   <string name="settings_item_diagnostics_title">Diagnosetest</string>
@@ -59,4 +60,5 @@
   <string name="undo">Rückgängig machen</string>
   <string name="version">Version %1$s (%2$d)</string>
   <string name="wikipedia">— Wikipedia</string>
+  <string name="settings_item_custom_heads_title">Benutzerdefinierter KOPF text</string>
 </resources>

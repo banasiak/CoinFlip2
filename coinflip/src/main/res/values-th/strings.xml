@@ -27,6 +27,8 @@
   <string name="settings_item_animation_summary">เรนเดอร์เหรียญหมุน</string>
   <string name="settings_item_animation_title">แอนิเมชั่น</string>
   <string name="settings_item_coin_title">ประเภทเหรียญ</string>
+  <string name="settings_item_custom_heads_title">ข้อความ หัว ที่กำหนดเอง</string>
+  <string name="settings_item_custom_tails_title">ข้อความ หาง ที่กำหนดเอง</string>
   <string name="settings_item_diagnostics_dialog">จำนวนการวนซ้ำ</string>
   <string name="settings_item_diagnostics_summary">การวนซ้ำ</string>
   <string name="settings_item_diagnostics_title">ทดสอบการวินิจฉัย</string>
