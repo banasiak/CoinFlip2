@@ -4,6 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.hardware.SensorManager
+import android.media.AudioAttributes
+import android.media.AudioManager
+import android.media.SoundPool
 import android.os.Build
 import android.os.Vibrator
 import android.os.VibratorManager
@@ -59,6 +62,26 @@ object AppModule {
   @Provides
   fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
     return PreferenceManager.getDefaultSharedPreferences(context)
+  }
+
+  @Provides
+  fun provideSoundPool(@ApplicationContext context: Context, buildInfo: BuildInfo): SoundPool {
+    val maxStreams = 2 // coin + power-up
+    return if (buildInfo.isUpsideDownCake()) {
+      SoundPool.Builder()
+        .setContext(context)
+        .setMaxStreams(maxStreams)
+        .setAudioAttributes(
+          AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_GAME)
+            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+            .build()
+        )
+        .build()
+    } else {
+      @Suppress("DEPRECATION")
+      SoundPool(maxStreams, AudioManager.STREAM_MUSIC, 100)
+    }
   }
 
   @Provides
