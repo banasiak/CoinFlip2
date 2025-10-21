@@ -1,7 +1,6 @@
 package com.banasiak.coinflip.common
 
 import com.banasiak.coinflip.settings.SettingsManager
-import io.mockk.MockKSettings.relaxed
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

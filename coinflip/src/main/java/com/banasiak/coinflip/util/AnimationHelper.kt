@@ -7,6 +7,9 @@ import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import androidx.annotation.DrawableRes
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.createBitmap
+import androidx.core.graphics.drawable.toDrawable
+import androidx.core.graphics.scale
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.BuildInfo
 import com.banasiak.coinflip.ui.DurationAnimationDrawable
@@ -100,11 +103,11 @@ class AnimationHelper @Inject constructor(
     val imageBitmap = image.bitmap
     val width = (imageBitmap.width * widthScale).toInt()
     val height = imageBitmap.height
-    val scaledBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, true)
+    val scaledBitmap = imageBitmap.scale(width, height)
     scaledBitmap.density = Bitmap.DENSITY_NONE
 
     // create a new canvas to combine the two images on
-    val comboImageBitmap = Bitmap.createBitmap(backgroundBitmap.width, backgroundBitmap.height, Bitmap.Config.ARGB_8888)
+    val comboImageBitmap = createBitmap(backgroundBitmap.width, backgroundBitmap.height)
     comboImageBitmap.density = Bitmap.DENSITY_NONE
     val canvas = Canvas(comboImageBitmap)
 
@@ -113,7 +116,7 @@ class AnimationHelper @Inject constructor(
     canvas.drawBitmap(scaledBitmap, (backgroundBitmap.width - scaledBitmap.width) / 2f, 0f, null)
 
     // convert the new combo image bitmap to a BitmapDrawable
-    return BitmapDrawable(resources, comboImageBitmap)
+    return comboImageBitmap.toDrawable(resources)
   }
 
   private fun generateAnimatedDrawable(

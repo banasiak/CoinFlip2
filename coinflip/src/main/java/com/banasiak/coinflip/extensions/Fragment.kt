@@ -1,9 +1,9 @@
 package com.banasiak.coinflip.extensions
 
-import android.net.Uri
 import androidx.annotation.IdRes
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.banasiak.coinflip.util.ColorHelper
@@ -47,7 +47,7 @@ fun Fragment.launchUrl(url: String, colors: ColorHelper.ThemedColors) {
       .build()
 
   try {
-    intent.launchUrl(requireContext(), Uri.parse(url))
+    intent.launchUrl(requireContext(), url.toUri())
   } catch (e: Exception) {
     Timber.e(e, "Unable to launch intent")
   }
