@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="about_app_text">Un moyen pratique de lancer une pièce, même sans en avoir une. Touchez simplement le point d\'interrogation ou secouez l\'appareil pour voir le résultat. Touchez ou secouez à nouveau pour relancer la pièce.</string>
   <string name="about_fragment_title">À propos de Coin Flip</string>
   <string name="about_menu_title">À propos</string>
-  <string name="about_text">Un moyen pratique de lancer une pièce, même si vous n\'en avez pas. Appuyez simplement sur le point d\'interrogation ou secouez et visualisez le résultat. Appuyez ou secouez pour faire tourner à nouveau la pièce.\n\nImages de pièces d\'un quart de dollar de la Monnaie des États-Unis. Images de la pièce présidentielle de 1 $de la Monnaie des États-Unis.</string>
   <string name="app_name">Lancement de pièces</string>
   <string name="coin_animation">Animation de pièces de monnaie</string>
   <string name="diagnostics_fragment_title">Test diagnostique</string>
@@ -27,6 +27,7 @@
   <string name="settings_item_animation_summary">Rendre la pièce en rotation</string>
   <string name="settings_item_animation_title">Animation</string>
   <string name="settings_item_coin_title">Type de pièce</string>
+  <string name="settings_item_custom_heads_title">Texte CHEFS personnalisé</string>
   <string name="settings_item_custom_tails_title">Texte QUEUES personnalisé</string>
   <string name="settings_item_diagnostics_dialog">Nombre d\'itérations</string>
   <string name="settings_item_diagnostics_summary">itérations</string>
@@ -60,5 +61,4 @@
   <string name="undo">annuler</string>
   <string name="version">version %1$s (%2$d)</string>
   <string name="wikipedia">— Wikipédia</string>
-  <string name="settings_item_custom_heads_title">Texte CHEFS personnalisé</string>
 </resources>

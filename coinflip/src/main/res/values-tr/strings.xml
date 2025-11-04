@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="about_app_text">Madeni paranız olmasa bile, yazı tura atmanın pratik bir yolu. Soru işaretine dokunun veya sonucu görmek için sallayın. Madeni parayı tekrar çevirmek için dokunun veya sallayın.</string>
   <string name="about_fragment_title">Yazı-tura hakkında</string>
   <string name="about_menu_title">Hakkında</string>
-  <string name="about_text">Madeni paranız olmasa bile yazı tura atmanın kolay bir yolu. Soru işaretine dokunmanız veya sallamanız yeterli ve sonucu görebilirsiniz. Madeni parayı tekrar döndürmek için dokunun veya sallayın.\n\nABD Darphanesi\'nden çeyrek dolarlık madeni para görselleri. ABD Darphanesi\'nden Başkanlık 1 Dolarlık Madeni Para görselleri.</string>
   <string name="app_name">Yazı tura</string>
   <string name="coin_animation">Para Animasyonu</string>
   <string name="diagnostics_fragment_title">Teşhis Testi</string>

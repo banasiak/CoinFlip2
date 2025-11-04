@@ -57,6 +57,30 @@
     <item>Sacagawea Dollar</item>
     <item>Canadian Loonie</item>
     <item>Canadian Toonie</item>
+    <item>Andorra Euro</item>
+    <item>Austria Euro</item>
+    <item>Belgium Euro</item>
+    <item>Croatia Euro</item>
+    <item>Cyprus Euro</item>
+    <item>Estonia Euro</item>
+    <item>Finland Euro</item>
+    <item>France Euro</item>
+    <item>Germany Euro</item>
+    <item>Greece Euro</item>
+    <item>Ireland Euro</item>
+    <item>Italy Euro</item>
+    <item>Latvia Euro</item>
+    <item>Lithuania Euro</item>
+    <item>Luxembourg Euro</item>
+    <item>Malta Euro</item>
+    <item>Monaco Euro</item>
+    <item>Netherlands Euro</item>
+    <item>Portugal Euro</item>
+    <item>San Marino Euro</item>
+    <item>Slovakia Euro</item>
+    <item>Slovenia Euro</item>
+    <item>Spain Euro</item>
+    <item>Vatican Euro</item>
     <item>Two-Face Dollar</item>
     <item>Random Coin</item>
   </string-array>
@@ -117,6 +141,30 @@
     <item>sacagawea</item>
     <item>loonie</item>
     <item>toonie</item>
+    <item>andorra</item>
+    <item>austria</item>
+    <item>belgium</item>
+    <item>croatia</item>
+    <item>cyprus</item>
+    <item>estonia</item>
+    <item>finland</item>
+    <item>france</item>
+    <item>germany</item>
+    <item>greece</item>
+    <item>ireland</item>
+    <item>italy</item>
+    <item>latvia</item>
+    <item>lithuania</item>
+    <item>luxembourg</item>
+    <item>malta</item>
+    <item>monaco</item>
+    <item>netherlands</item>
+    <item>portugal</item>
+    <item>sanmarino</item>
+    <item>slovakia</item>
+    <item>slovenia</item>
+    <item>spain</item>
+    <item>vatican</item>
     <item>twoface</item>
     <item>random</item>
   </string-array>

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="about_app_text">A convenient way to flip a coin, even if you don\'t have one. Simply tap the question mark or shake and view the result. Tap or shake to spin the coin again.</string>
   <string name="about_fragment_title">About Coin Flip</string>
   <string name="about_menu_title">About</string>
-  <string name="about_text">A convenient way to flip a coin, even if you don\'t have one. Simply tap the question mark or shake and view the result. Tap or shake to spin the coin again.\n\nQuarter-dollar coin images from the United States Mint. Presidential $1 Coin images from the United States Mint.</string>
+  <string name="about_mint_text" translatable="false">Quarter-dollar and Presidential $1 Coin images from the United States Mint. €1 Coin images from the European Central Bank.</string>
   <string name="app_name">Coin Flip</string>
   <string name="coin_animation">Coin Animation</string>
   <string name="copyright_text" translatable="false">Copyright &#169; 2025 &#8212; Richard Banasiak</string>

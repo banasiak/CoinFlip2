@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="about_app_text">Wygodny sposób na rzucenie monetą, nawet jeśli jej nie masz. Wystarczy dotknąć znaku zapytania lub potrząsnąć, aby zobaczyć wynik. Dotknij lub potrząsnąć, aby ponownie zakręcić monetą.</string>
   <string name="about_fragment_title">O grze Coin Flip</string>
   <string name="about_menu_title">O</string>
-  <string name="about_text">Wygodny sposób na rzucanie monetą, nawet jeśli jej nie masz. Po prostu dotknij znaku zapytania lub potrząśnij urządzeniem, aby zobaczyć wynik. Dotknij lub potrząśnij, aby ponownie zakręcić monetą.\n\nWizerunki monet ćwierćdolarowych z Mennicy Stanów Zjednoczonych. Wizerunki monety prezydenckiej 1 dolarowej z Mennicy Stanów Zjednoczonych.</string>
   <string name="app_name">Rzut monetą</string>
   <string name="coin_animation">Animacja monety</string>
-    <string name="diagnostics_fragment_title">Test diagnostyczny</string>
+  <string name="diagnostics_fragment_title">Test diagnostyczny</string>
   <string name="diagnostics_menu_title">Diagnostyka</string>
   <string name="donate">Przekaż darowiznę na rzecz EFF.org</string>
   <string name="donate_text">Jeśli podoba Ci się ta aplikacja, rozważ przekazanie darowizny na rzecz fundacji Electronic Frontier Foundation. ❤</string>

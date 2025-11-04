@@ -66,7 +66,7 @@ fun AboutView(state: AboutState, postAction: (AboutAction) -> Unit = { }) {
         )
         Text(
           modifier = Modifier.padding(top = Dimen.large),
-          text = stringResource(R.string.about_text),
+          text = stringResource(R.string.about_app_text),
           style = MaterialTheme.typography.bodyMedium
         )
         Text(

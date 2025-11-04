@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="about_app_text">Un modo comodo per lanciare una moneta, anche se non ne hai una. Basta toccare il punto interrogativo o agitare e visualizzare il risultato. Tocca o agita per far girare di nuovo la moneta.</string>
   <string name="about_fragment_title">Informazioni sul lancio della moneta</string>
   <string name="about_menu_title">Di</string>
-  <string name="about_text">Un modo comodo per lanciare una moneta, anche se non ne hai una. Basta toccare il punto interrogativo o agitarlo per visualizzare il risultato. Tocca o agita per far girare di nuovo la moneta.\n\nImmagini di monete da un quarto di dollaro della Zecca degli Stati Uniti. Immagini della moneta presidenziale da 1 dollaro della Zecca degli Stati Uniti.</string>
   <string name="app_name">Testa o croce</string>
   <string name="coin_animation">Animazione delle monete</string>
   <string name="diagnostics_fragment_title">Test diagnostico</string>

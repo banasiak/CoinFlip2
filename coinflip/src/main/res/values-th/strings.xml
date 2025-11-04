@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="about_app_text">วิธีโยนเหรียญที่สะดวก แม้ไม่มีเหรียญก็ตาม เพียงแตะเครื่องหมายคำถามหรือเขย่าเพื่อดูผลลัพธ์ แตะหรือเขย่าเพื่อหมุนเหรียญอีกครั้ง</string>
   <string name="about_fragment_title">เกี่ยวกับเหรียญพลิก</string>
   <string name="about_menu_title">เกี่ยวกับ</string>
-  <string name="about_text">วิธีที่สะดวกในการโยนเหรียญ แม้ว่าคุณจะไม่มีเหรียญก็ตาม เพียงแตะเครื่องหมายคำถามหรือเขย่าเพื่อดูผลลัพธ์ แตะหรือเขย่าเพื่อหมุนเหรียญอีกครั้ง\n\nภาพเหรียญ 25 ล้านดอลลาร์จากกองกษาปณ์สหรัฐอเมริกา ภาพเหรียญประธานาธิบดีมูลค่า 1 ดอลลาร์จากโรงกษาปณ์สหรัฐอเมริกา</string>
   <string name="app_name">พลิกเหรียญ</string>
   <string name="coin_animation">ภาพเคลื่อนไหวเหรียญ</string>
   <string name="diagnostics_fragment_title">ทดสอบการวินิจฉัย</string>

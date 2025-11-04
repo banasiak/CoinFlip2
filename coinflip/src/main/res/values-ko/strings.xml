@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="about_app_text">동전이 없어도 편리하게 동전을 던질 수 있습니다. 물음표를 탭하거나 흔들면 결과가 표시됩니다. 탭하거나 흔들면 동전이 다시 돌아갑니다.</string>
   <string name="about_fragment_title">동전 뒤집기에 대하여</string>
   <string name="about_menu_title">에 대한</string>
-  <string name="about_text">동전이 없더라도 편리하게 동전을 던질 수 있는 방법입니다. 물음표를 탭하거나 흔들면 결과를 볼 수 있습니다. 동전을 다시 돌리려면 탭하거나 흔들어주세요.\n\n미국 조폐국에서 발행한 25센트 동전 이미지. 미국 조폐국이 소장한 대통령 1달러 동전 이미지.</string>
   <string name="app_name">동전 던지기</string>
   <string name="coin_animation">코인 애니메이션</string>
   <string name="diagnostics_fragment_title">진단 검사</string>

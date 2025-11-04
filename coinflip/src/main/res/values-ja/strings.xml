@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="about_app_text">コインを持っていない時でも、コインを投げる便利な方法です。クエスチョンマークをタップするかシェイクするだけで結果が表示されます。タップまたはシェイクすると、もう一度コインを回すことができます。</string>
   <string name="about_fragment_title">コイントスについて</string>
   <string name="about_menu_title">について</string>
-  <string name="about_text">コインを持っていなくても、コインを投げる便利な方法です。疑問符をタップするか、振るだけで結果が表示されます。タップまたはシェイクするとコインが再び回転します。\n\nアメリカ造幣局発行の 25 ドル硬貨の画像。アメリカ造幣局発行の大統領 1 ドル硬貨の画像。</string>
   <string name="app_name">コイン投げ</string>
   <string name="coin_animation">コインアニメーション</string>
   <string name="diagnostics_fragment_title">診断テスト</string>

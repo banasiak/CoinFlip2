@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="about_app_text">Uma forma prática de atirar uma moeda para o ar, mesmo sem ter uma. Basta tocar no ponto de interrogação ou agitar o dispositivo para ver o resultado. Toque ou agite novamente para lançar a moeda mais uma vez.</string>
   <string name="about_fragment_title">Sobre Coin Flip</string>
   <string name="about_menu_title">Sobre</string>
-  <string name="about_text">Uma maneira conveniente de lançar uma moeda, mesmo que você não tenha uma. Basta tocar no ponto de interrogação ou agitar e ver o resultado. Toque ou agite para girar a moeda novamente.\n\nImagens de moedas de um quarto de dólar da Casa da Moeda dos Estados Unidos. Imagens da moeda presidencial de US $1 da Casa da Moeda dos Estados Unidos.</string>
   <string name="app_name">Moeda</string>
   <string name="coin_animation">Animação de Moeda</string>
   <string name="diagnostics_fragment_title">Teste de diagnóstico</string>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="about_app_text">Una forma sencilla de lanzar una moneda, incluso si no tienes una. Simplemente toca el signo de interrogación o agita el dispositivo para ver el resultado. Toca o agita para volver a lanzar la moneda.</string>
   <string name="about_fragment_title">Acerca del lanzamiento de monedas</string>
   <string name="about_menu_title">Acerca de</string>
-  <string name="about_text">Una forma cómoda de lanzar una moneda, incluso si no tienes una. Simplemente toque el signo de interrogación o agítelo y vea el resultado. Toque o agite para girar la moneda nuevamente.\n\nImágenes de monedas de un cuarto de dólar de la Casa de la Moneda de los Estados Unidos. Imágenes de monedas presidenciales de $1 de la Casa de la Moneda de los Estados Unidos.</string>
   <string name="app_name">Lanzamiento de moneda</string>
   <string name="coin_animation">Animación de monedas</string>
   <string name="diagnostics_fragment_title">Prueba de diagnóstico</string>
