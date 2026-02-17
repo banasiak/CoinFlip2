@@ -10,14 +10,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,6 +25,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.ui.theme.AppTheme
 import com.banasiak.coinflip.ui.theme.Dimen
+import com.banasiak.coinflip.ui.theme.Type
 
 @Composable
 fun DiagnosticsScreen(viewModel: DiagnosticsViewModel) {
@@ -35,15 +33,10 @@ fun DiagnosticsScreen(viewModel: DiagnosticsViewModel) {
   DiagnosticsView(state, viewModel::postAction)
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiagnosticsView(state: DiagnosticsState, postAction: (DiagnosticsAction) -> Unit = { }) {
   AppTheme {
-    ModalBottomSheet(
-      dragHandle = { },
-      onDismissRequest = { postAction(DiagnosticsAction.Back) },
-      sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    ) {
+    Surface(color = Color.Transparent, contentColor = MaterialTheme.colorScheme.onSurface) {
       Column(
         modifier =
           Modifier
@@ -69,7 +62,7 @@ fun DiagnosticsView(state: DiagnosticsState, postAction: (DiagnosticsAction) -> 
         ) {
           // HEADS
           StatsRow(
-            label = stringResource(R.string.heads),
+            label = state.labels.first ?: stringResource(R.string.heads),
             count = state.headsCount,
             ratio = state.headsRatio,
             color = headsColor
@@ -77,7 +70,7 @@ fun DiagnosticsView(state: DiagnosticsState, postAction: (DiagnosticsAction) -> 
 
           // TAILS
           StatsRow(
-            label = stringResource(R.string.tails),
+            label = state.labels.second ?: stringResource(R.string.tails),
             count = state.tailsCount,
             ratio = state.tailsRatio,
             color = tailsColor
@@ -133,35 +126,32 @@ private fun StatsRow(
   ratio: String = "",
   color: Color = MaterialTheme.colorScheme.onSurface
 ) {
-  val titleMedium = MaterialTheme.typography.titleMedium
-  val mediumStyle =
-    remember(color, titleMedium) {
-      titleMedium.copy(color = color)
-    }
-  val titleSmall = MaterialTheme.typography.titleSmall
-  val smallStyle =
-    remember(color, titleSmall) {
-      titleSmall.copy(color = color)
-    }
+  val labelStyle = Type.diagnosticsLabel.copy(color = color)
+  val valueStyle = Type.diagnosticsValue.copy(color = color)
   Row(
-    modifier = Modifier.fillMaxWidth(0.75f),
+    modifier = Modifier.fillMaxWidth(0.85f),
     verticalAlignment = Alignment.CenterVertically
   ) {
     Text(
       modifier = Modifier.weight(1f),
       text = label,
-      style = mediumStyle
+      style = labelStyle
     )
+    // when ratio is empty (e.g. TIME row), span both count and ratio columns to prevent text wrapping
     Text(
-      modifier = Modifier.weight(1f),
+      modifier = Modifier.weight(if (ratio.isEmpty()) 1.75f else 1f),
       text = count,
-      style = smallStyle
+      style = valueStyle,
+      maxLines = 1
     )
-    Text(
-      modifier = Modifier.weight(0.75f),
-      text = ratio,
-      style = smallStyle
-    )
+    if (ratio.isNotEmpty()) {
+      Text(
+        modifier = Modifier.weight(0.75f),
+        text = ratio,
+        style = valueStyle,
+        maxLines = 1
+      )
+    }
   }
 }
 

@@ -2,23 +2,19 @@ package com.banasiak.coinflip.about
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -32,26 +28,16 @@ fun AboutScreen(viewModel: AboutViewModel) {
   AboutView(state, viewModel::postAction)
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutView(state: AboutState, postAction: (AboutAction) -> Unit = { }) {
   AppTheme {
-    ModalBottomSheet(
-      dragHandle = { },
-      onDismissRequest = { postAction(AboutAction.Back) },
-      sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    ) {
+    Surface(color = Color.Transparent, contentColor = MaterialTheme.colorScheme.onSurface) {
       Column(
         modifier =
           Modifier
             .padding(
-              start = Dimen.large,
-              end = Dimen.large,
-              top = Dimen.large,
-              bottom =
-                WindowInsets.navigationBars
-                  .asPaddingValues()
-                  .calculateBottomPadding()
+              horizontal = Dimen.large,
+              vertical = Dimen.large
             )
             .verticalScroll(rememberScrollState())
       ) {
@@ -70,9 +56,14 @@ fun AboutView(state: AboutState, postAction: (AboutAction) -> Unit = { }) {
           style = MaterialTheme.typography.bodyMedium
         )
         Text(
+          modifier = Modifier.padding(top = Dimen.small),
+          text = stringResource(R.string.about_mint_text),
+          style = MaterialTheme.typography.bodyMedium
+        )
+        Text(
           modifier =
             Modifier
-              .padding(top = Dimen.large)
+              .padding(top = Dimen.medium)
               .clickable(onClick = { postAction(AboutAction.Website) }),
           text = stringResource(R.string.copyright_text),
           style = MaterialTheme.typography.bodyMedium
