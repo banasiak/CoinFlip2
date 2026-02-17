@@ -5,12 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.banasiak.coinflip.R
-import com.banasiak.coinflip.databinding.FragmentAboutBinding
 import com.banasiak.coinflip.extensions.launchUrl
 import com.banasiak.coinflip.extensions.navigateBack
 import com.banasiak.coinflip.util.ColorHelper
@@ -26,16 +25,12 @@ class AboutFragment : BottomSheetDialogFragment() {
   @Inject
   lateinit var colorHelper: ColorHelper
 
-  private lateinit var binding: FragmentAboutBinding
   private val viewModel: AboutViewModel by viewModels()
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-//    return ComposeView(requireContext()).apply {
-//      setContent { AboutScreen(viewModel) }
-//    }
-
-    binding = FragmentAboutBinding.inflate(inflater, container, false)
-    return binding.root
+    return ComposeView(requireContext()).apply {
+      setContent { AboutScreen(viewModel) }
+    }
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -49,22 +44,9 @@ class AboutFragment : BottomSheetDialogFragment() {
 
     viewLifecycleOwner.lifecycleScope.launch {
       repeatOnLifecycle(Lifecycle.State.STARTED) {
-        launch { viewModel.stateFlow.collect { bind(it) } }
         launch { viewModel.effectFlow.collect { onEffect(it) } }
       }
     }
-
-    setupActions()
-  }
-
-  private fun setupActions() {
-    binding.rateButton.setOnClickListener { viewModel.postAction(AboutAction.RateApp) }
-    binding.donateButton.setOnClickListener { viewModel.postAction(AboutAction.Donate) }
-    binding.copyright.setOnClickListener { viewModel.postAction(AboutAction.Website) }
-  }
-
-  private fun bind(state: AboutState) {
-    binding.version.text = getString(R.string.version, state.versionName, state.versionCode)
   }
 
   private fun onEffect(effect: AboutEffect) {
