@@ -70,6 +70,7 @@ dependencies {
   implementation(libs.seismic)
   implementation(libs.timber)
   ksp(libs.hilt.android.compiler)
+  ksp(libs.kotlin.metadata.jvm)
   testImplementation(libs.junit.jupiter)
   testImplementation(libs.kluent.android)
   testImplementation(libs.kotlinx.coroutines.test)

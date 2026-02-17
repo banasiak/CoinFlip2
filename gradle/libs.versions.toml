@@ -1,22 +1,23 @@
 [versions]
-agp = "8.13.0"
+agp = "8.13.2"
 android-junit = "1.14.0.0"
-androidx-activity = "1.11.0"
+androidx-activity = "1.12.4"
 androidx-appcompat = "1.7.1"
 androidx-browser = "1.9.0"
 androidx-core = "1.17.0"
-androidx-lifecycle = "2.9.4"
-androidx-navigation = "2.9.5"
+androidx-lifecycle = "2.10.0"
+androidx-navigation = "2.9.7"
 androidx-preference = "1.2.1"
-compose-bom = "2025.10.00"
-dagger = "2.57.2"
+compose-bom = "2026.02.00"
+dagger = "2.58"
 junit = "5.13.4"
 kluent = "1.73"
-kotlin = "2.2.20"
+kotlin = "2.3.10"
+kotlin-metadata-jvm = "2.3.0"
 kotlinx-coroutines = "1.10.2"
-ksp = "2.2.20-2.0.4"
+ksp = "2.3.5"
 google-material = "1.13.0"
-mockk = "1.14.6"
+mockk = "1.14.9"
 google-review = "2.0.2"
 seismic = "1.0.3"
 timber = "5.0.1"
@@ -48,6 +49,7 @@ hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", ve
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 kluent-android = { module = "org.amshove.kluent:kluent-android", version.ref = "kluent" }
+kotlin-metadata-jvm = { module = "org.jetbrains.kotlin:kotlin-metadata-jvm", version.ref = "kotlin-metadata-jvm" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 ktlint = {module = "com.pinterest.ktlint:ktlint-cli", version.ref = "ktlint" }
