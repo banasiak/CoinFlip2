@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
 import timber.log.Timber
@@ -53,11 +54,15 @@ class DiagnosticsViewModel @Inject constructor(
   private val _effectFlow = MutableSharedFlow<DiagnosticsEffect>(extraBufferCapacity = 1)
   val effectFlow = _effectFlow.asSharedFlow()
 
+  private var diagnosticsJob: Job? = null
+
   fun postAction(action: DiagnosticsAction) {
     when (action) {
       DiagnosticsAction.Back -> _effectFlow.tryEmit(DiagnosticsEffect.NavBack)
       DiagnosticsAction.Start -> {
-        viewModelScope.launch { runDiagnostics() }
+        if (diagnosticsJob?.isActive != true) {
+          diagnosticsJob = viewModelScope.launch { runDiagnostics() }
+        }
         viewModelScope.launch { showTurboModeNotice() }
       }
 
@@ -92,7 +97,7 @@ class DiagnosticsViewModel @Inject constructor(
     if (state.startTime == 0L) state = state.copy(startTime = clock.millis())
 
     // resume the loop where we left off
-    for (i in state.total..state.iterations) {
+    for (i in state.total until state.iterations) {
       state =
         when (val value = coin.flip().value) {
           Coin.Value.HEADS -> state.copy(heads = state.heads + 1, total = i + 1)
