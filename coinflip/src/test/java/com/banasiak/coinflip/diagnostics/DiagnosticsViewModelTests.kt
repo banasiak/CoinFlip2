@@ -10,6 +10,7 @@ import com.banasiak.coinflip.util.AnimationHelper
 import com.banasiak.coinflip.util.SoundHelper
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
@@ -242,5 +243,53 @@ class DiagnosticsViewModelTests {
       effects.test {
         expectNoEvents()
       }
+    }
+
+  @Test
+  fun total_equals_iterations() =
+    runTest {
+      val flips =
+        listOf(
+          Coin.Result(Coin.Value.HEADS, AnimationHelper.Permutation.HEADS_HEADS),
+          Coin.Result(Coin.Value.TAILS, AnimationHelper.Permutation.HEADS_TAILS),
+          Coin.Result(Coin.Value.HEADS, AnimationHelper.Permutation.TAILS_HEADS)
+        )
+      every { settingsManager.diagnosticsIterations } returns flips.size.toLong()
+      every { coin.flip() } returnsMany flips
+
+      val vm = viewModel()
+
+      backgroundScope.launch {
+        vm.postAction(DiagnosticsAction.Start)
+      }
+
+      vm.stateFlow.test {
+        awaitItem() // initial
+        val finalState = awaitItem()
+        finalState.heads + finalState.tails shouldBeEqualTo finalState.iterations
+        finalState.total shouldBeEqualTo finalState.iterations
+      }
+    }
+
+  @Test
+  fun duplicate_start_does_not_double_count() =
+    runTest {
+      every { settingsManager.diagnosticsIterations } returns 1L
+      every { coin.flip() } returns Coin.Result(Coin.Value.HEADS, AnimationHelper.Permutation.TAILS_HEADS)
+
+      val vm = viewModel()
+
+      backgroundScope.launch {
+        vm.postAction(DiagnosticsAction.Start)
+        vm.postAction(DiagnosticsAction.Start)
+      }
+
+      vm.stateFlow.test {
+        awaitItem() // initial
+        val finalState = awaitItem()
+        finalState.heads shouldBeEqualTo 1L
+        finalState.total shouldBeEqualTo 1L
+      }
+      verify(exactly = 1) { coin.flip() }
     }
 }
