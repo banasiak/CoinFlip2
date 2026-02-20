@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -60,7 +61,9 @@ fun MainView(state: MainState, postAction: (MainAction) -> Unit = {}) {
           Modifier
             .fillMaxSize()
             .padding(innerPadding)
-            .clickable { postAction(MainAction.TapCoin) },
+            .clickable(interactionSource = null, indication = null) {
+              postAction(MainAction.TapCoin)
+            },
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
         CoinContainer(state)
@@ -158,7 +161,7 @@ private fun CoinContainer(state: MainState) {
             .padding(Dimen.xlarge),
         contentAlignment = Alignment.Center
       ) {
-        val fontSize = maxWidth.value.sp
+        val fontSize = with(LocalDensity.current) { maxWidth.toSp() }
         Text(
           text = "?",
           color = MaterialTheme.colorScheme.primary,
@@ -242,7 +245,7 @@ private fun MainNavigationBar(postAction: (MainAction) -> Unit) {
 
 @PreviewLightDark
 @Composable
-fun MainViewPreview() {
+private fun MainViewPreview() {
   MainView(
     state =
       MainState(
@@ -255,7 +258,7 @@ fun MainViewPreview() {
 
 @PreviewLightDark
 @Composable
-fun MainViewWithResultPreview() {
+private fun MainViewWithResultPreview() {
   MainView(
     state =
       MainState(
