@@ -10,6 +10,7 @@ machine.
 | [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) | Approved technical plan |
 | [WALKTHROUGH.md](./WALKTHROUGH.md) | Summary of changes + verification results |
 
-**State at hand-off:** implementation and static verification complete
-(`ktlintCheck` passes, 44 unit tests pass, `assembleDebug` succeeds, previews
-render). Only the manual on-device smoke test remains.
+**State:** COMPLETE. Implementation, static verification (`ktlintCheck`,
+44 unit tests, `assembleDebug`, previews), and the on-device smoke test
+(Pixel 9a, 2026-07-09) all pass. Two small issues found and fixed during the
+smoke test — see [STATUS.md](./STATUS.md).
