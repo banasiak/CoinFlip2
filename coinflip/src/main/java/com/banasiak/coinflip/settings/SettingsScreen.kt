@@ -41,6 +41,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.banasiak.coinflip.R
+import com.banasiak.coinflip.extensions.formatNumber
 import com.banasiak.coinflip.ui.theme.AppTheme
 import com.banasiak.coinflip.ui.theme.Dimen
 
@@ -157,7 +158,8 @@ fun SettingsView(
           title = stringResource(R.string.settings_item_quick_reset_title),
           summary = stringResource(R.string.settings_item_quick_reset_summary),
           checked = state.quickReset,
-          enabled = state.stats, // dependency: stats
+          // dependency: stats
+          enabled = state.stats,
           onCheckedChange = { postAction(SettingsAction.SetQuickReset(it)) }
         )
         PreferenceRow(
@@ -180,7 +182,7 @@ fun SettingsView(
         )
         PreferenceRow(
           title = stringResource(R.string.settings_item_diagnostics_title),
-          summary = stringResource(R.string.settings_item_diagnostics_summary),
+          summary = "${state.diagnostics.formatNumber()} ${stringResource(R.string.settings_item_diagnostics_summary)}",
           onClick = { openDialog = OpenDialog.DIAGNOSTICS }
         )
         SwitchPreference(
@@ -198,7 +200,8 @@ fun SettingsView(
         PreferenceRow(
           title = stringResource(R.string.settings_item_force_title),
           summary = stringResource(R.string.settings_item_force_summary),
-          enabled = state.shake, // dependency: shake
+          // dependency: shake
+          enabled = state.shake,
           onClick = { openDialog = OpenDialog.FORCE }
         )
       }

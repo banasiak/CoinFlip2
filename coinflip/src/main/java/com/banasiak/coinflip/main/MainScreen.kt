@@ -187,7 +187,8 @@ private fun ResultText(state: MainState) {
     modifier =
       Modifier
         .fillMaxWidth()
-        .alpha(if (state.resultVisible) 1f else 0f), // alpha, not visibility, to preserve layout space
+        // alpha, not visibility, to preserve layout space
+        .alpha(if (state.resultVisible) 1f else 0f),
     text = state.result.customLabel ?: stringResource(state.result.value.string),
     color = resultColor,
     fontWeight = FontWeight.Bold,
