@@ -67,11 +67,13 @@ class MainViewModel @Inject constructor(
     generateAnimations()
 
     val instructions = if (settings.shakeEnabled) R.string.instructions_tap_shake else R.string.instructions_tap
+    val stats = settings.loadStats()
 
     state =
       state.copy(
         animation = null,
         coinImageType = CoinImageType.PLACEHOLDER,
+        dynamicColors = settings.dynamicColorsEnabled,
         instructionsText = instructions,
         labels = Pair(settings.customHeadsText, settings.customTailsText),
         paused = false,
@@ -79,11 +81,11 @@ class MainViewModel @Inject constructor(
         resultVisible = false,
         shakeEnabled = settings.shakeEnabled,
         shakeSensitivity = settings.shakeSensitivity,
-        stats = settings.loadStats(),
-        statsVisible = settings.showStats
+        stats = stats,
+        statsVisible = settings.showStats,
+        headsCount = stats.count(Coin.Value.HEADS),
+        tailsCount = stats.count(Coin.Value.TAILS)
       )
-
-    _effectFlow.tryEmit(updateStatsEffect(state.stats))
   }
 
   private fun onPause() {
@@ -141,12 +143,14 @@ class MainViewModel @Inject constructor(
   }
 
   private suspend fun onFlipFinished() {
+    // note: the displayed counts are updated here (after the flip lands), not in flipCoin()
     state =
       state.copy(
         resultVisible = settings.textEnabled,
-        shakeEnabled = settings.shakeEnabled && !state.paused
+        shakeEnabled = settings.shakeEnabled && !state.paused,
+        headsCount = state.stats.count(Coin.Value.HEADS),
+        tailsCount = state.stats.count(Coin.Value.TAILS)
       )
-    _effectFlow.emit(updateStatsEffect(state.stats))
 
     // keeping it &#128175;...
     val isOneHundred = state.stats.values.sum() % 100 == 0L
@@ -172,14 +176,15 @@ class MainViewModel @Inject constructor(
   private fun onResetStats() {
     settings.resetStats()
     val stats = settings.loadStats()
-    state = state.copy(stats = stats)
-    _effectFlow.tryEmit(updateStatsEffect(stats))
+    state =
+      state.copy(
+        stats = stats,
+        headsCount = stats.count(Coin.Value.HEADS),
+        tailsCount = stats.count(Coin.Value.TAILS)
+      )
   }
 
-  private fun updateStatsEffect(stats: Map<Coin.Value, Long>): MainEffect.UpdateStats {
-    return MainEffect.UpdateStats(
-      headsCount = (stats[Coin.Value.HEADS] ?: 0).toString(),
-      tailsCount = (stats[Coin.Value.TAILS] ?: 0).toString()
-    )
+  private fun Map<Coin.Value, Long>.count(value: Coin.Value): String {
+    return (this[value] ?: 0).toString()
   }
 }

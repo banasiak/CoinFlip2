@@ -3,6 +3,7 @@ package com.banasiak.coinflip.about
 import app.cash.turbine.test
 import com.banasiak.coinflip.MainDispatcherRule
 import com.banasiak.coinflip.common.BuildInfo
+import com.banasiak.coinflip.settings.SettingsManager
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.launch
@@ -15,9 +16,10 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(MainDispatcherRule::class)
 class AboutViewModelTests {
   private val buildInfo: BuildInfo = mockk()
+  private val settings: SettingsManager = mockk(relaxed = true)
 
   private fun viewModel(): AboutViewModel {
-    return AboutViewModel(buildInfo)
+    return AboutViewModel(buildInfo, settings)
   }
 
   @BeforeEach

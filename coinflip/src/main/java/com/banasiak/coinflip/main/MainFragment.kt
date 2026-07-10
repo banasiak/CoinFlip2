@@ -11,7 +11,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.banasiak.coinflip.R
 import com.banasiak.coinflip.extensions.navigate
 import com.google.android.play.core.ktx.launchReview
 import com.google.android.play.core.ktx.requestReview
@@ -32,17 +31,26 @@ class MainFragment : Fragment() {
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
     shakeDetector = ShakeDetector { viewModel.postAction(MainAction.Shake) }
     return ComposeView(requireContext()).apply {
-      setContent { MainScreen(viewModel) }
+      setContent {
+        MainScreen(
+          viewModel = viewModel,
+          onNavigate = { id -> navigate(id) },
+          onShowRate = { showRateAppDialog() }
+        )
+      }
     }
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
+    // the coin animation, navigation, and rate dialog are all handled within MainScreen; the
+    // fragment only owns the device sensor (shake detector), driven by the latest state
     viewLifecycleOwner.lifecycleScope.launch {
       repeatOnLifecycle(Lifecycle.State.STARTED) {
-        launch { viewModel.stateFlow.collect { onState(it) } }
-        launch { viewModel.effectFlow.collect { onEffect(it) } }
+        viewModel.stateFlow.collect { state ->
+          if (state.shakeEnabled) startShakeDetector(state.shakeSensitivity) else stopShakeDetector()
+        }
       }
     }
   }
@@ -55,22 +63,6 @@ class MainFragment : Fragment() {
   override fun onResume() {
     super.onResume()
     viewModel.postAction(MainAction.OnResume)
-  }
-
-  private fun onState(state: MainState) {
-    if (state.shakeEnabled) startShakeDetector(state.shakeSensitivity) else stopShakeDetector()
-  }
-
-  private fun onEffect(effect: MainEffect) {
-    Timber.d("onEffect(): $effect")
-    when (effect) {
-      MainEffect.FlipCoin -> { /* handled in Compose */ }
-      MainEffect.ToAbout -> navigate(R.id.toAbout)
-      MainEffect.ToDiagnostics -> navigate(R.id.toDiagnostics)
-      MainEffect.ToSettings -> navigate(R.id.toSettings)
-      MainEffect.ShowRateDialog -> showRateAppDialog()
-      is MainEffect.UpdateStats -> { /* derived from state in Compose */ }
-    }
   }
 
   private fun showRateAppDialog() {

@@ -2,32 +2,32 @@ package com.banasiak.coinflip.main
 
 import android.widget.ImageView
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -35,7 +35,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.Coin
 import com.banasiak.coinflip.ui.DurationAnimationDrawable
@@ -44,97 +47,63 @@ import com.banasiak.coinflip.ui.theme.Dimen
 import com.banasiak.coinflip.util.AnimationHelper
 
 @Composable
-fun MainScreen(viewModel: MainViewModel) {
+fun MainScreen(
+  viewModel: MainViewModel,
+  onNavigate: (Int) -> Unit = { },
+  onShowRate: () -> Unit = { }
+) {
   val state by viewModel.stateFlow.collectAsStateWithLifecycle()
-  MainView(state, viewModel::postAction)
+  val lifecycleOwner = LocalLifecycleOwner.current
+  var flipToken by remember { mutableIntStateOf(0) }
+
+  LaunchedEffect(viewModel, lifecycleOwner) {
+    lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+      viewModel.effectFlow.collect { effect ->
+        when (effect) {
+          MainEffect.FlipCoin -> flipToken++
+          MainEffect.ToAbout -> onNavigate(R.id.toAbout)
+          MainEffect.ToDiagnostics -> onNavigate(R.id.toDiagnostics)
+          MainEffect.ToSettings -> onNavigate(R.id.toSettings)
+          MainEffect.ShowRateDialog -> onShowRate()
+        }
+      }
+    }
+  }
+
+  MainView(state, viewModel::postAction, flipToken)
 }
 
 @Composable
-fun MainView(state: MainState, postAction: (MainAction) -> Unit = {}) {
-  AppTheme {
+fun MainView(
+  state: MainState,
+  postAction: (MainAction) -> Unit = { },
+  flipToken: Int = 0
+) {
+  AppTheme(dynamicColor = state.dynamicColors) {
     Scaffold(
-      modifier = Modifier.fillMaxSize(),
       bottomBar = { MainNavigationBar(postAction) }
-    ) { innerPadding ->
+    ) { contentPadding ->
       Column(
         modifier =
           Modifier
+            .padding(contentPadding)
             .fillMaxSize()
-            .padding(innerPadding)
-            .clickable(interactionSource = null, indication = null) {
-              postAction(MainAction.TapCoin)
-            },
+            .clickable(
+              interactionSource = remember { MutableInteractionSource() },
+              indication = null
+            ) { postAction(MainAction.TapCoin) },
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
-        CoinContainer(state)
-
-        val resultColor =
-          when (state.result.value) {
-            Coin.Value.HEADS -> MaterialTheme.colorScheme.secondary
-            Coin.Value.TAILS -> MaterialTheme.colorScheme.tertiary
-            else -> MaterialTheme.colorScheme.primary
-          }
-        Text(
-          text = state.result.customLabel ?: stringResource(state.result.value.string),
-          style =
-            MaterialTheme.typography.displayMedium.copy(
-              color = resultColor,
-              fontWeight = FontWeight.Bold,
-              fontSize = 72.sp
-            ),
-          textAlign = TextAlign.Center,
-          modifier =
-            Modifier
-              .fillMaxWidth()
-              .alpha(if (state.resultVisible) 1f else 0f)
-        )
-
-        Text(
-          text = stringResource(state.instructionsText),
-          style = MaterialTheme.typography.titleMedium,
-          textAlign = TextAlign.Center,
-          modifier =
-            Modifier
-              .fillMaxWidth()
-              .padding(top = Dimen.medium)
-        )
-
+        CoinImage(state, flipToken)
+        ResultText(state)
+        InstructionsText(state)
         if (state.statsVisible) {
-          val headsLabel = state.labels.first ?: stringResource(R.string.heads)
-          val tailsLabel = state.labels.second ?: stringResource(R.string.tails)
-          val headsCount = (state.stats[Coin.Value.HEADS] ?: 0).toString()
-          val tailsCount = (state.stats[Coin.Value.TAILS] ?: 0).toString()
-          val headsStyle = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.secondary)
-          val tailsStyle = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.tertiary)
-
-          Row(modifier = Modifier.fillMaxWidth().padding(top = Dimen.large)) {
-            Row(
-              modifier = Modifier.weight(1f),
-              horizontalArrangement = Arrangement.End,
-              verticalAlignment = Alignment.CenterVertically
-            ) {
-              Text(text = headsLabel, style = headsStyle)
-              Spacer(modifier = Modifier.width(Dimen.medium))
-              Text(text = headsCount, style = headsStyle)
-              Spacer(modifier = Modifier.width(Dimen.medium))
-            }
-            Row(
-              modifier = Modifier.weight(1f),
-              horizontalArrangement = Arrangement.Start,
-              verticalAlignment = Alignment.CenterVertically
-            ) {
-              Spacer(modifier = Modifier.width(Dimen.medium))
-              Text(text = tailsLabel, style = tailsStyle)
-              Spacer(modifier = Modifier.width(Dimen.medium))
-              Text(text = tailsCount, style = tailsStyle)
-            }
-          }
+          StatsRow(state)
         }
-
         if (state.resetVisible) {
           Button(
-            onClick = { postAction(MainAction.ResetStats) },
-            modifier = Modifier.padding(vertical = Dimen.medium)
+            modifier = Modifier.padding(vertical = Dimen.medium),
+            onClick = { postAction(MainAction.ResetStats) }
           ) {
             Text(stringResource(R.string.reset_stats))
           }
@@ -145,64 +114,142 @@ fun MainView(state: MainState, postAction: (MainAction) -> Unit = {}) {
 }
 
 @Composable
-private fun CoinContainer(state: MainState) {
-  Box(
+private fun CoinImage(state: MainState, flipToken: Int) {
+  val imageViewRef = remember { mutableStateOf<ImageView?>(null) }
+
+  BoxWithConstraints(
     modifier =
       Modifier
         .fillMaxWidth()
         .aspectRatio(1f),
     contentAlignment = Alignment.Center
   ) {
-    if (state.coinImageType == CoinImageType.PLACEHOLDER) {
-      BoxWithConstraints(
-        modifier =
-          Modifier
-            .fillMaxSize()
-            .padding(Dimen.xlarge),
-        contentAlignment = Alignment.Center
-      ) {
-        val fontSize = with(LocalDensity.current) { maxWidth.toSp() }
+    when (state.coinImageType) {
+      CoinImageType.PLACEHOLDER -> {
         Text(
           text = "?",
           color = MaterialTheme.colorScheme.primary,
           fontWeight = FontWeight.Bold,
-          fontSize = fontSize,
-          lineHeight = fontSize,
-          textAlign = TextAlign.Center,
-          modifier = Modifier.fillMaxSize()
+          fontSize = (maxWidth.value * 0.7f).sp
         )
       }
-    } else {
-      AndroidView(
-        modifier =
-          Modifier
-            .fillMaxSize()
-            .padding(Dimen.xlarge),
-        factory = { context ->
-          ImageView(context).apply {
-            scaleType = ImageView.ScaleType.CENTER_INSIDE
-            contentDescription = context.getString(R.string.coin_animation)
-          }
-        },
-        update = { imageView ->
-          when (state.coinImageType) {
-            CoinImageType.ANIMATION -> {
-              imageView.setImageDrawable(null)
-              if (imageView.background != state.animation) {
-                imageView.background = state.animation
-                (imageView.background as? DurationAnimationDrawable)?.apply {
-                  stop()
-                  start()
-                }
+      else -> {
+        AndroidView(
+          modifier =
+            Modifier
+              .fillMaxSize()
+              .padding(Dimen.xlarge),
+          factory = { context ->
+            ImageView(context).apply {
+              scaleType = ImageView.ScaleType.CENTER_INSIDE
+              contentDescription = context.getString(R.string.coin_animation)
+            }.also { imageViewRef.value = it }
+          },
+          update = { imageView ->
+            when (state.coinImageType) {
+              CoinImageType.IMAGE -> {
+                imageView.setImageDrawable(state.animation?.getLastFrame())
+                imageView.background = null
               }
+              // CoinImageType.ANIMATION is driven imperatively by the flipToken LaunchedEffect below
+              else -> { }
             }
-            CoinImageType.IMAGE -> {
-              imageView.setImageDrawable(state.animation?.getLastFrame())
-              imageView.background = null
-            }
-            CoinImageType.PLACEHOLDER -> {}
           }
-        }
+        )
+      }
+    }
+  }
+
+  // (re)start the frame animation only when a flip actually occurs, so unrelated
+  // recompositions (e.g. the result text appearing) never restart it mid-flip
+  LaunchedEffect(flipToken) {
+    if (flipToken == 0) return@LaunchedEffect
+    val imageView = imageViewRef.value ?: return@LaunchedEffect
+    val animation = state.animation
+    if (state.coinImageType == CoinImageType.ANIMATION && animation is DurationAnimationDrawable) {
+      imageView.setImageDrawable(null)
+      imageView.background = animation
+      animation.stop()
+      animation.start()
+    }
+  }
+}
+
+@Composable
+private fun ResultText(state: MainState) {
+  val resultColor =
+    when (state.result.value) {
+      Coin.Value.HEADS -> MaterialTheme.colorScheme.secondary
+      Coin.Value.TAILS -> MaterialTheme.colorScheme.tertiary
+      else -> MaterialTheme.colorScheme.primary
+    }
+  Text(
+    modifier =
+      Modifier
+        .fillMaxWidth()
+        .alpha(if (state.resultVisible) 1f else 0f), // alpha, not visibility, to preserve layout space
+    text = state.result.customLabel ?: stringResource(state.result.value.string),
+    color = resultColor,
+    fontWeight = FontWeight.Bold,
+    fontSize = 72.sp,
+    textAlign = TextAlign.Center
+  )
+}
+
+@Composable
+private fun InstructionsText(state: MainState) {
+  Text(
+    modifier =
+      Modifier
+        .fillMaxWidth()
+        .padding(top = Dimen.medium),
+    text = stringResource(state.instructionsText),
+    style = MaterialTheme.typography.titleMedium,
+    textAlign = TextAlign.Center
+  )
+}
+
+@Composable
+private fun StatsRow(state: MainState) {
+  val headsLabel = state.labels.first ?: stringResource(R.string.heads)
+  val tailsLabel = state.labels.second ?: stringResource(R.string.tails)
+  Row(
+    modifier =
+      Modifier
+        .fillMaxWidth()
+        .padding(top = Dimen.large)
+  ) {
+    Row(
+      modifier = Modifier.weight(1f),
+      horizontalArrangement = Arrangement.End
+    ) {
+      Text(
+        text = headsLabel,
+        modifier = Modifier.padding(end = Dimen.medium),
+        style = MaterialTheme.typography.titleLarge,
+        color = MaterialTheme.colorScheme.secondary
+      )
+      Text(
+        text = state.headsCount,
+        modifier = Modifier.padding(end = Dimen.medium),
+        style = MaterialTheme.typography.titleLarge,
+        color = MaterialTheme.colorScheme.secondary
+      )
+    }
+    Row(
+      modifier = Modifier.weight(1f),
+      horizontalArrangement = Arrangement.Start
+    ) {
+      Text(
+        text = tailsLabel,
+        modifier = Modifier.padding(start = Dimen.medium, end = Dimen.medium),
+        style = MaterialTheme.typography.titleLarge,
+        color = MaterialTheme.colorScheme.tertiary
+      )
+      Text(
+        text = state.tailsCount,
+        style = MaterialTheme.typography.titleLarge,
+        color = MaterialTheme.colorScheme.tertiary
       )
     }
   }
@@ -210,69 +257,54 @@ private fun CoinContainer(state: MainState) {
 
 @Composable
 private fun MainNavigationBar(postAction: (MainAction) -> Unit) {
-  val itemColors =
-    NavigationBarItemDefaults.colors(
-      indicatorColor = Color.Transparent,
-      selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
-      unselectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
-      selectedTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
-      unselectedTextColor = MaterialTheme.colorScheme.onPrimaryContainer
-    )
   NavigationBar {
     NavigationBarItem(
-      icon = { Icon(painterResource(R.drawable.diagnostics), contentDescription = null) },
-      label = { Text(stringResource(R.string.diagnostics_menu_title)) },
       selected = false,
       onClick = { postAction(MainAction.TapDiagnostics) },
-      colors = itemColors
+      icon = {
+        Icon(
+          painter = painterResource(R.drawable.diagnostics),
+          contentDescription = stringResource(R.string.diagnostics_menu_title)
+        )
+      },
+      label = { Text(stringResource(R.string.diagnostics_menu_title)) }
     )
     NavigationBarItem(
-      icon = { Icon(painterResource(R.drawable.settings), contentDescription = null) },
-      label = { Text(stringResource(R.string.settings_menu_title)) },
       selected = false,
       onClick = { postAction(MainAction.TapSettings) },
-      colors = itemColors
+      icon = {
+        Icon(
+          painter = painterResource(R.drawable.settings),
+          contentDescription = stringResource(R.string.settings_menu_title)
+        )
+      },
+      label = { Text(stringResource(R.string.settings_menu_title)) }
     )
     NavigationBarItem(
-      icon = { Icon(painterResource(R.drawable.about), contentDescription = null) },
-      label = { Text(stringResource(R.string.about_menu_title)) },
       selected = false,
       onClick = { postAction(MainAction.TapAbout) },
-      colors = itemColors
+      icon = {
+        Icon(
+          painter = painterResource(R.drawable.about),
+          contentDescription = stringResource(R.string.about_menu_title)
+        )
+      },
+      label = { Text(stringResource(R.string.about_menu_title)) }
     )
   }
 }
 
 @PreviewLightDark
 @Composable
-private fun MainViewPreview() {
-  MainView(
-    state =
-      MainState(
-        coinImageType = CoinImageType.PLACEHOLDER,
-        statsVisible = true,
-        stats = mapOf(Coin.Value.HEADS to 51L, Coin.Value.TAILS to 49L)
-      )
-  )
-}
-
-@PreviewLightDark
-@Composable
-private fun MainViewWithResultPreview() {
-  MainView(
-    state =
-      MainState(
-        coinImageType = CoinImageType.PLACEHOLDER,
-        result =
-          Coin.Result(
-            Coin.Value.HEADS,
-            AnimationHelper.Permutation.HEADS_HEADS,
-            null
-          ),
-        resultVisible = true,
-        statsVisible = true,
-        resetVisible = true,
-        stats = mapOf(Coin.Value.HEADS to 51L, Coin.Value.TAILS to 49L)
-      )
-  )
+fun MainViewPreview() {
+  val state =
+    MainState(
+      coinImageType = CoinImageType.PLACEHOLDER,
+      result = Coin.Result(Coin.Value.HEADS, AnimationHelper.Permutation.HEADS_HEADS),
+      resultVisible = true,
+      statsVisible = true,
+      headsCount = "51",
+      tailsCount = "49"
+    )
+  MainView(state)
 }

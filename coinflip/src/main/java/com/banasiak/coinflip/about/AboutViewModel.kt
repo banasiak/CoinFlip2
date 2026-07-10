@@ -2,6 +2,7 @@ package com.banasiak.coinflip.about
 
 import androidx.lifecycle.ViewModel
 import com.banasiak.coinflip.common.BuildInfo
+import com.banasiak.coinflip.settings.SettingsManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,13 +12,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AboutViewModel @Inject constructor(
-  buildInfo: BuildInfo
+  buildInfo: BuildInfo,
+  settings: SettingsManager
 ) : ViewModel() {
   private val donateUrl = "https://eff.org/donate"
   private val rateUrl = "market://details?id=${buildInfo.packageName}"
   private val websiteUrl = "https://www.banasiak.com"
 
-  private var state = AboutState(buildInfo.versionName, buildInfo.versionCode)
+  private var state = AboutState(buildInfo.versionName, buildInfo.versionCode, settings.dynamicColorsEnabled)
   private val _stateFlow = MutableStateFlow(state)
   val stateFlow = _stateFlow.asStateFlow()
 

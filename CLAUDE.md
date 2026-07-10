@@ -32,10 +32,10 @@ CoinFlip2 is a Modern Android Development (MAD) coin-flipping app published on t
 
 **Single Activity, Fragment-based navigation:** `AppActivity` hosts a Navigation Component graph (`nav_graph.xml`). Fragments are the top-level destinations:
 - `MainFragment` — coin flip screen (start destination)
-- `SettingsFragment` — preferences (XML `PreferenceFragmentCompat` with `root_settings.xml`)
+- `SettingsFragment` — preferences screen
 - `AboutFragment` / `DiagnosticsFragment` — `BottomSheetDialogFragment` dialogs
 
-**UI is migrating from XML to Jetpack Compose.** Fragments create a `ComposeView` in `onCreateView` and render a `*Screen` composable (e.g., `MainFragment` → `MainScreen`). Each Compose screen follows a two-layer pattern: `*Screen(viewModel)` collects state, `*View(state, postAction)` is the pure composable (used by `@PreviewLightDark`). The Compose theme is in `ui/theme/` (`AppTheme`). The coin animation still uses `AndroidView` wrapping an `ImageView` with `DurationAnimationDrawable`.
+**UI is fully migrated to Jetpack Compose.** Fragments create a `ComposeView` in `onCreateView` and render a `*Screen` composable (e.g., `MainFragment` → `MainScreen`, `SettingsFragment` → `SettingsScreen`). Each Compose screen follows a two-layer pattern: `*Screen(viewModel)` collects state, `*View(state, postAction)` is the pure composable (used by `@PreviewLightDark`). The Compose theme is in `ui/theme/` (`AppTheme`), which honors the dynamic-color preference on API 31+. The coin animation still uses `AndroidView` wrapping an `ImageView` with `DurationAnimationDrawable`.
 
 **State management pattern (MVI-style):**
 - Each feature has a `*State` (Parcelable data class), `*Action` (sealed class for user intents), and `*Effect` (sealed class for one-shot side effects like navigation or toasts).

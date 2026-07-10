@@ -13,6 +13,7 @@ import kotlinx.parcelize.Parcelize
 data class MainState(
   @IgnoredOnParcel val animation: DurationAnimationDrawable? = null,
   val coinImageType: CoinImageType = CoinImageType.PLACEHOLDER,
+  val dynamicColors: Boolean = false,
   @param:StringRes val instructionsText: Int = R.string.instructions_tap_shake,
   val labels: Pair<String?, String?> = Pair(null, null),
   val paused: Boolean = false,
@@ -22,7 +23,9 @@ data class MainState(
   val shakeEnabled: Boolean = false,
   val shakeSensitivity: Int = 0,
   val stats: Map<Coin.Value, Long> = emptyMap(),
-  val statsVisible: Boolean = true
+  val statsVisible: Boolean = true,
+  val headsCount: String = "0",
+  val tailsCount: String = "0"
 ) : Parcelable
 
 sealed class MainAction {
@@ -42,7 +45,6 @@ sealed class MainEffect {
   data object ToDiagnostics : MainEffect()
   data object ToSettings : MainEffect()
   data object ShowRateDialog : MainEffect()
-  data class UpdateStats(val headsCount: String, val tailsCount: String) : MainEffect()
 }
 
 enum class CoinImageType {
