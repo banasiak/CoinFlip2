@@ -30,7 +30,7 @@ fun AboutScreen(viewModel: AboutViewModel) {
 
 @Composable
 fun AboutView(state: AboutState, postAction: (AboutAction) -> Unit = { }) {
-  AppTheme {
+  AppTheme(dynamicColor = state.dynamicColors) {
     Surface(color = Color.Transparent, contentColor = MaterialTheme.colorScheme.onSurface) {
       Column(
         modifier =

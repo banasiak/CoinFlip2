@@ -25,10 +25,23 @@ class SettingsManager @Inject constructor(private val prefs: SharedPreferences) 
   val diagnosticsIterations get() = prefs.getString(Settings.DIAGNOSTICS.key, Settings.DIAGNOSTICS.default as String)!!.toLong()
   val dynamicColorsEnabled get() = prefs.getBoolean(Settings.DYNAMIC.key, Settings.DYNAMIC.default as Boolean)
   val shakeSensitivity get() = prefs.getString(Settings.FORCE.key, Settings.FORCE.default as String).toSensitivity()
+  val forceValue get() = prefs.getString(Settings.FORCE.key, Settings.FORCE.default as String)!!
   val secureRandom get() = prefs.getBoolean(Settings.SECURE_RANDOM.key, Settings.SECURE_RANDOM.default as Boolean)
 
   init {
     validateSchema()
+  }
+
+  /** Persists a single preference value, mirroring the keys/types written by the old PreferenceFragmentCompat. */
+  fun update(setting: Settings, value: Any?) {
+    prefs.edit {
+      when (value) {
+        is Boolean -> putBoolean(setting.key, value)
+        is String -> putString(setting.key, value)
+        null -> putString(setting.key, null)
+        else -> throw IllegalArgumentException("Unsupported preference type for ${setting.key}: $value")
+      }
+    }
   }
 
   fun loadStats(): Map<Coin.Value, Long> {

@@ -22,7 +22,8 @@ data class DiagnosticsState(
   val labels: Pair<String?, String?> = Pair(null, null),
   val finished: Boolean = false,
   val turboMode: Boolean = false,
-  val turboModeShown: Boolean = false
+  val turboModeShown: Boolean = false,
+  val dynamicColors: Boolean = false
 ) : Parcelable
 
 sealed class DiagnosticsAction {

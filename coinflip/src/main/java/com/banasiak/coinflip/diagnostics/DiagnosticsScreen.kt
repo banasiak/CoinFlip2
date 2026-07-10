@@ -35,7 +35,7 @@ fun DiagnosticsScreen(viewModel: DiagnosticsViewModel) {
 
 @Composable
 fun DiagnosticsView(state: DiagnosticsState, postAction: (DiagnosticsAction) -> Unit = { }) {
-  AppTheme {
+  AppTheme(dynamicColor = state.dynamicColors) {
     Surface(color = Color.Transparent, contentColor = MaterialTheme.colorScheme.onSurface) {
       Column(
         modifier =
