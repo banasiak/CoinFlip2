@@ -16,7 +16,8 @@ class DurationAnimationDrawable : AnimationDrawable() {
     if (withoutLastFrames == 0) return totalDuration
 
     var skippedDuration = 0L
-    for (i in numberOfFrames downTo numberOfFrames - withoutLastFrames) {
+    // frames are indexed 0..numberOfFrames-1, so the last N frames are numberOfFrames-N..numberOfFrames-1
+    for (i in numberOfFrames - 1 downTo numberOfFrames - withoutLastFrames) {
       skippedDuration += getDuration(i)
     }
     Timber.d("duration of last $withoutLastFrames frames = $skippedDuration ms")
