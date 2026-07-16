@@ -38,6 +38,11 @@ android {
       it.useJUnitPlatform()
     }
   }
+  lint {
+    // pre-existing warnings are captured in the baseline so new ones fail loudly;
+    // delete the file and run lint to regenerate after paying down the backlog
+    baseline = file("lint-baseline.xml")
+  }
 }
 
 kotlin {
