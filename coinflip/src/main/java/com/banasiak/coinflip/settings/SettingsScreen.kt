@@ -29,9 +29,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -55,20 +57,18 @@ fun SettingsScreen(
   val state by viewModel.stateFlow.collectAsStateWithLifecycle()
   val snackbarHostState = remember { SnackbarHostState() }
   val lifecycleOwner = LocalLifecycleOwner.current
-
-  // resolve snackbar strings up-front so the (non-composable) effect collector doesn't read resources
-  val statsResetMessage = stringResource(R.string.stats_reset_message)
-  val invalidIterations = stringResource(R.string.invalid_iterations)
-  val undoLabel = stringResource(R.string.undo)
+  val resources = LocalResources.current
 
   LaunchedEffect(viewModel, lifecycleOwner) {
     lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
       viewModel.effectFlow.collect { effect ->
         when (effect) {
           is SettingsEffect.ShowSnackbar -> {
-            val message = if (effect.message == R.string.invalid_iterations) invalidIterations else statsResetMessage
-            val actionLabel = effect.actionLabel?.let { undoLabel }
-            val result = snackbarHostState.showSnackbar(message = message, actionLabel = actionLabel)
+            val result =
+              snackbarHostState.showSnackbar(
+                message = resources.getString(effect.message),
+                actionLabel = effect.actionLabel?.let { resources.getString(it) }
+              )
             if (result == SnackbarResult.ActionPerformed && effect.action != null) {
               viewModel.postAction(effect.action)
             }
@@ -88,7 +88,8 @@ fun SettingsView(
   postAction: (SettingsAction) -> Unit = { },
   snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
 ) {
-  var openDialog by remember { mutableStateOf(OpenDialog.NONE) }
+  // saveable so an open dialog survives configuration change and process death
+  var openDialog by rememberSaveable { mutableStateOf(OpenDialog.NONE) }
 
   val coinEntries = stringArrayResource(R.array.coins)
   val coinValues = stringArrayResource(R.array.coins_values)
@@ -380,7 +381,7 @@ private fun TextInputDialog(
   onConfirm: (String) -> Unit,
   onDismiss: () -> Unit
 ) {
-  var value by remember { mutableStateOf(initialValue) }
+  var value by rememberSaveable { mutableStateOf(initialValue) }
   AlertDialog(
     onDismissRequest = onDismiss,
     title = { Text(title) },
@@ -391,7 +392,8 @@ private fun TextInputDialog(
         }
         OutlinedTextField(
           value = value,
-          onValueChange = { value = it },
+          // the legacy EditTextPreference enforced TYPE_CLASS_NUMBER, so keep numeric input digits-only
+          onValueChange = { value = if (numeric) it.filter { char -> char.isDigit() } else it },
           singleLine = true,
           keyboardOptions =
             KeyboardOptions(keyboardType = if (numeric) KeyboardType.Number else KeyboardType.Text)
