@@ -1,0 +1,2595 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.13.2" type="baseline" client="gradle" dependencies="false" name="AGP (8.13.2)" variant="all" version="8.13.2">
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of Gradle than 8.14.3 is available: 8.14.5"
+        errorLine1="distributionUrl=https\://services.gradle.org/distributions/gradle-8.14.3-bin.zip"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/workspace/github/CoinFlip2/gradle/wrapper/gradle-wrapper.properties"
+            line="4"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of com.android.application than 8.13.2 is available: 9.3.0"
+        errorLine1="agp = &quot;8.13.2&quot;"
+        errorLine2="      ~~~~~~~~">
+        <location
+            file="$HOME/workspace/github/CoinFlip2/gradle/libs.versions.toml"
+            line="2"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.activity:activity-ktx than 1.12.4 is available: 1.13.0"
+        errorLine1="androidx-activity = &quot;1.12.4&quot;"
+        errorLine2="                    ~~~~~~~~">
+        <location
+            file="$HOME/workspace/github/CoinFlip2/gradle/libs.versions.toml"
+            line="4"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.browser:browser than 1.9.0 is available: 1.10.0"
+        errorLine1="androidx-browser = &quot;1.9.0&quot;"
+        errorLine2="                   ~~~~~~~">
+        <location
+            file="$HOME/workspace/github/CoinFlip2/gradle/libs.versions.toml"
+            line="6"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.core:core-ktx than 1.17.0 is available: 1.19.0"
+        errorLine1="androidx-core = &quot;1.17.0&quot;"
+        errorLine2="                ~~~~~~~~">
+        <location
+            file="$HOME/workspace/github/CoinFlip2/gradle/libs.versions.toml"
+            line="7"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.lifecycle:lifecycle-runtime-compose than 2.10.0 is available: 2.11.0"
+        errorLine1="androidx-lifecycle = &quot;2.10.0&quot;"
+        errorLine2="                     ~~~~~~~~">
+        <location
+            file="$HOME/workspace/github/CoinFlip2/gradle/libs.versions.toml"
+            line="8"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.lifecycle:lifecycle-viewmodel-compose than 2.10.0 is available: 2.11.0"
+        errorLine1="androidx-lifecycle = &quot;2.10.0&quot;"
+        errorLine2="                     ~~~~~~~~">
+        <location
+            file="$HOME/workspace/github/CoinFlip2/gradle/libs.versions.toml"
+            line="8"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.lifecycle:lifecycle-viewmodel-ktx than 2.10.0 is available: 2.11.0"
+        errorLine1="androidx-lifecycle = &quot;2.10.0&quot;"
+        errorLine2="                     ~~~~~~~~">
+        <location
+            file="$HOME/workspace/github/CoinFlip2/gradle/libs.versions.toml"
+            line="8"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.lifecycle:lifecycle-viewmodel-savedstate than 2.10.0 is available: 2.11.0"
+        errorLine1="androidx-lifecycle = &quot;2.10.0&quot;"
+        errorLine2="                     ~~~~~~~~">
+        <location
+            file="$HOME/workspace/github/CoinFlip2/gradle/libs.versions.toml"
+            line="8"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.navigation:navigation-fragment-ktx than 2.9.7 is available: 2.9.8"
+        errorLine1="androidx-navigation = &quot;2.9.7&quot;"
+        errorLine2="                      ~~~~~~~">
+        <location
+            file="$HOME/workspace/github/CoinFlip2/gradle/libs.versions.toml"
+            line="9"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.navigation:navigation-ui-ktx than 2.9.7 is available: 2.9.8"
+        errorLine1="androidx-navigation = &quot;2.9.7&quot;"
+        errorLine2="                      ~~~~~~~">
+        <location
+            file="$HOME/workspace/github/CoinFlip2/gradle/libs.versions.toml"
+            line="9"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose:compose-bom than 2026.02.00 is available: 2026.06.01"
+        errorLine1="compose-bom = &quot;2026.02.00&quot;"
+        errorLine2="              ~~~~~~~~~~~~">
+        <location
+            file="$HOME/workspace/github/CoinFlip2/gradle/libs.versions.toml"
+            line="10"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.android.material:material than 1.13.0 is available: 1.14.0"
+        errorLine1="google-material = &quot;1.13.0&quot;"
+        errorLine2="                  ~~~~~~~~">
+        <location
+            file="$HOME/workspace/github/CoinFlip2/gradle/libs.versions.toml"
+            line="18"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of de.mannodermaus.android-junit5 than 1.14.0.0 is available: 2.0.1"
+        errorLine1="android-junit = &quot;1.14.0.0&quot;"
+        errorLine2="                ~~~~~~~~~~">
+        <location
+            file="$HOME/workspace/github/CoinFlip2/gradle/libs.versions.toml"
+            line="3"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.google.dagger.hilt.android than 2.58 is available: 2.60.1"
+        errorLine1="dagger = &quot;2.58&quot;"
+        errorLine2="         ~~~~~~">
+        <location
+            file="$HOME/workspace/github/CoinFlip2/gradle/libs.versions.toml"
+            line="11"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.google.dagger:hilt-android than 2.58 is available: 2.60.1"
+        errorLine1="dagger = &quot;2.58&quot;"
+        errorLine2="         ~~~~~~">
+        <location
+            file="$HOME/workspace/github/CoinFlip2/gradle/libs.versions.toml"
+            line="11"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.google.dagger:hilt-android-compiler than 2.58 is available: 2.60.1"
+        errorLine1="dagger = &quot;2.58&quot;"
+        errorLine2="         ~~~~~~">
+        <location
+            file="$HOME/workspace/github/CoinFlip2/gradle/libs.versions.toml"
+            line="11"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.junit.jupiter:junit-jupiter than 5.13.4 is available: 6.1.2"
+        errorLine1="junit = &quot;5.13.4&quot;"
+        errorLine2="        ~~~~~~~~">
+        <location
+            file="$HOME/workspace/github/CoinFlip2/gradle/libs.versions.toml"
+            line="12"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlin.android than 2.3.10 is available: 2.4.10"
+        errorLine1="kotlin = &quot;2.3.10&quot;"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="$HOME/workspace/github/CoinFlip2/gradle/libs.versions.toml"
+            line="14"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlin.plugin.compose than 2.3.10 is available: 2.4.10"
+        errorLine1="kotlin = &quot;2.3.10&quot;"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="$HOME/workspace/github/CoinFlip2/gradle/libs.versions.toml"
+            line="14"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlin.plugin.parcelize than 2.3.10 is available: 2.4.10"
+        errorLine1="kotlin = &quot;2.3.10&quot;"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="$HOME/workspace/github/CoinFlip2/gradle/libs.versions.toml"
+            line="14"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlinx:kotlinx-coroutines-android than 1.10.2 is available: 1.11.0"
+        errorLine1="kotlinx-coroutines = &quot;1.10.2&quot;"
+        errorLine2="                     ~~~~~~~~">
+        <location
+            file="$HOME/workspace/github/CoinFlip2/gradle/libs.versions.toml"
+            line="16"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlinx:kotlinx-coroutines-test than 1.10.2 is available: 1.11.0"
+        errorLine1="kotlinx-coroutines = &quot;1.10.2&quot;"
+        errorLine2="                     ~~~~~~~~">
+        <location
+            file="$HOME/workspace/github/CoinFlip2/gradle/libs.versions.toml"
+            line="16"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of io.mockk:mockk-agent than 1.14.9 is available: 1.14.11"
+        errorLine1="mockk = &quot;1.14.9&quot;"
+        errorLine2="        ~~~~~~~~">
+        <location
+            file="$HOME/workspace/github/CoinFlip2/gradle/libs.versions.toml"
+            line="19"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of io.mockk:mockk-android than 1.14.9 is available: 1.14.11"
+        errorLine1="mockk = &quot;1.14.9&quot;"
+        errorLine2="        ~~~~~~~~">
+        <location
+            file="$HOME/workspace/github/CoinFlip2/gradle/libs.versions.toml"
+            line="19"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.github.ben-manes.versions than 0.53.0 is available: 0.54.0"
+        errorLine1="versions = &quot;0.53.0&quot;"
+        errorLine2="           ~~~~~~~~">
+        <location
+            file="$HOME/workspace/github/CoinFlip2/gradle/libs.versions.toml"
+            line="24"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Fixed screen orientations will be ignored in most cases, starting from Android 16. Android is moving toward a model where apps are expected to adapt to various orientations, display sizes, and aspect ratios."
+        errorLine1="      android:screenOrientation=&quot;userPortrait&quot;"
+        errorLine2="      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="30"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="Typos"
+        message="&quot;ok&quot; is usually capitalized as &quot;OK&quot;"
+        errorLine1="    &lt;item>ok&lt;/item>"
+        errorLine2="          ~~">
+        <location
+            file="src/main/res/values/arrays.xml"
+            line="125"
+            column="11"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ak_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ak_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ak_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/ak_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.al_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/al_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.al_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/al_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.andorra_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/andorra_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.andorra_tails` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/andorra_tails.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ar_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ar_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ar_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/ar_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.austria_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/austria_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.austria_tails` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/austria_tails.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.az_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/az_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.az_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/az_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.belgium_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/belgium_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.belgium_tails` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/belgium_tails.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ca_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ca_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ca_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/ca_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.co_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/co_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.co_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/co_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.seed` appears to be unused"
+        errorLine1="  &lt;color name=&quot;seed&quot;>#6667AB&lt;/color>"
+        errorLine2="         ~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="3"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.md_theme_light_shadow` appears to be unused"
+        errorLine1="  &lt;color name=&quot;md_theme_light_shadow&quot;>#000000&lt;/color>"
+        errorLine2="         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="30"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.md_theme_light_surfaceTint` appears to be unused"
+        errorLine1="  &lt;color name=&quot;md_theme_light_surfaceTint&quot;>#5455A9&lt;/color>"
+        errorLine2="         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="31"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.md_theme_light_outlineVariant` appears to be unused"
+        errorLine1="  &lt;color name=&quot;md_theme_light_outlineVariant&quot;>#C8C5D0&lt;/color>"
+        errorLine2="         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="32"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.md_theme_light_scrim` appears to be unused"
+        errorLine1="  &lt;color name=&quot;md_theme_light_scrim&quot;>#000000&lt;/color>"
+        errorLine2="         ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="33"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.md_theme_dark_shadow` appears to be unused"
+        errorLine1="  &lt;color name=&quot;md_theme_dark_shadow&quot;>#000000&lt;/color>"
+        errorLine2="         ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="60"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.md_theme_dark_surfaceTint` appears to be unused"
+        errorLine1="  &lt;color name=&quot;md_theme_dark_surfaceTint&quot;>#C1C1FF&lt;/color>"
+        errorLine2="         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="61"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.md_theme_dark_outlineVariant` appears to be unused"
+        errorLine1="  &lt;color name=&quot;md_theme_dark_outlineVariant&quot;>#47464F&lt;/color>"
+        errorLine2="         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="62"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.md_theme_dark_scrim` appears to be unused"
+        errorLine1="  &lt;color name=&quot;md_theme_dark_scrim&quot;>#000000&lt;/color>"
+        errorLine2="         ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="63"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.croatia_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/croatia_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.croatia_tails` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/croatia_tails.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ct_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ct_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ct_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/ct_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.cyprus_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/cyprus_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.cyprus_tails` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/cyprus_tails.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.dc_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/dc_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.dc_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/dc_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.de_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/de_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.de_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/de_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.spacing_xlarge` appears to be unused"
+        errorLine1="  &lt;dimen name=&quot;spacing_xlarge&quot;>64dp&lt;/dimen>"
+        errorLine2="         ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="3"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.spacing_large` appears to be unused"
+        errorLine1="  &lt;dimen name=&quot;spacing_large&quot;>32dp&lt;/dimen>"
+        errorLine2="         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="4"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.spacing_medium` appears to be unused"
+        errorLine1="  &lt;dimen name=&quot;spacing_medium&quot;>16dp&lt;/dimen>"
+        errorLine2="         ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="5"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.spacing_small` appears to be unused"
+        errorLine1="  &lt;dimen name=&quot;spacing_small&quot;>8dp&lt;/dimen>"
+        errorLine2="         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="6"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.spacing_xsmall` appears to be unused"
+        errorLine1="  &lt;dimen name=&quot;spacing_xsmall&quot;>4dp&lt;/dimen>"
+        errorLine2="         ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="7"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.estonia_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/estonia_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.estonia_tails` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/estonia_tails.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.euro_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/euro_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.finland_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/finland_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.finland_tails` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/finland_tails.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.fl_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/fl_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.fl_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/fl_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.france_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/france_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.france_tails` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/france_tails.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ga_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ga_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ga_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/ga_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.germany_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/germany_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.germany_tails` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/germany_tails.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.greece_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/greece_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.greece_tails` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/greece_tails.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.gw_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/gw_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.gw_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/gw_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.hi_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/hi_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.hi_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/hi_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ia_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ia_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ia_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/ia_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.id_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/id_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.id_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/id_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.il_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/il_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.il_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/il_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.in_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/in_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.in_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/in_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ireland_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/ireland_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ireland_tails` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ireland_tails.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.italy_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/italy_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.italy_tails` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/italy_tails.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.jfk_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/jfk_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.jfk_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/jfk_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ks_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ks_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ks_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/ks_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ky_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ky_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ky_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/ky_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.la_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/la_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.la_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/la_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.latvia_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/latvia_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.latvia_tails` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/latvia_tails.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.lithuania_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/lithuania_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.lithuania_tails` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/lithuania_tails.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.loonie_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/loonie_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.loonie_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/loonie_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.luxembourg_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/luxembourg_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.luxembourg_tails` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/luxembourg_tails.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ma_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ma_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ma_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/ma_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.malta_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/malta_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.malta_tails` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/malta_tails.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.md_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/md_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.md_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/md_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.me_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/me_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.me_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/me_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.mi_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/mi_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.mi_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/mi_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.mn_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/mn_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.mn_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/mn_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.mo_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/mo_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.mo_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/mo_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.monaco_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/monaco_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.monaco_tails` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/monaco_tails.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ms_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ms_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ms_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/ms_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.mt_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/mt_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.mt_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/mt_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.nc_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/nc_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.nc_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/nc_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.nd_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/nd_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.nd_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/nd_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ne_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ne_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ne_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/ne_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.netherlands_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/netherlands_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.netherlands_tails` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/netherlands_tails.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.nh_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/nh_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.nh_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/nh_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.nj_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/nj_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.nj_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/nj_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.nm_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/nm_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.nm_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/nm_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.nv_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/nv_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.nv_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/nv_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ny_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ny_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ny_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/ny_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.oh_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/oh_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.oh_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/oh_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ok_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ok_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ok_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/ok_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.or_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/or_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.or_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/or_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.pa_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/pa_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.pa_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/pa_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.portugal_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/portugal_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.portugal_tails` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/portugal_tails.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.quarter_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/quarter_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ri_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ri_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ri_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/ri_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.sacagawea_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/sacagawea_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.sacagawea_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/sacagawea_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.sanmarino_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/sanmarino_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.sanmarino_tails` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/sanmarino_tails.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.sc_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/sc_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.sc_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/sc_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.sd_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/sd_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.sd_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/sd_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.slovakia_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/slovakia_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.slovakia_tails` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/slovakia_tails.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.slovenia_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/slovenia_heads.png"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.slovenia_tails` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/slovenia_tails.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.spain_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/spain_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.spain_tails` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/spain_tails.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.settings_activity_title` appears to be unused"
+        errorLine1="  &lt;string name=&quot;settings_activity_title&quot;>Coin Flip Settings&lt;/string>"
+        errorLine2="          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="26"
+            column="11"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.settings_not_set` appears to be unused"
+        errorLine1="  &lt;string name=&quot;settings_not_set&quot;>Not set&lt;/string>"
+        errorLine2="          ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="58"
+            column="11"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.tn_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/tn_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.tn_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/tn_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.toonie_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/toonie_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.toonie_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/toonie_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.twoface_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/twoface_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.twoface_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/twoface_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.tx_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/tx_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.tx_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/tx_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ut_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ut_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ut_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/ut_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.va_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/va_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.va_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/va_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.vatican_heads` appears to be unused">
+        <location
+            file="src/main/res/drawable/vatican_heads.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.vatican_tails` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/vatican_tails.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.vt_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/vt_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.vt_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/vt_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.wa_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/wa_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.wa_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/wa_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.wi_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/wi_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.wi_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/wi_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.wv_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/wv_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.wv_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/wv_tails.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.wy_heads` appears to be unused"
+        errorLine1="&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/wy_heads.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.wy_tails` appears to be unused">
+        <location
+            file="src/main/res/drawable/wy_tails.webp"/>
+    </issue>
+
+    <issue
+        id="MonochromeLauncherIcon"
+        message="The application adaptive icon is missing a monochrome tag"
+        errorLine1="&lt;adaptive-icon xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/mipmap-anydpi/ic_launcher.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="MonochromeLauncherIcon"
+        message="The application adaptive roundIcon is missing a monochrome tag"
+        errorLine1="&lt;adaptive-icon xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/mipmap-anydpi/ic_launcher_round.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ak_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/ak_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/al_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/al_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/andorra_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/andorra_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ar_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/ar_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/austria_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/austria_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/az_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/az_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/background.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/background.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/belgium_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/belgium_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ca_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/ca_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/co_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/co_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/croatia_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/croatia_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ct_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/ct_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/cyprus_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/cyprus_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/dc_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/dc_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/de_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/de_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/edge.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/edge.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/estonia_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/estonia_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/euro_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/euro_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/finland_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/finland_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/fl_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/fl_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/france_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/france_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ga_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/ga_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/germany_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/germany_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/greece_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/greece_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/gw_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/gw_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/gw_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/gw_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/hi_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/hi_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ia_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/ia_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/id_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/id_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/il_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/il_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/in_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/in_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ireland_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/ireland_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/italy_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/italy_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/jfk_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/jfk_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/jfk_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/jfk_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ks_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/ks_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ky_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/ky_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/la_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/la_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/latvia_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/latvia_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/lithuania_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/lithuania_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/loonie_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/loonie_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/loonie_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/loonie_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/luxembourg_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/luxembourg_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ma_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/ma_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/malta_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/malta_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/md_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/md_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/me_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/me_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/mi_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/mi_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/mn_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/mn_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/mo_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/mo_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/monaco_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/monaco_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ms_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/ms_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/mt_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/mt_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/nc_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/nc_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/nd_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/nd_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ne_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/ne_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/netherlands_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/netherlands_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/nh_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/nh_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/nj_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/nj_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/nm_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/nm_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/nv_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/nv_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ny_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/ny_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/oh_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/oh_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ok_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/ok_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/or_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/or_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/pa_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/pa_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/portugal_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/portugal_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/quarter_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/quarter_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ri_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/ri_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/sacagawea_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/sacagawea_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/sacagawea_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/sacagawea_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/sanmarino_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/sanmarino_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/sc_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/sc_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/sd_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/sd_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/slovakia_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/slovakia_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/slovenia_heads.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/slovenia_heads.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/spain_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/spain_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/tn_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/tn_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/toonie_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/toonie_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/toonie_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/toonie_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/twoface_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/twoface_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/twoface_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/twoface_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/tx_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/tx_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ut_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/ut_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/va_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/va_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/vatican_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/vatican_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/vt_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/vt_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/wa_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/wa_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/wi_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/wi_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/wv_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/wv_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/wy_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/wy_tails.webp"/>
+    </issue>
+
+</issues>
