@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -46,6 +47,7 @@ import com.banasiak.coinflip.R
 import com.banasiak.coinflip.extensions.formatNumber
 import com.banasiak.coinflip.ui.theme.AppTheme
 import com.banasiak.coinflip.ui.theme.Dimen
+import kotlinx.coroutines.launch
 
 private enum class OpenDialog { NONE, COIN, FORCE, HEADS, TAILS, DIAGNOSTICS }
 
@@ -64,13 +66,19 @@ fun SettingsScreen(
       viewModel.effectFlow.collect { effect ->
         when (effect) {
           is SettingsEffect.ShowSnackbar -> {
-            val result =
-              snackbarHostState.showSnackbar(
-                message = resources.getString(effect.message),
-                actionLabel = effect.actionLabel?.let { resources.getString(it) }
-              )
-            if (result == SnackbarResult.ActionPerformed && effect.action != null) {
-              viewModel.postAction(effect.action)
+            // launch so the collector isn't suspended while the snackbar is visible -- effects
+            // emitted in the meantime would overflow the buffer and be dropped
+            launch {
+              val result =
+                snackbarHostState.showSnackbar(
+                  message = resources.getString(effect.message),
+                  actionLabel = effect.actionLabel?.let { resources.getString(it) },
+                  // with an actionLabel the default duration is Indefinite; match the legacy Snackbar.LENGTH_LONG
+                  duration = SnackbarDuration.Long
+                )
+              if (result == SnackbarResult.ActionPerformed && effect.action != null) {
+                viewModel.postAction(effect.action)
+              }
             }
           }
           SettingsEffect.EnableRestartOnBack -> onEnableRestartOnBack()
