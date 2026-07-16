@@ -48,9 +48,9 @@ class SettingsViewModel @Inject constructor(
   }
 
   private fun onSetDiagnostics(value: String) {
-    // don't allow the user to set a value that can't be safely converted to a Long in the future
+    // don't allow the user to set a value that can't be safely converted to a positive Long in the future
     val number = value.toLongOrNull()
-    if (number == null || number == 0L) {
+    if (number == null || number <= 0L) {
       Timber.w("Not persisting invalid iteration count: $value")
       _effectFlow.tryEmit(SettingsEffect.ShowSnackbar(R.string.invalid_iterations))
       return

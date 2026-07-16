@@ -76,6 +76,19 @@ class SettingsViewModelTests {
     }
 
   @Test
+  fun negative_diagnostics_value_shows_snackbar_and_is_not_persisted() =
+    runTest {
+      val vm = viewModel()
+
+      vm.effectFlow.test {
+        vm.postAction(SettingsAction.SetDiagnostics("-100"))
+        awaitItem() shouldBeEqualTo SettingsEffect.ShowSnackbar(R.string.invalid_iterations)
+      }
+
+      verify(exactly = 0) { settings.update(Settings.DIAGNOSTICS, any()) }
+    }
+
+  @Test
   fun toggling_dynamic_colors_requests_restart_on_back() =
     runTest {
       val vm = viewModel()
