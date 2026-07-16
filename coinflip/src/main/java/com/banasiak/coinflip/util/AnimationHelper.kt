@@ -40,11 +40,17 @@ class AnimationHelper @Inject constructor(
   var animations: Map<Permutation, DurationAnimationDrawable> = emptyMap()
     private set
 
+  @Volatile
+  private var loadedPrefix: String? = null
+
   suspend fun loadAnimationsForCoin(prefix: String) {
-    val startTime = clock.millis()
     withContext(Dispatchers.IO) {
+      // skip the bitmap work when the same coin is already loaded; "random" rerolls on every load
+      if (prefix == loadedPrefix && prefix != RANDOM) return@withContext
+      val startTime = clock.millis()
       val ids = getIdentifiersForPrefix(prefix)
       generateAnimations(ids.first, ids.second)
+      loadedPrefix = prefix
       Timber.i("Animations generated in: ${clock.millis() - startTime} milliseconds")
     }
   }
