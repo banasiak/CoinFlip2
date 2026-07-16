@@ -62,7 +62,6 @@ dependencies {
   implementation(libs.androidx.lifecycle.viewmodel.savedstate)
   implementation(libs.androidx.navigation.fragment.ktx)
   implementation(libs.androidx.navigation.ui.ktx)
-  implementation(libs.androidx.preference.ktx)
   implementation(libs.google.material)
   implementation(libs.google.review.ktx)
   implementation(libs.hilt.android)
