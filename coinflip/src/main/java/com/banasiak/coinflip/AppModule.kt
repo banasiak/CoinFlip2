@@ -10,7 +10,6 @@ import android.media.SoundPool
 import android.os.Build
 import android.os.Vibrator
 import android.os.VibratorManager
-import androidx.preference.PreferenceManager
 import com.banasiak.coinflip.common.BuildInfo
 import dagger.Module
 import dagger.Provides
@@ -61,7 +60,9 @@ object AppModule {
 
   @Provides
   fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
-    return PreferenceManager.getDefaultSharedPreferences(context)
+    // must match the file PreferenceManager.getDefaultSharedPreferences() used before the
+    // Compose migration, otherwise existing users lose their settings and statistics
+    return context.getSharedPreferences("${context.packageName}_preferences", Context.MODE_PRIVATE)
   }
 
   @Provides

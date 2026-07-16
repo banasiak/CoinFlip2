@@ -7,7 +7,6 @@ androidx-browser = "1.9.0"
 androidx-core = "1.17.0"
 androidx-lifecycle = "2.10.0"
 androidx-navigation = "2.9.7"
-androidx-preference = "1.2.1"
 compose-bom = "2026.02.00"
 dagger = "2.58"
 junit = "5.13.4"
@@ -41,7 +40,6 @@ androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-view
 androidx-lifecycle-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "androidx-lifecycle"}
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "androidx-navigation" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "androidx-navigation" }
-androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "androidx-preference" }
 google-material = { module = "com.google.android.material:material", version.ref = "google-material" }
 google-review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "google-review" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "dagger" }
