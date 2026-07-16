@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
@@ -37,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.lifecycle.Lifecycle
@@ -288,13 +290,15 @@ private fun SwitchPreference(
     modifier =
       Modifier
         .fillMaxWidth()
-        .clickable(enabled = enabled) { onCheckedChange(!checked) }
+        // toggleable (not clickable) so accessibility services see a single switch with its state
+        .toggleable(value = checked, enabled = enabled, role = Role.Switch, onValueChange = onCheckedChange)
         .padding(horizontal = Dimen.medium, vertical = Dimen.medium),
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.spacedBy(Dimen.medium)
   ) {
     TitleAndSummary(Modifier.weight(1f), title, summary, enabled)
-    Switch(checked = checked, enabled = enabled, onCheckedChange = onCheckedChange)
+    // null onCheckedChange: the row handles interaction, so the thumb isn't a second focus target
+    Switch(checked = checked, enabled = enabled, onCheckedChange = null)
   }
 }
 
@@ -355,6 +359,7 @@ private fun SingleChoiceDialog(
                 .fillMaxWidth()
                 .selectable(
                   selected = value == selectedValue,
+                  role = Role.RadioButton,
                   onClick = {
                     onSelect(value)
                     onDismiss()
