@@ -1,22 +1,23 @@
 package com.banasiak.coinflip.settings
 
 import androidx.annotation.StringRes
+import com.banasiak.coinflip.settings.SettingsManager.Settings
 
 data class SettingsState(
-  val coin: String = "gw",
-  val animate: Boolean = true,
-  val shake: Boolean = true,
-  val sound: Boolean = true,
-  val text: Boolean = true,
-  val vibrate: Boolean = true,
-  val stats: Boolean = true,
-  val quickReset: Boolean = false,
-  val customHeads: String? = null,
-  val customTails: String? = null,
-  val diagnostics: String = "100000",
-  val dynamic: Boolean = false,
-  val secureRandom: Boolean = false,
-  val force: String = "medium"
+  val coin: String = Settings.COIN.default as String,
+  val animate: Boolean = Settings.ANIMATE.default as Boolean,
+  val shake: Boolean = Settings.SHAKE.default as Boolean,
+  val sound: Boolean = Settings.SOUND.default as Boolean,
+  val text: Boolean = Settings.TEXT.default as Boolean,
+  val vibrate: Boolean = Settings.VIBRATE.default as Boolean,
+  val stats: Boolean = Settings.STATS.default as Boolean,
+  val quickReset: Boolean = Settings.QUICK_RESET.default as Boolean,
+  val customHeads: String? = Settings.CUSTOM_HEADS_TEXT.default as String?,
+  val customTails: String? = Settings.CUSTOM_TAILS_TEXT.default as String?,
+  val diagnostics: String = Settings.DIAGNOSTICS.default as String,
+  val dynamic: Boolean = Settings.DYNAMIC.default as Boolean,
+  val secureRandom: Boolean = Settings.SECURE_RANDOM.default as Boolean,
+  val force: String = Settings.FORCE.default as String
 )
 
 sealed class SettingsAction {
