@@ -20,8 +20,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
-import kotlin.concurrent.atomics.AtomicBoolean
-import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -46,8 +44,8 @@ class MainViewModel @Inject constructor(
   private val _effectFlow = MutableSharedFlow<MainEffect>(extraBufferCapacity = 1)
   val effectFlow = _effectFlow.asSharedFlow()
 
-  @OptIn(ExperimentalAtomicApi::class)
-  private val isFlipping = AtomicBoolean(false)
+  // postAction() and viewModelScope coroutines all run on the main dispatcher, so a plain field suffices
+  private var isFlipping = false
 
   fun postAction(action: MainAction) {
     Timber.d("postAction(): $action")
@@ -95,16 +93,15 @@ class MainViewModel @Inject constructor(
     savedState.save(state)
   }
 
-  @OptIn(ExperimentalAtomicApi::class)
   private fun flipCoin() {
-    if (isFlipping.load()) {
+    if (isFlipping) {
       Timber.d("flipCoin() already in progress. Ignoring.")
       return
     }
+    // set before launching so the guard doesn't depend on the coroutine dispatching immediately
+    isFlipping = true
 
     viewModelScope.launch {
-      isFlipping.store(true)
-
       // the heart and soul of this entire endeavor
       val result = coin.flip()
 
@@ -138,7 +135,7 @@ class MainViewModel @Inject constructor(
       }
 
       onFlipFinished()
-      isFlipping.store(false)
+      isFlipping = false
     }
   }
 
