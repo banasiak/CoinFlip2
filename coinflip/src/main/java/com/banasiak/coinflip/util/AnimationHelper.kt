@@ -35,8 +35,10 @@ class AnimationHelper @Inject constructor(
     private const val RANDOM = "random"
   }
 
-  private val _animations = mutableMapOf<Permutation, DurationAnimationDrawable>()
-  val animations: Map<Permutation, DurationAnimationDrawable> = _animations
+  // written on Dispatchers.IO and read on Main during flips, so publish as a single volatile reference swap
+  @Volatile
+  var animations: Map<Permutation, DurationAnimationDrawable> = emptyMap()
+    private set
 
   suspend fun loadAnimationsForCoin(prefix: String) {
     val startTime = clock.millis()
@@ -86,9 +88,11 @@ class AnimationHelper @Inject constructor(
     val b2 = resizeBitmapDrawable(b4, bg, 0.5f)
     val b1 = resizeBitmapDrawable(b4, bg, 0.25f)
 
+    val generated = mutableMapOf<Permutation, DurationAnimationDrawable>()
     for (permutation in Permutation.entries) {
-      _animations[permutation] = generateAnimatedDrawable(a4, a3, a2, a1, b4, b3, b2, b1, e, permutation)
+      generated[permutation] = generateAnimatedDrawable(a4, a3, a2, a1, b4, b3, b2, b1, e, permutation)
     }
+    animations = generated
   }
 
   private fun resizeBitmapDrawable(
