@@ -2,7 +2,6 @@ package com.banasiak.coinflip.common
 
 import android.os.Parcelable
 import androidx.annotation.StringRes
-import androidx.annotation.StyleRes
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.settings.SettingsManager
 import com.banasiak.coinflip.util.AnimationHelper
@@ -15,10 +14,10 @@ class Coin @Inject constructor(
   private val random: RNG,
   private val settings: SettingsManager
 ) {
-  enum class Value(@param:StringRes val string: Int, @param:StyleRes val style: Int) {
-    HEADS(R.string.heads, R.style.AppTheme_TextAppearance_Result_Heads),
-    TAILS(R.string.tails, R.style.AppTheme_TextAppearance_Result_Tails),
-    UNKNOWN(R.string.empty, R.style.AppTheme_TextAppearance_Result);
+  enum class Value(@param:StringRes val string: Int) {
+    HEADS(R.string.heads),
+    TAILS(R.string.tails),
+    UNKNOWN(R.string.empty);
 
     fun customLabel(settingsManager: SettingsManager): String? {
       return when (this) {
