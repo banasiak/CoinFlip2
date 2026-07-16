@@ -16,6 +16,7 @@ import com.banasiak.coinflip.extensions.save
 import com.banasiak.coinflip.settings.SettingsManager
 import com.banasiak.coinflip.util.SoundHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -23,6 +24,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
 import timber.log.Timber
 import java.time.Clock
@@ -34,14 +36,18 @@ class DiagnosticsViewModel @Inject constructor(
   private val coin: Coin,
   private val settings: SettingsManager,
   private val soundHelper: SoundHelper,
+  private val dispatcher: CoroutineDispatcher,
   private val savedState: SavedStateHandle
 ) : ViewModel(), LifecycleEventObserver {
   companion object {
+    private const val BATCH_SIZE = 100L
     private const val SMOOTH_DELAY = 5L
     private const val TURBO_MODE_THRESHOLD = 1_000_000L
     private const val WIKIPEDIA_URL = "https://w.wiki/3kSY"
   }
 
+  // the flip loop publishes this from `dispatcher` while onPause() reads it on the main thread
+  @Volatile
   private var state =
     savedState.restore()
       ?: DiagnosticsState(
@@ -62,9 +68,13 @@ class DiagnosticsViewModel @Inject constructor(
       DiagnosticsAction.Back -> _effectFlow.tryEmit(DiagnosticsEffect.NavBack)
       DiagnosticsAction.Start -> {
         if (diagnosticsJob?.isActive != true) {
-          diagnosticsJob = viewModelScope.launch { runDiagnostics() }
+          diagnosticsJob =
+            viewModelScope.launch {
+              // sequenced before the loop so the loop is the only writer of `state` while it runs
+              showTurboModeNotice()
+              runDiagnostics()
+            }
         }
-        viewModelScope.launch { showTurboModeNotice() }
       }
 
       DiagnosticsAction.Wikipedia -> _effectFlow.tryEmit(DiagnosticsEffect.LaunchUrl(WIKIPEDIA_URL))
@@ -97,38 +107,47 @@ class DiagnosticsViewModel @Inject constructor(
     // don't update the start time if state has been restored, then you can see how long the loop was "paused" for in wall-clock time
     if (state.startTime == 0L) state = state.copy(startTime = clock.millis())
 
-    // resume the loop where we left off
-    for (i in state.total until state.iterations) {
-      state =
+    // run the flips off the main thread, accumulating in locals; state is published once per batch
+    // so the UI animates and onPause() can still persist (batch-granular) partial progress
+    withContext(dispatcher) {
+      // resume the loop where we left off
+      var heads = state.heads
+      var tails = state.tails
+      var total = state.total
+
+      while (total < state.iterations) {
         when (val value = coin.flip().value) {
-          Coin.Value.HEADS -> state.copy(heads = state.heads + 1, total = i + 1)
-          Coin.Value.TAILS -> state.copy(tails = state.tails + 1, total = i + 1)
-          else -> {
-            throw IllegalStateException("Coin.flip() returned invalid value: $value")
-          }
+          Coin.Value.HEADS -> heads++
+          Coin.Value.TAILS -> tails++
+          else -> throw IllegalStateException("Coin.flip() returned invalid value: $value")
         }
+        total++
 
-      if (state.total % 100 == 0L || state.total == state.iterations) {
-        val elapsedTime = clock.millis() - state.startTime
-        state =
-          state.copy(
-            headsCount = state.heads.formatNumber(),
-            tailsCount = state.tails.formatNumber(),
-            totalCount = state.total.formatNumber(),
-            headsRatio = formatRatio(state.heads, state.iterations),
-            tailsRatio = formatRatio(state.tails, state.iterations),
-            totalRatio = formatRatio(state.total, state.iterations),
-            elapsedTime = elapsedTime,
-            formattedTime = elapsedTime.formatMilliseconds()
-          )
-        _stateFlow.emit(state)
+        if (total % BATCH_SIZE == 0L || total == state.iterations) {
+          val elapsedTime = clock.millis() - state.startTime
+          state =
+            state.copy(
+              heads = heads,
+              tails = tails,
+              total = total,
+              headsCount = heads.formatNumber(),
+              tailsCount = tails.formatNumber(),
+              totalCount = total.formatNumber(),
+              headsRatio = formatRatio(heads, state.iterations),
+              tailsRatio = formatRatio(tails, state.iterations),
+              totalRatio = formatRatio(total, state.iterations),
+              elapsedTime = elapsedTime,
+              formattedTime = elapsedTime.formatMilliseconds()
+            )
+          _stateFlow.emit(state)
 
-        if (state.turboMode) {
-          // don't delay UI updates if the user has chosen to run an objectively large number of iterations
-          yield()
-        } else {
-          // otherwise, this short delay smooths out the UI animation and make it looks nicer for small values
-          delay(SMOOTH_DELAY)
+          if (state.turboMode) {
+            // don't delay UI updates if the user has chosen to run an objectively large number of iterations
+            yield()
+          } else {
+            // otherwise, this short delay smooths out the UI animation and make it looks nicer for small values
+            delay(SMOOTH_DELAY)
+          }
         }
       }
     }

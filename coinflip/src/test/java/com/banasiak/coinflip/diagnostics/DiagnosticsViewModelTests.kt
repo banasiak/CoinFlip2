@@ -11,6 +11,7 @@ import com.banasiak.coinflip.util.SoundHelper
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
@@ -28,7 +29,8 @@ class DiagnosticsViewModelTests {
   private val savedStateHandle: SavedStateHandle = mockk()
 
   private fun viewModel(): DiagnosticsViewModel {
-    return DiagnosticsViewModel(clock, coin, settingsManager, soundHelper, savedStateHandle)
+    // Dispatchers.Main is the UnconfinedTestDispatcher here, so runTest virtual time drives the flip loop
+    return DiagnosticsViewModel(clock, coin, settingsManager, soundHelper, Dispatchers.Main, savedStateHandle)
   }
 
   @BeforeEach
