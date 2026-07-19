@@ -22,6 +22,45 @@ class SettingsViewModelTests {
   }
 
   @Test
+  fun initial_state_is_loaded_from_the_settings_manager() =
+    runTest {
+      every { settings.coinPrefix } returns "jfk"
+      every { settings.animationEnabled } returns false
+      every { settings.shakeEnabled } returns false
+      every { settings.soundEnabled } returns false
+      every { settings.textEnabled } returns false
+      every { settings.vibrateEnabled } returns false
+      every { settings.showStats } returns false
+      every { settings.showQuickReset } returns true
+      every { settings.customHeadsText } returns "CROWN"
+      every { settings.customTailsText } returns "SHIP"
+      every { settings.diagnosticsIterations } returns 5000L
+      every { settings.dynamicColorsEnabled } returns true
+      every { settings.secureRandom } returns true
+      every { settings.forceValue } returns "high"
+
+      val vm = viewModel()
+
+      vm.stateFlow.value shouldBeEqualTo
+        SettingsState(
+          coin = "jfk",
+          animate = false,
+          shake = false,
+          sound = false,
+          text = false,
+          vibrate = false,
+          stats = false,
+          quickReset = true,
+          customHeads = "CROWN",
+          customTails = "SHIP",
+          diagnostics = "5000",
+          dynamic = true,
+          secureRandom = true,
+          force = "high"
+        )
+    }
+
+  @Test
   fun set_animate_persists_and_updates_state() =
     runTest {
       val vm = viewModel()
@@ -39,6 +78,106 @@ class SettingsViewModelTests {
 
       verify { settings.update(Settings.COIN, "jfk") }
       vm.stateFlow.value.coin shouldBeEqualTo "jfk"
+    }
+
+  @Test
+  fun set_shake_persists_and_updates_state() =
+    runTest {
+      val vm = viewModel()
+      vm.postAction(SettingsAction.SetShake(false))
+
+      verify { settings.update(Settings.SHAKE, false) }
+      vm.stateFlow.value.shake shouldBeEqualTo false
+    }
+
+  @Test
+  fun set_sound_persists_and_updates_state() =
+    runTest {
+      val vm = viewModel()
+      vm.postAction(SettingsAction.SetSound(false))
+
+      verify { settings.update(Settings.SOUND, false) }
+      vm.stateFlow.value.sound shouldBeEqualTo false
+    }
+
+  @Test
+  fun set_text_persists_and_updates_state() =
+    runTest {
+      val vm = viewModel()
+      vm.postAction(SettingsAction.SetText(false))
+
+      verify { settings.update(Settings.TEXT, false) }
+      vm.stateFlow.value.text shouldBeEqualTo false
+    }
+
+  @Test
+  fun set_vibrate_persists_and_updates_state() =
+    runTest {
+      val vm = viewModel()
+      vm.postAction(SettingsAction.SetVibrate(false))
+
+      verify { settings.update(Settings.VIBRATE, false) }
+      vm.stateFlow.value.vibrate shouldBeEqualTo false
+    }
+
+  @Test
+  fun set_stats_persists_and_updates_state() =
+    runTest {
+      val vm = viewModel()
+      vm.postAction(SettingsAction.SetStats(false))
+
+      verify { settings.update(Settings.STATS, false) }
+      vm.stateFlow.value.stats shouldBeEqualTo false
+    }
+
+  @Test
+  fun set_quick_reset_persists_and_updates_state() =
+    runTest {
+      val vm = viewModel()
+      vm.postAction(SettingsAction.SetQuickReset(true))
+
+      verify { settings.update(Settings.QUICK_RESET, true) }
+      vm.stateFlow.value.quickReset shouldBeEqualTo true
+    }
+
+  @Test
+  fun set_secure_random_persists_and_updates_state() =
+    runTest {
+      val vm = viewModel()
+      vm.postAction(SettingsAction.SetSecureRandom(true))
+
+      verify { settings.update(Settings.SECURE_RANDOM, true) }
+      vm.stateFlow.value.secureRandom shouldBeEqualTo true
+    }
+
+  @Test
+  fun set_custom_heads_persists_and_updates_state() =
+    runTest {
+      val vm = viewModel()
+      vm.postAction(SettingsAction.SetCustomHeads("CROWN"))
+
+      verify { settings.update(Settings.CUSTOM_HEADS_TEXT, "CROWN") }
+      vm.stateFlow.value.customHeads shouldBeEqualTo "CROWN"
+    }
+
+  @Test
+  fun set_custom_tails_persists_and_updates_state() =
+    runTest {
+      val vm = viewModel()
+      vm.postAction(SettingsAction.SetCustomTails("SHIP"))
+
+      verify { settings.update(Settings.CUSTOM_TAILS_TEXT, "SHIP") }
+      vm.stateFlow.value.customTails shouldBeEqualTo "SHIP"
+    }
+
+  @Test
+  fun set_force_persists_and_updates_state() =
+    runTest {
+      val vm = viewModel()
+      vm.postAction(SettingsAction.SetForce("high"))
+
+      verify { settings.update(Settings.FORCE, "high") }
+      vm.stateFlow.value.force shouldBeEqualTo "high"
     }
 
   @Test

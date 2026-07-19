@@ -1,5 +1,6 @@
 package com.banasiak.coinflip.diagnostics
 
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.banasiak.coinflip.MainDispatcherRule
@@ -245,6 +246,84 @@ class DiagnosticsViewModelTests {
       effects.test {
         expectNoEvents()
       }
+    }
+
+  @Test
+  fun back() =
+    runTest {
+      val vm = viewModel()
+      val effects = vm.effectFlow
+
+      backgroundScope.launch {
+        vm.postAction(DiagnosticsAction.Back)
+      }
+
+      effects.test {
+        awaitItem() shouldBeEqualTo DiagnosticsEffect.NavBack
+      }
+    }
+
+  @Test
+  fun on_start_lifecycle_event_runs_diagnostics() =
+    runTest {
+      every { settingsManager.diagnosticsIterations } returns 1L
+      every { coin.flip() } returns Coin.Result(Coin.Value.HEADS, AnimationHelper.Permutation.TAILS_HEADS)
+
+      val vm = viewModel()
+
+      backgroundScope.launch {
+        vm.onStateChanged(mockk(), Lifecycle.Event.ON_START)
+      }
+
+      vm.stateFlow.test {
+        awaitItem() // initial
+        awaitItem().total shouldBeEqualTo 1L
+      }
+      verify(exactly = 1) { coin.flip() }
+    }
+
+  @Test
+  fun on_pause_lifecycle_event_saves_state() =
+    runTest {
+      every { savedStateHandle.set("state", any<DiagnosticsState>()) } returns Unit
+
+      val vm = viewModel()
+      vm.onStateChanged(mockk(), Lifecycle.Event.ON_PAUSE)
+
+      verify { savedStateHandle.set("state", any<DiagnosticsState>()) }
+    }
+
+  @Test
+  fun restored_partial_run_resumes_where_it_left_off() =
+    runTest {
+      every { clock.millis() } returns 2500L
+      every {
+        savedStateHandle.get<DiagnosticsState>("state")
+      } returns DiagnosticsState(iterations = 5, heads = 1, tails = 1, total = 2, startTime = 1000L)
+      every { coin.flip() } returnsMany
+        listOf(
+          Coin.Result(Coin.Value.HEADS, AnimationHelper.Permutation.TAILS_HEADS),
+          Coin.Result(Coin.Value.HEADS, AnimationHelper.Permutation.HEADS_HEADS),
+          Coin.Result(Coin.Value.TAILS, AnimationHelper.Permutation.HEADS_TAILS)
+        )
+
+      val vm = viewModel()
+
+      backgroundScope.launch {
+        vm.postAction(DiagnosticsAction.Start)
+      }
+
+      vm.stateFlow.test {
+        awaitItem() // restored state
+        val final = awaitItem()
+        final.heads shouldBeEqualTo 3L
+        final.tails shouldBeEqualTo 2L
+        final.total shouldBeEqualTo 5L
+        // the original start time is retained so the elapsed clock includes the "paused" period
+        final.startTime shouldBeEqualTo 1000L
+        final.elapsedTime shouldBeEqualTo 1500L
+      }
+      verify(exactly = 3) { coin.flip() }
     }
 
   @Test

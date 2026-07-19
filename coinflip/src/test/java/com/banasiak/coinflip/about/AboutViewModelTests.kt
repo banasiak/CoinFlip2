@@ -79,4 +79,46 @@ class AboutViewModelTests {
         ensureAllEventsConsumed()
       }
     }
+
+  @Test
+  fun `website button`() =
+    runTest {
+      val vm = viewModel()
+      val effects = vm.effectFlow
+
+      backgroundScope.launch {
+        vm.postAction(AboutAction.Website)
+      }
+
+      effects.test {
+        awaitItem() shouldBeEqualTo AboutEffect.LaunchUrl("https://www.banasiak.com")
+        ensureAllEventsConsumed()
+      }
+    }
+
+  @Test
+  fun `back button`() =
+    runTest {
+      val vm = viewModel()
+      val effects = vm.effectFlow
+
+      backgroundScope.launch {
+        vm.postAction(AboutAction.Back)
+      }
+
+      effects.test {
+        awaitItem() shouldBeEqualTo AboutEffect.NavBack
+        ensureAllEventsConsumed()
+      }
+    }
+
+  @Test
+  fun `dynamic colors preference is reflected in initial state`() =
+    runTest {
+      every { settings.dynamicColorsEnabled } returns true
+
+      val vm = viewModel()
+
+      vm.stateFlow.value shouldBeEqualTo AboutState("versionName", 99, dynamicColors = true)
+    }
 }
