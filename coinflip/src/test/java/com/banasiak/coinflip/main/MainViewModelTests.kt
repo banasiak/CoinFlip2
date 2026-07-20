@@ -79,7 +79,7 @@ class MainViewModelTests {
     }
 
   @Test
-  fun flip_increments_stats_and_reveals_counts_after_landing() =
+  fun flip_without_animation_updates_stats_and_result_immediately() =
     runTest {
       every { settings.animationEnabled } returns false
       every { settings.textEnabled } returns true
@@ -108,6 +108,7 @@ class MainViewModelTests {
       val vm = viewModel()
       vm.postAction(MainAction.ResetStats)
 
+      verify { settings.resetStats() }
       val state = vm.stateFlow.value
       state.headsCount shouldBeEqualTo "0"
       state.tailsCount shouldBeEqualTo "0"
@@ -187,20 +188,32 @@ class MainViewModelTests {
     }
 
   @Test
-  fun taps_during_an_animated_flip_are_ignored() =
+  fun animated_flip_defers_counts_and_ignores_taps_until_landed() =
     runTest {
       val animation: DurationAnimationDrawable = mockk(relaxed = true)
       every { animation.duration(withoutLastFrames = 4) } returns 100L
       every { animationHelper.animations } returns mapOf(AnimationHelper.Permutation.HEADS_HEADS to animation)
       every { settings.animationEnabled } returns true
+      every { settings.textEnabled } returns true
       every { coin.flip() } returns Coin.Result(Coin.Value.HEADS, AnimationHelper.Permutation.HEADS_HEADS)
 
       val vm = viewModel()
       vm.postAction(MainAction.TapCoin) // suspends at the animation delay
+
+      // mid-air: the flip is recorded internally but not yet revealed
+      val midAir = vm.stateFlow.value
+      midAir.stats[Coin.Value.HEADS] shouldBeEqualTo 1L
+      midAir.headsCount shouldBeEqualTo "0"
+      midAir.resultVisible shouldBeEqualTo false
+
       vm.postAction(MainAction.TapCoin) // ignored while the first flip is mid-air
       advanceUntilIdle()
 
+      // landed: the counts and result text are revealed and the guard is released
       verify(exactly = 1) { coin.flip() }
+      val landed = vm.stateFlow.value
+      landed.headsCount shouldBeEqualTo "1"
+      landed.resultVisible shouldBeEqualTo true
 
       vm.postAction(MainAction.TapCoin) // once landed, flipping works again
       advanceUntilIdle()
