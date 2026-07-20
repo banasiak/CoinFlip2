@@ -13,7 +13,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
@@ -71,12 +71,9 @@ class DiagnosticsViewModelTests {
           formattedTime = "1.500"
         )
 
-      backgroundScope.launch {
-        vm.postAction(DiagnosticsAction.Start)
-      }
-
       states.test {
         awaitItem() shouldBeEqualTo initialState
+        vm.postAction(DiagnosticsAction.Start)
         awaitItem() shouldBeEqualTo expectedState
       }
     }
@@ -108,12 +105,9 @@ class DiagnosticsViewModelTests {
           formattedTime = "1.500"
         )
 
-      backgroundScope.launch {
-        vm.postAction(DiagnosticsAction.Start)
-      }
-
       states.test {
         awaitItem() shouldBeEqualTo initialState
+        vm.postAction(DiagnosticsAction.Start)
         awaitItem() shouldBeEqualTo expectedState
       }
     }
@@ -153,12 +147,9 @@ class DiagnosticsViewModelTests {
           formattedTime = "1.500"
         )
 
-      backgroundScope.launch {
-        vm.postAction(DiagnosticsAction.Start)
-      }
-
       states.test {
-        awaitItem()shouldBeEqualTo initialState
+        awaitItem() shouldBeEqualTo initialState
+        vm.postAction(DiagnosticsAction.Start)
         awaitItem() shouldBeEqualTo expectedState
       }
     }
@@ -176,12 +167,9 @@ class DiagnosticsViewModelTests {
       val initialState = DiagnosticsState(finished = true)
       val expectedState = DiagnosticsState(finished = true, labels = Pair("HEADS", "TAILS"))
 
-      backgroundScope.launch {
-        vm.postAction(DiagnosticsAction.Start)
-      }
-
       states.test {
         awaitItem() shouldBeEqualTo initialState
+        vm.postAction(DiagnosticsAction.Start)
         awaitItem() shouldBeEqualTo expectedState
       }
     }
@@ -192,12 +180,9 @@ class DiagnosticsViewModelTests {
       val vm = viewModel()
       val effects = vm.effectFlow
 
-      backgroundScope.launch {
+      effects.test {
         vm.postAction(DiagnosticsAction.Start)
         vm.postAction(DiagnosticsAction.Wikipedia)
-      }
-
-      effects.test {
         awaitItem() shouldBeEqualTo DiagnosticsEffect.LaunchUrl("https://w.wiki/3kSY")
       }
     }
@@ -208,20 +193,15 @@ class DiagnosticsViewModelTests {
       every { savedStateHandle.get<DiagnosticsState>("state") } returns DiagnosticsState(iterations = 1L, turboMode = true)
 
       val vm = viewModel()
-      val states = vm.stateFlow
-      val effects = vm.effectFlow
+      vm.stateFlow.value shouldBeEqualTo DiagnosticsState(iterations = 1, turboMode = true)
 
-      backgroundScope.launch {
+      // subscribe before acting so the one-shot toast can't be missed
+      vm.effectFlow.test {
         vm.postAction(DiagnosticsAction.Start)
-      }
-
-      states.test {
-        awaitItem() shouldBeEqualTo DiagnosticsState(iterations = 1, turboMode = true)
-      }
-
-      effects.test {
         awaitItem() shouldBeEqualTo DiagnosticsEffect.ShowToast(R.string.turbo_mode)
+        ensureAllEventsConsumed()
       }
+      verify { soundHelper.playSound(SoundHelper.Sound.POWERUP) }
     }
 
   @Test
@@ -232,33 +212,23 @@ class DiagnosticsViewModelTests {
       } returns DiagnosticsState(iterations = 1L, turboMode = true, turboModeShown = true)
 
       val vm = viewModel()
-      val states = vm.stateFlow
-      val effects = vm.effectFlow
 
-      backgroundScope.launch {
+      // subscribe before acting and drive the run to completion, so a spurious toast would be caught
+      vm.effectFlow.test {
         vm.postAction(DiagnosticsAction.Start)
-      }
-
-      states.test {
-        awaitItem() shouldBeEqualTo DiagnosticsState(iterations = 1L, turboMode = true, turboModeShown = true)
-      }
-
-      effects.test {
+        advanceUntilIdle()
         expectNoEvents()
       }
+      verify(exactly = 0) { soundHelper.playSound(any()) }
     }
 
   @Test
   fun back() =
     runTest {
       val vm = viewModel()
-      val effects = vm.effectFlow
 
-      backgroundScope.launch {
+      vm.effectFlow.test {
         vm.postAction(DiagnosticsAction.Back)
-      }
-
-      effects.test {
         awaitItem() shouldBeEqualTo DiagnosticsEffect.NavBack
       }
     }
@@ -271,12 +241,9 @@ class DiagnosticsViewModelTests {
 
       val vm = viewModel()
 
-      backgroundScope.launch {
-        vm.onStateChanged(mockk(), Lifecycle.Event.ON_START)
-      }
-
       vm.stateFlow.test {
         awaitItem() // initial
+        vm.onStateChanged(mockk(), Lifecycle.Event.ON_START)
         awaitItem().total shouldBeEqualTo 1L
       }
       verify(exactly = 1) { coin.flip() }
@@ -309,12 +276,9 @@ class DiagnosticsViewModelTests {
 
       val vm = viewModel()
 
-      backgroundScope.launch {
-        vm.postAction(DiagnosticsAction.Start)
-      }
-
       vm.stateFlow.test {
         awaitItem() // restored state
+        vm.postAction(DiagnosticsAction.Start)
         val final = awaitItem()
         final.heads shouldBeEqualTo 3L
         final.tails shouldBeEqualTo 2L
@@ -340,12 +304,9 @@ class DiagnosticsViewModelTests {
 
       val vm = viewModel()
 
-      backgroundScope.launch {
-        vm.postAction(DiagnosticsAction.Start)
-      }
-
       vm.stateFlow.test {
         awaitItem() // initial
+        vm.postAction(DiagnosticsAction.Start)
         val finalState = awaitItem()
         finalState.heads + finalState.tails shouldBeEqualTo finalState.iterations
         finalState.total shouldBeEqualTo finalState.iterations
@@ -360,13 +321,10 @@ class DiagnosticsViewModelTests {
 
       val vm = viewModel()
 
-      backgroundScope.launch {
-        vm.postAction(DiagnosticsAction.Start)
-        vm.postAction(DiagnosticsAction.Start)
-      }
-
       vm.stateFlow.test {
         awaitItem() // initial
+        vm.postAction(DiagnosticsAction.Start)
+        vm.postAction(DiagnosticsAction.Start)
         val finalState = awaitItem()
         finalState.heads shouldBeEqualTo 1L
         finalState.total shouldBeEqualTo 1L

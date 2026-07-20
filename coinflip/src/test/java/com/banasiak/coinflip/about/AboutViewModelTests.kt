@@ -6,7 +6,6 @@ import com.banasiak.coinflip.common.BuildInfo
 import com.banasiak.coinflip.settings.SettingsManager
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
@@ -52,13 +51,9 @@ class AboutViewModelTests {
   fun `donate button`() =
     runTest {
       val vm = viewModel()
-      val effects = vm.effectFlow
 
-      backgroundScope.launch {
+      vm.effectFlow.test {
         vm.postAction(AboutAction.Donate)
-      }
-
-      effects.test {
         awaitItem() shouldBeEqualTo AboutEffect.LaunchUrl("https://eff.org/donate")
         ensureAllEventsConsumed()
       }
@@ -68,13 +63,9 @@ class AboutViewModelTests {
   fun `rate app button`() =
     runTest {
       val vm = viewModel()
-      val effects = vm.effectFlow
 
-      backgroundScope.launch {
+      vm.effectFlow.test {
         vm.postAction(AboutAction.RateApp)
-      }
-
-      effects.test {
         awaitItem() shouldBeEqualTo AboutEffect.LaunchUrl("market://details?id=packageName")
         ensureAllEventsConsumed()
       }
@@ -84,13 +75,9 @@ class AboutViewModelTests {
   fun `website button`() =
     runTest {
       val vm = viewModel()
-      val effects = vm.effectFlow
 
-      backgroundScope.launch {
+      vm.effectFlow.test {
         vm.postAction(AboutAction.Website)
-      }
-
-      effects.test {
         awaitItem() shouldBeEqualTo AboutEffect.LaunchUrl("https://www.banasiak.com")
         ensureAllEventsConsumed()
       }
@@ -100,13 +87,9 @@ class AboutViewModelTests {
   fun `back button`() =
     runTest {
       val vm = viewModel()
-      val effects = vm.effectFlow
 
-      backgroundScope.launch {
+      vm.effectFlow.test {
         vm.postAction(AboutAction.Back)
-      }
-
-      effects.test {
         awaitItem() shouldBeEqualTo AboutEffect.NavBack
         ensureAllEventsConsumed()
       }
