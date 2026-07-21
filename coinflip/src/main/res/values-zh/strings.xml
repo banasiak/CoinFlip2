@@ -20,7 +20,6 @@
   <string name="reset_stats">重置统计数据</string>
   <string name="rng">随机数生成是一个过程，通常使用伪随机数生成器来生成一系列数字，这些数字无法比随机机会更好地合理预测。这意味着特定的结果序列将包含一些事后可检测但无法预见的模式。</string>
   <string name="seconds">%1s 秒</string>
-  <string name="settings_activity_title">硬币翻转设置</string>
   <string name="settings_header_advanced_title">高级设置</string>
   <string name="settings_header_basic_title">基本设置</string>
   <string name="settings_header_statistics_title">统计设置</string>
@@ -52,7 +51,6 @@
   <string name="settings_item_vibrate_summary">翻转硬币时振动</string>
   <string name="settings_item_vibrate_title">颤动</string>
   <string name="settings_menu_title">设置</string>
-  <string name="settings_not_set">没有设置</string>
   <string name="stats_reset_message">统计数据已重置</string>
   <string name="tails">尾巴</string>
   <string name="time">时间</string>

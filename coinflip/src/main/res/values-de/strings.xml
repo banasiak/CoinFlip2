@@ -20,7 +20,6 @@
   <string name="reset_stats">Statistiken zurücksetzen</string>
   <string name="rng">Bei der Generierung von Zufallszahlen handelt es sich um einen Prozess, bei dem – häufig mithilfe eines Pseudozufallszahlengenerators – eine Zahlenfolge erzeugt wird, die vernünftigerweise nicht besser als durch Zufall vorhergesagt werden kann. Dies bedeutet, dass die jeweilige Ergebnissequenz einige Muster enthält, die im Nachhinein erkennbar, aber nicht vorhersehbar sind.</string>
   <string name="seconds">%1s Sekunden</string>
-  <string name="settings_activity_title">Münzwurfeinstellungen</string>
   <string name="settings_header_advanced_title">Erweiterte Einstellungen</string>
   <string name="settings_header_basic_title">Grundeinstellungen</string>
   <string name="settings_header_statistics_title">Statistikeinstellungen</string>
@@ -52,7 +51,6 @@
   <string name="settings_item_vibrate_summary">Vibrieren Sie beim Münzwurf</string>
   <string name="settings_item_vibrate_title">Vibrieren</string>
   <string name="settings_menu_title">Einstellungen</string>
-  <string name="settings_not_set">Nicht eingestellt</string>
   <string name="stats_reset_message">Statistiken wurden zurückgesetzt</string>
   <string name="tails">ZAHL</string>
   <string name="time">ZEIT</string>

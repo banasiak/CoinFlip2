@@ -20,7 +20,6 @@
   <string name="reset_stats">Ripristina statistiche</string>
   <string name="rng">La generazione di numeri casuali è un processo mediante il quale, spesso tramite un generatore di numeri pseudo-casuali, viene generata una sequenza di numeri che non può essere ragionevolmente prevista meglio che tramite il caso. Ciò significa che la particolare sequenza di risultati conterrà alcuni modelli rilevabili a posteriori, ma impossibili da prevedere.</string>
   <string name="seconds">%1s secondi</string>
-  <string name="settings_activity_title">Impostazioni del lancio della moneta</string>
   <string name="settings_header_advanced_title">Impostazioni avanzate</string>
   <string name="settings_header_basic_title">Impostazioni di base</string>
   <string name="settings_header_statistics_title">Impostazioni statistiche</string>
@@ -52,7 +51,6 @@
   <string name="settings_item_vibrate_summary">Vibra al lancio della moneta</string>
   <string name="settings_item_vibrate_title">Vibrare</string>
   <string name="settings_menu_title">Impostazioni</string>
-  <string name="settings_not_set">Non impostato</string>
   <string name="stats_reset_message">Le statistiche sono state ripristinate</string>
   <string name="tails">CODE</string>
   <string name="time">TEMPO</string>

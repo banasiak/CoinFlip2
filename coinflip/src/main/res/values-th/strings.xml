@@ -20,7 +20,6 @@
   <string name="reset_stats">รีเซ็ตสถิติ</string>
   <string name="rng">การสร้างตัวเลขสุ่มเป็นกระบวนการซึ่งมักจะใช้เครื่องสร้างตัวเลขสุ่มเทียมเพื่อสร้างลำดับตัวเลขที่ไม่สามารถคาดเดาได้ดีกว่าโอกาสแบบสุ่ม ซึ่งหมายความว่าลำดับผลลัพธ์โดยเฉพาะจะมีรูปแบบบางอย่างที่สามารถตรวจจับได้ในภายหลังแต่ไม่สามารถคาดการณ์ได้</string>
   <string name="seconds">%1s วินาที</string>
-  <string name="settings_activity_title">การตั้งค่าการพลิกเหรียญ</string>
   <string name="settings_header_advanced_title">ตั้งค่าขั้นสูง</string>
   <string name="settings_header_basic_title">การตั้งค่าพื้นฐาน</string>
   <string name="settings_header_statistics_title">การตั้งค่าสถิติ</string>
@@ -52,7 +51,6 @@
   <string name="settings_item_vibrate_summary">สั่นเมื่อพลิกเหรียญ</string>
   <string name="settings_item_vibrate_title">สั่น</string>
   <string name="settings_menu_title">การตั้งค่า</string>
-  <string name="settings_not_set">ไม่ได้ตั้งค่า</string>
   <string name="stats_reset_message">สถิติถูกรีเซ็ตแล้ว</string>
   <string name="tails">หาง</string>
   <string name="time">เวลา</string>
