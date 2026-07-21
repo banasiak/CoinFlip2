@@ -104,7 +104,6 @@ class SettingsManager @Inject constructor(private val prefs: SharedPreferences) 
     QUICK_RESET("quickReset", false),
     FORCE("force", "medium"),
     SECURE_RANDOM("secureRandom", false),
-    RESET("resetStats", Unit),
     HEADS("headsCount", 0L),
     TAILS("tailsCount", 0L),
     SCHEMA("schemaVersion", 7) // the old version of the app was '6'
