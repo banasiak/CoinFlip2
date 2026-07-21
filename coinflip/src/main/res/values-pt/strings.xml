@@ -20,7 +20,6 @@
   <string name="reset_stats">Redefinir estatísticas</string>
   <string name="rng">A geração de números aleatórios é um processo pelo qual, geralmente por meio de um gerador de números pseudoaleatórios, é gerada uma sequência de números que não pode ser prevista de forma razoável senão pelo acaso. Isso significa que a sequência de resultados específica conterá alguns padrões detectáveis em retrospectiva, mas impossíveis de prever.</string>
   <string name="seconds">%1s segundos</string>
-  <string name="settings_activity_title">Configurações de lançamento de moeda</string>
   <string name="settings_header_advanced_title">Configurações avançadas</string>
   <string name="settings_header_basic_title">Configurações básicas</string>
   <string name="settings_header_statistics_title">Configurações de estatísticas</string>
@@ -52,7 +51,6 @@
   <string name="settings_item_vibrate_summary">Vibrar no lançamento da moeda</string>
   <string name="settings_item_vibrate_title">Vibrar</string>
   <string name="settings_menu_title">Configurações</string>
-  <string name="settings_not_set">Não configurado</string>
   <string name="stats_reset_message">As estatísticas foram redefinidas</string>
   <string name="tails">CAUDAS</string>
   <string name="time">TEMPO</string>

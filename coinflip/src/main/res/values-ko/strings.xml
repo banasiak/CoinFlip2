@@ -20,7 +20,6 @@
   <string name="reset_stats">통계 재설정</string>
   <string name="rng">난수 생성은 종종 의사난수 생성기를 사용하여 무작위적인 기회에 의한 것보다 더 잘 예측할 수 없는 숫자 시퀀스를 생성하는 프로세스입니다. 이는 특정 결과 시퀀스에는 후견적으로 발견할 수 있지만 예측할 수 없는 몇 가지 패턴이 포함될 수 있음을 의미합니다.</string>
   <string name="seconds">%1s초</string>
-  <string name="settings_activity_title">동전 뒤집기 설정</string>
   <string name="settings_header_advanced_title">고급 설정</string>
   <string name="settings_header_basic_title">기본 설정</string>
   <string name="settings_header_statistics_title">통계 설정</string>
@@ -52,7 +51,6 @@
   <string name="settings_item_vibrate_summary">동전 뒤집기 시 진동</string>
   <string name="settings_item_vibrate_title">떨리다</string>
   <string name="settings_menu_title">설정</string>
-  <string name="settings_not_set">설정되지 않음</string>
   <string name="stats_reset_message">통계가 재설정되었습니다</string>
   <string name="tails">꼬리</string>
   <string name="time">시간</string>

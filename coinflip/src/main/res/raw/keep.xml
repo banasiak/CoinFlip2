@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  The coin drawables are loaded dynamically by name prefix in AnimationHelper
+  (resources.getIdentifier), so lint's UnusedResources check and the R8 resource
+  shrinker cannot see those references. Keep every heads/tails asset explicitly.
+-->
+<resources
+  xmlns:tools="http://schemas.android.com/tools"
+  tools:keep="@drawable/*_heads,@drawable/*_tails"
+  />

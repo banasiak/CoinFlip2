@@ -23,7 +23,6 @@
   <string name="reset_stats">Reset Stats</string>
   <string name="rng">Random number generation is a process by which, often by means of a pseudo-random number generator, a sequence of numbers is generated that cannot be reasonably predicted better than by random chance. This means that the particular outcome sequence will contain some patterns detectable in hindsight but impossible to foresee.</string>
   <string name="seconds">%1s seconds</string>
-  <string name="settings_activity_title">Coin Flip Settings</string>
   <string name="settings_header_advanced_title">Advanced Settings</string>
   <string name="settings_header_basic_title">Basic Settings</string>
   <string name="settings_header_statistics_title">Statistics Settings</string>
@@ -55,7 +54,6 @@
   <string name="settings_item_vibrate_summary">Vibrate on coin flip</string>
   <string name="settings_item_vibrate_title">Vibrate</string>
   <string name="settings_menu_title">Settings</string>
-  <string name="settings_not_set">Not set</string>
   <string name="stats_reset_message">Statistics Have Been Reset</string>
   <string name="tails">TAILS</string>
   <string name="time">TIME</string>

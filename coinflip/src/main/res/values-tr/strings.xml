@@ -20,7 +20,6 @@
   <string name="reset_stats">İstatistikleri Sıfırla</string>
   <string name="rng">Rastgele sayı üretimi, çoğunlukla sözde rastgele sayı üreteci aracılığıyla, makul bir şekilde rastgele şanstan daha iyi tahmin edilemeyen bir sayı dizisinin üretilmesi sürecidir. Bu, belirli sonuç dizisinin, geriye dönüp bakıldığında tespit edilebilen ancak önceden tahmin edilmesi imkansız bazı kalıplar içereceği anlamına gelir.</string>
   <string name="seconds">%1s saniye</string>
-  <string name="settings_activity_title">Yazı-tura ayarları</string>
   <string name="settings_header_advanced_title">Gelişmiş Ayarlar</string>
   <string name="settings_header_basic_title">Temel Ayarlar</string>
   <string name="settings_header_statistics_title">İstatistik Ayarları</string>
@@ -52,7 +51,6 @@
   <string name="settings_item_vibrate_summary">Yazı-tura atıldığında titreşim</string>
   <string name="settings_item_vibrate_title">Titreşim</string>
   <string name="settings_menu_title">Ayarlar</string>
-  <string name="settings_not_set">Ayarlanmadı</string>
   <string name="stats_reset_message">İstatistikler Sıfırlandı</string>
   <string name="tails">KUYRUKLAR</string>
   <string name="time">ZAMAN</string>

@@ -20,7 +20,6 @@
   <string name="reset_stats">Zresetuj statystyki</string>
   <string name="rng">Generowanie liczb losowych to proces, w którym, często za pomocą generatora liczb pseudolosowych, generowany jest ciąg liczb, którego nie da się przewidzieć lepiej niż metodą losową. Oznacza to, że konkretna sekwencja wyników będzie zawierać pewne wzorce, które można wykryć z perspektywy czasu, ale których nie da się przewidzieć.</string>
   <string name="seconds">%1stowary drugiej jakości</string>
-  <string name="settings_activity_title">Ustawienia rzucania monetą</string>
   <string name="settings_header_advanced_title">Ustawienia zaawansowane</string>
   <string name="settings_header_basic_title">Ustawienia podstawowe</string>
   <string name="settings_header_statistics_title">Ustawienia statystyk</string>
@@ -52,7 +51,6 @@
   <string name="settings_item_vibrate_summary">Wibracja przy rzucie monetą</string>
   <string name="settings_item_vibrate_title">Wibrować</string>
   <string name="settings_menu_title">Ustawienia</string>
-  <string name="settings_not_set">Nie ustawiono</string>
   <string name="stats_reset_message">Statystyki zostały zresetowane</string>
   <string name="tails">OGONY</string>
   <string name="time">CZAS</string>
