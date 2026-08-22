@@ -1,16 +1,20 @@
 package com.banasiak.coinflip.main
 
+import android.content.res.Configuration
 import android.widget.ImageView
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -21,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,7 +37,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
@@ -81,9 +88,11 @@ fun MainView(
 ) {
   AppTheme(dynamicColor = state.dynamicColors) {
     Scaffold(
+      // the display cutout sits alongside the content in landscape, not above it
+      contentWindowInsets = WindowInsets.safeDrawing,
       bottomBar = { MainNavigationBar(postAction) }
     ) { contentPadding ->
-      Column(
+      BoxWithConstraints(
         modifier =
           Modifier
             .padding(contentPadding)
@@ -91,21 +100,49 @@ fun MainView(
             .clickable(
               interactionSource = remember { MutableInteractionSource() },
               indication = null
-            ) { postAction(MainAction.TapCoin) },
-        horizontalAlignment = Alignment.CenterHorizontally
+            ) { postAction(MainAction.TapCoin) }
       ) {
-        CoinImage(state, flipToken)
-        ResultText(state)
-        InstructionsText(state)
-        if (state.statsVisible) {
-          StatsRow(state)
-        }
-        if (state.resetVisible) {
-          Button(
-            modifier = Modifier.padding(vertical = Dimen.medium),
-            onClick = { postAction(MainAction.ResetStats) }
+        // the coin is emitted from two different call sites below; movableContent keeps the same
+        // ImageView (and any in-flight animation) alive when the device rotates between them
+        val coin =
+          remember {
+            movableContentOf<MainState, Int, Dp, Dp> { coinState, token, size, coinPadding ->
+              CoinImage(coinState, token, size, coinPadding)
+            }
+          }
+
+        val landscape = maxWidth > maxHeight
+        // portrait sizes the coin off the width; landscape sizes it off the (much scarcer) height,
+        // capped at half the width so the text column still gets its share of a squarish window
+        val coinSize = if (landscape) maxHeight.coerceAtMost(maxWidth / 2) else maxWidth
+
+        if (landscape) {
+          // the coin keeps its half of the window and the text column takes the other
+          Row(
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically
           ) {
-            Text(stringResource(R.string.reset_stats))
+            Box(
+              modifier = Modifier.weight(1f),
+              contentAlignment = Alignment.Center
+            ) {
+              coin(state, flipToken, coinSize, Dimen.large)
+            }
+            Column(
+              modifier = Modifier.weight(1f),
+              horizontalAlignment = Alignment.CenterHorizontally,
+              verticalArrangement = Arrangement.Center
+            ) {
+              CoinDetails(state, postAction, landscape = true)
+            }
+          }
+        } else {
+          Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+          ) {
+            coin(state, flipToken, coinSize, Dimen.xlarge)
+            CoinDetails(state, postAction, landscape = false)
           }
         }
       }
@@ -114,14 +151,28 @@ fun MainView(
 }
 
 @Composable
-private fun CoinImage(state: MainState, flipToken: Int) {
+private fun CoinDetails(state: MainState, postAction: (MainAction) -> Unit, landscape: Boolean) {
+  ResultText(state, landscape)
+  InstructionsText(state, landscape)
+  if (state.statsVisible) {
+    StatsRow(state, landscape)
+  }
+  if (state.resetVisible) {
+    Button(
+      modifier = Modifier.padding(vertical = if (landscape) Dimen.small else Dimen.medium),
+      onClick = { postAction(MainAction.ResetStats) }
+    ) {
+      Text(stringResource(R.string.reset_stats))
+    }
+  }
+}
+
+@Composable
+private fun CoinImage(state: MainState, flipToken: Int, size: Dp, coinPadding: Dp) {
   val imageViewRef = remember { mutableStateOf<ImageView?>(null) }
 
-  BoxWithConstraints(
-    modifier =
-      Modifier
-        .fillMaxWidth()
-        .aspectRatio(1f),
+  Box(
+    modifier = Modifier.size(size),
     contentAlignment = Alignment.Center
   ) {
     when (state.coinImageType) {
@@ -130,7 +181,7 @@ private fun CoinImage(state: MainState, flipToken: Int) {
           text = "?",
           color = MaterialTheme.colorScheme.primary,
           fontWeight = FontWeight.Bold,
-          fontSize = (maxWidth.value * 0.7f).sp
+          fontSize = (size.value * 0.7f).sp
         )
       }
       else -> {
@@ -138,7 +189,7 @@ private fun CoinImage(state: MainState, flipToken: Int) {
           modifier =
             Modifier
               .fillMaxSize()
-              .padding(Dimen.xlarge),
+              .padding(coinPadding),
           factory = { context ->
             ImageView(context).apply {
               scaleType = ImageView.ScaleType.CENTER_INSIDE
@@ -176,13 +227,14 @@ private fun CoinImage(state: MainState, flipToken: Int) {
 }
 
 @Composable
-private fun ResultText(state: MainState) {
+private fun ResultText(state: MainState, landscape: Boolean) {
   val resultColor =
     when (state.result.value) {
       Coin.Value.HEADS -> MaterialTheme.colorScheme.secondary
       Coin.Value.TAILS -> MaterialTheme.colorScheme.tertiary
       else -> MaterialTheme.colorScheme.primary
     }
+  val fontSize = if (landscape) 56.sp else 72.sp
   Text(
     modifier =
       Modifier
@@ -192,18 +244,21 @@ private fun ResultText(state: MainState) {
     text = state.result.customLabel ?: stringResource(state.result.value.string),
     color = resultColor,
     fontWeight = FontWeight.Bold,
-    fontSize = 72.sp,
+    fontSize = fontSize,
+    // UNKNOWN resolves to an empty string, which measures shorter than a word does; pinning the
+    // line height keeps everything below from shifting when the first result lands
+    lineHeight = fontSize * 1.25f,
     textAlign = TextAlign.Center
   )
 }
 
 @Composable
-private fun InstructionsText(state: MainState) {
+private fun InstructionsText(state: MainState, landscape: Boolean) {
   Text(
     modifier =
       Modifier
         .fillMaxWidth()
-        .padding(top = Dimen.medium),
+        .padding(top = if (landscape) Dimen.small else Dimen.medium),
     text = stringResource(state.instructionsText),
     style = MaterialTheme.typography.titleMedium,
     textAlign = TextAlign.Center
@@ -211,14 +266,14 @@ private fun InstructionsText(state: MainState) {
 }
 
 @Composable
-private fun StatsRow(state: MainState) {
+private fun StatsRow(state: MainState, landscape: Boolean) {
   val headsLabel = state.labels.first ?: stringResource(R.string.heads)
   val tailsLabel = state.labels.second ?: stringResource(R.string.tails)
   Row(
     modifier =
       Modifier
         .fillMaxWidth()
-        .padding(top = Dimen.large)
+        .padding(top = if (landscape) Dimen.medium else Dimen.large)
   ) {
     Row(
       modifier = Modifier.weight(1f),
@@ -295,17 +350,25 @@ private fun MainNavigationBar(postAction: (MainAction) -> Unit) {
   }
 }
 
+private fun previewState() =
+  MainState(
+    coinImageType = CoinImageType.PLACEHOLDER,
+    result = Coin.Result(Coin.Value.HEADS, AnimationHelper.Permutation.HEADS_HEADS),
+    resultVisible = true,
+    statsVisible = true,
+    headsCount = "51",
+    tailsCount = "49"
+  )
+
 @PreviewLightDark
 @Composable
 fun MainViewPreview() {
-  val state =
-    MainState(
-      coinImageType = CoinImageType.PLACEHOLDER,
-      result = Coin.Result(Coin.Value.HEADS, AnimationHelper.Permutation.HEADS_HEADS),
-      resultVisible = true,
-      statsVisible = true,
-      headsCount = "51",
-      tailsCount = "49"
-    )
-  MainView(state)
+  MainView(previewState())
+}
+
+@Preview(name = "landscape", widthDp = 892, heightDp = 411)
+@Preview(name = "landscape dark", widthDp = 892, heightDp = 411, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun MainViewLandscapePreview() {
+  MainView(previewState())
 }
