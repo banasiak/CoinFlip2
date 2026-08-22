@@ -19,16 +19,10 @@
     tools:targetApi="36"
     >
 
-    <property
-      android:name="android.window.PROPERTY_COMPAT_ALLOW_RESTRICTED_RESIZABILITY"
-      android:value="true"
-      />
-
     <activity
       android:name=".AppActivity"
+      android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
       android:exported="true"
-      android:screenOrientation="userPortrait"
-      tools:ignore="LockedOrientationActivity"
       >
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
