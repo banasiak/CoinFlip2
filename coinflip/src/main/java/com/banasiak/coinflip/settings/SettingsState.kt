@@ -14,10 +14,11 @@ data class SettingsState(
   val quickReset: Boolean = Settings.QUICK_RESET.default as Boolean,
   val customHeads: String? = Settings.CUSTOM_HEADS_TEXT.default as String?,
   val customTails: String? = Settings.CUSTOM_TAILS_TEXT.default as String?,
-  val diagnostics: String = Settings.DIAGNOSTICS.default as String,
   val dynamic: Boolean = Settings.DYNAMIC.default as Boolean,
   val secureRandom: Boolean = Settings.SECURE_RANDOM.default as Boolean,
-  val force: String = Settings.FORCE.default as String
+  val force: String = Settings.FORCE.default as String,
+  // how many flips are on record, so a destructive reset can say what there is to lose
+  val flipCount: Long = 0
 )
 
 sealed class SettingsAction {
@@ -31,7 +32,6 @@ sealed class SettingsAction {
   data class SetQuickReset(val value: Boolean) : SettingsAction()
   data class SetCustomHeads(val value: String) : SettingsAction()
   data class SetCustomTails(val value: String) : SettingsAction()
-  data class SetDiagnostics(val value: String) : SettingsAction()
   data class SetDynamic(val value: Boolean) : SettingsAction()
   data class SetSecureRandom(val value: Boolean) : SettingsAction()
   data class SetForce(val value: String) : SettingsAction()

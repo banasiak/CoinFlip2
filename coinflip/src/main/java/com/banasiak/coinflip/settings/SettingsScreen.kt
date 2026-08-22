@@ -1,31 +1,40 @@
 package com.banasiak.coinflip.settings
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.selection.toggleable
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -35,28 +44,34 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalResources
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.extensions.formatNumber
+import com.banasiak.coinflip.ui.TextInputDialog
+import com.banasiak.coinflip.ui.rememberEditableValue
 import com.banasiak.coinflip.ui.theme.AppTheme
 import com.banasiak.coinflip.ui.theme.Dimen
+import com.banasiak.coinflip.ui.theme.Type
 import kotlinx.coroutines.launch
 
-private enum class OpenDialog { NONE, COIN, FORCE, HEADS, TAILS, DIAGNOSTICS }
+private enum class OpenDialog { NONE, COIN, CUSTOM_TEXT }
 
 @Composable
 fun SettingsScreen(
   viewModel: SettingsViewModel,
-  onEnableRestartOnBack: () -> Unit = { }
+  onEnableRestartOnBack: () -> Unit = { },
+  onNavigateBack: () -> Unit = { }
 ) {
   val state by viewModel.stateFlow.collectAsStateWithLifecycle()
   val snackbarHostState = remember { SnackbarHostState() }
@@ -89,20 +104,22 @@ fun SettingsScreen(
     }
   }
 
-  SettingsView(state, viewModel::postAction, snackbarHostState)
+  SettingsView(state, viewModel::postAction, snackbarHostState, onNavigateBack)
 }
 
 @Composable
 fun SettingsView(
   state: SettingsState,
   postAction: (SettingsAction) -> Unit = { },
-  snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
+  snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+  onNavigateBack: () -> Unit = { }
 ) {
   // saveable so an open dialog survives configuration change and process death
   var openDialog by rememberSaveable { mutableStateOf(OpenDialog.NONE) }
 
   val coinEntries = stringArrayResource(R.array.coins)
   val coinValues = stringArrayResource(R.array.coins_values)
+  val coinGroups = stringArrayResource(R.array.coins_groups)
   val forceEntries = stringArrayResource(R.array.force)
   val forceValues = stringArrayResource(R.array.force_values)
   val headsDefault = stringResource(R.string.heads)
@@ -110,6 +127,9 @@ fun SettingsView(
 
   AppTheme(dynamicColor = state.dynamic) {
     Scaffold(
+      // the display cutout sits alongside the content in landscape, not above it
+      contentWindowInsets = WindowInsets.safeDrawing,
+      topBar = { SettingsTopBar(onNavigateBack) },
       snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { contentPadding ->
       Column(
@@ -117,26 +137,42 @@ fun SettingsView(
           Modifier
             .padding(contentPadding)
             .fillMaxSize()
+            // scroll the full width, but center the rows in a readable column so a switch never
+            // ends up a screen away from the label it belongs to
             .verticalScroll(rememberScrollState())
+            .wrapContentWidth()
+            .widthIn(max = Dimen.maxContent)
       ) {
-        // ----- Basic -----
-        CategoryHeader(stringResource(R.string.settings_header_basic_title))
+        // ----- Coin -----
+        CategoryHeader(stringResource(R.string.settings_header_coin_title))
         PreferenceRow(
           title = stringResource(R.string.settings_item_coin_title),
           summary = coinEntries.getOrNull(coinValues.indexOf(state.coin)),
           onClick = { openDialog = OpenDialog.COIN }
         )
         SwitchPreference(
+          title = stringResource(R.string.settings_item_text_title),
+          summary = stringResource(R.string.settings_item_text_summary),
+          checked = state.text,
+          onCheckedChange = { postAction(SettingsAction.SetText(it)) }
+        )
+        // one row for both labels: naming the two faces is a single decision, and they are drawn
+        // only by the result text, so this sits with the switch that turns it on
+        PreferenceRow(
+          title = stringResource(R.string.settings_item_custom_text_title),
+          summary = "${state.customHeads ?: headsDefault} / ${state.customTails ?: tailsDefault}",
+          // dependency: text
+          enabled = state.text,
+          onClick = { openDialog = OpenDialog.CUSTOM_TEXT }
+        )
+
+        // ----- Flip: the switches run together, with the one non-switch control after them -----
+        CategoryHeader(stringResource(R.string.settings_header_flip_title))
+        SwitchPreference(
           title = stringResource(R.string.settings_item_animation_title),
           summary = stringResource(R.string.settings_item_animation_summary),
           checked = state.animate,
           onCheckedChange = { postAction(SettingsAction.SetAnimate(it)) }
-        )
-        SwitchPreference(
-          title = stringResource(R.string.settings_item_shake_title),
-          summary = stringResource(R.string.settings_item_shake_summary),
-          checked = state.shake,
-          onCheckedChange = { postAction(SettingsAction.SetShake(it)) }
         )
         SwitchPreference(
           title = stringResource(R.string.settings_item_sound_title),
@@ -145,16 +181,27 @@ fun SettingsView(
           onCheckedChange = { postAction(SettingsAction.SetSound(it)) }
         )
         SwitchPreference(
-          title = stringResource(R.string.settings_item_text_title),
-          summary = stringResource(R.string.settings_item_text_summary),
-          checked = state.text,
-          onCheckedChange = { postAction(SettingsAction.SetText(it)) }
-        )
-        SwitchPreference(
           title = stringResource(R.string.settings_item_vibrate_title),
           summary = stringResource(R.string.settings_item_vibrate_summary),
           checked = state.vibrate,
           onCheckedChange = { postAction(SettingsAction.SetVibrate(it)) }
+        )
+        SwitchPreference(
+          title = stringResource(R.string.settings_item_shake_title),
+          summary = stringResource(R.string.settings_item_shake_summary),
+          checked = state.shake,
+          onCheckedChange = { postAction(SettingsAction.SetShake(it)) }
+        )
+        // three choices are cheaper to show inline than to bury behind a dialog
+        SegmentedPreference(
+          title = stringResource(R.string.settings_item_force_title),
+          summary = stringResource(R.string.settings_item_force_summary),
+          entries = forceEntries,
+          values = forceValues,
+          selectedValue = state.force,
+          // dependency: shake
+          enabled = state.shake,
+          onSelect = { postAction(SettingsAction.SetForce(it)) }
         )
 
         // ----- Statistics -----
@@ -173,107 +220,95 @@ fun SettingsView(
           enabled = state.stats,
           onCheckedChange = { postAction(SettingsAction.SetQuickReset(it)) }
         )
-        PreferenceRow(
-          title = stringResource(R.string.settings_item_reset_stats_title),
-          summary = null,
+        Text(
+          text = stringResource(R.string.settings_item_reset_stats_summary, state.flipCount.formatNumber()),
+          modifier = Modifier.padding(start = Dimen.medium, end = Dimen.medium, top = Dimen.small),
+          style = MaterialTheme.typography.bodyMedium,
+          color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        // an action, not a preference -- it changes data instead of recording a choice
+        DestructiveButton(
+          title = stringResource(R.string.reset_stats),
+          enabled = state.flipCount > 0L,
           onClick = { postAction(SettingsAction.ResetStats) }
         )
 
-        // ----- Advanced -----
-        CategoryHeader(stringResource(R.string.settings_header_advanced_title))
-        PreferenceRow(
-          title = stringResource(R.string.settings_item_custom_heads_title),
-          summary = state.customHeads ?: headsDefault,
-          onClick = { openDialog = OpenDialog.HEADS }
-        )
-        PreferenceRow(
-          title = stringResource(R.string.settings_item_custom_tails_title),
-          summary = state.customTails ?: tailsDefault,
-          onClick = { openDialog = OpenDialog.TAILS }
-        )
-        PreferenceRow(
-          title = stringResource(R.string.settings_item_diagnostics_title),
-          summary = "${state.diagnostics.formatNumber()} ${stringResource(R.string.settings_item_diagnostics_summary)}",
-          onClick = { openDialog = OpenDialog.DIAGNOSTICS }
-        )
+        // ----- Appearance -----
+        CategoryHeader(stringResource(R.string.settings_header_appearance_title))
         SwitchPreference(
           title = stringResource(R.string.settings_item_dynamic_colors_title),
           summary = stringResource(R.string.settings_item_dynamic_colors_summary),
           checked = state.dynamic,
           onCheckedChange = { postAction(SettingsAction.SetDynamic(it)) }
         )
+
+        // ----- Advanced -----
+        CategoryHeader(stringResource(R.string.settings_header_advanced_title))
         SwitchPreference(
           title = stringResource(R.string.settings_item_secure_random_title),
           summary = stringResource(R.string.settings_item_secure_random_summary),
           checked = state.secureRandom,
           onCheckedChange = { postAction(SettingsAction.SetSecureRandom(it)) }
         )
-        PreferenceRow(
-          title = stringResource(R.string.settings_item_force_title),
-          summary = stringResource(R.string.settings_item_force_summary),
-          // dependency: shake
-          enabled = state.shake,
-          onClick = { openDialog = OpenDialog.FORCE }
-        )
+        Spacer(Modifier.height(Dimen.large))
       }
     }
-  }
 
-  when (openDialog) {
-    OpenDialog.COIN ->
-      SingleChoiceDialog(
-        title = stringResource(R.string.settings_item_coin_title),
-        entries = coinEntries,
-        values = coinValues,
-        selectedValue = state.coin,
-        onSelect = { postAction(SettingsAction.SetCoin(it)) },
-        onDismiss = { openDialog = OpenDialog.NONE }
-      )
-    OpenDialog.FORCE ->
-      SingleChoiceDialog(
-        title = stringResource(R.string.settings_item_force_title),
-        entries = forceEntries,
-        values = forceValues,
-        selectedValue = state.force,
-        onSelect = { postAction(SettingsAction.SetForce(it)) },
-        onDismiss = { openDialog = OpenDialog.NONE }
-      )
-    OpenDialog.HEADS ->
-      TextInputDialog(
-        title = stringResource(R.string.settings_item_custom_heads_title),
-        initialValue = state.customHeads ?: headsDefault,
-        onConfirm = { value -> postAction(SettingsAction.SetCustomHeads(value.ifBlank { headsDefault })) },
-        onDismiss = { openDialog = OpenDialog.NONE }
-      )
-    OpenDialog.TAILS ->
-      TextInputDialog(
-        title = stringResource(R.string.settings_item_custom_tails_title),
-        initialValue = state.customTails ?: tailsDefault,
-        onConfirm = { value -> postAction(SettingsAction.SetCustomTails(value.ifBlank { tailsDefault })) },
-        onDismiss = { openDialog = OpenDialog.NONE }
-      )
-    OpenDialog.DIAGNOSTICS ->
-      TextInputDialog(
-        title = stringResource(R.string.settings_item_diagnostics_title),
-        message = stringResource(R.string.settings_item_diagnostics_dialog),
-        initialValue = state.diagnostics,
-        numeric = true,
-        onConfirm = { value -> postAction(SettingsAction.SetDiagnostics(value)) },
-        onDismiss = { openDialog = OpenDialog.NONE }
-      )
-    OpenDialog.NONE -> { }
+    // inside AppTheme: a dialog is composed into its own window, so it only inherits the app's
+    // colors if it is emitted from within the theme
+    when (openDialog) {
+      OpenDialog.COIN ->
+        CoinPicker(
+          entries = coinEntries,
+          values = coinValues,
+          groups = coinGroups,
+          selectedValue = state.coin,
+          onSelect = { postAction(SettingsAction.SetCoin(it)) },
+          onDismiss = { openDialog = OpenDialog.NONE }
+        )
+      OpenDialog.CUSTOM_TEXT ->
+        CustomTextDialog(
+          initialHeads = state.customHeads ?: headsDefault,
+          initialTails = state.customTails ?: tailsDefault,
+          onConfirm = { heads, tails ->
+            postAction(SettingsAction.SetCustomHeads(heads.ifBlank { headsDefault }))
+            postAction(SettingsAction.SetCustomTails(tails.ifBlank { tailsDefault }))
+          },
+          onDismiss = { openDialog = OpenDialog.NONE }
+        )
+      OpenDialog.NONE -> { }
+    }
   }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CategoryHeader(title: String) {
+private fun SettingsTopBar(onNavigateBack: () -> Unit) {
+  TopAppBar(
+    title = { Text(stringResource(R.string.settings_menu_title)) },
+    navigationIcon = {
+      IconButton(onClick = onNavigateBack) {
+        Icon(
+          painter = painterResource(R.drawable.arrow_back),
+          contentDescription = stringResource(R.string.navigate_back)
+        )
+      }
+    }
+  )
+}
+
+/** Shared with the coin picker so section headers match wherever they appear. */
+@Composable
+internal fun CategoryHeader(title: String) {
   Text(
     text = title,
     modifier =
       Modifier
         .fillMaxWidth()
-        .padding(start = Dimen.medium, end = Dimen.medium, top = Dimen.medium, bottom = Dimen.small),
-    style = MaterialTheme.typography.titleSmall,
+        // weighted towards the top so the header binds to the rows it introduces rather than
+        // floating midway between two sections
+        .padding(start = Dimen.medium, end = Dimen.medium, top = Dimen.large, bottom = Dimen.small),
+    style = Type.settingsHeader,
     color = MaterialTheme.colorScheme.primary
   )
 }
@@ -313,11 +348,73 @@ private fun PreferenceRow(
     modifier =
       Modifier
         .fillMaxWidth()
-        .clickable(enabled = enabled) { onClick() }
+        .clickable(enabled = enabled, role = Role.Button) { onClick() }
         .padding(horizontal = Dimen.medium, vertical = Dimen.medium),
     verticalAlignment = Alignment.CenterVertically
   ) {
     TitleAndSummary(Modifier.weight(1f), title, summary, enabled)
+  }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SegmentedPreference(
+  title: String,
+  summary: String?,
+  entries: Array<String>,
+  values: Array<String>,
+  selectedValue: String,
+  enabled: Boolean,
+  onSelect: (String) -> Unit
+) {
+  Column(
+    modifier =
+      Modifier
+        .fillMaxWidth()
+        .padding(horizontal = Dimen.medium, vertical = Dimen.medium)
+  ) {
+    TitleAndSummary(Modifier.fillMaxWidth(), title, summary, enabled)
+    SingleChoiceSegmentedButtonRow(
+      modifier =
+        Modifier
+          .fillMaxWidth()
+          .padding(top = Dimen.small)
+    ) {
+      values.forEachIndexed { index, value ->
+        SegmentedButton(
+          selected = value == selectedValue,
+          enabled = enabled,
+          onClick = { onSelect(value) },
+          shape = SegmentedButtonDefaults.itemShape(index = index, count = values.size),
+          // the Material default paints the active segment with secondaryContainer, which in this
+          // theme is the deep red used for HEADS -- follow the switches on primary instead
+          colors =
+            SegmentedButtonDefaults.colors(
+              activeContainerColor = MaterialTheme.colorScheme.primaryContainer,
+              activeContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+              activeBorderColor = MaterialTheme.colorScheme.outline
+            )
+        ) {
+          Text(entries.getOrNull(index) ?: value)
+        }
+      }
+    }
+  }
+}
+
+@Composable
+private fun DestructiveButton(title: String, enabled: Boolean, onClick: () -> Unit) {
+  val border =
+    if (enabled) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
+  OutlinedButton(
+    // sized to its label rather than the page -- a full-width red pill outshouts every row above it
+    modifier = Modifier.padding(horizontal = Dimen.medium, vertical = Dimen.small),
+    onClick = onClick,
+    enabled = enabled,
+    colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error),
+    border = BorderStroke(1.dp, border)
+  ) {
+    Text(title)
   }
 }
 
@@ -338,95 +435,34 @@ private fun TitleAndSummary(modifier: Modifier, title: String, summary: String?,
 }
 
 @Composable
-private fun SingleChoiceDialog(
-  title: String,
-  entries: Array<String>,
-  values: Array<String>,
-  selectedValue: String,
-  onSelect: (String) -> Unit,
+private fun CustomTextDialog(
+  initialHeads: String,
+  initialTails: String,
+  onConfirm: (String, String) -> Unit,
   onDismiss: () -> Unit
 ) {
-  AlertDialog(
-    onDismissRequest = onDismiss,
-    title = { Text(title) },
-    text = {
-      LazyColumn(modifier = Modifier.selectableGroup()) {
-        items(entries.size) { index ->
-          val value = values[index]
-          Row(
-            modifier =
-              Modifier
-                .fillMaxWidth()
-                .selectable(
-                  selected = value == selectedValue,
-                  role = Role.RadioButton,
-                  onClick = {
-                    onSelect(value)
-                    onDismiss()
-                  }
-                )
-                .padding(vertical = Dimen.small),
-            verticalAlignment = Alignment.CenterVertically
-          ) {
-            RadioButton(selected = value == selectedValue, onClick = null)
-            Text(
-              text = entries[index],
-              modifier = Modifier.padding(start = Dimen.medium),
-              style = MaterialTheme.typography.bodyLarge
-            )
-          }
-        }
-      }
-    },
-    confirmButton = { },
-    dismissButton = {
-      TextButton(onClick = onDismiss) { Text(stringResource(android.R.string.cancel)) }
-    }
-  )
-}
+  var heads by rememberEditableValue(initialHeads, selectAll = true)
+  var tails by rememberEditableValue(initialTails)
 
-@Composable
-private fun TextInputDialog(
-  title: String,
-  initialValue: String,
-  message: String? = null,
-  numeric: Boolean = false,
-  onConfirm: (String) -> Unit,
-  onDismiss: () -> Unit
-) {
-  var value by rememberSaveable { mutableStateOf(initialValue) }
-  AlertDialog(
-    onDismissRequest = onDismiss,
-    title = { Text(title) },
-    text = {
-      Column {
-        if (!message.isNullOrEmpty()) {
-          Text(text = message, modifier = Modifier.padding(bottom = Dimen.small))
-        }
-        OutlinedTextField(
-          value = value,
-          // the legacy EditTextPreference enforced TYPE_CLASS_NUMBER, so keep numeric input digits-only
-          onValueChange = { value = if (numeric) it.filter { char -> char.isDigit() } else it },
-          singleLine = true,
-          keyboardOptions =
-            KeyboardOptions(keyboardType = if (numeric) KeyboardType.Number else KeyboardType.Text)
-        )
-      }
-    },
-    confirmButton = {
-      TextButton(
-        onClick = {
-          onConfirm(value)
-          onDismiss()
-        }
-      ) {
-        Text(stringResource(android.R.string.ok))
-      }
-    },
-    dismissButton = {
-      TextButton(onClick = onDismiss) { Text(stringResource(android.R.string.cancel)) }
-    }
-  )
+  TextInputDialog(
+    title = stringResource(R.string.settings_item_custom_text_title),
+    onConfirm = { onConfirm(heads.text, tails.text) },
+    onDismiss = onDismiss
+  ) { focusRequester ->
+    OutlinedTextField(
+      value = heads,
+      modifier = Modifier.focusRequester(focusRequester),
+      onValueChange = { heads = it },
+      label = { Text(stringResource(R.string.heads)) },
+      singleLine = true
+    )
+    OutlinedTextField(
+      value = tails,
+      onValueChange = { tails = it },
+      label = { Text(stringResource(R.string.tails)) },
+      singleLine = true
+    )
+  }
 }
 
 @PreviewLightDark

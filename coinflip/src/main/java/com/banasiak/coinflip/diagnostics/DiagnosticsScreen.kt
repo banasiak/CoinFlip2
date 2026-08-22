@@ -9,20 +9,32 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.banasiak.coinflip.R
+import com.banasiak.coinflip.extensions.formatNumber
+import com.banasiak.coinflip.ui.TextInputDialog
+import com.banasiak.coinflip.ui.digitsOnly
+import com.banasiak.coinflip.ui.rememberEditableValue
 import com.banasiak.coinflip.ui.theme.AppTheme
 import com.banasiak.coinflip.ui.theme.Dimen
 import com.banasiak.coinflip.ui.theme.Type
@@ -35,6 +47,9 @@ fun DiagnosticsScreen(viewModel: DiagnosticsViewModel) {
 
 @Composable
 fun DiagnosticsView(state: DiagnosticsState, postAction: (DiagnosticsAction) -> Unit = { }) {
+  // saveable so an open dialog survives configuration change and process death
+  var editingIterations by rememberSaveable { mutableStateOf(false) }
+
   AppTheme(dynamicColor = state.dynamicColors) {
     Surface(color = Color.Transparent, contentColor = MaterialTheme.colorScheme.onSurface) {
       Column(
@@ -51,7 +66,21 @@ fun DiagnosticsView(state: DiagnosticsState, postAction: (DiagnosticsAction) -> 
           style = MaterialTheme.typography.titleLarge
         )
 
-        Spacer(modifier = Modifier.height(Dimen.large))
+        // the iteration count is this screen's only input, so it belongs here rather than as a
+        // remote control buried in Settings; changing it reruns the test
+        Text(
+          modifier =
+            Modifier
+              .clickable(role = Role.Button, onClick = { editingIterations = true })
+              // padding inside the click area: a bare Text gets no minimum touch target the way a
+              // Material component does, and the line box alone is barely 20dp
+              .padding(vertical = Dimen.medium),
+          text = "${state.iterations.formatNumber()} ${stringResource(R.string.diagnostics_iterations_summary)}",
+          style = MaterialTheme.typography.bodyMedium,
+          color = MaterialTheme.colorScheme.primary
+        )
+
+        Spacer(modifier = Modifier.height(Dimen.medium))
 
         val headsColor = MaterialTheme.colorScheme.secondary
         val tailsColor = MaterialTheme.colorScheme.tertiary
@@ -116,6 +145,39 @@ fun DiagnosticsView(state: DiagnosticsState, postAction: (DiagnosticsAction) -> 
         )
       }
     }
+
+    if (editingIterations) {
+      IterationsDialog(
+        initialValue = state.iterations,
+        onConfirm = { postAction(DiagnosticsAction.SetIterations(it)) },
+        onDismiss = { editingIterations = false }
+      )
+    }
+  }
+}
+
+@Composable
+private fun IterationsDialog(initialValue: Long, onConfirm: (Long) -> Unit, onDismiss: () -> Unit) {
+  var value by rememberEditableValue(initialValue.toString(), selectAll = true)
+  val iterations = value.text.toLongOrNull() ?: 0L
+
+  TextInputDialog(
+    title = stringResource(R.string.diagnostics_iterations_dialog),
+    confirmEnabled = iterations in 1L..MAX_ITERATIONS,
+    onConfirm = { onConfirm(iterations) },
+    onDismiss = onDismiss
+  ) { focusRequester ->
+    OutlinedTextField(
+      value = value,
+      modifier = Modifier.focusRequester(focusRequester),
+      onValueChange = { value = digitsOnly(it) },
+      singleLine = true,
+      // states the bound, so a value the decoder cannot take reads as out of range rather than
+      // as an OK button that mysteriously refuses to light up
+      supportingText = { Text(stringResource(R.string.diagnostics_iterations_range, MAX_ITERATIONS.formatNumber())) },
+      isError = value.text.isNotEmpty() && iterations !in 1L..MAX_ITERATIONS,
+      keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+    )
   }
 }
 

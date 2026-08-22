@@ -18,6 +18,7 @@ import com.banasiak.coinflip.util.SoundHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -66,6 +67,7 @@ class DiagnosticsViewModel @Inject constructor(
   fun postAction(action: DiagnosticsAction) {
     when (action) {
       DiagnosticsAction.Back -> _effectFlow.tryEmit(DiagnosticsEffect.NavBack)
+      is DiagnosticsAction.SetIterations -> onSetIterations(action.value)
       DiagnosticsAction.Start -> {
         if (diagnosticsJob?.isActive != true) {
           diagnosticsJob =
@@ -79,6 +81,30 @@ class DiagnosticsViewModel @Inject constructor(
 
       DiagnosticsAction.Wikipedia -> _effectFlow.tryEmit(DiagnosticsEffect.LaunchUrl(WIKIPEDIA_URL))
     }
+  }
+
+  /** Persists a new iteration count and restarts the test with it. */
+  private fun onSetIterations(value: Long) {
+    // the dialog disables its confirm button outside this range, so this is only belt and braces
+    if (value !in 1L..MAX_ITERATIONS) return
+    settings.update(SettingsManager.Settings.DIAGNOSTICS, value.toString())
+
+    val running = diagnosticsJob
+    diagnosticsJob =
+      viewModelScope.launch {
+        // the loop publishes state from `dispatcher`, so let it stop before resetting -- otherwise
+        // its final batch lands on top of the run we are about to start
+        running?.cancelAndJoin()
+        state =
+          DiagnosticsState(
+            iterations = value,
+            turboMode = value >= TURBO_MODE_THRESHOLD,
+            dynamicColors = state.dynamicColors
+          )
+        _stateFlow.emit(state)
+        showTurboModeNotice()
+        runDiagnostics()
+      }
   }
 
   override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {

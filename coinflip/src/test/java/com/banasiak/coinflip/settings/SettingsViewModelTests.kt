@@ -34,10 +34,10 @@ class SettingsViewModelTests {
       every { settings.showQuickReset } returns true
       every { settings.customHeadsText } returns "CROWN"
       every { settings.customTailsText } returns "SHIP"
-      every { settings.diagnosticsIterations } returns 5000L
       every { settings.dynamicColorsEnabled } returns true
       every { settings.secureRandom } returns true
       every { settings.forceValue } returns "high"
+      every { settings.loadStats() } returns mapOf(Coin.Value.HEADS to 7L, Coin.Value.TAILS to 5L)
 
       val vm = viewModel()
 
@@ -53,10 +53,10 @@ class SettingsViewModelTests {
           quickReset = true,
           customHeads = "CROWN",
           customTails = "SHIP",
-          diagnostics = "5000",
           dynamic = true,
           secureRandom = true,
-          force = "high"
+          force = "high",
+          flipCount = 12
         )
     }
 
@@ -181,53 +181,6 @@ class SettingsViewModelTests {
     }
 
   @Test
-  fun valid_diagnostics_value_is_persisted() =
-    runTest {
-      val vm = viewModel()
-      vm.postAction(SettingsAction.SetDiagnostics("500"))
-
-      verify { settings.update(Settings.DIAGNOSTICS, "500") }
-      vm.stateFlow.value.diagnostics shouldBeEqualTo "500"
-    }
-
-  @Test
-  fun invalid_diagnostics_value_shows_snackbar_and_is_not_persisted() =
-    runTest {
-      val vm = viewModel()
-
-      vm.effectFlow.test {
-        vm.postAction(SettingsAction.SetDiagnostics("0"))
-        awaitItem() shouldBeEqualTo SettingsEffect.ShowSnackbar(R.string.invalid_iterations)
-      }
-
-      verify(exactly = 0) { settings.update(Settings.DIAGNOSTICS, any()) }
-    }
-
-  @Test
-  fun non_numeric_diagnostics_value_shows_snackbar() =
-    runTest {
-      val vm = viewModel()
-
-      vm.effectFlow.test {
-        vm.postAction(SettingsAction.SetDiagnostics("abc"))
-        awaitItem() shouldBeEqualTo SettingsEffect.ShowSnackbar(R.string.invalid_iterations)
-      }
-    }
-
-  @Test
-  fun negative_diagnostics_value_shows_snackbar_and_is_not_persisted() =
-    runTest {
-      val vm = viewModel()
-
-      vm.effectFlow.test {
-        vm.postAction(SettingsAction.SetDiagnostics("-100"))
-        awaitItem() shouldBeEqualTo SettingsEffect.ShowSnackbar(R.string.invalid_iterations)
-      }
-
-      verify(exactly = 0) { settings.update(Settings.DIAGNOSTICS, any()) }
-    }
-
-  @Test
   fun toggling_dynamic_colors_requests_restart_on_back() =
     runTest {
       val vm = viewModel()
@@ -260,7 +213,10 @@ class SettingsViewModelTests {
       }
       verify { settings.resetStats() }
 
+      vm.stateFlow.value.flipCount shouldBeEqualTo 0L
+
       vm.postAction(SettingsAction.UndoResetStats)
       verify { settings.persistStats(previous) }
+      vm.stateFlow.value.flipCount shouldBeEqualTo 9L
     }
 }
