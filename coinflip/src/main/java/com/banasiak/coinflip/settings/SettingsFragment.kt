@@ -21,7 +21,10 @@ class SettingsFragment : Fragment() {
       setContent {
         SettingsScreen(
           viewModel = viewModel,
-          onEnableRestartOnBack = { onBackPressedCallback.isEnabled = true }
+          onEnableRestartOnBack = { onBackPressedCallback.isEnabled = true },
+          // route the app bar's up arrow through the dispatcher so it restarts the activity on the
+          // way out when the dynamic color preference changed, exactly as system back does
+          onNavigateBack = { requireActivity().onBackPressedDispatcher.onBackPressed() }
         )
       }
     }

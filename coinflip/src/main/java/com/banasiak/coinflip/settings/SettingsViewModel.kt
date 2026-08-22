@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,22 +39,10 @@ class SettingsViewModel @Inject constructor(
       is SettingsAction.SetCustomTails -> persist(Settings.CUSTOM_TAILS_TEXT, action.value) { copy(customTails = action.value) }
       is SettingsAction.SetSecureRandom -> persist(Settings.SECURE_RANDOM, action.value) { copy(secureRandom = action.value) }
       is SettingsAction.SetForce -> persist(Settings.FORCE, action.value) { copy(force = action.value) }
-      is SettingsAction.SetDiagnostics -> onSetDiagnostics(action.value)
       is SettingsAction.SetDynamic -> onSetDynamic(action.value)
       SettingsAction.ResetStats -> onResetStats()
-      SettingsAction.UndoResetStats -> previousStats?.let { settings.persistStats(it) }
+      SettingsAction.UndoResetStats -> onUndoResetStats()
     }
-  }
-
-  private fun onSetDiagnostics(value: String) {
-    // don't allow the user to set a value that can't be safely converted to a positive Long in the future
-    val number = value.toLongOrNull()
-    if (number == null || number <= 0L) {
-      Timber.w("Not persisting invalid iteration count: $value")
-      _effectFlow.tryEmit(SettingsEffect.ShowSnackbar(R.string.invalid_iterations))
-      return
-    }
-    persist(Settings.DIAGNOSTICS, value) { copy(diagnostics = value) }
   }
 
   private fun onSetDynamic(value: Boolean) {
@@ -67,6 +54,7 @@ class SettingsViewModel @Inject constructor(
   private fun onResetStats() {
     previousStats = settings.loadStats()
     settings.resetStats()
+    emit(state.copy(flipCount = 0L))
     _effectFlow.tryEmit(
       SettingsEffect.ShowSnackbar(
         message = R.string.stats_reset_message,
@@ -76,9 +64,19 @@ class SettingsViewModel @Inject constructor(
     )
   }
 
+  private fun onUndoResetStats() {
+    val previous = previousStats ?: return
+    settings.persistStats(previous)
+    emit(state.copy(flipCount = previous.values.sum()))
+  }
+
   private fun persist(setting: Settings, value: Any?, transform: SettingsState.() -> SettingsState) {
     settings.update(setting, value)
-    state = state.transform()
+    emit(state.transform())
+  }
+
+  private fun emit(value: SettingsState) {
+    state = value
     _stateFlow.tryEmit(state)
   }
 
@@ -94,10 +92,10 @@ class SettingsViewModel @Inject constructor(
       quickReset = settings.showQuickReset,
       customHeads = settings.customHeadsText,
       customTails = settings.customTailsText,
-      diagnostics = settings.diagnosticsIterations.toString(),
       dynamic = settings.dynamicColorsEnabled,
       secureRandom = settings.secureRandom,
-      force = settings.forceValue
+      force = settings.forceValue,
+      flipCount = settings.loadStats().values.sum()
     )
   }
 }

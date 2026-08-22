@@ -4,6 +4,12 @@ import android.os.Parcelable
 import androidx.annotation.StringRes
 import kotlinx.parcelize.Parcelize
 
+/**
+ * Upper bound on the test size. Without one a mistyped value starts a run that never finishes and
+ * silently resumes on every reopen, because the loop persists partial progress across pauses.
+ */
+const val MAX_ITERATIONS = 10_000_000L
+
 @Parcelize
 data class DiagnosticsState(
   val heads: Long = 0,
@@ -28,6 +34,7 @@ data class DiagnosticsState(
 
 sealed class DiagnosticsAction {
   data object Back : DiagnosticsAction()
+  data class SetIterations(val value: Long) : DiagnosticsAction()
   data object Start : DiagnosticsAction()
   data object Wikipedia : DiagnosticsAction()
 }

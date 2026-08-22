@@ -7,6 +7,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 
 object Type {
+  // a section header that is smaller than the rows beneath it reads as a caption rather than a
+  // heading, so this sits one step above the titleMedium used for preference titles
+  val settingsHeader: TextStyle
+    @Composable @ReadOnlyComposable
+    get() = MaterialTheme.typography.titleMedium.copy(fontSize = 18.sp)
+
   val diagnosticsLabel: TextStyle
     @Composable @ReadOnlyComposable
     get() = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp)

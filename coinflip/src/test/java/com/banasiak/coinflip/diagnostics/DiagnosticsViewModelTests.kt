@@ -45,6 +45,48 @@ class DiagnosticsViewModelTests {
   }
 
   @Test
+  fun setting_iterations_persists_the_value_and_reruns_the_test() =
+    runTest {
+      every { settingsManager.diagnosticsIterations } returns 1L
+      every { coin.flip() } returns Coin.Result(Coin.Value.TAILS, AnimationHelper.Permutation.HEADS_TAILS)
+
+      val vm = viewModel()
+      vm.postAction(DiagnosticsAction.Start)
+      advanceUntilIdle()
+      vm.stateFlow.value.total shouldBeEqualTo 1L
+
+      vm.postAction(DiagnosticsAction.SetIterations(2L))
+      advanceUntilIdle()
+
+      verify { settingsManager.update(SettingsManager.Settings.DIAGNOSTICS, "2") }
+      // asserted on the settled value rather than the emissions: the reset is conflated away by
+      // StateFlow. A run that had already finished would early-return, so reaching 2 is what
+      // proves the state was cleared and the loop restarted.
+      val state = vm.stateFlow.value
+      state.iterations shouldBeEqualTo 2L
+      state.total shouldBeEqualTo 2L
+      state.tailsCount shouldBeEqualTo "2"
+    }
+
+  @Test
+  fun out_of_range_iteration_counts_are_rejected() =
+    runTest {
+      every { settingsManager.diagnosticsIterations } returns 1L
+      every { coin.flip() } returns Coin.Result(Coin.Value.TAILS, AnimationHelper.Permutation.HEADS_TAILS)
+
+      val vm = viewModel()
+
+      vm.postAction(DiagnosticsAction.SetIterations(0L))
+      vm.postAction(DiagnosticsAction.SetIterations(-1L))
+      // above this the loop would never finish, and it resumes from saved progress on every reopen
+      vm.postAction(DiagnosticsAction.SetIterations(MAX_ITERATIONS + 1))
+      advanceUntilIdle()
+
+      verify(exactly = 0) { settingsManager.update(SettingsManager.Settings.DIAGNOSTICS, any()) }
+      vm.stateFlow.value.iterations shouldBeEqualTo 1L
+    }
+
+  @Test
   fun heads() =
     runTest {
       every { settingsManager.diagnosticsIterations } returns 1L
