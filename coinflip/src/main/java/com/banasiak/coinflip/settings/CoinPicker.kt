@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.util.TypedValue
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -58,7 +59,7 @@ import com.banasiak.coinflip.ui.theme.AppTheme
 import com.banasiak.coinflip.ui.theme.Dimen
 
 // the group keys in R.array.coins_groups, which runs parallel to coins_values
-private val COIN_GROUP_LABELS =
+internal val COIN_GROUP_LABELS =
   mapOf(
     "us" to R.string.settings_item_coin_group_us,
     "canada" to R.string.settings_item_coin_group_canada,
@@ -66,7 +67,7 @@ private val COIN_GROUP_LABELS =
     "other" to R.string.settings_item_coin_group_other
   )
 
-private sealed interface CoinListItem {
+internal sealed interface CoinListItem {
   data class Group(@param:StringRes val title: Int) : CoinListItem
 
   data class Option(val label: String, val value: String) : CoinListItem
@@ -318,7 +319,8 @@ private fun CoinListItem.key(): String =
   }
 
 /** Filters by [query] and interleaves a header ahead of each group that still has matches. */
-private fun buildCoinList(
+@VisibleForTesting
+internal fun buildCoinList(
   entries: Array<String>,
   values: Array<String>,
   groups: Array<String>,

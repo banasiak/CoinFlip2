@@ -81,4 +81,30 @@ class CoinTests {
     result.permutation shouldBe AnimationHelper.Permutation.TAILS_TAILS
     result.customLabel shouldBe "TAILS"
   }
+
+  @Test
+  fun `a cleared custom label falls back to nothing so the localized default applies`() {
+    // given the settings dialog stores a blank field as null rather than as the localized literal
+    every { settings.customHeadsText } returns null
+    every { rng.nextBoolean() } returns true
+    val coin = Coin(rng, settings)
+
+    // when
+    val result = coin.flip()
+
+    // then
+    result.customLabel shouldBe null
+  }
+
+  @Test
+  fun `the unknown face never carries a custom label`() {
+    Coin.Value.UNKNOWN.customLabel(settings) shouldBe null
+  }
+
+  @Test
+  fun `the coin reports which source it is flipping with`() {
+    every { rng.useSecureRandom } returns true
+
+    Coin(rng, settings).isSecure() shouldBe true
+  }
 }

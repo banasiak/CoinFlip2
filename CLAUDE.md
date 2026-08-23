@@ -15,8 +15,8 @@ CoinFlip2 is a Modern Android Development (MAD) coin-flipping app published on t
 # Run all unit tests (uses JUnit 5 / JUnit Platform)
 ./gradlew :coinflip:test
 
-# Run a single test class
-./gradlew :coinflip:test --tests "com.banasiak.coinflip.common.CoinTests"
+# Run a single test class (the `test` lifecycle task does not accept --tests)
+./gradlew :coinflip:testDebugUnitTest --tests "com.banasiak.coinflip.common.CoinTests"
 
 # Lint Kotlin code style (ktlint, runs as part of `check`)
 ./gradlew :coinflip:ktlintCheck
@@ -52,7 +52,12 @@ CoinFlip2 is a Modern Android Development (MAD) coin-flipping app published on t
 - `AnimationHelper` — generates frame-by-frame `DurationAnimationDrawable` for each of the 4 flip permutations; coin images are loaded by resource name prefix (e.g., `"gw"` → `gw_heads` / `gw_tails` drawables)
 - `SoundHelper`, `VibrationHelper` — play sounds / haptics only when the corresponding setting is enabled
 
-**Testing:** JUnit 5 with MockK for mocking, Kluent for assertions, Turbine for Flow testing. ViewModel tests use `@ExtendWith(MainDispatcherRule::class)` to swap `Dispatchers.Main` with `UnconfinedTestDispatcher`. Tests are in `coinflip/src/test/`.
+**Testing:** JUnit 5 with MockK for mocking, Kluent for assertions, Turbine for Flow testing. ViewModel tests use `@ExtendWith(MainDispatcherRule::class)` to swap `Dispatchers.Main` with `UnconfinedTestDispatcher`. Tests are in `coinflip/src/test/`; there is no `androidTest` source set, so nothing in Compose is covered.
+
+`FakeSharedPreferences` is an in-memory `SharedPreferences` used instead of mocking the interface, so
+tests can assert what the store ends up holding. `CoinResourcesTests` reads `res/` off disk to assert
+the three parallel coin arrays and the drawables they name by string concatenation stay in step —
+`build.gradle.kts` declares those files as test inputs so the guard is not skipped as up-to-date.
 
 ## Code Style
 

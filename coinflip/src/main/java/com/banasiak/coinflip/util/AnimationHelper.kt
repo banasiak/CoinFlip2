@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import androidx.annotation.DrawableRes
+import androidx.annotation.VisibleForTesting
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.drawable.toDrawable
@@ -56,7 +57,8 @@ class AnimationHelper @Inject constructor(
   }
 
   @SuppressLint("DiscouragedApi") // lol
-  private fun getIdentifiersForPrefix(prefix: String): Pair<Int, Int> {
+  @VisibleForTesting
+  internal fun getIdentifiersForPrefix(prefix: String): Pair<Int, Int> {
     val newPrefix =
       if (prefix == RANDOM) {
         val entries = resources.getStringArray(R.array.coins_values).filterNot { it == RANDOM }
