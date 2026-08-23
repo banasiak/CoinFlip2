@@ -50,6 +50,21 @@ kotlin {
   }
 }
 
+tasks.withType<Test>().configureEach {
+  // CoinResourcesTests reads these straight off disk to assert the coin arrays and the drawables
+  // they name still line up. Without declaring them Gradle calls the task up-to-date after a
+  // resource-only edit and skips the guard; scoped to the two it actually reads so that editing a
+  // translation does not rerun the whole suite.
+  inputs
+    .file(layout.projectDirectory.file("src/main/res/values/arrays.xml"))
+    .withPropertyName("coinArrays")
+    .withPathSensitivity(PathSensitivity.RELATIVE)
+  inputs
+    .dir(layout.projectDirectory.dir("src/main/res/drawable"))
+    .withPropertyName("coinDrawables")
+    .withPathSensitivity(PathSensitivity.RELATIVE)
+}
+
 val ktlint: Configuration by configurations.creating
 
 dependencies {

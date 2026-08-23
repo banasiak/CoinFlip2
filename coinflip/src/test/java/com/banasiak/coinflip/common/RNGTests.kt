@@ -1,9 +1,14 @@
 package com.banasiak.coinflip.common
 
+import com.banasiak.coinflip.FakeSharedPreferences
 import com.banasiak.coinflip.settings.SettingsManager
+import com.banasiak.coinflip.settings.SettingsManager.Settings
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeFalse
+import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
 import java.security.SecureRandom
 import kotlin.random.Random
@@ -40,4 +45,48 @@ class RNGTests {
     verify(exactly = 0) { random.nextBoolean() }
     verify(exactly = 1) { secureRandom.nextBoolean() }
   }
+
+  @Test
+  fun `toggling the setting swaps the source without a restart`() {
+    // wired against a real manager and store, because the swap only works if the listener the
+    // manager registers is the one the store actually calls back
+    val (store, manager) = realSettings()
+    val rng = RNG(random, secureRandom, manager)
+    rng.useSecureRandom.shouldBeFalse()
+
+    manager.update(Settings.SECURE_RANDOM, true)
+
+    rng.useSecureRandom.shouldBeTrue()
+    rng.nextBoolean()
+    verify(exactly = 1) { secureRandom.nextBoolean() }
+    verify(exactly = 0) { random.nextBoolean() }
+    store.values[Settings.SECURE_RANDOM.key] shouldBeEqualTo true
+  }
+
+  @Test
+  fun `toggling back returns to the standard source`() {
+    val (_, manager) = realSettings(Settings.SECURE_RANDOM.key to true)
+    val rng = RNG(random, secureRandom, manager)
+    rng.useSecureRandom.shouldBeTrue()
+
+    manager.update(Settings.SECURE_RANDOM, false)
+
+    rng.useSecureRandom.shouldBeFalse()
+    rng.nextBoolean()
+    verify(exactly = 1) { random.nextBoolean() }
+  }
+
+  @Test
+  fun `an unrelated preference change does not disturb the source`() {
+    // the callback fires for every key, so it has to filter rather than re-read on each write
+    val (_, manager) = realSettings(Settings.SECURE_RANDOM.key to true)
+    val rng = RNG(random, secureRandom, manager)
+
+    manager.update(Settings.COIN, "jfk")
+
+    rng.useSecureRandom.shouldBeTrue()
+  }
+
+  private fun realSettings(vararg stored: Pair<String, Any>): Pair<FakeSharedPreferences, SettingsManager> =
+    FakeSharedPreferences(stored.toMap()).let { it to SettingsManager(it) }
 }
