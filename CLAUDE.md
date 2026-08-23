@@ -74,6 +74,12 @@ generating the reports costs about a second, where a separate workflow would rep
 
 Kotlin formatting is enforced by **ktlint**. Run `./gradlew :coinflip:format` before committing. The project uses Kotlin DSL for Gradle build files and a version catalog (`gradle/libs.versions.toml`). Package is `com.banasiak.coinflip`; code targets JVM 17.
 
+**Toolchain:** AGP 9 compiles Kotlin itself, so there is deliberately no `org.jetbrains.kotlin.android`
+plugin — re-adding it fails the build. The compose and parcelize compiler plugins are still applied
+separately, and `kotlin { compilerOptions { } }` still configures the compiler. `compileSdkMinor`
+selects the Android 37.1 platform. Kotlin is held at 2.3.x because KSP has no 2.4 release yet, and
+ktlint is pinned at 1.1.0 on purpose — bumping it reformats the whole codebase.
+
 ## Localization
 
 The app ships English plus 12 translations (and an `es-MX` regional variant); none were done by a

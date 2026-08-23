@@ -2,7 +2,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
   alias(libs.plugins.android.application)
-  alias(libs.plugins.kotlin.android)
   alias(libs.plugins.kotlin.compose)
   alias(libs.plugins.kotlin.parcelize)
   alias(libs.plugins.hilt.android)
@@ -12,12 +11,13 @@ plugins {
 
 android {
   namespace = "com.banasiak.coinflip"
-  compileSdk = 36
+  compileSdk = 37
+  compileSdkMinor = 1
 
   defaultConfig {
     applicationId = "com.banasiak.coinflip"
     minSdk = 26
-    targetSdk = 36
+    targetSdk = 37
     versionCode = 74
     versionName = "2026/07"
   }
