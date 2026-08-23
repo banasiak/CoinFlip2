@@ -32,8 +32,11 @@
   <string name="settings_item_animation_summary">Dönen parayı göster</string>
   <string name="settings_item_animation_title">Animasyon</string>
   <string name="settings_item_coin_empty">Eşleşen madeni para yok</string>
+  <string name="settings_item_coin_favorite_add">%1$s favorilere ekle</string>
+  <string name="settings_item_coin_favorite_remove">%1$s favorilerden çıkar</string>
   <string name="settings_item_coin_group_canada">Kanada</string>
   <string name="settings_item_coin_group_euro">Euro</string>
+  <string name="settings_item_coin_group_favorites">Favoriler</string>
   <string name="settings_item_coin_group_other">Diğer</string>
   <string name="settings_item_coin_group_us">Amerika Birleşik Devletleri</string>
   <string name="settings_item_coin_title">Madeni para türü</string>

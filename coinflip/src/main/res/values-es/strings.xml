@@ -32,8 +32,11 @@
   <string name="settings_item_animation_summary">Renderizar moneda giratoria</string>
   <string name="settings_item_animation_title">Animación</string>
   <string name="settings_item_coin_empty">No hay monedas coincidentes</string>
+  <string name="settings_item_coin_favorite_add">Añadir %1$s a favoritos</string>
+  <string name="settings_item_coin_favorite_remove">Quitar %1$s de favoritos</string>
   <string name="settings_item_coin_group_canada">Canadá</string>
   <string name="settings_item_coin_group_euro">Euro</string>
+  <string name="settings_item_coin_group_favorites">Favoritos</string>
   <string name="settings_item_coin_group_other">Otras</string>
   <string name="settings_item_coin_group_us">Estados Unidos</string>
   <string name="settings_item_coin_title">Tipo de moneda</string>

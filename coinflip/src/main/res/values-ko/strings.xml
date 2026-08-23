@@ -32,8 +32,11 @@
   <string name="settings_item_animation_summary">회전하는 동전 렌더링</string>
   <string name="settings_item_animation_title">애니메이션</string>
   <string name="settings_item_coin_empty">일치하는 동전이 없습니다</string>
+  <string name="settings_item_coin_favorite_add">%1$s을(를) 즐겨찾기에 추가</string>
+  <string name="settings_item_coin_favorite_remove">%1$s을(를) 즐겨찾기에서 제거</string>
   <string name="settings_item_coin_group_canada">캐나다</string>
   <string name="settings_item_coin_group_euro">유로</string>
+  <string name="settings_item_coin_group_favorites">즐겨찾기</string>
   <string name="settings_item_coin_group_other">기타</string>
   <string name="settings_item_coin_group_us">미국</string>
   <string name="settings_item_coin_title">동전 종류</string>

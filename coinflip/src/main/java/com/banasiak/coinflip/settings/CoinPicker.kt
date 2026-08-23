@@ -70,7 +70,11 @@ internal val COIN_GROUP_LABELS =
 internal sealed interface CoinListItem {
   data class Group(@param:StringRes val title: Int) : CoinListItem
 
-  data class Option(val label: String, val value: String) : CoinListItem
+  /**
+   * [inFavoritesSection] marks the copy rendered at the top. A starred coin appears twice, and
+   * LazyColumn keys have to differ or it throws on the duplicate.
+   */
+  data class Option(val label: String, val value: String, val inFavoritesSection: Boolean = false) : CoinListItem
 }
 
 /**
@@ -84,7 +88,9 @@ fun CoinPicker(
   values: Array<String>,
   groups: Array<String>,
   selectedValue: String,
+  favorites: Set<String>,
   onSelect: (String) -> Unit,
+  onToggleFavorite: (String) -> Unit,
   onDismiss: () -> Unit
 ) {
   Dialog(
@@ -92,7 +98,7 @@ fun CoinPicker(
     // a full-screen dialog, so it owns the whole window and draws edge to edge like a destination
     properties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)
   ) {
-    CoinPickerContent(entries, values, groups, selectedValue, onSelect, onDismiss)
+    CoinPickerContent(entries, values, groups, selectedValue, favorites, onSelect, onToggleFavorite, onDismiss)
   }
 }
 
@@ -102,21 +108,31 @@ private fun CoinPickerContent(
   values: Array<String>,
   groups: Array<String>,
   selectedValue: String,
+  favorites: Set<String>,
   onSelect: (String) -> Unit,
+  onToggleFavorite: (String) -> Unit,
   onDismiss: () -> Unit
 ) {
   var query by rememberSaveable { mutableStateOf("") }
   // keyed on the query alone: stringArrayResource hands back a fresh array on every composition,
   // so an array key would compare unequal every time and never memoize anything
-  val items = remember(query) { buildCoinList(entries, values, groups, query) }
+  val items = remember(query, favorites) { buildCoinList(entries, values, groups, favorites, query) }
   val thumbnails = rememberThumbnails(values)
   val listState = rememberLazyListState()
 
-  // open on the coin that's already selected rather than at the top of a very long list, keeping
-  // the row above it on screen so the group header isn't scrolled away
-  LaunchedEffect(Unit) {
-    val index = items.indexOfFirst { it is CoinListItem.Option && it.value == selectedValue }
-    if (index > 0) listState.scrollToItem(index - 1)
+  // Keyed on the query so editing or clearing the search lands on the top of the new results
+  // instead of wherever the old list happened to sit. Deliberately not keyed on favorites: starring
+  // a coin rebuilds the list too, and the row under the user's finger must not jump.
+  LaunchedEffect(query) {
+    if (query.isBlank() && favorites.isEmpty()) {
+      // nothing pinned, so open on the coin that's already selected rather than at the top of a
+      // very long list, keeping the row above it on screen so the group header isn't scrolled away
+      val index = items.indexOfFirst { it is CoinListItem.Option && it.value == selectedValue }
+      if (index > 0) listState.scrollToItem(index - 1)
+    } else {
+      // with favorites the top is the part worth landing on, and it is off-screen above otherwise
+      listState.scrollToItem(0)
+    }
   }
 
   Surface(modifier = Modifier.fillMaxSize()) {
@@ -143,10 +159,12 @@ private fun CoinPickerContent(
                     label = item.label,
                     thumbnail = thumbnails[item.value] ?: 0,
                     selected = item.value == selectedValue,
+                    favorite = item.value in favorites,
                     onClick = {
                       onSelect(item.value)
                       onDismiss()
-                    }
+                    },
+                    onToggleFavorite = { onToggleFavorite(item.value) }
                   )
                 }
               }
@@ -182,7 +200,7 @@ private fun SearchField(query: String, onQueryChange: (String) -> Unit) {
     modifier =
       Modifier
         .fillMaxWidth()
-        .padding(horizontal = Dimen.medium, vertical = Dimen.small),
+        .padding(start = Dimen.medium, end = Dimen.small, top = Dimen.small, bottom = Dimen.small),
     placeholder = { Text(stringResource(android.R.string.search_go)) },
     leadingIcon = { Icon(painter = painterResource(R.drawable.search), contentDescription = null) },
     trailingIcon = {
@@ -200,7 +218,14 @@ private fun SearchField(query: String, onQueryChange: (String) -> Unit) {
 }
 
 @Composable
-private fun CoinRow(label: String, @DrawableRes thumbnail: Int, selected: Boolean, onClick: () -> Unit) {
+private fun CoinRow(
+  label: String,
+  @DrawableRes thumbnail: Int,
+  selected: Boolean,
+  favorite: Boolean,
+  onClick: () -> Unit,
+  onToggleFavorite: () -> Unit
+) {
   Row(
     modifier =
       Modifier
@@ -221,6 +246,19 @@ private fun CoinRow(label: String, @DrawableRes thumbnail: Int, selected: Boolea
         painter = painterResource(R.drawable.check),
         contentDescription = null,
         tint = MaterialTheme.colorScheme.primary
+      )
+    }
+    // an IconButton rather than a clickable Icon: the row is already selectable, so the star needs
+    // its own semantics node and its own 48dp target instead of being swallowed by the row
+    IconButton(onClick = onToggleFavorite) {
+      Icon(
+        painter = painterResource(if (favorite) R.drawable.star_filled else R.drawable.star),
+        contentDescription =
+          stringResource(
+            if (favorite) R.string.settings_item_coin_favorite_remove else R.string.settings_item_coin_favorite_add,
+            label
+          ),
+        tint = if (favorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
       )
     }
   }
@@ -315,10 +353,11 @@ private fun decodeThumbnail(resources: Resources, @DrawableRes id: Int, targetPx
   return BitmapFactory.decodeResource(resources, id, options)?.asImageBitmap()
 }
 
-private fun CoinListItem.key(): String =
+@VisibleForTesting
+internal fun CoinListItem.key(): String =
   when (this) {
     is CoinListItem.Group -> "group-$title"
-    is CoinListItem.Option -> "coin-$value"
+    is CoinListItem.Option -> if (inFavoritesSection) "favorite-$value" else "coin-$value"
   }
 
 /** Filters by [query] and interleaves a header ahead of each group that still has matches. */
@@ -327,6 +366,7 @@ internal fun buildCoinList(
   entries: Array<String>,
   values: Array<String>,
   groups: Array<String>,
+  favorites: Set<String>,
   query: String
 ): List<CoinListItem> {
   val matches = mutableListOf<Pair<Int, CoinListItem.Option>>()
@@ -340,6 +380,17 @@ internal fun buildCoinList(
   }
 
   return buildList {
+    // starred coins are repeated at the top rather than moved out, so the origin groups keep no
+    // holes. Only while browsing though: a search has already narrowed the list, and showing one
+    // hit under two headers reads as noise rather than as a shortcut.
+    if (query.isBlank()) {
+      val starred = matches.map { it.second }.filter { it.value in favorites }
+      if (starred.isNotEmpty()) {
+        add(CoinListItem.Group(R.string.settings_item_coin_group_favorites))
+        starred.forEach { add(it.copy(inFavoritesSection = true)) }
+      }
+    }
+
     var currentGroup: Int? = null
     matches.forEach { (itemGroup, option) ->
       if (itemGroup != currentGroup) {
@@ -360,7 +411,9 @@ fun CoinPickerPreview() {
       values = stringArrayResource(R.array.coins_values),
       groups = stringArrayResource(R.array.coins_groups),
       selectedValue = "gw",
+      favorites = setOf("gw", "jfk"),
       onSelect = { },
+      onToggleFavorite = { },
       onDismiss = { }
     )
   }

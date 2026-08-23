@@ -12,6 +12,11 @@ import javax.inject.Singleton
 
 @Singleton
 class SettingsManager @Inject constructor(private val prefs: SharedPreferences) {
+  companion object {
+    // coin prefixes are lowercase identifiers, so a comma can never appear inside one
+    private const val FAVORITES_DELIMITER = ","
+  }
+
   val coinPrefix get() = prefs.getString(Settings.COIN.key, Settings.COIN.default as String)!! // pinky swear
   val customHeadsText get() = prefs.getString(Settings.CUSTOM_HEADS_TEXT.key, Settings.CUSTOM_HEADS_TEXT.default as String?)
   val customTailsText get() = prefs.getString(Settings.CUSTOM_TAILS_TEXT.key, Settings.CUSTOM_TAILS_TEXT.default as String?)
@@ -28,6 +33,15 @@ class SettingsManager @Inject constructor(private val prefs: SharedPreferences) 
   val forceValue get() = prefs.getString(Settings.FORCE.key, Settings.FORCE.default as String)!!
   val secureRandom get() = prefs.getBoolean(Settings.SECURE_RANDOM.key, Settings.SECURE_RANDOM.default as Boolean)
 
+  /** Coin prefixes the user has starred, stored as one delimited string so [update] keeps its simple contract. */
+  val favoriteCoins: Set<String>
+    get() =
+      prefs.getString(Settings.FAVORITES.key, Settings.FAVORITES.default as String)
+        .orEmpty()
+        .split(FAVORITES_DELIMITER)
+        .filter { it.isNotBlank() }
+        .toSet()
+
   init {
     validateSchema()
   }
@@ -42,6 +56,10 @@ class SettingsManager @Inject constructor(private val prefs: SharedPreferences) 
         else -> throw IllegalArgumentException("Unsupported preference type for ${setting.key}: $value")
       }
     }
+  }
+
+  fun persistFavoriteCoins(values: Set<String>) {
+    update(Settings.FAVORITES, values.joinToString(FAVORITES_DELIMITER))
   }
 
   fun loadStats(): Map<Coin.Value, Long> {
@@ -103,6 +121,7 @@ class SettingsManager @Inject constructor(private val prefs: SharedPreferences) 
     QUICK_RESET("quickReset", false),
     FORCE("force", "medium"),
     SECURE_RANDOM("secureRandom", false),
+    FAVORITES("favoriteCoins", ""),
     HEADS("headsCount", 0L),
     TAILS("tailsCount", 0L),
     SCHEMA("schemaVersion", 7) // the old version of the app was '6'
