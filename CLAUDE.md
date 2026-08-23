@@ -77,8 +77,12 @@ Kotlin formatting is enforced by **ktlint**. Run `./gradlew :coinflip:format` be
 **Toolchain:** AGP 9 compiles Kotlin itself, so there is deliberately no `org.jetbrains.kotlin.android`
 plugin — re-adding it fails the build. The compose and parcelize compiler plugins are still applied
 separately, and `kotlin { compilerOptions { } }` still configures the compiler. `compileSdkMinor`
-selects the Android 37.1 platform. Kotlin is held at 2.3.x because KSP has no 2.4 release yet, and
-ktlint is pinned at 1.1.0 on purpose — bumping it reformats the whole codebase.
+selects the Android 37.1 platform. Kotlin is held at 2.3.x because KSP has no 2.4 release yet.
+
+ktlint runs from the CLI and takes its rules from the `ktlint_*` block at the end of `.editorconfig`.
+Each release adds standard rules that reflow working code rather than catch a defect, so a bump
+normally arrives as a wall of violations; the ones this project rejects are disabled there, and the
+next bump will likely need a few more added. Check what a new rule actually changes before adopting it.
 
 ## Localization
 

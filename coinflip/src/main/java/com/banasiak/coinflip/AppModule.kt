@@ -26,44 +26,34 @@ import kotlin.random.Random
 @InstallIn(SingletonComponent::class)
 object AppModule {
   @Provides
-  fun provideBuildInfo(@ApplicationContext context: Context): BuildInfo {
-    return BuildInfo(
+  fun provideBuildInfo(@ApplicationContext context: Context): BuildInfo =
+    BuildInfo(
       Build.VERSION.SDK_INT,
       context.packageName,
       BuildConfig.VERSION_NAME,
       BuildConfig.VERSION_CODE
     )
-  }
 
   @Provides
-  fun provideClock(): Clock {
-    return Clock.systemUTC()
-  }
+  fun provideClock(): Clock = Clock.systemUTC()
 
   @Provides
-  fun provideDefaultDispatcher(): CoroutineDispatcher {
-    return Dispatchers.Default
-  }
+  fun provideDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
 
   @Provides
-  fun provideRandom(): Random {
-    return Random.Default
-  }
+  fun provideRandom(): Random = Random.Default
 
   @Provides
-  fun provideSecureRandom(): SecureRandom {
-    return SecureRandom.getInstanceStrong()
-  }
+  fun provideSecureRandom(): SecureRandom = SecureRandom.getInstanceStrong()
 
   @Provides
-  fun provideResources(@ApplicationContext context: Context): Resources {
-    return context.resources
-  }
+  fun provideResources(@ApplicationContext context: Context): Resources = context.resources
 
   @Provides
-  fun provideSensorManager(@ApplicationContext context: Context): SensorManager {
-    return context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-  }
+  fun provideSensorManager(@ApplicationContext context: Context): SensorManager =
+    context.getSystemService(
+      Context.SENSOR_SERVICE
+    ) as SensorManager
 
   @Provides
   fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {

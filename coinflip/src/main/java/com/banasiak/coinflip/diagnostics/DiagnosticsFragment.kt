@@ -29,11 +29,10 @@ class DiagnosticsFragment : BottomSheetDialogFragment() {
 
   private val viewModel: DiagnosticsViewModel by viewModels()
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-    return ComposeView(requireContext()).apply {
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+    ComposeView(requireContext()).apply {
       setContent { DiagnosticsScreen(viewModel) }
     }
-  }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     val dialog = super.onCreateDialog(savedInstanceState)

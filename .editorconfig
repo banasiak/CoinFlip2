@@ -958,6 +958,11 @@ ktlint_standard_blank-line-before-declaration = disabled
 ktlint_standard_function-signature = disabled
 ktlint_standard_parameter-list-wrapping = disabled
 ktlint_standard_spacing-between-declarations-with-annotations = disabled
+# added after ktlint 1.1.0; these reflow working code rather than catch a defect. Newer ktlint
+# releases tend to add more of the same, so disabling them is the pattern here, not a workaround.
+ktlint_standard_class-signature = disabled
+ktlint_standard_chain-method-continuation = disabled
+ktlint_standard_blank-line-between-when-conditions = disabled
 ktlint_function_naming_ignore_when_annotated_with = Composable
 
 [{*.markdown,*.md}]

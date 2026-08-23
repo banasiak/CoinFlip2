@@ -80,8 +80,8 @@ class SettingsViewModel @Inject constructor(
     _stateFlow.tryEmit(state)
   }
 
-  private fun loadState(): SettingsState {
-    return SettingsState(
+  private fun loadState(): SettingsState =
+    SettingsState(
       coin = settings.coinPrefix,
       animate = settings.animationEnabled,
       shake = settings.shakeEnabled,
@@ -97,5 +97,4 @@ class SettingsViewModel @Inject constructor(
       force = settings.forceValue,
       flipCount = settings.loadStats().values.sum()
     )
-  }
 }

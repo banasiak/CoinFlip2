@@ -80,14 +80,13 @@ class SettingsManager @Inject constructor(private val prefs: SharedPreferences) 
     }
   }
 
-  private fun String?.toSensitivity(): Int {
-    return when (this) {
+  private fun String?.toSensitivity(): Int =
+    when (this) {
       "low" -> ShakeDetector.SENSITIVITY_LIGHT
       "medium" -> ShakeDetector.SENSITIVITY_MEDIUM
       "high" -> ShakeDetector.SENSITIVITY_HARD
       else -> ShakeDetector.SENSITIVITY_MEDIUM
     }
-  }
 
   enum class Settings(val key: String, val default: Any?) {
     COIN("coin", "gw"), // George Washington dollar

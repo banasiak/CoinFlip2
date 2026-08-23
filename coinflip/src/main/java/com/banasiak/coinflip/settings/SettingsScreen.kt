@@ -98,7 +98,9 @@ fun SettingsScreen(
               }
             }
           }
-          SettingsEffect.EnableRestartOnBack -> onEnableRestartOnBack()
+          SettingsEffect.EnableRestartOnBack -> {
+            onEnableRestartOnBack()
+          }
         }
       }
     }
@@ -257,7 +259,7 @@ fun SettingsView(
     // inside AppTheme: a dialog is composed into its own window, so it only inherits the app's
     // colors if it is emitted from within the theme
     when (openDialog) {
-      OpenDialog.COIN ->
+      OpenDialog.COIN -> {
         CoinPicker(
           entries = coinEntries,
           values = coinValues,
@@ -266,7 +268,8 @@ fun SettingsView(
           onSelect = { postAction(SettingsAction.SetCoin(it)) },
           onDismiss = { openDialog = OpenDialog.NONE }
         )
-      OpenDialog.CUSTOM_TEXT ->
+      }
+      OpenDialog.CUSTOM_TEXT -> {
         CustomTextDialog(
           initialHeads = state.customHeads,
           initialTails = state.customTails,
@@ -278,6 +281,7 @@ fun SettingsView(
           },
           onDismiss = { openDialog = OpenDialog.NONE }
         )
+      }
       OpenDialog.NONE -> { }
     }
   }

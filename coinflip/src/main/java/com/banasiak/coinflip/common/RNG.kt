@@ -25,13 +25,12 @@ class RNG @Inject constructor(
     useSecureRandom = settings.secureRandom
   }
 
-  fun nextBoolean(): Boolean {
-    return if (useSecureRandom) {
+  fun nextBoolean(): Boolean =
+    if (useSecureRandom) {
       secureRandom.nextBoolean()
     } else {
       random.nextBoolean()
     }
-  }
 
   override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
     // cache this value when the setting changes, so we don't have unnecessary SharedPreferences I/O

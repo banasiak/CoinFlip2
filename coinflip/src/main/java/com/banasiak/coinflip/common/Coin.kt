@@ -19,13 +19,12 @@ class Coin @Inject constructor(
     TAILS(R.string.tails),
     UNKNOWN(R.string.empty);
 
-    fun customLabel(settingsManager: SettingsManager): String? {
-      return when (this) {
+    fun customLabel(settingsManager: SettingsManager): String? =
+      when (this) {
         HEADS -> settingsManager.customHeadsText
         TAILS -> settingsManager.customTailsText
         else -> null
       }
-    }
   }
 
   private var currentValue: Value = Value.HEADS
@@ -37,19 +36,16 @@ class Coin @Inject constructor(
     return Result(next, permutation(current, next), next.customLabel(settings))
   }
 
-  fun isSecure(): Boolean {
-    return random.useSecureRandom
-  }
+  fun isSecure(): Boolean = random.useSecureRandom
 
-  private fun permutation(current: Value, next: Value): AnimationHelper.Permutation {
-    return when {
+  private fun permutation(current: Value, next: Value): AnimationHelper.Permutation =
+    when {
       current == Value.HEADS && next == Value.HEADS -> AnimationHelper.Permutation.HEADS_HEADS
       current == Value.HEADS && next == Value.TAILS -> AnimationHelper.Permutation.HEADS_TAILS
       current == Value.TAILS && next == Value.HEADS -> AnimationHelper.Permutation.TAILS_HEADS
       current == Value.TAILS && next == Value.TAILS -> AnimationHelper.Permutation.TAILS_TAILS
       else -> AnimationHelper.Permutation.UNKNOWN
     }
-  }
 
   private fun RNG.nextValue(): Value {
     val next = this.nextBoolean()
