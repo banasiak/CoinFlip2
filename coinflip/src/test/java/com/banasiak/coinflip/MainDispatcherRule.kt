@@ -11,11 +11,11 @@ import org.junit.jupiter.api.extension.ExtensionContext
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MainDispatcherRule : BeforeEachCallback, AfterEachCallback {
-  override fun beforeEach(junitContext: ExtensionContext?) {
+  override fun beforeEach(junitContext: ExtensionContext) {
     Dispatchers.setMain(UnconfinedTestDispatcher())
   }
 
-  override fun afterEach(junitContext: ExtensionContext?) {
+  override fun afterEach(junitContext: ExtensionContext) {
     Dispatchers.resetMain()
   }
 }
