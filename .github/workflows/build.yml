@@ -1,0 +1,109 @@
+name: Build & Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# no default token permissions; each job declares exactly what it needs
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # the build never pushes, so don't leave the token in .git/config for later steps
+          persist-credentials: false
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@3f131e8634966bd73d06cc69884922b02e6faf92 # v6.2.0
+        with:
+          validate-wrappers: true
+          # only trusted builds on main may write the shared Gradle cache; PR builds read it
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+
+      - name: Build, test, and lint
+        run: ./gradlew :coinflip:check
+
+      - name: Generate the coverage report
+        # a report and not a gate, so it must never be the reason the job goes red
+        if: always()
+        continue-on-error: true
+        run: ./gradlew :coinflip:koverXmlReportDebug :coinflip:koverHtmlReportDebug
+
+      - name: Write the summary
+        if: always()
+        run: |
+          report=coinflip/build/reports/kover/reportDebug.xml
+          if [ ! -f "$report" ]; then
+            echo "No coverage report was produced." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          python3 - "$report" <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import collections, sys, xml.etree.ElementTree as ET
+
+          report = ET.parse(sys.argv[1]).getroot()
+
+          def counters(element):
+            return {c.get("type"): (int(c.get("covered")), int(c.get("missed"))) for c in element.findall("counter")}
+
+          print("## Coverage (debug)\n")
+          print("Generated and Compose sources are filtered out; see the `kover` block in `coinflip/build.gradle.kts`.\n")
+          print("| Metric | Covered | Total | % |")
+          print("| --- | ---: | ---: | ---: |")
+          for kind in ("LINE", "BRANCH", "INSTRUCTION"):
+            covered, missed = counters(report).get(kind, (0, 0))
+            total = covered + missed
+            if total:
+              print(f"| {kind.title()} | {covered} | {total} | {100 * covered / total:.1f}% |")
+
+          # collapse lambdas and inner classes onto the class that declares them
+          classes = collections.defaultdict(lambda: [0, 0])
+          for package in report.iter("package"):
+            for klass in package.findall("class"):
+              covered, missed = counters(klass).get("LINE", (0, 0))
+              name = klass.get("name").split("$")[0].replace("com/banasiak/coinflip/", "").replace("/", ".")
+              classes[name][0] += covered
+              classes[name][1] += missed
+
+          gaps = sorted((v for v in classes.items() if v[1][1]), key=lambda kv: -kv[1][1])[:15]
+          if gaps:
+            print("\n### Biggest gaps\n")
+            print("| Class | Lines | % |")
+            print("| --- | ---: | ---: |")
+            for name, (covered, missed) in gaps:
+              total = covered + missed
+              print(f"| `{name}` | {covered}/{total} | {100 * covered / total:.0f}% |")
+          PY
+
+      - name: Upload the coverage report
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: coverage-report
+          path: coinflip/build/reports/kover/htmlDebug/
+          if-no-files-found: warn
+
+      - name: Upload reports on failure
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: build-reports
+          path: coinflip/build/reports/
