@@ -1,7 +1,11 @@
 package com.banasiak.coinflip.main
 
 import android.content.res.Configuration
+import android.graphics.Paint
+import android.graphics.Rect
+import android.graphics.Typeface
 import android.widget.ImageView
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -33,8 +37,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -52,6 +60,7 @@ import com.banasiak.coinflip.ui.DurationAnimationDrawable
 import com.banasiak.coinflip.ui.theme.AppTheme
 import com.banasiak.coinflip.ui.theme.Dimen
 import com.banasiak.coinflip.util.AnimationHelper
+import kotlin.math.min
 
 @Composable
 fun MainScreen(
@@ -167,6 +176,8 @@ private fun CoinDetails(state: MainState, postAction: (MainAction) -> Unit, land
   }
 }
 
+private const val PLACEHOLDER_GLYPH = "?"
+
 @Composable
 private fun CoinImage(state: MainState, flipToken: Int, size: Dp, coinPadding: Dp) {
   val imageViewRef = remember { mutableStateOf<ImageView?>(null) }
@@ -177,12 +188,46 @@ private fun CoinImage(state: MainState, flipToken: Int, size: Dp, coinPadding: D
   ) {
     when (state.coinImageType) {
       CoinImageType.PLACEHOLDER -> {
-        Text(
-          text = "?",
-          color = MaterialTheme.colorScheme.primary,
-          fontWeight = FontWeight.Bold,
-          fontSize = (size.value * 0.7f).sp
-        )
+        val glyphColor = MaterialTheme.colorScheme.primary
+        Canvas(
+          modifier =
+            Modifier
+              .fillMaxSize()
+              // the same inset the coin gets, so the glyph fills exactly the coin's bounds
+              .padding(coinPadding)
+              // a Canvas has no semantics of its own; announce what the Text used to
+              .semantics { contentDescription = PLACEHOLDER_GLYPH }
+        ) {
+          // explicit receiver: the enclosing composable also has a `size`, in Dp
+          val box = this.size
+          val paint =
+            Paint().apply {
+              isAntiAlias = true
+              color = glyphColor.toArgb()
+              typeface = Typeface.DEFAULT_BOLD
+              textSize = box.minDimension
+            }
+          val ink = Rect()
+          // A font size is not a glyph size: '?' inks barely three quarters of its em box and none
+          // of its width, so scale by what was measured rather than by a guessed fraction. This
+          // lands the glyph at ~97% of the box; getTextBounds reports a slightly larger rect than
+          // the glyph actually paints, and iterating the fit does not close that last few percent.
+          paint.getTextBounds(PLACEHOLDER_GLYPH, 0, PLACEHOLDER_GLYPH.length, ink)
+          paint.textSize *=
+            min(
+              box.width / ink.width().coerceAtLeast(1),
+              box.height / ink.height().coerceAtLeast(1)
+            )
+          paint.getTextBounds(PLACEHOLDER_GLYPH, 0, PLACEHOLDER_GLYPH.length, ink)
+          // drawText puts the origin on the baseline with the ink sitting asymmetrically around it,
+          // so centring the text run leaves the glyph high; centre the measured ink box instead
+          drawContext.canvas.nativeCanvas.drawText(
+            PLACEHOLDER_GLYPH,
+            box.width / 2f - ink.exactCenterX(),
+            box.height / 2f - ink.exactCenterY(),
+            paint
+          )
+        }
       }
       else -> {
         AndroidView(
