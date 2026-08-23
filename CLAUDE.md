@@ -51,8 +51,8 @@ CoinFlip2 is a Modern Android Development (MAD) coin-flipping app published on t
 **Key domain classes:**
 - `Coin` — core flip logic; tracks `currentValue` to determine animation permutation (heads→heads, heads→tails, etc.)
 - `RNG` — wraps `kotlin.random.Random` / `SecureRandom`, listens for preference changes to hot-swap
-- `SettingsManager` — typed accessors over `SharedPreferences`; all preference keys defined in the `Settings` enum
-- `AnimationHelper` — generates frame-by-frame `DurationAnimationDrawable` for each of the 4 flip permutations; coin images are loaded by resource name prefix (e.g., `"gw"` → `gw_heads` / `gw_tails` drawables)
+- `SettingsManager` — typed accessors over `SharedPreferences`; all preference keys defined in the `Settings` enum. `update()` deliberately accepts only `Boolean`, `String`, and `null` (and throws otherwise), so favorite coins are stored as one comma-delimited string rather than a `StringSet`. Adding a key needs no schema bump: `validateSchema()` wipes everything only on a version *mismatch*
+- `AnimationHelper` — generates frame-by-frame `DurationAnimationDrawable` for each of the 4 flip permutations; coin images are loaded by resource name prefix (e.g., `"gw"` → `gw_heads` / `gw_tails` drawables). A permutation with no frames gets *no map entry*, not an empty drawable — `getLastFrame()` reads index -1 on an empty one, which would defeat the caller's null check
 - `SoundHelper`, `VibrationHelper` — play sounds / haptics only when the corresponding setting is enabled
 
 **Testing:** JUnit 5 with MockK for mocking, Kluent for assertions, Turbine for Flow testing. ViewModel tests use `@ExtendWith(MainDispatcherRule::class)` to swap `Dispatchers.Main` with `UnconfinedTestDispatcher`. Tests are in `coinflip/src/test/`; there is no `androidTest` source set, so nothing in Compose is covered.
@@ -62,7 +62,7 @@ tests can assert what the store ends up holding. `CoinResourcesTests` reads `res
 the three parallel coin arrays and the drawables they name by string concatenation stay in step —
 `build.gradle.kts` declares those files as test inputs so the guard is not skipped as up-to-date.
 
-**Coverage:** Kover, reported on the debug variant. Generated (Hilt/Dagger) code, `@Composable`
+**Coverage:** Kover, reported on the debug variant. 142 tests, ~57% of filtered lines; the biggest remaining gap is `AnimationHelper`'s bitmap pipeline, which needs Robolectric or instrumentation rather than plain unit tests. Generated (Hilt/Dagger) code, `@Composable`
 functions, and the theme declarations are filtered out in the `kover` block of `coinflip/build.gradle.kts`,
 so the number reflects testable logic only — remove the Compose exclusions if UI tests are ever added.
 Nothing gates the build: `koverVerify` runs as part of `check` but has no rules. CI is the single
