@@ -268,11 +268,13 @@ fun SettingsView(
         )
       OpenDialog.CUSTOM_TEXT ->
         CustomTextDialog(
-          initialHeads = state.customHeads ?: headsDefault,
-          initialTails = state.customTails ?: tailsDefault,
+          initialHeads = state.customHeads,
+          initialTails = state.customTails,
+          headsDefault = headsDefault,
+          tailsDefault = tailsDefault,
           onConfirm = { heads, tails ->
-            postAction(SettingsAction.SetCustomHeads(heads.ifBlank { headsDefault }))
-            postAction(SettingsAction.SetCustomTails(tails.ifBlank { tailsDefault }))
+            postAction(SettingsAction.SetCustomHeads(heads))
+            postAction(SettingsAction.SetCustomTails(tails))
           },
           onDismiss = { openDialog = OpenDialog.NONE }
         )
@@ -436,17 +438,22 @@ private fun TitleAndSummary(modifier: Modifier, title: String, summary: String?,
 
 @Composable
 private fun CustomTextDialog(
-  initialHeads: String,
-  initialTails: String,
-  onConfirm: (String, String) -> Unit,
+  initialHeads: String?,
+  initialTails: String?,
+  headsDefault: String,
+  tailsDefault: String,
+  onConfirm: (String?, String?) -> Unit,
   onDismiss: () -> Unit
 ) {
-  var heads by rememberEditableValue(initialHeads, selectAll = true)
-  var tails by rememberEditableValue(initialTails)
+  // an empty field means "no override", shown as the localized default in the placeholder. Storing
+  // the default as a literal instead would freeze the label to whatever language set it, and leave
+  // no way back -- these are the words the coin lands on, so they have to follow the locale.
+  var heads by rememberEditableValue(initialHeads.orEmpty(), selectAll = true)
+  var tails by rememberEditableValue(initialTails.orEmpty())
 
   TextInputDialog(
     title = stringResource(R.string.settings_item_custom_text_title),
-    onConfirm = { onConfirm(heads.text, tails.text) },
+    onConfirm = { onConfirm(heads.text.ifBlank { null }, tails.text.ifBlank { null }) },
     onDismiss = onDismiss
   ) { focusRequester ->
     OutlinedTextField(
@@ -454,12 +461,14 @@ private fun CustomTextDialog(
       modifier = Modifier.focusRequester(focusRequester),
       onValueChange = { heads = it },
       label = { Text(stringResource(R.string.heads)) },
+      placeholder = { Text(headsDefault) },
       singleLine = true
     )
     OutlinedTextField(
       value = tails,
       onValueChange = { tails = it },
       label = { Text(stringResource(R.string.tails)) },
+      placeholder = { Text(tailsDefault) },
       singleLine = true
     )
   }

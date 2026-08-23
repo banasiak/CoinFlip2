@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="about_app_text">Una forma sencilla de lanzar una moneda, incluso si no tienes una. Simplemente toca el signo de interrogación o agita el dispositivo para ver el resultado. Toca o agita para volver a lanzar la moneda.</string>
-  <string name="about_fragment_title">Acerca del lanzamiento de monedas</string>
+  <string name="about_app_text">Una forma sencilla de lanzar una moneda, incluso si no tiene una. Simplemente toque el signo de interrogación o agite el dispositivo para ver el resultado. Toque o agite para volver a lanzar la moneda.</string>
+  <string name="about_fragment_title">Acerca del lanzamiento de moneda</string>
   <string name="about_menu_title">Acerca de</string>
   <string name="app_name">Lanzamiento de moneda</string>
   <string name="clear">Borrar</string>
-  <string name="coin_animation">Animación de monedas</string>
+  <string name="coin_animation">Animación de moneda</string>
   <string name="diagnostics_fragment_title">Prueba de diagnóstico</string>
   <string name="diagnostics_iterations_dialog">Número de iteraciones</string>
   <string name="diagnostics_iterations_range">Máximo: %1$s</string>
@@ -16,11 +16,11 @@
   <string name="force_high">Alto</string>
   <string name="force_low">Bajo</string>
   <string name="force_medium">Medio</string>
-  <string name="heads">CABEZAS</string>
-  <string name="instructions_tap">Toca para lanzar una moneda</string>
+  <string name="heads">CARA</string>
+  <string name="instructions_tap">Toque para lanzar una moneda</string>
   <string name="instructions_tap_shake">Toque/agite para lanzar una moneda</string>
   <string name="navigate_back">Atrás</string>
-  <string name="rate_app">Califica la aplicación en Google Play</string>
+  <string name="rate_app">Calificar la aplicación en Google Play</string>
   <string name="reset_stats">Restablecer estadísticas</string>
   <string name="rng">La generación de números aleatorios es un proceso mediante el cual, a menudo por medio de un generador de números pseudoaleatorios, se genera una secuencia de números que no se puede predecir razonablemente mejor que por casualidad. Esto significa que la secuencia de resultados particular contendrá algunos patrones detectables en retrospectiva pero imposibles de prever.</string>
   <string name="seconds">%1s segundos</string>
@@ -41,11 +41,11 @@
   <string name="settings_item_dynamic_colors_summary">Usar colores de fondo de pantalla (Android 12+)</string>
   <string name="settings_item_dynamic_colors_title">Tema de color dinámico</string>
   <string name="settings_item_force_summary">Fuerza necesaria para lanzar una moneda</string>
-  <string name="settings_item_force_title">Sensibilidad al batido</string>
-  <string name="settings_item_quick_reset_summary">Mostrar el botón de reinicio debajo de las estadísticas</string>
+  <string name="settings_item_force_title">Sensibilidad al agitar</string>
+  <string name="settings_item_quick_reset_summary">Mostrar el botón de restablecimiento debajo de las estadísticas</string>
   <string name="settings_item_quick_reset_title">Restablecimiento rápido de estadísticas</string>
   <string name="settings_item_reset_stats_summary">Lanzamientos registrados: %1$s</string>
-  <string name="settings_item_secure_random_summary">Utilice un generador de números pseudoaleatorios criptográficamente seguro</string>
+  <string name="settings_item_secure_random_summary">Usar un generador de números pseudoaleatorios criptográficamente seguro (CSPRNG)</string>
   <string name="settings_item_secure_random_title">Generador de números aleatorios</string>
   <string name="settings_item_shake_summary">Agite el dispositivo para lanzar una moneda</string>
   <string name="settings_item_shake_title">Agitar</string>
@@ -53,12 +53,12 @@
   <string name="settings_item_sound_title">Sonido</string>
   <string name="settings_item_stats_summary">Mostrar el total acumulado</string>
   <string name="settings_item_stats_title">Estadísticas</string>
-  <string name="settings_item_text_summary">Mostrar CABEZAS/CRUZ</string>
+  <string name="settings_item_text_summary">Mostrar CARA/CRUZ</string>
   <string name="settings_item_text_title">Texto del resultado</string>
   <string name="settings_item_vibrate_summary">Vibrar al lanzar una moneda</string>
   <string name="settings_item_vibrate_title">Vibrar</string>
   <string name="settings_menu_title">Ajustes</string>
-  <string name="stats_reset_message">Las estadísticas se han reiniciado</string>
+  <string name="stats_reset_message">Las estadísticas se han restablecido</string>
   <string name="tails">CRUZ</string>
   <string name="time">TIEMPO</string>
   <string name="total">TOTAL</string>

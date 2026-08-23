@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Overrides only, not a full translation: anything absent here resolves to values-es, so future
+  Spanish edits reach Mexico without being duplicated.
+
+  Mexico calls a coin toss "un volado" and its faces "águila o sol" rather than "cara o cruz".
+  Águila is the Escudo Nacional on the obverse; sol is the rayed reverse of the old republic
+  coinage, so the mapping follows the same portrait-side-is-heads rule as every other locale.
+-->
+<resources>
+  <string name="heads">ÁGUILA</string>
+  <string name="settings_item_text_summary">Mostrar ÁGUILA/SOL</string>
+  <!-- "Ajustes" is peninsular; Android uses "Configuración" across Latin America -->
+  <string name="settings_menu_title">Configuración</string>
+  <string name="tails">SOL</string>
+</resources>
