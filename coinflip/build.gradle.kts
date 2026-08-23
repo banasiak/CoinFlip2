@@ -6,6 +6,7 @@ plugins {
   alias(libs.plugins.kotlin.compose)
   alias(libs.plugins.kotlin.parcelize)
   alias(libs.plugins.hilt.android)
+  alias(libs.plugins.kover)
   alias(libs.plugins.ksp)
 }
 
@@ -63,6 +64,31 @@ tasks.withType<Test>().configureEach {
     .dir(layout.projectDirectory.dir("src/main/res/drawable"))
     .withPropertyName("coinDrawables")
     .withPathSensitivity(PathSensitivity.RELATIVE)
+}
+
+kover {
+  reports {
+    filters {
+      excludes {
+        // Hilt/Dagger and the Compose compiler emit these; nobody wrote them and nobody can test them
+        annotatedBy("dagger.internal.DaggerGenerated")
+        classes(
+          "*.BuildConfig",
+          "*.Hilt_*",
+          "*_Factory*",
+          "*_MembersInjector",
+          "*_HiltModules*",
+          "*ComposableSingletons*"
+        )
+        packages("hilt_aggregated_deps", "dagger.hilt.internal")
+
+        // the UI layer is deliberately out of scope while there are no Compose tests. Drop these two
+        // exclusions the day androidTest exists, or the report will keep flattering the UI.
+        annotatedBy("androidx.compose.runtime.Composable")
+        packages("com.banasiak.coinflip.ui.theme")
+      }
+    }
+  }
 }
 
 val ktlint: Configuration by configurations.creating

@@ -13,6 +13,7 @@ kluent = "1.73"
 kotlin = "2.3.10"
 kotlin-metadata-jvm = "2.3.0"
 kotlinx-coroutines = "1.10.2"
+kover = "0.9.9"
 ksp = "2.3.5"
 google-material = "1.13.0"
 mockk = "1.14.9"
@@ -62,5 +63,6 @@ hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 versions = { id = "com.github.ben-manes.versions", version.ref = "versions" }

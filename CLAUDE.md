@@ -26,6 +26,9 @@ CoinFlip2 is a Modern Android Development (MAD) coin-flipping app published on t
 
 # Full check (build + tests + ktlint)
 ./gradlew :coinflip:check
+
+# Coverage report -> coinflip/build/reports/kover/htmlDebug/index.html
+./gradlew :coinflip:koverHtmlReportDebug
 ```
 
 ## Architecture
@@ -58,6 +61,14 @@ CoinFlip2 is a Modern Android Development (MAD) coin-flipping app published on t
 tests can assert what the store ends up holding. `CoinResourcesTests` reads `res/` off disk to assert
 the three parallel coin arrays and the drawables they name by string concatenation stay in step —
 `build.gradle.kts` declares those files as test inputs so the guard is not skipped as up-to-date.
+
+**Coverage:** Kover, reported on the debug variant. Generated (Hilt/Dagger) code, `@Composable`
+functions, and the theme declarations are filtered out in the `kover` block of `coinflip/build.gradle.kts`,
+so the number reflects testable logic only — remove the Compose exclusions if UI tests are ever added.
+Nothing gates the build: `koverVerify` runs as part of `check` but has no rules. CI is the single
+**Build & Test** workflow, which reports coverage into its run summary as a step that cannot fail the
+job. It lives on the same job as the tests on purpose: `check` already runs the instrumented tests, so
+generating the reports costs about a second, where a separate workflow would repeat the whole build.
 
 ## Code Style
 
