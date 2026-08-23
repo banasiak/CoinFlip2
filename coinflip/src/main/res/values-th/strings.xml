@@ -32,8 +32,11 @@
   <string name="settings_item_animation_summary">แสดงเหรียญหมุน</string>
   <string name="settings_item_animation_title">แอนิเมชัน</string>
   <string name="settings_item_coin_empty">ไม่พบเหรียญที่ตรงกัน</string>
+  <string name="settings_item_coin_favorite_add">เพิ่ม %1$s ในรายการโปรด</string>
+  <string name="settings_item_coin_favorite_remove">นำ %1$s ออกจากรายการโปรด</string>
   <string name="settings_item_coin_group_canada">แคนาดา</string>
   <string name="settings_item_coin_group_euro">ยูโร</string>
+  <string name="settings_item_coin_group_favorites">รายการโปรด</string>
   <string name="settings_item_coin_group_other">อื่น ๆ</string>
   <string name="settings_item_coin_group_us">สหรัฐอเมริกา</string>
   <string name="settings_item_coin_title">ประเภทเหรียญ</string>

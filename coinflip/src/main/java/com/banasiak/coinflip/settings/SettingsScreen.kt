@@ -265,7 +265,9 @@ fun SettingsView(
           values = coinValues,
           groups = coinGroups,
           selectedValue = state.coin,
+          favorites = state.favorites,
           onSelect = { postAction(SettingsAction.SetCoin(it)) },
+          onToggleFavorite = { postAction(SettingsAction.ToggleFavoriteCoin(it)) },
           onDismiss = { openDialog = OpenDialog.NONE }
         )
       }

@@ -32,8 +32,11 @@
   <string name="settings_item_animation_summary">घूमता हुआ सिक्का दिखाएँ</string>
   <string name="settings_item_animation_title">एनिमेशन</string>
   <string name="settings_item_coin_empty">कोई मेल खाता सिक्का नहीं</string>
+  <string name="settings_item_coin_favorite_add">%1$s को पसंदीदा में जोड़ें</string>
+  <string name="settings_item_coin_favorite_remove">%1$s को पसंदीदा से हटाएं</string>
   <string name="settings_item_coin_group_canada">कनाडा</string>
   <string name="settings_item_coin_group_euro">यूरो</string>
+  <string name="settings_item_coin_group_favorites">पसंदीदा</string>
   <string name="settings_item_coin_group_other">अन्य</string>
   <string name="settings_item_coin_group_us">संयुक्त राज्य अमेरिका</string>
   <string name="settings_item_coin_title">सिक्के का प्रकार</string>

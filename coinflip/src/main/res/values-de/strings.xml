@@ -32,8 +32,11 @@
   <string name="settings_item_animation_summary">Sich drehende Münze anzeigen</string>
   <string name="settings_item_animation_title">Animation</string>
   <string name="settings_item_coin_empty">Keine passenden Münzen</string>
+  <string name="settings_item_coin_favorite_add">%1$s zu Favoriten hinzufügen</string>
+  <string name="settings_item_coin_favorite_remove">%1$s aus Favoriten entfernen</string>
   <string name="settings_item_coin_group_canada">Kanada</string>
   <string name="settings_item_coin_group_euro">Euro</string>
+  <string name="settings_item_coin_group_favorites">Favoriten</string>
   <string name="settings_item_coin_group_other">Sonstige</string>
   <string name="settings_item_coin_group_us">Vereinigte Staaten</string>
   <string name="settings_item_coin_title">Münztyp</string>

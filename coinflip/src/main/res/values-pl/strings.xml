@@ -32,8 +32,11 @@
   <string name="settings_item_animation_summary">Wyświetl wirującą monetę</string>
   <string name="settings_item_animation_title">Animacja</string>
   <string name="settings_item_coin_empty">Brak pasujących monet</string>
+  <string name="settings_item_coin_favorite_add">Dodaj %1$s do ulubionych</string>
+  <string name="settings_item_coin_favorite_remove">Usuń %1$s z ulubionych</string>
   <string name="settings_item_coin_group_canada">Kanada</string>
   <string name="settings_item_coin_group_euro">Euro</string>
+  <string name="settings_item_coin_group_favorites">Ulubione</string>
   <string name="settings_item_coin_group_other">Inne</string>
   <string name="settings_item_coin_group_us">Stany Zjednoczone</string>
   <string name="settings_item_coin_title">Typ monety</string>

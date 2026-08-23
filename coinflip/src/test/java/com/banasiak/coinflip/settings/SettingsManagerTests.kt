@@ -236,4 +236,48 @@ class SettingsManagerTests {
 
     changed shouldBeEqualTo listOf(Settings.SECURE_RANDOM.key)
   }
+
+  @Nested
+  inner class Favorites {
+    @Test
+    fun `no favorites by default`() {
+      manager().second.favoriteCoins shouldBeEqualTo emptySet()
+    }
+
+    @Test
+    fun `favorites round trip`() {
+      val (prefs, settings) = manager()
+
+      settings.persistFavoriteCoins(setOf("gw", "jfk"))
+
+      settings.favoriteCoins shouldBeEqualTo setOf("gw", "jfk")
+      // one delimited string, so update() keeps its Boolean/String/null contract
+      prefs.values[Settings.FAVORITES.key] shouldBeEqualTo "gw,jfk"
+    }
+
+    @Test
+    fun `clearing the last favorite leaves an empty set rather than a blank entry`() {
+      val (_, settings) = manager(Settings.FAVORITES.key to "gw")
+
+      settings.persistFavoriteCoins(emptySet())
+
+      settings.favoriteCoins shouldBeEqualTo emptySet()
+    }
+
+    @Test
+    fun `a stray delimiter does not produce a blank favorite`() {
+      // guards against an empty string surviving a split and matching no coin
+      manager(Settings.FAVORITES.key to ",gw,,jfk,").second.favoriteCoins shouldBeEqualTo setOf("gw", "jfk")
+    }
+
+    @Test
+    fun `favorites survive alongside the other settings`() {
+      val (_, settings) = manager(Settings.COIN.key to "jfk")
+
+      settings.persistFavoriteCoins(setOf("gw"))
+
+      settings.coinPrefix shouldBeEqualTo "jfk"
+      settings.favoriteCoins shouldBeEqualTo setOf("gw")
+    }
+  }
 }

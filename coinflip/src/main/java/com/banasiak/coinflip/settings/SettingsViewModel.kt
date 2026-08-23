@@ -28,6 +28,7 @@ class SettingsViewModel @Inject constructor(
   fun postAction(action: SettingsAction) {
     when (action) {
       is SettingsAction.SetCoin -> persist(Settings.COIN, action.value) { copy(coin = action.value) }
+      is SettingsAction.ToggleFavoriteCoin -> onToggleFavoriteCoin(action.value)
       is SettingsAction.SetAnimate -> persist(Settings.ANIMATE, action.value) { copy(animate = action.value) }
       is SettingsAction.SetShake -> persist(Settings.SHAKE, action.value) { copy(shake = action.value) }
       is SettingsAction.SetSound -> persist(Settings.SOUND, action.value) { copy(sound = action.value) }
@@ -43,6 +44,12 @@ class SettingsViewModel @Inject constructor(
       SettingsAction.ResetStats -> onResetStats()
       SettingsAction.UndoResetStats -> onUndoResetStats()
     }
+  }
+
+  private fun onToggleFavoriteCoin(value: String) {
+    val favorites = if (value in state.favorites) state.favorites - value else state.favorites + value
+    settings.persistFavoriteCoins(favorites)
+    emit(state.copy(favorites = favorites))
   }
 
   private fun onSetDynamic(value: Boolean) {
@@ -83,6 +90,7 @@ class SettingsViewModel @Inject constructor(
   private fun loadState(): SettingsState =
     SettingsState(
       coin = settings.coinPrefix,
+      favorites = settings.favoriteCoins,
       animate = settings.animationEnabled,
       shake = settings.shakeEnabled,
       sound = settings.soundEnabled,

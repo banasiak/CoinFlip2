@@ -32,8 +32,11 @@
   <string name="settings_item_animation_summary">回転するコインを表示する</string>
   <string name="settings_item_animation_title">アニメーション</string>
   <string name="settings_item_coin_empty">一致するコインがありません</string>
+  <string name="settings_item_coin_favorite_add">%1$s をお気に入りに追加</string>
+  <string name="settings_item_coin_favorite_remove">%1$s をお気に入りから削除</string>
   <string name="settings_item_coin_group_canada">カナダ</string>
   <string name="settings_item_coin_group_euro">ユーロ</string>
+  <string name="settings_item_coin_group_favorites">お気に入り</string>
   <string name="settings_item_coin_group_other">その他</string>
   <string name="settings_item_coin_group_us">アメリカ合衆国</string>
   <string name="settings_item_coin_title">コインの種類</string>

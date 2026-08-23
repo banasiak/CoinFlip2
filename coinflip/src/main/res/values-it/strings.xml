@@ -32,8 +32,11 @@
   <string name="settings_item_animation_summary">Renderizza la moneta che gira</string>
   <string name="settings_item_animation_title">Animazione</string>
   <string name="settings_item_coin_empty">Nessuna moneta corrispondente</string>
+  <string name="settings_item_coin_favorite_add">Aggiungi %1$s ai preferiti</string>
+  <string name="settings_item_coin_favorite_remove">Rimuovi %1$s dai preferiti</string>
   <string name="settings_item_coin_group_canada">Canada</string>
   <string name="settings_item_coin_group_euro">Euro</string>
+  <string name="settings_item_coin_group_favorites">Preferiti</string>
   <string name="settings_item_coin_group_other">Altre</string>
   <string name="settings_item_coin_group_us">Stati Uniti</string>
   <string name="settings_item_coin_title">Tipo di moneta</string>

@@ -17,12 +17,16 @@ data class SettingsState(
   val dynamic: Boolean = Settings.DYNAMIC.default as Boolean,
   val secureRandom: Boolean = Settings.SECURE_RANDOM.default as Boolean,
   val force: String = Settings.FORCE.default as String,
+  val favorites: Set<String> = emptySet(),
   // how many flips are on record, so a destructive reset can say what there is to lose
   val flipCount: Long = 0
 )
 
 sealed class SettingsAction {
   data class SetCoin(val value: String) : SettingsAction()
+
+  /** Stars or unstars a coin in the picker; the same action does both. */
+  data class ToggleFavoriteCoin(val value: String) : SettingsAction()
   data class SetAnimate(val value: Boolean) : SettingsAction()
   data class SetShake(val value: Boolean) : SettingsAction()
   data class SetSound(val value: Boolean) : SettingsAction()
