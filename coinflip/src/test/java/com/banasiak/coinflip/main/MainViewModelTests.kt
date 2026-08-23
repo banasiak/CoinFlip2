@@ -29,9 +29,7 @@ class MainViewModelTests {
   private val vibrationHelper: VibrationHelper = mockk(relaxed = true)
   private val savedStateHandle: SavedStateHandle = mockk()
 
-  private fun viewModel(): MainViewModel {
-    return MainViewModel(animationHelper, coin, settings, soundHelper, vibrationHelper, savedStateHandle)
-  }
+  private fun viewModel(): MainViewModel = MainViewModel(animationHelper, coin, settings, soundHelper, vibrationHelper, savedStateHandle)
 
   @BeforeEach
   fun beforeEach() {

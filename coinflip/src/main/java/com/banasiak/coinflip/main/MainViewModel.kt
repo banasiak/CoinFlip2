@@ -181,7 +181,5 @@ class MainViewModel @Inject constructor(
       )
   }
 
-  private fun Map<Coin.Value, Long>.count(value: Coin.Value): String {
-    return (this[value] ?: 0).toString()
-  }
+  private fun Map<Coin.Value, Long>.count(value: Coin.Value): String = (this[value] ?: 0).toString()
 }

@@ -24,7 +24,5 @@ class DurationAnimationDrawable : AnimationDrawable() {
     return totalDuration - skippedDuration
   }
 
-  fun getLastFrame(): Drawable {
-    return getFrame(numberOfFrames - 1)
-  }
+  fun getLastFrame(): Drawable = getFrame(numberOfFrames - 1)
 }

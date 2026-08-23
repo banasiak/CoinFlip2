@@ -17,9 +17,7 @@ class AboutViewModelTests {
   private val buildInfo: BuildInfo = mockk()
   private val settings: SettingsManager = mockk(relaxed = true)
 
-  private fun viewModel(): AboutViewModel {
-    return AboutViewModel(buildInfo, settings)
-  }
+  private fun viewModel(): AboutViewModel = AboutViewModel(buildInfo, settings)
 
   @BeforeEach
   fun beforeEach() {

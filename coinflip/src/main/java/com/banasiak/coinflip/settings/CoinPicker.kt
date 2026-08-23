@@ -135,8 +135,10 @@ private fun CoinPickerContent(
           ) {
             items(items = items, key = { it.key() }) { item ->
               when (item) {
-                is CoinListItem.Group -> CategoryHeader(stringResource(item.title))
-                is CoinListItem.Option ->
+                is CoinListItem.Group -> {
+                  CategoryHeader(stringResource(item.title))
+                }
+                is CoinListItem.Option -> {
                   CoinRow(
                     label = item.label,
                     thumbnail = thumbnails[item.value] ?: 0,
@@ -146,6 +148,7 @@ private fun CoinPickerContent(
                       onDismiss()
                     }
                   )
+                }
               }
             }
           }

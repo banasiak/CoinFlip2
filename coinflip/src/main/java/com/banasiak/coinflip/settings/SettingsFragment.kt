@@ -16,8 +16,8 @@ class SettingsFragment : Fragment() {
   private val viewModel: SettingsViewModel by viewModels()
   private lateinit var onBackPressedCallback: OnBackPressedCallback
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-    return ComposeView(requireContext()).apply {
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+    ComposeView(requireContext()).apply {
       setContent {
         SettingsScreen(
           viewModel = viewModel,
@@ -28,7 +28,6 @@ class SettingsFragment : Fragment() {
         )
       }
     }
-  }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)

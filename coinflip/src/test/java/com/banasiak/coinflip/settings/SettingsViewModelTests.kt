@@ -17,9 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 class SettingsViewModelTests {
   private val settings: SettingsManager = mockk(relaxed = true)
 
-  private fun viewModel(): SettingsViewModel {
-    return SettingsViewModel(settings)
-  }
+  private fun viewModel(): SettingsViewModel = SettingsViewModel(settings)
 
   @Test
   fun initial_state_is_loaded_from_the_settings_manager() =

@@ -15,6 +15,7 @@ kotlin-metadata-jvm = "2.3.21"
 kotlinx-coroutines = "1.11.0"
 kover = "0.9.9"
 ksp = "2.3.11"
+ktlint = "1.8.0"
 google-material = "1.14.0"
 mockk = "1.14.11"
 google-review = "2.0.2"
@@ -22,9 +23,6 @@ seismic = "1.0.3"
 timber = "5.0.1"
 turbine = "1.2.1"
 versions = "0.61.0"
-
-#noinspection NewerVersionAvailable
-ktlint = "1.1.0"
 
 [libraries]
 androidx-activity = { module = "androidx.activity:activity-ktx", version.ref="androidx-activity" }

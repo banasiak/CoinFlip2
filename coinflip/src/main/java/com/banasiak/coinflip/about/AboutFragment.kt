@@ -27,11 +27,10 @@ class AboutFragment : BottomSheetDialogFragment() {
 
   private val viewModel: AboutViewModel by viewModels()
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-    return ComposeView(requireContext()).apply {
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+    ComposeView(requireContext()).apply {
       setContent { AboutScreen(viewModel) }
     }
-  }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     val dialog = super.onCreateDialog(savedInstanceState)

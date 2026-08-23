@@ -66,8 +66,12 @@ class DiagnosticsViewModel @Inject constructor(
 
   fun postAction(action: DiagnosticsAction) {
     when (action) {
-      DiagnosticsAction.Back -> _effectFlow.tryEmit(DiagnosticsEffect.NavBack)
-      is DiagnosticsAction.SetIterations -> onSetIterations(action.value)
+      DiagnosticsAction.Back -> {
+        _effectFlow.tryEmit(DiagnosticsEffect.NavBack)
+      }
+      is DiagnosticsAction.SetIterations -> {
+        onSetIterations(action.value)
+      }
       DiagnosticsAction.Start -> {
         if (diagnosticsJob?.isActive != true) {
           diagnosticsJob =
@@ -79,7 +83,9 @@ class DiagnosticsViewModel @Inject constructor(
         }
       }
 
-      DiagnosticsAction.Wikipedia -> _effectFlow.tryEmit(DiagnosticsEffect.LaunchUrl(WIKIPEDIA_URL))
+      DiagnosticsAction.Wikipedia -> {
+        _effectFlow.tryEmit(DiagnosticsEffect.LaunchUrl(WIKIPEDIA_URL))
+      }
     }
   }
 
@@ -110,8 +116,12 @@ class DiagnosticsViewModel @Inject constructor(
   override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
     Timber.d("Lifecycle onStateChanged(): $event")
     when (event) {
-      Lifecycle.Event.ON_START -> postAction(DiagnosticsAction.Start)
-      Lifecycle.Event.ON_PAUSE -> onPause()
+      Lifecycle.Event.ON_START -> {
+        postAction(DiagnosticsAction.Start)
+      }
+      Lifecycle.Event.ON_PAUSE -> {
+        onPause()
+      }
       else -> { }
     }
   }
@@ -203,7 +213,9 @@ class DiagnosticsViewModel @Inject constructor(
     }
   }
 
-  private fun formatRatio(numerator: Long, denominator: Long): String {
-    return "[" + "%.2f".format((numerator.toDouble() / denominator.toDouble()) * 100) + "%]"
-  }
+  private fun formatRatio(numerator: Long, denominator: Long): String =
+    "[" +
+      "%.2f".format(
+        (numerator.toDouble() / denominator.toDouble()) * 100
+      ) + "%]"
 }
