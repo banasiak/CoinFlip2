@@ -19,7 +19,7 @@ android {
     minSdk = 26
     targetSdk = 37
     versionCode = 74
-    versionName = "2026/07"
+    versionName = "2026/08"
   }
   buildFeatures {
     buildConfig = true
