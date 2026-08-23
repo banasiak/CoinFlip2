@@ -57,3 +57,14 @@ CoinFlip2 is a Modern Android Development (MAD) coin-flipping app published on t
 ## Code Style
 
 Kotlin formatting is enforced by **ktlint**. Run `./gradlew :coinflip:format` before committing. The project uses Kotlin DSL for Gradle build files and a version catalog (`gradle/libs.versions.toml`). Package is `com.banasiak.coinflip`; code targets JVM 17.
+
+## Localization
+
+The app ships English plus 12 translations (and an `es-MX` regional variant); none were done by a
+human translator. Lint treats `MissingTranslation` as an **error**, so adding a translatable string
+means adding it to every locale in the same commit or `./gradlew :coinflip:check` fails.
+
+Read **[I18N.md](I18N.md)** before touching `res/values-*/strings.xml`. It records the coin-face
+terminology per locale and the rule behind it (portrait side = heads), the two idioms that run
+backwards against that rule, which strings are still unreviewed machine output, and the regional
+variant's partial-override design.

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="about_app_text">Un modo comodo per lanciare una moneta, anche se non ne hai una. Basta toccare il punto interrogativo o agitare e visualizzare il risultato. Tocca o agita per far girare di nuovo la moneta.</string>
-  <string name="about_fragment_title">Informazioni sul lancio della moneta</string>
-  <string name="about_menu_title">Di</string>
+  <string name="about_fragment_title">Informazioni su Testa o croce</string>
+  <string name="about_menu_title">Informazioni</string>
   <string name="app_name">Testa o croce</string>
   <string name="clear">Cancella</string>
-  <string name="coin_animation">Animazione delle monete</string>
+  <string name="coin_animation">Animazione della moneta</string>
   <string name="diagnostics_fragment_title">Test diagnostico</string>
   <string name="diagnostics_iterations_dialog">Numero di iterazioni</string>
   <string name="diagnostics_iterations_range">Massimo: %1$s</string>
@@ -15,8 +15,8 @@
   <string name="donate_text">Se ti piace questa app, ti preghiamo di considerare di fare una donazione alla Electronic Frontier Foundation. ❤</string>
   <string name="force_high">Alto</string>
   <string name="force_low">Basso</string>
-  <string name="force_medium">medio</string>
-  <string name="heads">TESTE</string>
+  <string name="force_medium">Medio</string>
+  <string name="heads">TESTA</string>
   <string name="instructions_tap">Tocca per lanciare la moneta</string>
   <string name="instructions_tap_shake">Tocca/scuoti per lanciare la moneta</string>
   <string name="navigate_back">Indietro</string>
@@ -40,30 +40,30 @@
   <string name="settings_item_custom_text_title">Testo personalizzato</string>
   <string name="settings_item_dynamic_colors_summary">Utilizza i colori dello sfondo (Android 12+)</string>
   <string name="settings_item_dynamic_colors_title">Tema colore dinamico</string>
-  <string name="settings_item_force_summary">Forza necessaria per lanciare una moneta</string>
+  <string name="settings_item_force_summary">Forza necessaria per lanciare la moneta</string>
   <string name="settings_item_force_title">Sensibilità alle scosse</string>
   <string name="settings_item_quick_reset_summary">Mostra il pulsante di ripristino sotto le statistiche</string>
   <string name="settings_item_quick_reset_title">Ripristino rapido delle statistiche</string>
   <string name="settings_item_reset_stats_summary">Lanci registrati: %1$s</string>
-  <string name="settings_item_secure_random_summary">Utilizzare un generatore di numeri pseudocasuali crittograficamente sicuro</string>
+  <string name="settings_item_secure_random_summary">Utilizza un generatore di numeri pseudocasuali crittograficamente sicuro (CSPRNG)</string>
   <string name="settings_item_secure_random_title">Generatore di numeri casuali</string>
-  <string name="settings_item_shake_summary">Agitare il dispositivo per lanciare la moneta</string>
+  <string name="settings_item_shake_summary">Scuoti il dispositivo per lanciare la moneta</string>
   <string name="settings_item_shake_title">Scuotere</string>
   <string name="settings_item_sound_summary">Riproduci il suono dopo il lancio della moneta</string>
   <string name="settings_item_sound_title">Suono</string>
-  <string name="settings_item_stats_summary">Visualizza il totale parziale</string>
+  <string name="settings_item_stats_summary">Visualizza il totale progressivo</string>
   <string name="settings_item_stats_title">Statistiche</string>
-  <string name="settings_item_text_summary">Visualizza TESTE/CODE</string>
+  <string name="settings_item_text_summary">Visualizza TESTA/CROCE</string>
   <string name="settings_item_text_title">Testo del risultato</string>
   <string name="settings_item_vibrate_summary">Vibra al lancio della moneta</string>
   <string name="settings_item_vibrate_title">Vibrare</string>
   <string name="settings_menu_title">Impostazioni</string>
   <string name="stats_reset_message">Le statistiche sono state ripristinate</string>
-  <string name="tails">CODE</string>
+  <string name="tails">CROCE</string>
   <string name="time">TEMPO</string>
   <string name="total">TOTALE</string>
   <string name="turbo_mode">Modalità Turbo attivata &#127812;</string>
-  <string name="undo">Disfare</string>
+  <string name="undo">Annulla</string>
   <string name="version">versione %1$s (%2$d)</string>
   <string name="wikipedia">— Wikipedia</string>
 </resources>

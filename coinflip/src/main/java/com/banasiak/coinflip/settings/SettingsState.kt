@@ -30,8 +30,10 @@ sealed class SettingsAction {
   data class SetVibrate(val value: Boolean) : SettingsAction()
   data class SetStats(val value: Boolean) : SettingsAction()
   data class SetQuickReset(val value: Boolean) : SettingsAction()
-  data class SetCustomHeads(val value: String) : SettingsAction()
-  data class SetCustomTails(val value: String) : SettingsAction()
+
+  // null clears the override, so the label falls back to the localized default
+  data class SetCustomHeads(val value: String?) : SettingsAction()
+  data class SetCustomTails(val value: String?) : SettingsAction()
   data class SetDynamic(val value: Boolean) : SettingsAction()
   data class SetSecureRandom(val value: Boolean) : SettingsAction()
   data class SetForce(val value: String) : SettingsAction()
