@@ -98,7 +98,10 @@ class AnimationHelper @Inject constructor(
 
     val generated = mutableMapOf<Permutation, DurationAnimationDrawable>()
     for (permutation in Permutation.entries) {
-      generated[permutation] = generateAnimatedDrawable(a4, a3, a2, a1, b4, b3, b2, b1, e, permutation)
+      // a permutation with no frames gets no entry at all: an empty AnimationDrawable is worse than
+      // a missing one, because getLastFrame() reads index -1 on it and callers' null checks never
+      // get the chance to fire
+      generateAnimatedDrawable(a4, a3, a2, a1, b4, b3, b2, b1, e, permutation)?.let { generated[permutation] = it }
     }
     animations = generated
   }
@@ -142,7 +145,7 @@ class AnimationHelper @Inject constructor(
     b1: BitmapDrawable,
     edge: BitmapDrawable,
     permutation: Permutation
-  ): DurationAnimationDrawable {
+  ): DurationAnimationDrawable? {
     val animation = DurationAnimationDrawable()
     animation.isOneShot = true
 
@@ -347,7 +350,10 @@ class AnimationHelper @Inject constructor(
         animation.addFrame(b3, FRAME_DURATION)
         animation.addFrame(b4, FRAME_DURATION)
       }
-      else -> { }
+      // UNKNOWN, and anything added to the enum later, has no flip to draw
+      else -> {
+        return null
+      }
     }
     return animation
   }
