@@ -91,7 +91,6 @@ class DiagnosticsViewModel @Inject constructor(
 
   /** Persists a new iteration count and restarts the test with it. */
   private fun onSetIterations(value: Long) {
-    // the dialog disables its confirm button outside this range, so this is only belt and braces
     if (value !in 1L..MAX_ITERATIONS) return
     settings.update(SettingsManager.Settings.DIAGNOSTICS, value.toString())
 

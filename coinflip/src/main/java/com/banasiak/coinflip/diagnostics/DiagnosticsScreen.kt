@@ -66,14 +66,10 @@ fun DiagnosticsView(state: DiagnosticsState, postAction: (DiagnosticsAction) -> 
           style = MaterialTheme.typography.titleLarge
         )
 
-        // the iteration count is this screen's only input, so it belongs here rather than as a
-        // remote control buried in Settings; changing it reruns the test
         Text(
           modifier =
             Modifier
               .clickable(role = Role.Button, onClick = { editingIterations = true })
-              // padding inside the click area: a bare Text gets no minimum touch target the way a
-              // Material component does, and the line box alone is barely 20dp
               .padding(vertical = Dimen.medium),
           text = "${state.iterations.formatNumber()} ${stringResource(R.string.diagnostics_iterations_summary)}",
           style = MaterialTheme.typography.bodyMedium,
