@@ -67,6 +67,10 @@ import kotlinx.coroutines.launch
 
 private enum class OpenDialog { NONE, COIN, CUSTOM_TEXT }
 
+// Material's disabled tokens: 38% for content, 12% for containers and outlines
+private const val DISABLED_CONTENT_ALPHA = 0.38f
+private const val DISABLED_CONTAINER_ALPHA = 0.12f
+
 @Composable
 fun SettingsScreen(
   viewModel: SettingsViewModel,
@@ -400,7 +404,12 @@ private fun SegmentedPreference(
             SegmentedButtonDefaults.colors(
               activeContainerColor = MaterialTheme.colorScheme.primaryContainer,
               activeContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-              activeBorderColor = MaterialTheme.colorScheme.outline
+              activeBorderColor = MaterialTheme.colorScheme.outline,
+              // the disabled variants default to secondaryContainer as well, so a switched-off
+              // control rendered crimson and drew more attention than a live one
+              disabledActiveContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = DISABLED_CONTAINER_ALPHA),
+              disabledActiveContentColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = DISABLED_CONTENT_ALPHA),
+              disabledActiveBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = DISABLED_CONTAINER_ALPHA)
             )
         ) {
           Text(entries.getOrNull(index) ?: value)
@@ -413,7 +422,7 @@ private fun SegmentedPreference(
 @Composable
 private fun DestructiveButton(title: String, enabled: Boolean, onClick: () -> Unit) {
   val border =
-    if (enabled) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
+    if (enabled) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface.copy(alpha = DISABLED_CONTAINER_ALPHA)
   OutlinedButton(
     // sized to its label rather than the page -- a full-width red pill outshouts every row above it
     modifier = Modifier.padding(horizontal = Dimen.medium, vertical = Dimen.small),
@@ -429,7 +438,7 @@ private fun DestructiveButton(title: String, enabled: Boolean, onClick: () -> Un
 @Composable
 private fun TitleAndSummary(modifier: Modifier, title: String, summary: String?, enabled: Boolean) {
   val contentColor =
-    if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+    if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = DISABLED_CONTENT_ALPHA)
   Column(modifier = modifier) {
     Text(text = title, style = MaterialTheme.typography.titleMedium, color = contentColor)
     if (!summary.isNullOrEmpty()) {
