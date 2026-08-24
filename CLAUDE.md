@@ -77,7 +77,14 @@ Kotlin formatting is enforced by **ktlint**. Run `./gradlew :coinflip:format` be
 **Toolchain:** AGP 9 compiles Kotlin itself, so there is deliberately no `org.jetbrains.kotlin.android`
 plugin — re-adding it fails the build. The compose and parcelize compiler plugins are still applied
 separately, and `kotlin { compilerOptions { } }` still configures the compiler. `compileSdkMinor`
-selects the Android 37.1 platform. Kotlin is held at 2.3.x because KSP has no 2.4 release yet.
+selects the Android 37.1 platform. KSP lags Kotlin — 2.3.11 against Kotlin 2.4.10 — and that is
+fine under AGP 9: Hilt's codegen runs and the build is clean, so do not assume the two have to
+match. Verify before holding a Kotlin bump back on KSP's account.
+
+Dependabot is deliberately **not** configured for version updates; there is no `dependabot.yml`.
+Security alerts are a repository setting instead. Dependency bumps are done deliberately, and the
+SHA-pinned actions in `build.yml` need their pin and version comment updated together — note that
+`gradle/actions` uses annotated tags, so verifying a pin means dereferencing the tag object.
 
 ktlint runs from the CLI and takes its rules from the `ktlint_*` block at the end of `.editorconfig`.
 Each release adds standard rules that reflow working code rather than catch a defect, so a bump
