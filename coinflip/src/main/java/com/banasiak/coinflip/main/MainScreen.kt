@@ -122,7 +122,7 @@ fun MainView(
 
         val landscape = maxWidth > maxHeight
         // portrait sizes the coin off the width; landscape sizes it off the (much scarcer) height,
-        // capped at half the width so the text column still gets its share of a squarish window
+        // capped at half the width so the text column still gets its share of a square-ish window
         val coinSize = if (landscape) maxHeight.coerceAtMost(maxWidth / 2) else maxWidth
 
         if (landscape) {
@@ -195,7 +195,7 @@ private fun CoinImage(state: MainState, flipToken: Int, size: Dp, coinPadding: D
               .fillMaxSize()
               // the same inset the coin gets, so the glyph fills exactly the coin's bounds
               .padding(coinPadding)
-              // a Canvas has no semantics of its own; announce what the Text used to
+              // a Canvas has no semantics of its own; announce what a Text normally would
               .semantics { contentDescription = PLACEHOLDER_GLYPH }
         ) {
           // explicit receiver: the enclosing composable also has a `size`, in Dp
