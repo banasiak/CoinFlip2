@@ -3,6 +3,7 @@ package com.banasiak.coinflip.settings
 import androidx.lifecycle.ViewModel
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.Coin
+import com.banasiak.coinflip.common.Stats
 import com.banasiak.coinflip.settings.SettingsManager.Settings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -23,7 +24,7 @@ class SettingsViewModel @Inject constructor(
   val effectFlow = _effectFlow.asSharedFlow()
 
   // the stats prior to a reset, retained so the user can undo the reset
-  private var previousStats: Map<Coin.Value, Long>? = null
+  private var previousStats: Stats? = null
 
   fun postAction(action: SettingsAction) {
     when (action) {
@@ -35,6 +36,7 @@ class SettingsViewModel @Inject constructor(
       is SettingsAction.SetText -> persist(Settings.TEXT, action.value) { copy(text = action.value) }
       is SettingsAction.SetVibrate -> persist(Settings.VIBRATE, action.value) { copy(vibrate = action.value) }
       is SettingsAction.SetStats -> persist(Settings.STATS, action.value) { copy(stats = action.value) }
+      is SettingsAction.SetStreak -> persist(Settings.STREAK, action.value) { copy(streak = action.value) }
       is SettingsAction.SetQuickReset -> persist(Settings.QUICK_RESET, action.value) { copy(quickReset = action.value) }
       is SettingsAction.SetCustomHeads -> persist(Settings.CUSTOM_HEADS_TEXT, action.value) { copy(customHeads = action.value) }
       is SettingsAction.SetCustomTails -> persist(Settings.CUSTOM_TAILS_TEXT, action.value) { copy(customTails = action.value) }
@@ -61,7 +63,7 @@ class SettingsViewModel @Inject constructor(
   private fun onResetStats() {
     previousStats = settings.loadStats()
     settings.resetStats()
-    emit(state.copy(flipCount = 0L))
+    emit(state.copy(flipCount = 0L, headsRecord = 0L, tailsRecord = 0L))
     _effectFlow.tryEmit(
       SettingsEffect.ShowSnackbar(
         message = R.string.stats_reset_message,
@@ -74,7 +76,7 @@ class SettingsViewModel @Inject constructor(
   private fun onUndoResetStats() {
     val previous = previousStats ?: return
     settings.persistStats(previous)
-    emit(state.copy(flipCount = previous.values.sum()))
+    emit(state.withStats(previous))
   }
 
   private fun persist(setting: Settings, value: Any?, transform: SettingsState.() -> SettingsState) {
@@ -87,6 +89,14 @@ class SettingsViewModel @Inject constructor(
     _stateFlow.tryEmit(state)
   }
 
+  /** Copies over every figure the Statistics section shows, so a reset and its undo cannot disagree. */
+  private fun SettingsState.withStats(stats: Stats): SettingsState =
+    copy(
+      flipCount = stats.total,
+      headsRecord = stats.record(Coin.Value.HEADS),
+      tailsRecord = stats.record(Coin.Value.TAILS)
+    )
+
   private fun loadState(): SettingsState =
     SettingsState(
       coin = settings.coinPrefix,
@@ -97,12 +107,12 @@ class SettingsViewModel @Inject constructor(
       text = settings.textEnabled,
       vibrate = settings.vibrateEnabled,
       stats = settings.showStats,
+      streak = settings.showStreak,
       quickReset = settings.showQuickReset,
       customHeads = settings.customHeadsText,
       customTails = settings.customTailsText,
       dynamic = settings.dynamicColorsEnabled,
       secureRandom = settings.secureRandom,
-      force = settings.forceValue,
-      flipCount = settings.loadStats().values.sum()
-    )
+      force = settings.forceValue
+    ).withStats(settings.loadStats())
 }

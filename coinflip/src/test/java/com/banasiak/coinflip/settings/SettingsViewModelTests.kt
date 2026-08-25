@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import com.banasiak.coinflip.MainDispatcherRule
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.Coin
+import com.banasiak.coinflip.common.Stats
 import com.banasiak.coinflip.settings.SettingsManager.Settings
 import io.mockk.every
 import io.mockk.mockk
@@ -35,7 +36,12 @@ class SettingsViewModelTests {
       every { settings.dynamicColorsEnabled } returns true
       every { settings.secureRandom } returns true
       every { settings.forceValue } returns "high"
-      every { settings.loadStats() } returns mapOf(Coin.Value.HEADS to 7L, Coin.Value.TAILS to 5L)
+      every { settings.showStreak } returns true
+      every { settings.loadStats() } returns
+        Stats(
+          counts = mapOf(Coin.Value.HEADS to 7L, Coin.Value.TAILS to 5L),
+          records = mapOf(Coin.Value.HEADS to 4L, Coin.Value.TAILS to 3L)
+        )
 
       val vm = viewModel()
 
@@ -48,13 +54,16 @@ class SettingsViewModelTests {
           text = false,
           vibrate = false,
           stats = false,
+          streak = true,
           quickReset = true,
           customHeads = "CROWN",
           customTails = "SHIP",
           dynamic = true,
           secureRandom = true,
           force = "high",
-          flipCount = 12
+          flipCount = 12,
+          headsRecord = 4,
+          tailsRecord = 3
         )
     }
 
@@ -195,7 +204,13 @@ class SettingsViewModelTests {
   @Test
   fun reset_stats_emits_undo_snackbar_and_can_be_undone() =
     runTest {
-      val previous = mapOf(Coin.Value.HEADS to 7L, Coin.Value.TAILS to 2L)
+      val previous =
+        Stats(
+          counts = mapOf(Coin.Value.HEADS to 7L, Coin.Value.TAILS to 2L),
+          records = mapOf(Coin.Value.HEADS to 5L, Coin.Value.TAILS to 2L),
+          streakValue = Coin.Value.HEADS,
+          streak = 3L
+        )
       every { settings.loadStats() } returns previous
 
       val vm = viewModel()
@@ -211,10 +226,15 @@ class SettingsViewModelTests {
       }
       verify { settings.resetStats() }
 
+      // the records go with the counts, and both come back together
       vm.stateFlow.value.flipCount shouldBeEqualTo 0L
+      vm.stateFlow.value.headsRecord shouldBeEqualTo 0L
+      vm.stateFlow.value.tailsRecord shouldBeEqualTo 0L
 
       vm.postAction(SettingsAction.UndoResetStats)
       verify { settings.persistStats(previous) }
       vm.stateFlow.value.flipCount shouldBeEqualTo 9L
+      vm.stateFlow.value.headsRecord shouldBeEqualTo 5L
+      vm.stateFlow.value.tailsRecord shouldBeEqualTo 2L
     }
 }

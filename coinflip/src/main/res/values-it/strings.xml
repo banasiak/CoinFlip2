@@ -47,6 +47,7 @@
   <string name="settings_item_force_title">Sensibilità alle scosse</string>
   <string name="settings_item_quick_reset_summary">Mostra il pulsante di ripristino sotto le statistiche</string>
   <string name="settings_item_quick_reset_title">Ripristino rapido delle statistiche</string>
+  <string name="settings_item_records_summary">Serie migliore: %1$s</string>
   <string name="settings_item_reset_stats_summary">Lanci registrati: %1$s</string>
   <string name="settings_item_secure_random_summary">Utilizza un generatore di numeri pseudocasuali crittograficamente sicuro (CSPRNG)</string>
   <string name="settings_item_secure_random_title">Generatore di numeri casuali</string>
@@ -56,12 +57,15 @@
   <string name="settings_item_sound_title">Suono</string>
   <string name="settings_item_stats_summary">Visualizza il totale progressivo</string>
   <string name="settings_item_stats_title">Statistiche</string>
+  <string name="settings_item_streak_summary">Mostrare la serie attuale di risultati uguali</string>
+  <string name="settings_item_streak_title">Serie</string>
   <string name="settings_item_text_summary">Visualizza TESTA/CROCE</string>
   <string name="settings_item_text_title">Testo del risultato</string>
   <string name="settings_item_vibrate_summary">Vibra al lancio della moneta</string>
   <string name="settings_item_vibrate_title">Vibrare</string>
   <string name="settings_menu_title">Impostazioni</string>
   <string name="stats_reset_message">Le statistiche sono state ripristinate</string>
+  <string name="streak_content_description">%1$d di fila</string>
   <string name="tails">CROCE</string>
   <string name="time">TEMPO</string>
   <string name="total">TOTALE</string>

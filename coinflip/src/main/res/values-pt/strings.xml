@@ -47,6 +47,7 @@
   <string name="settings_item_force_title">Sensibilidade à agitação</string>
   <string name="settings_item_quick_reset_summary">Mostrar botão de redefinição abaixo das estatísticas</string>
   <string name="settings_item_quick_reset_title">Redefinição rápida de estatísticas</string>
+  <string name="settings_item_records_summary">Melhor sequência: %1$s</string>
   <string name="settings_item_reset_stats_summary">Lançamentos registrados: %1$s</string>
   <string name="settings_item_secure_random_summary">Usar um gerador de números pseudoaleatórios criptograficamente seguro (CSPRNG)</string>
   <string name="settings_item_secure_random_title">Gerador de números aleatórios</string>
@@ -56,12 +57,15 @@
   <string name="settings_item_sound_title">Som</string>
   <string name="settings_item_stats_summary">Exibir total acumulado</string>
   <string name="settings_item_stats_title">Estatísticas</string>
+  <string name="settings_item_streak_summary">Mostrar a sequência atual de resultados iguais</string>
+  <string name="settings_item_streak_title">Sequência</string>
   <string name="settings_item_text_summary">Exibir CARA/COROA</string>
   <string name="settings_item_text_title">Texto do resultado</string>
   <string name="settings_item_vibrate_summary">Vibrar no lançamento da moeda</string>
   <string name="settings_item_vibrate_title">Vibrar</string>
   <string name="settings_menu_title">Configurações</string>
   <string name="stats_reset_message">As estatísticas foram redefinidas</string>
+  <string name="streak_content_description">%1$d seguidos</string>
   <string name="tails">COROA</string>
   <string name="time">TEMPO</string>
   <string name="total">TOTAL</string>

@@ -2,6 +2,7 @@ package com.banasiak.coinflip.settings
 
 import com.banasiak.coinflip.FakeSharedPreferences
 import com.banasiak.coinflip.common.Coin
+import com.banasiak.coinflip.common.Stats
 import com.banasiak.coinflip.settings.SettingsManager.Settings
 import com.squareup.seismic.ShakeDetector
 import org.amshove.kluent.shouldBeEqualTo
@@ -162,44 +163,72 @@ class SettingsManagerTests {
   }
 
   @Nested
-  inner class Stats {
+  inner class Statistics {
+    /** What an untouched store reads back as: both counters and both records at zero, no run going. */
+    private fun zeroed() =
+      Stats(
+        counts = mapOf(Coin.Value.HEADS to 0L, Coin.Value.TAILS to 0L),
+        records = mapOf(Coin.Value.HEADS to 0L, Coin.Value.TAILS to 0L),
+        streakValue = Coin.Value.UNKNOWN,
+        streak = 0L
+      )
+
     @Test
     fun `stats default to zero`() {
       val (_, settings) = manager()
 
-      settings.loadStats() shouldBeEqualTo mapOf(Coin.Value.HEADS to 0L, Coin.Value.TAILS to 0L)
+      settings.loadStats() shouldBeEqualTo zeroed()
     }
 
     @Test
-    fun `stats round trip`() {
+    fun `counts, records and the run in progress all round trip`() {
       val (_, settings) = manager()
+      val stats =
+        Stats(
+          counts = mapOf(Coin.Value.HEADS to 7L, Coin.Value.TAILS to 5L),
+          records = mapOf(Coin.Value.HEADS to 4L, Coin.Value.TAILS to 3L),
+          streakValue = Coin.Value.TAILS,
+          streak = 2L
+        )
 
-      settings.persistStats(mapOf(Coin.Value.HEADS to 7L, Coin.Value.TAILS to 5L))
+      settings.persistStats(stats)
 
-      settings.loadStats() shouldBeEqualTo mapOf(Coin.Value.HEADS to 7L, Coin.Value.TAILS to 5L)
+      settings.loadStats() shouldBeEqualTo stats
     }
 
     @Test
     fun `a missing side is persisted as zero rather than left stale`() {
       val (_, settings) = manager(Settings.HEADS.key to 7L, Settings.TAILS.key to 5L)
 
-      settings.persistStats(mapOf(Coin.Value.HEADS to 8L))
+      settings.persistStats(Stats(counts = mapOf(Coin.Value.HEADS to 8L)))
 
-      settings.loadStats() shouldBeEqualTo mapOf(Coin.Value.HEADS to 8L, Coin.Value.TAILS to 0L)
+      settings.loadStats() shouldBeEqualTo zeroed().copy(counts = mapOf(Coin.Value.HEADS to 8L, Coin.Value.TAILS to 0L))
     }
 
     @Test
-    fun `resetting clears both counters and nothing else`() {
+    fun `an unrecognised streak face reads back as unknown`() {
+      // a value written by a future build, or corrupted -- it must not blow up the load
+      val (_, settings) = manager(Settings.STREAK_VALUE.key to "SIDEWAYS", Settings.STREAK_COUNT.key to 3L)
+
+      settings.loadStats() shouldBeEqualTo zeroed().copy(streakValue = Coin.Value.UNKNOWN, streak = 3L)
+    }
+
+    @Test
+    fun `resetting clears every counter and nothing else`() {
       val (prefs, settings) =
         manager(
           Settings.HEADS.key to 7L,
           Settings.TAILS.key to 5L,
+          Settings.HEADS_RECORD.key to 4L,
+          Settings.TAILS_RECORD.key to 3L,
+          Settings.STREAK_VALUE.key to Coin.Value.HEADS.name,
+          Settings.STREAK_COUNT.key to 2L,
           Settings.COIN.key to "jfk"
         )
 
       settings.resetStats()
 
-      settings.loadStats() shouldBeEqualTo mapOf(Coin.Value.HEADS to 0L, Coin.Value.TAILS to 0L)
+      settings.loadStats() shouldBeEqualTo zeroed()
       prefs.values shouldBeEqualTo mutableMapOf<String, Any>(Settings.COIN.key to "jfk")
     }
   }

@@ -47,6 +47,7 @@
   <string name="settings_item_force_title">シェイク感度</string>
   <string name="settings_item_quick_reset_summary">統計の下にリセットボタンを表示</string>
   <string name="settings_item_quick_reset_title">統計情報のクイックリセット</string>
+  <string name="settings_item_records_summary">最高連続記録: %1$s</string>
   <string name="settings_item_reset_stats_summary">記録されたコイントス: %1$s</string>
   <string name="settings_item_secure_random_summary">暗号的に安全な擬似乱数ジェネレータ (CSPRNG) を使用する</string>
   <string name="settings_item_secure_random_title">乱数ジェネレータ</string>
@@ -56,12 +57,15 @@
   <string name="settings_item_sound_title">音</string>
   <string name="settings_item_stats_summary">現在の合計を表示する</string>
   <string name="settings_item_stats_title">統計</string>
+  <string name="settings_item_streak_summary">同じ結果が続いている回数を表示</string>
+  <string name="settings_item_streak_title">連続記録</string>
   <string name="settings_item_text_summary">表裏を表示</string>
   <string name="settings_item_text_title">結果テキスト</string>
   <string name="settings_item_vibrate_summary">コイントス時に振動する</string>
   <string name="settings_item_vibrate_title">振動</string>
   <string name="settings_menu_title">設定</string>
   <string name="stats_reset_message">統計がリセットされました</string>
+  <string name="streak_content_description">%1$d回連続</string>
   <string name="tails">裏</string>
   <string name="time">時間</string>
   <string name="total">合計</string>

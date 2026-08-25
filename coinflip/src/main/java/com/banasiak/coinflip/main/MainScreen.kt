@@ -56,6 +56,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.Coin
+import com.banasiak.coinflip.extensions.formatNumber
 import com.banasiak.coinflip.ui.DurationAnimationDrawable
 import com.banasiak.coinflip.ui.theme.AppTheme
 import com.banasiak.coinflip.ui.theme.Dimen
@@ -178,6 +179,17 @@ private fun CoinDetails(state: MainState, postAction: (MainAction) -> Unit, land
 
 private const val PLACEHOLDER_GLYPH = "?"
 
+// a multiplication sign and a numeral, so the run needs no translating; the words are left to the
+// content description, which keeps a plural rule per locale out of the most visible text in the app
+private const val STREAK_PREFIX = "×"
+
+// big enough to read across a table, small enough that 'HEADS ×12' still fits a portrait phone
+private const val STREAK_SIZE_RATIO = 0.55f
+
+// applied to both halves of the result line: it reserves the line's height before the first flip,
+// and keeping it a constant multiple of each font size is what lets the two centre against each other
+private const val RESULT_LINE_HEIGHT_RATIO = 1.25f
+
 @Composable
 private fun CoinImage(state: MainState, flipToken: Int, size: Dp, coinPadding: Dp) {
   val imageViewRef = remember { mutableStateOf<ImageView?>(null) }
@@ -280,21 +292,55 @@ private fun ResultText(state: MainState, landscape: Boolean) {
       else -> MaterialTheme.colorScheme.primary
     }
   val fontSize = if (landscape) 56.sp else 72.sp
-  Text(
+  val streakFontSize = fontSize * STREAK_SIZE_RATIO
+  val label = state.result.customLabel ?: stringResource(state.result.value.string)
+  val streakVisible = state.streakVisible && state.streakCount >= MIN_DRAWN_STREAK
+  val streakDescription = stringResource(R.string.streak_content_description, state.streakCount)
+
+  Row(
     modifier =
       Modifier
         .fillMaxWidth()
         // alpha, not visibility, to preserve layout space
-        .alpha(if (state.resultVisible) 1f else 0f),
-    text = state.result.customLabel ?: stringResource(state.result.value.string),
-    color = resultColor,
-    fontWeight = FontWeight.Bold,
-    fontSize = fontSize,
-    // UNKNOWN resolves to an empty string, which measures shorter than a word does; pinning the
-    // line height keeps everything below from shifting when the first result lands
-    lineHeight = fontSize * 1.25f,
-    textAlign = TextAlign.Center
-  )
+        .alpha(if (state.resultVisible || streakVisible) 1f else 0f)
+        .then(
+          if (streakVisible) {
+            // '×7' reads as "times seven"; say what it means, and only when there is a run to say it about
+            Modifier.semantics {
+              contentDescription = if (state.resultVisible) "$label, $streakDescription" else streakDescription
+            }
+          } else {
+            Modifier
+          }
+        ),
+    horizontalArrangement = Arrangement.Center,
+    verticalAlignment = Alignment.CenterVertically
+  ) {
+    Text(
+      // measured after the run, so a long custom label wraps into what is left rather than
+      // pushing the run off the edge
+      modifier = Modifier.weight(1f, fill = false),
+      text = if (state.resultVisible) label else "",
+      color = resultColor,
+      fontWeight = FontWeight.Bold,
+      fontSize = fontSize,
+      // a hidden result resolves to an empty string, which measures shorter than a word does; pinning
+      // the line height keeps everything below from shifting when the first result lands
+      lineHeight = fontSize * RESULT_LINE_HEIGHT_RATIO,
+      textAlign = TextAlign.Center
+    )
+    if (streakVisible) {
+      Text(
+        // the gap belongs to the pair, so it goes away when the run is the only thing on the line
+        modifier = if (state.resultVisible) Modifier.padding(start = Dimen.small) else Modifier,
+        text = "$STREAK_PREFIX${state.streakCount}",
+        color = resultColor,
+        fontWeight = FontWeight.Bold,
+        fontSize = streakFontSize,
+        lineHeight = streakFontSize * RESULT_LINE_HEIGHT_RATIO
+      )
+    }
+  }
 }
 
 @Composable
@@ -331,7 +377,7 @@ private fun StatsRow(state: MainState, landscape: Boolean) {
         color = MaterialTheme.colorScheme.secondary
       )
       Text(
-        text = state.headsCount,
+        text = state.headsCount.formatNumber(),
         modifier = Modifier.padding(end = Dimen.medium),
         style = MaterialTheme.typography.titleLarge,
         color = MaterialTheme.colorScheme.secondary
@@ -348,7 +394,7 @@ private fun StatsRow(state: MainState, landscape: Boolean) {
         color = MaterialTheme.colorScheme.tertiary
       )
       Text(
-        text = state.tailsCount,
+        text = state.tailsCount.formatNumber(),
         style = MaterialTheme.typography.titleLarge,
         color = MaterialTheme.colorScheme.tertiary
       )
@@ -401,8 +447,10 @@ private fun previewState() =
     result = Coin.Result(Coin.Value.HEADS, AnimationHelper.Permutation.HEADS_HEADS),
     resultVisible = true,
     statsVisible = true,
-    headsCount = "51",
-    tailsCount = "49"
+    streakVisible = true,
+    headsCount = 51,
+    tailsCount = 49,
+    streakCount = 7
   )
 
 @PreviewLightDark

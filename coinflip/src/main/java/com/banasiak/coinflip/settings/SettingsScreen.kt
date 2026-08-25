@@ -67,6 +67,9 @@ import kotlinx.coroutines.launch
 
 private enum class OpenDialog { NONE, COIN, CUSTOM_TEXT }
 
+// divides the two faces' records; punctuation rather than a word, so it needs no translating
+private const val RECORD_SEPARATOR = "·"
+
 // Material's disabled tokens: 38% for content, 12% for containers and outlines
 private const val DISABLED_CONTENT_ALPHA = 0.38f
 private const val DISABLED_CONTAINER_ALPHA = 0.12f
@@ -213,6 +216,12 @@ fun SettingsView(
         // ----- Statistics -----
         CategoryHeader(stringResource(R.string.settings_header_statistics_title))
         SwitchPreference(
+          title = stringResource(R.string.settings_item_streak_title),
+          summary = stringResource(R.string.settings_item_streak_summary),
+          checked = state.streak,
+          onCheckedChange = { postAction(SettingsAction.SetStreak(it)) }
+        )
+        SwitchPreference(
           title = stringResource(R.string.settings_item_stats_title),
           summary = stringResource(R.string.settings_item_stats_summary),
           checked = state.stats,
@@ -229,6 +238,19 @@ fun SettingsView(
         Text(
           text = stringResource(R.string.settings_item_reset_stats_summary, state.flipCount.formatNumber()),
           modifier = Modifier.padding(start = Dimen.medium, end = Dimen.medium, top = Dimen.small),
+          style = MaterialTheme.typography.bodyMedium,
+          color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        // the record lives here rather than on the main screen: a personal best is a trophy to look
+        // up, where the run in progress is the number worth putting in front of somebody
+        Text(
+          text =
+            stringResource(
+              R.string.settings_item_records_summary,
+              "${state.customHeads ?: headsDefault} ${state.headsRecord.formatNumber()}" +
+                " $RECORD_SEPARATOR ${state.customTails ?: tailsDefault} ${state.tailsRecord.formatNumber()}"
+            ),
+          modifier = Modifier.padding(start = Dimen.medium, end = Dimen.medium, top = Dimen.xsmall),
           style = MaterialTheme.typography.bodyMedium,
           color = MaterialTheme.colorScheme.onSurfaceVariant
         )

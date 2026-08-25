@@ -11,6 +11,7 @@ data class SettingsState(
   val text: Boolean = Settings.TEXT.default as Boolean,
   val vibrate: Boolean = Settings.VIBRATE.default as Boolean,
   val stats: Boolean = Settings.STATS.default as Boolean,
+  val streak: Boolean = Settings.STREAK.default as Boolean,
   val quickReset: Boolean = Settings.QUICK_RESET.default as Boolean,
   val customHeads: String? = Settings.CUSTOM_HEADS_TEXT.default as String?,
   val customTails: String? = Settings.CUSTOM_TAILS_TEXT.default as String?,
@@ -19,7 +20,10 @@ data class SettingsState(
   val force: String = Settings.FORCE.default as String,
   val favorites: Set<String> = emptySet(),
   // how many flips are on record, so a destructive reset can say what there is to lose
-  val flipCount: Long = 0
+  val flipCount: Long = 0,
+  // the longest run each face has managed; the reset takes these too, so they are shown beside the count
+  val headsRecord: Long = 0,
+  val tailsRecord: Long = 0
 )
 
 sealed class SettingsAction {
@@ -33,6 +37,7 @@ sealed class SettingsAction {
   data class SetText(val value: Boolean) : SettingsAction()
   data class SetVibrate(val value: Boolean) : SettingsAction()
   data class SetStats(val value: Boolean) : SettingsAction()
+  data class SetStreak(val value: Boolean) : SettingsAction()
   data class SetQuickReset(val value: Boolean) : SettingsAction()
 
   // null clears the override, so the label falls back to the localized default

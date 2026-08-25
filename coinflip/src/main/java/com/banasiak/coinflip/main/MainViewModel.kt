@@ -21,6 +21,18 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
+/**
+ * How long a run has to be before beating your own record earns the fanfare. Short records are set
+ * within the first handful of flips, so celebrating those would fire a five-second sound constantly
+ * early on. Ten is also the bar the bit itself uses — "ten heads in a row" is the win condition
+ * everyone who built one of these settled on — and it is genuinely rare: the wait roughly doubles
+ * per step, so a first run of ten takes about 1,000 flips, an eleven about 2,000.
+ */
+private const val FANFARE_THRESHOLD = 10L
+
+/** Decided in [MainViewModel.flipCoin]: a new record compares against the stats from before the flip, which are gone once they are committed. */
+private enum class Landing { ORDINARY, NEW_RECORD, HUNDREDTH }
+
 @HiltViewModel
 class MainViewModel @Inject constructor(
   private val animationHelper: AnimationHelper,
@@ -66,6 +78,12 @@ class MainViewModel @Inject constructor(
 
     val instructions = if (settings.shakeEnabled) R.string.instructions_tap_shake else R.string.instructions_tap
     val stats = settings.loadStats()
+    val showStreak = settings.showStreak
+    // a run in progress is the thing the user wants to hold up and show somebody, so it is on screen
+    // before a single flip is made this session. Seeding the result from it names the run rather than
+    // leaving a bare number under a coin that has not been flipped yet. Below MIN_DRAWN_STREAK there
+    // is no run to show, so the screen opens blank the way it always did.
+    val standing = showStreak && stats.streak >= MIN_DRAWN_STREAK
 
     state =
       state.copy(
@@ -76,13 +94,21 @@ class MainViewModel @Inject constructor(
         labels = Pair(settings.customHeadsText, settings.customTailsText),
         paused = false,
         resetVisible = settings.showStats && settings.showQuickReset,
-        resultVisible = false,
+        result =
+          if (standing) {
+            Coin.Result(stats.streakValue, AnimationHelper.Permutation.UNKNOWN, stats.streakValue.customLabel(settings))
+          } else {
+            state.result
+          },
+        resultVisible = standing && settings.textEnabled,
         shakeEnabled = settings.shakeEnabled,
         shakeSensitivity = settings.shakeSensitivity,
         stats = stats,
         statsVisible = settings.showStats,
+        streakVisible = showStreak,
         headsCount = stats.count(Coin.Value.HEADS),
-        tailsCount = stats.count(Coin.Value.TAILS)
+        tailsCount = stats.count(Coin.Value.TAILS),
+        streakCount = stats.streak
       )
   }
 
@@ -100,14 +126,28 @@ class MainViewModel @Inject constructor(
     }
     // set before launching so the guard doesn't depend on the coroutine dispatching immediately
     isFlipping = true
-
     viewModelScope.launch {
       // the heart and soul of this entire endeavor
       val result = coin.flip()
 
-      val stats = state.stats.toMutableMap()
-      val currentCount = stats.getOrDefault(result.value, 0)
-      stats[result.value] = currentCount + 1
+      val previous = state.stats
+      val stats = previous.afterFlip(result.value)
+      // the fanfare is for beating your own record, and only once the run is long enough to deserve
+      // one (see FANFARE_THRESHOLD). Records are still kept when the display is switched off; the
+      // sound is part of that display, so it goes quiet with it.
+      val fanfare =
+        state.streakVisible &&
+          stats.streak >= FANFARE_THRESHOLD &&
+          stats.record(result.value) > previous.record(result.value)
+
+      // keeping it &#128175;...
+      val landing =
+        when {
+          // the hundredth flip outranks a new record: it is the rarer of the two and it comes with a dialog
+          stats.total % 100 == 0L -> Landing.HUNDREDTH
+          fanfare -> Landing.NEW_RECORD
+          else -> Landing.ORDINARY
+        }
 
       val animationEnabled = settings.animationEnabled
       val animation = animationHelper.animations[result.permutation]
@@ -119,7 +159,8 @@ class MainViewModel @Inject constructor(
           result = result,
           resultVisible = false,
           shakeEnabled = false,
-          stats = stats
+          stats = stats,
+          streakCount = 0
         )
       _effectFlow.emit(MainEffect.FlipCoin)
 
@@ -134,30 +175,33 @@ class MainViewModel @Inject constructor(
         }
       }
 
-      onFlipFinished()
+      onFlipFinished(landing)
       isFlipping = false
     }
   }
 
-  private suspend fun onFlipFinished() {
+  private suspend fun onFlipFinished(landing: Landing) {
     // note: the displayed counts are updated here (after the flip lands), not in flipCoin()
     state =
       state.copy(
         resultVisible = settings.textEnabled,
         shakeEnabled = settings.shakeEnabled && !state.paused,
         headsCount = state.stats.count(Coin.Value.HEADS),
-        tailsCount = state.stats.count(Coin.Value.TAILS)
+        tailsCount = state.stats.count(Coin.Value.TAILS),
+        streakCount = state.stats.streak
       )
 
-    // keeping it &#128175;...
-    val isOneHundred = state.stats.values.sum() % 100 == 0L
-
     // ask for free internet points every 100 flips
-    if (isOneHundred) {
+    if (landing == Landing.HUNDREDTH) {
       _effectFlow.emit(MainEffect.ShowRateDialog)
     }
 
-    val sound = if (isOneHundred) SoundHelper.Sound.ONEUP else SoundHelper.Sound.COIN // Happy Easter, Ryan!
+    val sound =
+      when (landing) {
+        Landing.HUNDREDTH -> SoundHelper.Sound.ONEUP // Happy Easter, Ryan!
+        Landing.NEW_RECORD -> SoundHelper.Sound.STREAK
+        Landing.ORDINARY -> SoundHelper.Sound.COIN
+      }
     soundHelper.playSound(sound)
 
     vibrationHelper.vibrate(VibrationHelper.Vibration.THUD)
@@ -177,9 +221,8 @@ class MainViewModel @Inject constructor(
       state.copy(
         stats = stats,
         headsCount = stats.count(Coin.Value.HEADS),
-        tailsCount = stats.count(Coin.Value.TAILS)
+        tailsCount = stats.count(Coin.Value.TAILS),
+        streakCount = stats.streak
       )
   }
-
-  private fun Map<Coin.Value, Long>.count(value: Coin.Value): String = (this[value] ?: 0).toString()
 }

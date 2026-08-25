@@ -64,7 +64,7 @@ object AppModule {
 
   @Provides
   fun provideSoundPool(@ApplicationContext context: Context, buildInfo: BuildInfo): SoundPool {
-    val maxStreams = 2 // coin + power-up
+    val maxStreams = 3 // // coin + power-up + streak fanfare
     return if (buildInfo.isUpsideDownCake()) {
       SoundPool.Builder()
         .setContext(context)

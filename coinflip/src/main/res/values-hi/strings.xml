@@ -47,6 +47,7 @@
   <string name="settings_item_force_title">हिलाने की संवेदनशीलता</string>
   <string name="settings_item_quick_reset_summary">आँकड़ों के नीचे रीसेट बटन दिखाएं</string>
   <string name="settings_item_quick_reset_title">त्वरित आँकड़े रीसेट करें</string>
+  <string name="settings_item_records_summary">सबसे अच्छा सिलसिला: %1$s</string>
   <string name="settings_item_reset_stats_summary">दर्ज किए गए उछाल: %1$s</string>
   <string name="settings_item_secure_random_summary">क्रिप्टोग्राफ़िक रूप से सुरक्षित छद्म यादृच्छिक संख्या जनरेटर (CSPRNG) का उपयोग करें</string>
   <string name="settings_item_secure_random_title">यादृच्छिक संख्या जनरेटर</string>
@@ -56,12 +57,15 @@
   <string name="settings_item_sound_title">आवाज़</string>
   <string name="settings_item_stats_summary">वर्तमान कुल प्रदर्शित करें</string>
   <string name="settings_item_stats_title">आँकड़े</string>
+  <string name="settings_item_streak_summary">समान परिणामों का मौजूदा सिलसिला दिखाएँ</string>
+  <string name="settings_item_streak_title">सिलसिला</string>
   <string name="settings_item_text_summary">चित/पट प्रदर्शित करें</string>
   <string name="settings_item_text_title">परिणाम पाठ</string>
   <string name="settings_item_vibrate_summary">सिक्का उछालने पर कंपन</string>
   <string name="settings_item_vibrate_title">कंपन</string>
   <string name="settings_menu_title">सेटिंग्स</string>
   <string name="stats_reset_message">आँकड़े रीसेट कर दिए गए हैं</string>
+  <string name="streak_content_description">लगातार %1$d</string>
   <string name="tails">पट</string>
   <string name="time">समय</string>
   <string name="total">कुल</string>
