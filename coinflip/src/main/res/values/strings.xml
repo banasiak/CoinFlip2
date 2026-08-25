@@ -8,7 +8,7 @@
   <string name="changes">CHANGES</string>
   <string name="clear">Clear</string>
   <string name="coin_animation">Coin Animation</string>
-  <string name="copyright_text" translatable="false">Copyright &#169; 2025 &#8212; Richard Banasiak</string>
+  <string name="copyright_text" translatable="false">Copyright &#169; 2026 &#8212; Richard Banasiak</string>
   <string name="diagnostics_fragment_title">Diagnostic Test</string>
   <string name="diagnostics_iterations_dialog">Number of Iterations</string>
   <string name="diagnostics_iterations_range">Maximum: %1$s</string>
