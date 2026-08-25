@@ -47,6 +47,7 @@
   <string name="settings_item_force_title">Sensibilité aux secousses</string>
   <string name="settings_item_quick_reset_summary">Afficher le bouton de réinitialisation sous les statistiques</string>
   <string name="settings_item_quick_reset_title">Réinitialisation rapide des statistiques</string>
+  <string name="settings_item_records_summary">Meilleure série : %1$s</string>
   <string name="settings_item_reset_stats_summary">Lancers enregistrés : %1$s</string>
   <string name="settings_item_secure_random_summary">Utiliser un générateur de nombres pseudo-aléatoires cryptographiquement sûr (CSPRNG)</string>
   <string name="settings_item_secure_random_title">Générateur de nombres aléatoires</string>
@@ -56,12 +57,15 @@
   <string name="settings_item_sound_title">Son</string>
   <string name="settings_item_stats_summary">Afficher le total cumulé</string>
   <string name="settings_item_stats_title">Statistiques</string>
+  <string name="settings_item_streak_summary">Afficher la série en cours de résultats identiques</string>
+  <string name="settings_item_streak_title">Série</string>
   <string name="settings_item_text_summary">Afficher FACE/PILE</string>
   <string name="settings_item_text_title">Texte du résultat</string>
   <string name="settings_item_vibrate_summary">Vibrer lors du lancer de la pièce</string>
   <string name="settings_item_vibrate_title">Vibrer</string>
   <string name="settings_menu_title">Paramètres</string>
   <string name="stats_reset_message">Les statistiques ont été réinitialisées</string>
+  <string name="streak_content_description">%1$d d’affilée</string>
   <string name="tails">PILE</string>
   <string name="time">TEMPS</string>
   <string name="total">TOTAL</string>

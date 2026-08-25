@@ -50,6 +50,7 @@
   <string name="settings_item_force_title">Shake Sensitivity</string>
   <string name="settings_item_quick_reset_summary">Show reset button below statistics</string>
   <string name="settings_item_quick_reset_title">Quick Stats Reset</string>
+  <string name="settings_item_records_summary">Best streak: %1$s</string>
   <string name="settings_item_reset_stats_summary">Flips recorded: %1$s</string>
   <string name="settings_item_secure_random_summary">Use a cryptographically secure pseudorandom number generator (CSPRNG)</string>
   <string name="settings_item_secure_random_title">Random Number Generator</string>
@@ -59,12 +60,15 @@
   <string name="settings_item_sound_title">Sound</string>
   <string name="settings_item_stats_summary">Display running total</string>
   <string name="settings_item_stats_title">Statistics</string>
+  <string name="settings_item_streak_summary">Show the current run of identical results</string>
+  <string name="settings_item_streak_title">Streak</string>
   <string name="settings_item_text_summary">Display HEADS/TAILS</string>
   <string name="settings_item_text_title">Result Text</string>
   <string name="settings_item_vibrate_summary">Vibrate on coin flip</string>
   <string name="settings_item_vibrate_title">Vibrate</string>
   <string name="settings_menu_title">Settings</string>
   <string name="stats_reset_message">Statistics Have Been Reset</string>
+  <string name="streak_content_description">%1$d in a row</string>
   <string name="tails">TAILS</string>
   <string name="time">TIME</string>
   <string name="total">TOTAL</string>

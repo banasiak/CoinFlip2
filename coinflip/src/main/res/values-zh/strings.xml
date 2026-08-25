@@ -47,6 +47,7 @@
   <string name="settings_item_force_title">摇动灵敏度</string>
   <string name="settings_item_quick_reset_summary">在统计数据下方显示重置按钮</string>
   <string name="settings_item_quick_reset_title">快速统计重置</string>
+  <string name="settings_item_records_summary">最佳连续记录：%1$s</string>
   <string name="settings_item_reset_stats_summary">已记录抛掷次数：%1$s</string>
   <string name="settings_item_secure_random_summary">使用加密安全的伪随机数生成器 (CSPRNG)</string>
   <string name="settings_item_secure_random_title">随机数生成器</string>
@@ -56,12 +57,15 @@
   <string name="settings_item_sound_title">声音</string>
   <string name="settings_item_stats_summary">显示累计总数</string>
   <string name="settings_item_stats_title">统计数据</string>
+  <string name="settings_item_streak_summary">显示当前连续相同的结果次数</string>
+  <string name="settings_item_streak_title">连续记录</string>
   <string name="settings_item_text_summary">显示正面/反面</string>
   <string name="settings_item_text_title">结果文本</string>
   <string name="settings_item_vibrate_summary">抛硬币时振动</string>
   <string name="settings_item_vibrate_title">振动</string>
   <string name="settings_menu_title">设置</string>
   <string name="stats_reset_message">统计数据已重置</string>
+  <string name="streak_content_description">连续 %1$d 次</string>
   <string name="tails">反面</string>
   <string name="time">时间</string>
   <string name="total">总计</string>

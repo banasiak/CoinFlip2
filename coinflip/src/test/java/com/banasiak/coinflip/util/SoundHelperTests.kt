@@ -17,6 +17,7 @@ class SoundHelperTests {
   private val coinSoundId = 1
   private val powerupSoundId = 2
   private val oneupSoundId = 3
+  private val streakSoundId = 4
 
   @BeforeEach
   fun before() {
@@ -24,6 +25,7 @@ class SoundHelperTests {
     every { soundPool.load(context, SoundHelper.Sound.COIN.resId, 1) } returns coinSoundId
     every { soundPool.load(context, SoundHelper.Sound.POWERUP.resId, 1) } returns powerupSoundId
     every { soundPool.load(context, SoundHelper.Sound.ONEUP.resId, 1) } returns oneupSoundId
+    every { soundPool.load(context, SoundHelper.Sound.STREAK.resId, 1) } returns streakSoundId
   }
 
   @Test
@@ -60,6 +62,18 @@ class SoundHelperTests {
 
     // then
     verify(exactly = 1) { soundPool.play(oneupSoundId, 1.0f, 1.0f, SoundHelper.Sound.ONEUP.priority, 0, 1.0f) }
+  }
+
+  @Test
+  fun `given sound enabled, when play streak sound, then sound pool plays streak sound`() {
+    // given
+    val soundHelper = SoundHelper(context, settings, soundPool)
+
+    // when
+    soundHelper.playSound(SoundHelper.Sound.STREAK)
+
+    // then
+    verify(exactly = 1) { soundPool.play(streakSoundId, 1.0f, 1.0f, SoundHelper.Sound.STREAK.priority, 0, 1.0f) }
   }
 
   @Test

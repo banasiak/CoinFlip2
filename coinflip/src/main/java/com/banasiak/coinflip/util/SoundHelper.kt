@@ -18,6 +18,7 @@ class SoundHelper @Inject constructor(
   private val coinSound = soundPool.load(context, Sound.COIN.resId, 1)
   private val powerUpSound = soundPool.load(context, Sound.POWERUP.resId, 1)
   private val oneUpSound = soundPool.load(context, Sound.ONEUP.resId, 1)
+  private val streakSound = soundPool.load(context, Sound.STREAK.resId, 1)
 
   fun playSound(sound: Sound) {
     if (!settings.soundEnabled) return
@@ -27,6 +28,7 @@ class SoundHelper @Inject constructor(
         Sound.COIN -> coinSound
         Sound.POWERUP -> powerUpSound
         Sound.ONEUP -> oneUpSound
+        Sound.STREAK -> streakSound
       }
     soundPool.play(soundId, 1.0f, 1.0f, sound.priority, 0, 1.0f)
   }
@@ -34,6 +36,7 @@ class SoundHelper @Inject constructor(
   enum class Sound(@param:RawRes val resId: Int, val priority: Int) {
     COIN(R.raw.coin, 0),
     POWERUP(R.raw.powerup, 0),
-    ONEUP(R.raw.oneup, 1) // always make sure this special sound plays :)
+    ONEUP(R.raw.oneup, 1), // always make sure this special sound plays :)
+    STREAK(R.raw.streak, 1)
   }
 }

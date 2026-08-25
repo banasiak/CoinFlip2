@@ -47,6 +47,7 @@
   <string name="settings_item_force_title">흔들림 감도</string>
   <string name="settings_item_quick_reset_summary">통계 아래에 재설정 버튼 표시</string>
   <string name="settings_item_quick_reset_title">빠른 통계 재설정</string>
+  <string name="settings_item_records_summary">최고 연속 기록: %1$s</string>
   <string name="settings_item_reset_stats_summary">기록된 던지기: %1$s</string>
   <string name="settings_item_secure_random_summary">암호학적으로 안전한 의사 난수 생성기(CSPRNG) 사용</string>
   <string name="settings_item_secure_random_title">난수 생성기</string>
@@ -56,12 +57,15 @@
   <string name="settings_item_sound_title">소리</string>
   <string name="settings_item_stats_summary">누계 표시</string>
   <string name="settings_item_stats_title">통계</string>
+  <string name="settings_item_streak_summary">같은 결과가 이어진 횟수를 표시</string>
+  <string name="settings_item_streak_title">연속 기록</string>
   <string name="settings_item_text_summary">앞면/뒷면 표시</string>
   <string name="settings_item_text_title">결과 텍스트</string>
   <string name="settings_item_vibrate_summary">동전 던지기 시 진동</string>
   <string name="settings_item_vibrate_title">진동</string>
   <string name="settings_menu_title">설정</string>
   <string name="stats_reset_message">통계가 재설정되었습니다</string>
+  <string name="streak_content_description">%1$d회 연속</string>
   <string name="tails">뒷면</string>
   <string name="time">시간</string>
   <string name="total">합계</string>

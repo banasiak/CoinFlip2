@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.core.content.edit
 import com.banasiak.coinflip.common.Coin
+import com.banasiak.coinflip.common.Stats
 import com.squareup.seismic.ShakeDetector
 import timber.log.Timber
 import javax.inject.Inject
@@ -25,6 +26,7 @@ class SettingsManager @Inject constructor(private val prefs: SharedPreferences) 
   val soundEnabled get() = prefs.getBoolean(Settings.SOUND.key, Settings.SOUND.default as Boolean)
   val showQuickReset get() = prefs.getBoolean(Settings.QUICK_RESET.key, Settings.QUICK_RESET.default as Boolean)
   val showStats get() = prefs.getBoolean(Settings.STATS.key, Settings.STATS.default as Boolean)
+  val showStreak get() = prefs.getBoolean(Settings.STREAK.key, Settings.STREAK.default as Boolean)
   val textEnabled get() = prefs.getBoolean(Settings.TEXT.key, Settings.TEXT.default as Boolean)
   val vibrateEnabled get() = prefs.getBoolean(Settings.VIBRATE.key, Settings.VIBRATE.default as Boolean)
   val diagnosticsIterations get() = prefs.getString(Settings.DIAGNOSTICS.key, Settings.DIAGNOSTICS.default as String)!!.toLong()
@@ -62,22 +64,42 @@ class SettingsManager @Inject constructor(private val prefs: SharedPreferences) 
     update(Settings.FAVORITES, values.joinToString(FAVORITES_DELIMITER))
   }
 
-  fun loadStats(): Map<Coin.Value, Long> {
-    val map: MutableMap<Coin.Value, Long> = mutableMapOf()
-    map[Coin.Value.HEADS] = prefs.getLong(Settings.HEADS.key, Settings.HEADS.default as Long)
-    map[Coin.Value.TAILS] = prefs.getLong(Settings.TAILS.key, Settings.TAILS.default as Long)
-    return map
-  }
+  fun loadStats(): Stats =
+    Stats(
+      counts =
+        mapOf(
+          Coin.Value.HEADS to prefs.getLong(Settings.HEADS.key, Settings.HEADS.default as Long),
+          Coin.Value.TAILS to prefs.getLong(Settings.TAILS.key, Settings.TAILS.default as Long)
+        ),
+      records =
+        mapOf(
+          Coin.Value.HEADS to prefs.getLong(Settings.HEADS_RECORD.key, Settings.HEADS_RECORD.default as Long),
+          Coin.Value.TAILS to prefs.getLong(Settings.TAILS_RECORD.key, Settings.TAILS_RECORD.default as Long)
+        ),
+      streakValue = prefs.getString(Settings.STREAK_VALUE.key, Settings.STREAK_VALUE.default as String).toCoinValue(),
+      streak = prefs.getLong(Settings.STREAK_COUNT.key, Settings.STREAK_COUNT.default as Long)
+    )
 
-  fun persistStats(stats: Map<Coin.Value, Long>) {
+  fun persistStats(stats: Stats) {
     prefs.edit {
-      putLong(Settings.HEADS.key, stats.getOrDefault(Coin.Value.HEADS, 0))
-      putLong(Settings.TAILS.key, stats.getOrDefault(Coin.Value.TAILS, 0))
+      putLong(Settings.HEADS.key, stats.count(Coin.Value.HEADS))
+      putLong(Settings.TAILS.key, stats.count(Coin.Value.TAILS))
+      putLong(Settings.HEADS_RECORD.key, stats.record(Coin.Value.HEADS))
+      putLong(Settings.TAILS_RECORD.key, stats.record(Coin.Value.TAILS))
+      putString(Settings.STREAK_VALUE.key, stats.streakValue.name)
+      putLong(Settings.STREAK_COUNT.key, stats.streak)
     }
   }
 
   fun resetStats() {
-    prefs.edit { remove(Settings.HEADS.key).remove(Settings.TAILS.key) }
+    prefs.edit {
+      remove(Settings.HEADS.key)
+        .remove(Settings.TAILS.key)
+        .remove(Settings.HEADS_RECORD.key)
+        .remove(Settings.TAILS_RECORD.key)
+        .remove(Settings.STREAK_VALUE.key)
+        .remove(Settings.STREAK_COUNT.key)
+    }
   }
 
   fun registerChangeListener(listener: OnSharedPreferenceChangeListener) {
@@ -97,6 +119,9 @@ class SettingsManager @Inject constructor(private val prefs: SharedPreferences) 
       }
     }
   }
+
+  /** The streak's face round-trips as its enum name; anything unrecognised means no run is in progress. */
+  private fun String?.toCoinValue(): Coin.Value = Coin.Value.entries.firstOrNull { it.name == this } ?: Coin.Value.UNKNOWN
 
   private fun String?.toSensitivity(): Int =
     when (this) {
@@ -122,8 +147,15 @@ class SettingsManager @Inject constructor(private val prefs: SharedPreferences) 
     FORCE("force", "medium"),
     SECURE_RANDOM("secureRandom", false),
     FAVORITES("favoriteCoins", ""),
+    STREAK("streak", false),
     HEADS("headsCount", 0L),
     TAILS("tailsCount", 0L),
+    HEADS_RECORD("headsRecord", 0L),
+    TAILS_RECORD("tailsRecord", 0L),
+    STREAK_VALUE("streakValue", ""), // Coin.Value.name; "" reads back as UNKNOWN
+    STREAK_COUNT("streakCount", 0L),
+
+    // adding a key needs no bump -- validateSchema() only wipes on a mismatch, and an absent key reads its default
     SCHEMA("schemaVersion", 7) // the old version of the app was '6'
   }
 }

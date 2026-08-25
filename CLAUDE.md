@@ -49,11 +49,30 @@ CoinFlip2 is a Modern Android Development (MAD) coin-flipping app published on t
 **Dependency injection:** Hilt (`@HiltAndroidApp` on `App`, `@AndroidEntryPoint` on Activity/Fragments, `@HiltViewModel` on ViewModels). `AppModule` provides system services (`SensorManager`, `Vibrator`, `SoundPool`, `SharedPreferences`) and platform types (`Clock`, `Random`, `SecureRandom`, `BuildInfo`) as a `SingletonComponent`. `ColorHelper` is `@ActivityScoped`.
 
 **Key domain classes:**
-- `Coin` — core flip logic; tracks `currentValue` to determine animation permutation (heads→heads, heads→tails, etc.)
+- `Coin` — core flip logic; tracks `currentValue` to determine animation permutation (heads→heads, heads→tails, etc.). Deliberately holds *no* streak state: `DiagnosticsViewModel` runs `coin.flip()` in a loop up to 10,000,000 times, which would obliterate the user's run and records
+- `Stats` — the counts, the run of identical results in progress, and each face's longest run, as one value. `afterFlip()` folds a landed flip into all three. They travel together because reset and undo have to move all of them at once
 - `RNG` — wraps `kotlin.random.Random` / `SecureRandom`, listens for preference changes to hot-swap
 - `SettingsManager` — typed accessors over `SharedPreferences`; all preference keys defined in the `Settings` enum. `update()` deliberately accepts only `Boolean`, `String`, and `null` (and throws otherwise), so favorite coins are stored as one comma-delimited string rather than a `StringSet`. Adding a key needs no schema bump: `validateSchema()` wipes everything only on a version *mismatch*
 - `AnimationHelper` — generates frame-by-frame `DurationAnimationDrawable` for each of the 4 flip permutations; coin images are loaded by resource name prefix (e.g., `"gw"` → `gw_heads` / `gw_tails` drawables). A permutation with no frames gets *no map entry*, not an empty drawable — `getLastFrame()` reads index -1 on an empty one, which would defeat the caller's null check
-- `SoundHelper`, `VibrationHelper` — play sounds / haptics only when the corresponding setting is enabled
+- `SoundHelper`, `VibrationHelper` — play sounds / haptics only when the corresponding setting is enabled. `STREAK` runs ~5.5s where the others run ~1s, so it is still sounding over the flips that follow it; `AppModule` sizes the `SoundPool` stream budget for that
+
+**Streaks** count *any* face repeating, not heads specifically — the app ships ~40 coins and custom
+labels and takes no side, so a run is "the same result again". The number is therefore never 0 and
+moves on every flip. `MainState.streakCount` is the *deferred* copy, held at 0 while a flip is
+mid-air exactly as `headsCount`/`tailsCount` are, so nothing reveals the result early. It always
+holds the true run, including 1 — `MIN_DRAWN_STREAK` is the separate *display* rule that keeps a
+meaningless `×1` off every single flip, and it gates the cold-start seeding too so the screen still
+opens blank when the standing run is 1. The run is drawn on the result's own line as `HEADS ×7`
+rather than taking a line of its own, because landscape has no vertical room to spare. It is two
+`Text`s in a centre-aligned `Row`, not one styled span: a span shares the result's baseline, which
+leaves the smaller digits sitting low against tall capitals. It survives a cold start (that is the point — you show somebody your
+run hours later), which is why `onResume` seeds `result` from the persisted run so the number is
+named rather than floating alone under an unflipped coin. Beating your own record plays the `STREAK`
+fanfare, but only from `FANFARE_THRESHOLD` (ten) up; below that a new record lands within the first
+few flips and the five-second sound would fire constantly. Ten also takes about 1,000 flips to reach,
+so the fanfare stays a rare event. The record itself lives in Settings, not on
+the main screen — a personal best is a trophy to look up, the run in progress is the number you hold
+up to somebody.
 
 **Testing:** JUnit 5 with MockK for mocking, Kluent for assertions, Turbine for Flow testing. ViewModel tests use `@ExtendWith(MainDispatcherRule::class)` to swap `Dispatchers.Main` with `UnconfinedTestDispatcher`. Tests are in `coinflip/src/test/`; there is no `androidTest` source set, so nothing in Compose is covered.
 
@@ -62,7 +81,7 @@ tests can assert what the store ends up holding. `CoinResourcesTests` reads `res
 the three parallel coin arrays and the drawables they name by string concatenation stay in step —
 `build.gradle.kts` declares those files as test inputs so the guard is not skipped as up-to-date.
 
-**Coverage:** Kover, reported on the debug variant. 142 tests, ~57% of filtered lines; the biggest remaining gap is `AnimationHelper`'s bitmap pipeline, which needs Robolectric or instrumentation rather than plain unit tests. Generated (Hilt/Dagger) code, `@Composable`
+**Coverage:** Kover, reported on the debug variant. 161 tests, ~58% of filtered lines; the biggest remaining gap is `AnimationHelper`'s bitmap pipeline, which needs Robolectric or instrumentation rather than plain unit tests. Generated (Hilt/Dagger) code, `@Composable`
 functions, and the theme declarations are filtered out in the `kover` block of `coinflip/build.gradle.kts`,
 so the number reflects testable logic only — remove the Compose exclusions if UI tests are ever added.
 Nothing gates the build: `koverVerify` runs as part of `check` but has no rules. CI is the single

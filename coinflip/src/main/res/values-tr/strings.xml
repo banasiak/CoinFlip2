@@ -47,6 +47,7 @@
   <string name="settings_item_force_title">Sallama hassasiyeti</string>
   <string name="settings_item_quick_reset_summary">İstatistiklerin altında sıfırlama düğmesini göster</string>
   <string name="settings_item_quick_reset_title">Hızlı istatistik sıfırlama</string>
+  <string name="settings_item_records_summary">En iyi seri: %1$s</string>
   <string name="settings_item_reset_stats_summary">Kaydedilen atışlar: %1$s</string>
   <string name="settings_item_secure_random_summary">Kriptografik olarak güvenli bir sözde rastgele sayı üreteci (CSPRNG) kullanın</string>
   <string name="settings_item_secure_random_title">Rastgele sayı üreteci</string>
@@ -56,12 +57,15 @@
   <string name="settings_item_sound_title">Ses</string>
   <string name="settings_item_stats_summary">Güncel toplamı görüntüle</string>
   <string name="settings_item_stats_title">İstatistikler</string>
+  <string name="settings_item_streak_summary">Aynı sonuçların mevcut serisini göster</string>
+  <string name="settings_item_streak_title">Seri</string>
   <string name="settings_item_text_summary">TURA/YAZI göster</string>
   <string name="settings_item_text_title">Sonuç metni</string>
   <string name="settings_item_vibrate_summary">Yazı tura atıldığında titreşim</string>
   <string name="settings_item_vibrate_title">Titreşim</string>
   <string name="settings_menu_title">Ayarlar</string>
   <string name="stats_reset_message">İstatistikler sıfırlandı</string>
+  <string name="streak_content_description">%1$d ardışık</string>
   <string name="tails">YAZI</string>
   <string name="time">ZAMAN</string>
   <string name="total">TOPLAM</string>

@@ -47,6 +47,7 @@
   <string name="settings_item_force_title">ความไวในการเขย่า</string>
   <string name="settings_item_quick_reset_summary">แสดงปุ่มรีเซ็ตด้านล่างสถิติ</string>
   <string name="settings_item_quick_reset_title">รีเซ็ตสถิติด่วน</string>
+  <string name="settings_item_records_summary">สถิติต่อเนื่องสูงสุด: %1$s</string>
   <string name="settings_item_reset_stats_summary">การพลิกที่บันทึกไว้: %1$s</string>
   <string name="settings_item_secure_random_summary">ใช้ตัวสร้างตัวเลขสุ่มเทียมที่ปลอดภัยด้วยการเข้ารหัส (CSPRNG)</string>
   <string name="settings_item_secure_random_title">ตัวสร้างตัวเลขสุ่ม</string>
@@ -56,12 +57,15 @@
   <string name="settings_item_sound_title">เสียง</string>
   <string name="settings_item_stats_summary">แสดงผลรวมสะสม</string>
   <string name="settings_item_stats_title">สถิติ</string>
+  <string name="settings_item_streak_summary">แสดงจำนวนครั้งที่ได้ผลเหมือนกันติดต่อกัน</string>
+  <string name="settings_item_streak_title">ผลต่อเนื่อง</string>
   <string name="settings_item_text_summary">แสดงหัว/ก้อย</string>
   <string name="settings_item_text_title">ข้อความผลลัพธ์</string>
   <string name="settings_item_vibrate_summary">สั่นเมื่อพลิกเหรียญ</string>
   <string name="settings_item_vibrate_title">สั่น</string>
   <string name="settings_menu_title">การตั้งค่า</string>
   <string name="stats_reset_message">สถิติถูกรีเซ็ตแล้ว</string>
+  <string name="streak_content_description">%1$d ครั้งติดต่อกัน</string>
   <string name="tails">ก้อย</string>
   <string name="time">เวลา</string>
   <string name="total">รวม</string>

@@ -47,6 +47,7 @@
   <string name="settings_item_force_title">Czułość potrząsania</string>
   <string name="settings_item_quick_reset_summary">Pokaż przycisk resetowania poniżej statystyk</string>
   <string name="settings_item_quick_reset_title">Szybkie resetowanie statystyk</string>
+  <string name="settings_item_records_summary">Najlepsza seria: %1$s</string>
   <string name="settings_item_reset_stats_summary">Zapisane rzuty: %1$s</string>
   <string name="settings_item_secure_random_summary">Użyj kryptograficznie bezpiecznego generatora liczb pseudolosowych (CSPRNG)</string>
   <string name="settings_item_secure_random_title">Generator liczb losowych</string>
@@ -56,12 +57,15 @@
   <string name="settings_item_sound_title">Dźwięk</string>
   <string name="settings_item_stats_summary">Wyświetl sumę bieżącą</string>
   <string name="settings_item_stats_title">Statystyki</string>
+  <string name="settings_item_streak_summary">Pokaż bieżącą serię jednakowych wyników</string>
+  <string name="settings_item_streak_title">Seria</string>
   <string name="settings_item_text_summary">Wyświetl orła/reszkę</string>
   <string name="settings_item_text_title">Tekst wyniku</string>
   <string name="settings_item_vibrate_summary">Wibruj przy rzucie monetą</string>
   <string name="settings_item_vibrate_title">Wibracje</string>
   <string name="settings_menu_title">Ustawienia</string>
   <string name="stats_reset_message">Statystyki zostały zresetowane</string>
+  <string name="streak_content_description">%1$d z rzędu</string>
   <string name="tails">RESZKA</string>
   <string name="time">CZAS</string>
   <string name="total">SUMA</string>
