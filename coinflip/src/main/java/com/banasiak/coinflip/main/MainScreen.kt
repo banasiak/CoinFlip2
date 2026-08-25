@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
@@ -39,11 +40,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -186,6 +190,10 @@ private const val STREAK_PREFIX = "×"
 // big enough to read across a table, small enough that 'HEADS ×12' still fits a portrait phone
 private const val STREAK_SIZE_RATIO = 0.55f
 
+// scaling to exactly the available width can still spill by a pixel, because glyph advances are not
+// perfectly linear in font size; this keeps a sliver in hand
+private const val FIT_MARGIN = 0.98f
+
 // applied to both halves of the result line: it reserves the line's height before the first flip,
 // and keeping it a constant multiple of each font size is what lets the two centre against each other
 private const val RESULT_LINE_HEIGHT_RATIO = 1.25f
@@ -291,54 +299,90 @@ private fun ResultText(state: MainState, landscape: Boolean) {
       Coin.Value.TAILS -> MaterialTheme.colorScheme.tertiary
       else -> MaterialTheme.colorScheme.primary
     }
-  val fontSize = if (landscape) 56.sp else 72.sp
-  val streakFontSize = fontSize * STREAK_SIZE_RATIO
+  val baseFontSize = if (landscape) 56.sp else 72.sp
   val label = state.result.customLabel ?: stringResource(state.result.value.string)
   val streakVisible = state.streakVisible && state.streakCount >= MIN_DRAWN_STREAK
+  val streakText = "$STREAK_PREFIX${state.streakCount}"
   val streakDescription = stringResource(R.string.streak_content_description, state.streakCount)
 
-  Row(
-    modifier =
-      Modifier
-        .fillMaxWidth()
-        // alpha, not visibility, to preserve layout space
-        .alpha(if (state.resultVisible || streakVisible) 1f else 0f)
-        .then(
-          if (streakVisible) {
-            // '×7' reads as "times seven"; say what it means, and only when there is a run to say it about
-            Modifier.semantics {
-              contentDescription = if (state.resultVisible) "$label, $streakDescription" else streakDescription
-            }
-          } else {
-            Modifier
-          }
-        ),
-    horizontalArrangement = Arrangement.Center,
-    verticalAlignment = Alignment.CenterVertically
+  BoxWithConstraints(
+    // scaling fills whatever width it is given, so a long label would otherwise run to both edges;
+    // the inset is what keeps it off them
+    modifier = Modifier.fillMaxWidth().padding(horizontal = Dimen.medium)
   ) {
-    Text(
-      // measured after the run, so a long custom label wraps into what is left rather than
-      // pushing the run off the edge
-      modifier = Modifier.weight(1f, fill = false),
-      text = if (state.resultVisible) label else "",
-      color = resultColor,
-      fontWeight = FontWeight.Bold,
-      fontSize = fontSize,
-      // a hidden result resolves to an empty string, which measures shorter than a word does; pinning
-      // the line height keeps everything below from shifting when the first result lands
-      lineHeight = fontSize * RESULT_LINE_HEIGHT_RATIO,
-      textAlign = TextAlign.Center
-    )
-    if (streakVisible) {
+    val measurer = rememberTextMeasurer()
+    val density = LocalDensity.current
+
+    // a custom label long enough to wrap reads worse than a smaller one that fits, and once it wraps
+    // there is nowhere for the run to sit beside it. Both halves shrink by one factor so the pair fits
+    // on a single line -- one factor, so the run keeps its proportion to the label and stays centred.
+    // The label is measured whether or not it is currently drawn, so the line does not change height
+    // as a flip is revealed.
+    val scale =
+      run {
+        val bold = FontWeight.Bold
+        val labelWidth = measurer.measure(label, TextStyle(fontSize = baseFontSize, fontWeight = bold)).size.width
+        val runWidth =
+          if (streakVisible) {
+            measurer.measure(streakText, TextStyle(fontSize = baseFontSize * STREAK_SIZE_RATIO, fontWeight = bold)).size.width
+          } else {
+            0
+          }
+        val gap = if (streakVisible) with(density) { Dimen.small.toPx() } else 0f
+        val needed = labelWidth + runWidth + gap
+        val available = with(density) { maxWidth.toPx() } * FIT_MARGIN
+        if (needed > available && needed > 0f) available / needed else 1f
+      }
+
+    val fontSize = baseFontSize * scale
+    val streakFontSize = fontSize * STREAK_SIZE_RATIO
+    // the line keeps the height it would occupy unscaled, so shrinking a long label to fit does not
+    // pull the instructions and stats up with it. The two halves still center against each other
+    // inside it, because each keeps its line box proportional to its own font size.
+    val unscaledHeight = with(density) { (baseFontSize * RESULT_LINE_HEIGHT_RATIO).toDp() }
+
+    Row(
+      modifier =
+        Modifier
+          .fillMaxWidth()
+          .heightIn(min = unscaledHeight)
+          // alpha, not visibility, to preserve layout space
+          .alpha(if (state.resultVisible || streakVisible) 1f else 0f)
+          .then(
+            if (streakVisible) {
+              // '×7' reads as "times seven"; say what it means, and only when there is a run to say it about
+              Modifier.semantics {
+                contentDescription = if (state.resultVisible) "$label, $streakDescription" else streakDescription
+              }
+            } else {
+              Modifier
+            }
+          ),
+      horizontalArrangement = Arrangement.Center,
+      verticalAlignment = Alignment.CenterVertically
+    ) {
       Text(
-        // the gap belongs to the pair, so it goes away when the run is the only thing on the line
-        modifier = if (state.resultVisible) Modifier.padding(start = Dimen.small) else Modifier,
-        text = "$STREAK_PREFIX${state.streakCount}",
+        modifier = Modifier.weight(1f, fill = false),
+        text = if (state.resultVisible) label else "",
         color = resultColor,
         fontWeight = FontWeight.Bold,
-        fontSize = streakFontSize,
-        lineHeight = streakFontSize * RESULT_LINE_HEIGHT_RATIO
+        fontSize = fontSize,
+        // a hidden result resolves to an empty string, which measures shorter than a word does; pinning
+        // the line height keeps everything below from shifting when the first result lands
+        lineHeight = fontSize * RESULT_LINE_HEIGHT_RATIO,
+        textAlign = TextAlign.Center
       )
+      if (streakVisible) {
+        Text(
+          // the gap belongs to the pair, so it goes away when the run is the only thing on the line
+          modifier = if (state.resultVisible) Modifier.padding(start = Dimen.small) else Modifier,
+          text = streakText,
+          color = resultColor,
+          fontWeight = FontWeight.Bold,
+          fontSize = streakFontSize,
+          lineHeight = streakFontSize * RESULT_LINE_HEIGHT_RATIO
+        )
+      }
     }
   }
 }
