@@ -187,7 +187,7 @@ private fun StatsRow(
   val labelStyle = Type.diagnosticsLabel.copy(color = color)
   val valueStyle = Type.diagnosticsValue.copy(color = color)
   Row(
-    modifier = Modifier.fillMaxWidth(0.85f),
+    modifier = Modifier.fillMaxWidth(0.9f),
     verticalAlignment = Alignment.CenterVertically
   ) {
     Text(
@@ -197,14 +197,14 @@ private fun StatsRow(
     )
     // when ratio is empty (e.g. TIME row), span both count and ratio columns to prevent text wrapping
     Text(
-      modifier = Modifier.weight(if (ratio.isEmpty()) 1.75f else 1f),
+      modifier = Modifier.weight(if (ratio.isEmpty()) 2f else 1f),
       text = count,
       style = valueStyle,
       maxLines = 1
     )
     if (ratio.isNotEmpty()) {
       Text(
-        modifier = Modifier.weight(0.75f),
+        modifier = Modifier.weight(1f),
         text = ratio,
         style = valueStyle,
         maxLines = 1
