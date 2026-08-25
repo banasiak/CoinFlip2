@@ -26,8 +26,12 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.banasiak.coinflip.R
@@ -38,6 +42,9 @@ import com.banasiak.coinflip.ui.rememberEditableValue
 import com.banasiak.coinflip.ui.theme.AppTheme
 import com.banasiak.coinflip.ui.theme.Dimen
 import com.banasiak.coinflip.ui.theme.Type
+
+// pairs the two faces' streaks, matching the separator Settings uses for the same pairing
+private const val STAT_SEPARATOR = "·"
 
 @Composable
 fun DiagnosticsScreen(viewModel: DiagnosticsViewModel) {
@@ -72,7 +79,7 @@ fun DiagnosticsView(state: DiagnosticsState, postAction: (DiagnosticsAction) -> 
               .clickable(role = Role.Button, onClick = { editingIterations = true })
               .padding(vertical = Dimen.medium),
           text = "${state.iterations.formatNumber()} ${stringResource(R.string.diagnostics_iterations_summary)}",
-          style = MaterialTheme.typography.bodyMedium,
+          style = MaterialTheme.typography.bodyLarge,
           color = MaterialTheme.colorScheme.primary
         )
 
@@ -85,18 +92,21 @@ fun DiagnosticsView(state: DiagnosticsState, postAction: (DiagnosticsAction) -> 
           modifier = Modifier.padding(start = Dimen.medium),
           verticalArrangement = Arrangement.spacedBy(Dimen.xsmall)
         ) {
+          val headsLabel = state.labels.first ?: stringResource(R.string.heads)
+          val tailsLabel = state.labels.second ?: stringResource(R.string.tails)
+
           // HEADS
           StatsRow(
-            label = state.labels.first ?: stringResource(R.string.heads),
-            count = state.headsCount,
+            label = headsLabel,
+            count = AnnotatedString(state.headsCount),
             ratio = state.headsRatio,
             color = headsColor
           )
 
           // TAILS
           StatsRow(
-            label = state.labels.second ?: stringResource(R.string.tails),
-            count = state.tailsCount,
+            label = tailsLabel,
+            count = AnnotatedString(state.tailsCount),
             ratio = state.tailsRatio,
             color = tailsColor
           )
@@ -104,8 +114,35 @@ fun DiagnosticsView(state: DiagnosticsState, postAction: (DiagnosticsAction) -> 
           // TOTAL
           StatsRow(
             label = stringResource(R.string.total),
-            count = state.totalCount,
+            count = AnnotatedString(state.totalCount),
             ratio = state.totalRatio
+          )
+
+          Spacer(modifier = Modifier.height(Dimen.medium))
+
+          // CHANGES -- how often the result differed from the flip before it. The ratio the other
+          // rows show only tests the balance: a generator that simply alternates reports 50/50 and
+          // passes, while this reads 100%. A sticky one reads near zero.
+          StatsRow(
+            label = stringResource(R.string.changes),
+            count = AnnotatedString(state.changesCount),
+            ratio = state.changesRatio
+          )
+
+          // STREAK -- an observation rather than a test, so it is shown without a reference value:
+          // the longest run varies too widely between healthy runs for one to mean anything
+          StatsRow(
+            label = stringResource(R.string.streak),
+            count =
+              buildAnnotatedString {
+                withStyle(SpanStyle(color = headsColor)) {
+                  append(stringResource(R.string.streak_face, headsLabel, state.headsStreak.formatNumber()))
+                }
+                append(" $STAT_SEPARATOR ")
+                withStyle(SpanStyle(color = tailsColor)) {
+                  append(stringResource(R.string.streak_face, tailsLabel, state.tailsStreak.formatNumber()))
+                }
+              }
           )
 
           Spacer(modifier = Modifier.height(Dimen.medium))
@@ -113,7 +150,7 @@ fun DiagnosticsView(state: DiagnosticsState, postAction: (DiagnosticsAction) -> 
           // TIME
           StatsRow(
             label = stringResource(R.string.time),
-            count = stringResource(R.string.seconds, state.formattedTime)
+            count = AnnotatedString(stringResource(R.string.seconds, state.formattedTime))
           )
         }
 
@@ -180,7 +217,7 @@ private fun IterationsDialog(initialValue: Long, onConfirm: (Long) -> Unit, onDi
 @Composable
 private fun StatsRow(
   label: String,
-  count: String,
+  count: AnnotatedString,
   ratio: String = "",
   color: Color = MaterialTheme.colorScheme.onSurface
 ) {
@@ -191,7 +228,9 @@ private fun StatsRow(
     verticalAlignment = Alignment.CenterVertically
   ) {
     Text(
-      modifier = Modifier.weight(1f),
+      // the widest label is CHANGES, not the five-character face names, so this column carries more
+      // than an even third -- the ratio column has the slack to give
+      modifier = Modifier.weight(1.25f),
       text = label,
       style = labelStyle
     )
@@ -200,7 +239,9 @@ private fun StatsRow(
       modifier = Modifier.weight(if (ratio.isEmpty()) 2f else 1f),
       text = count,
       style = valueStyle,
-      maxLines = 1
+      // a spanning row wraps rather than truncates: with long custom face labels the streak line
+      // does not fit on one, and losing the second face entirely is worse than a second line
+      maxLines = if (ratio.isEmpty()) 2 else 1
     )
     if (ratio.isNotEmpty()) {
       Text(

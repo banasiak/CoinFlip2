@@ -4,6 +4,7 @@
   <string name="about_fragment_title">Yazı tura hakkında</string>
   <string name="about_menu_title">Hakkında</string>
   <string name="app_name">Yazı tura</string>
+  <string name="changes">DEĞİŞİM</string>
   <string name="clear">Temizle</string>
   <string name="coin_animation">Para animasyonu</string>
   <string name="diagnostics_fragment_title">Teşhis testi</string>
@@ -47,7 +48,7 @@
   <string name="settings_item_force_title">Sallama hassasiyeti</string>
   <string name="settings_item_quick_reset_summary">İstatistiklerin altında sıfırlama düğmesini göster</string>
   <string name="settings_item_quick_reset_title">Hızlı istatistik sıfırlama</string>
-  <string name="settings_item_records_summary">En iyi seri: %1$s</string>
+  <string name="settings_item_records_summary">En iyi seri &#8212; %1$s</string>
   <string name="settings_item_reset_stats_summary">Kaydedilen atışlar: %1$s</string>
   <string name="settings_item_secure_random_summary">Kriptografik olarak güvenli bir sözde rastgele sayı üreteci (CSPRNG) kullanın</string>
   <string name="settings_item_secure_random_title">Rastgele sayı üreteci</string>
@@ -65,7 +66,9 @@
   <string name="settings_item_vibrate_title">Titreşim</string>
   <string name="settings_menu_title">Ayarlar</string>
   <string name="stats_reset_message">İstatistikler sıfırlandı</string>
+  <string name="streak">SERİ</string>
   <string name="streak_content_description">%1$d ardışık</string>
+  <string name="streak_face">%1$s: %2$s</string>
   <string name="tails">YAZI</string>
   <string name="time">ZAMAN</string>
   <string name="total">TOPLAM</string>

@@ -4,6 +4,7 @@
   <string name="about_fragment_title">Über Münzwurf</string>
   <string name="about_menu_title">Über</string>
   <string name="app_name">Münzwurf</string>
+  <string name="changes">WECHSEL</string>
   <string name="clear">Löschen</string>
   <string name="coin_animation">Münzanimation</string>
   <string name="diagnostics_fragment_title">Diagnosetest</string>
@@ -47,7 +48,7 @@
   <string name="settings_item_force_title">Schüttelempfindlichkeit</string>
   <string name="settings_item_quick_reset_summary">Schaltfläche zum Zurücksetzen unterhalb der Statistiken anzeigen</string>
   <string name="settings_item_quick_reset_title">Schnelles Zurücksetzen der Statistiken</string>
-  <string name="settings_item_records_summary">Beste Serie: %1$s</string>
+  <string name="settings_item_records_summary">Beste Serie &#8212; %1$s</string>
   <string name="settings_item_reset_stats_summary">Aufgezeichnete Würfe: %1$s</string>
   <string name="settings_item_secure_random_summary">Kryptografisch sicheren Pseudozufallszahlengenerator (CSPRNG) verwenden</string>
   <string name="settings_item_secure_random_title">Zufallszahlengenerator</string>
@@ -65,7 +66,9 @@
   <string name="settings_item_vibrate_title">Vibrieren</string>
   <string name="settings_menu_title">Einstellungen</string>
   <string name="stats_reset_message">Statistiken wurden zurückgesetzt</string>
+  <string name="streak">SERIE</string>
   <string name="streak_content_description">%1$d hintereinander</string>
+  <string name="streak_face">%1$s: %2$s</string>
   <string name="tails">ZAHL</string>
   <string name="time">ZEIT</string>
   <string name="total">GESAMT</string>

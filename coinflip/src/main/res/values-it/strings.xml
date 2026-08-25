@@ -4,6 +4,7 @@
   <string name="about_fragment_title">Informazioni su Testa o croce</string>
   <string name="about_menu_title">Informazioni</string>
   <string name="app_name">Testa o croce</string>
+  <string name="changes">CAMBI</string>
   <string name="clear">Cancella</string>
   <string name="coin_animation">Animazione della moneta</string>
   <string name="diagnostics_fragment_title">Test diagnostico</string>
@@ -47,7 +48,7 @@
   <string name="settings_item_force_title">Sensibilità alle scosse</string>
   <string name="settings_item_quick_reset_summary">Mostra il pulsante di ripristino sotto le statistiche</string>
   <string name="settings_item_quick_reset_title">Ripristino rapido delle statistiche</string>
-  <string name="settings_item_records_summary">Serie migliore: %1$s</string>
+  <string name="settings_item_records_summary">Serie migliore &#8212; %1$s</string>
   <string name="settings_item_reset_stats_summary">Lanci registrati: %1$s</string>
   <string name="settings_item_secure_random_summary">Utilizza un generatore di numeri pseudocasuali crittograficamente sicuro (CSPRNG)</string>
   <string name="settings_item_secure_random_title">Generatore di numeri casuali</string>
@@ -65,7 +66,9 @@
   <string name="settings_item_vibrate_title">Vibrare</string>
   <string name="settings_menu_title">Impostazioni</string>
   <string name="stats_reset_message">Le statistiche sono state ripristinate</string>
+  <string name="streak">SERIE</string>
   <string name="streak_content_description">%1$d di fila</string>
+  <string name="streak_face">%1$s: %2$s</string>
   <string name="tails">CROCE</string>
   <string name="time">TEMPO</string>
   <string name="total">TOTALE</string>

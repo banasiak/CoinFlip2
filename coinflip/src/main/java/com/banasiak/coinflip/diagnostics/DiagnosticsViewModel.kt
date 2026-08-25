@@ -149,14 +149,37 @@ class DiagnosticsViewModel @Inject constructor(
       var heads = state.heads
       var tails = state.tails
       var total = state.total
+      // primitive locals, not Stats.afterFlip() -- that allocates two maps per call, and this loop
+      // runs up to ten million times with the resulting benchmark shown on the same screen
+      var changes = state.changes
+      var runValue = state.runValue
+      var run = state.currentRun
+      var headsStreak = state.headsStreak
+      var tailsStreak = state.tailsStreak
 
       while (total < state.iterations) {
-        when (val value = coin.flip().value) {
+        val value = coin.flip().value
+        when (value) {
           Coin.Value.HEADS -> heads++
           Coin.Value.TAILS -> tails++
           else -> throw IllegalStateException("Coin.flip() returned invalid value: $value")
         }
         total++
+
+        if (value == runValue) {
+          run++
+        } else {
+          // runValue is UNKNOWN only on the first flip of a test, which follows nothing and so
+          // changes nothing; on a resume it holds the face the run carried across the pause
+          if (runValue != Coin.Value.UNKNOWN) changes++
+          runValue = value
+          run = 1
+        }
+        if (value == Coin.Value.HEADS) {
+          if (run > headsStreak) headsStreak = run
+        } else {
+          if (run > tailsStreak) tailsStreak = run
+        }
 
         if (total % BATCH_SIZE == 0L || total == state.iterations) {
           val elapsedTime = clock.millis() - state.startTime
@@ -165,6 +188,13 @@ class DiagnosticsViewModel @Inject constructor(
               heads = heads,
               tails = tails,
               total = total,
+              changes = changes,
+              changesCount = changes.formatNumber(),
+              changesRatio = formatRatio(changes, state.iterations),
+              runValue = runValue,
+              currentRun = run,
+              headsStreak = headsStreak,
+              tailsStreak = tailsStreak,
               headsCount = heads.formatNumber(),
               tailsCount = tails.formatNumber(),
               totalCount = total.formatNumber(),
