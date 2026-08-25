@@ -247,8 +247,9 @@ fun SettingsView(
           text =
             stringResource(
               R.string.settings_item_records_summary,
-              "${state.customHeads ?: headsDefault} ${state.headsRecord.formatNumber()}" +
-                " $RECORD_SEPARATOR ${state.customTails ?: tailsDefault} ${state.tailsRecord.formatNumber()}"
+              stringResource(R.string.streak_face, state.customHeads ?: headsDefault, state.headsRecord.formatNumber()) +
+                " $RECORD_SEPARATOR " +
+                stringResource(R.string.streak_face, state.customTails ?: tailsDefault, state.tailsRecord.formatNumber())
             ),
           modifier = Modifier.padding(start = Dimen.medium, end = Dimen.medium, top = Dimen.xsmall),
           style = MaterialTheme.typography.bodyMedium,

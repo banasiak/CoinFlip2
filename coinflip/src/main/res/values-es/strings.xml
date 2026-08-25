@@ -4,6 +4,7 @@
   <string name="about_fragment_title">Acerca del lanzamiento de moneda</string>
   <string name="about_menu_title">Acerca de</string>
   <string name="app_name">Lanzamiento de moneda</string>
+  <string name="changes">CAMBIOS</string>
   <string name="clear">Borrar</string>
   <string name="coin_animation">Animación de moneda</string>
   <string name="diagnostics_fragment_title">Prueba de diagnóstico</string>
@@ -47,7 +48,7 @@
   <string name="settings_item_force_title">Sensibilidad al agitar</string>
   <string name="settings_item_quick_reset_summary">Mostrar el botón de restablecimiento debajo de las estadísticas</string>
   <string name="settings_item_quick_reset_title">Restablecimiento rápido de estadísticas</string>
-  <string name="settings_item_records_summary">Mejor racha: %1$s</string>
+  <string name="settings_item_records_summary">Mejor racha &#8212; %1$s</string>
   <string name="settings_item_reset_stats_summary">Lanzamientos registrados: %1$s</string>
   <string name="settings_item_secure_random_summary">Usar un generador de números pseudoaleatorios criptográficamente seguro (CSPRNG)</string>
   <string name="settings_item_secure_random_title">Generador de números aleatorios</string>
@@ -65,7 +66,9 @@
   <string name="settings_item_vibrate_title">Vibrar</string>
   <string name="settings_menu_title">Ajustes</string>
   <string name="stats_reset_message">Las estadísticas se han restablecido</string>
+  <string name="streak">RACHA</string>
   <string name="streak_content_description">%1$d seguidos</string>
+  <string name="streak_face">%1$s: %2$s</string>
   <string name="tails">CRUZ</string>
   <string name="time">TIEMPO</string>
   <string name="total">TOTAL</string>

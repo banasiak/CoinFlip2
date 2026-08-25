@@ -4,6 +4,7 @@
   <string name="about_fragment_title">동전 던지기 정보</string>
   <string name="about_menu_title">정보</string>
   <string name="app_name">동전 던지기</string>
+  <string name="changes">변화</string>
   <string name="clear">지우기</string>
   <string name="coin_animation">동전 애니메이션</string>
   <string name="diagnostics_fragment_title">진단 검사</string>
@@ -47,7 +48,7 @@
   <string name="settings_item_force_title">흔들림 감도</string>
   <string name="settings_item_quick_reset_summary">통계 아래에 재설정 버튼 표시</string>
   <string name="settings_item_quick_reset_title">빠른 통계 재설정</string>
-  <string name="settings_item_records_summary">최고 연속 기록: %1$s</string>
+  <string name="settings_item_records_summary">최고 연속 기록 &#8212; %1$s</string>
   <string name="settings_item_reset_stats_summary">기록된 던지기: %1$s</string>
   <string name="settings_item_secure_random_summary">암호학적으로 안전한 의사 난수 생성기(CSPRNG) 사용</string>
   <string name="settings_item_secure_random_title">난수 생성기</string>
@@ -65,7 +66,9 @@
   <string name="settings_item_vibrate_title">진동</string>
   <string name="settings_menu_title">설정</string>
   <string name="stats_reset_message">통계가 재설정되었습니다</string>
+  <string name="streak">연속</string>
   <string name="streak_content_description">%1$d회 연속</string>
+  <string name="streak_face">%1$s: %2$s</string>
   <string name="tails">뒷면</string>
   <string name="time">시간</string>
   <string name="total">합계</string>

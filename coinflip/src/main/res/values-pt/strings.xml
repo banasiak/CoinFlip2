@@ -4,6 +4,7 @@
   <string name="about_fragment_title">Sobre Cara ou Coroa</string>
   <string name="about_menu_title">Sobre</string>
   <string name="app_name">Cara ou Coroa</string>
+  <string name="changes">MUDANÇAS</string>
   <string name="clear">Limpar</string>
   <string name="coin_animation">Animação da moeda</string>
   <string name="diagnostics_fragment_title">Teste de diagnóstico</string>
@@ -47,7 +48,7 @@
   <string name="settings_item_force_title">Sensibilidade à agitação</string>
   <string name="settings_item_quick_reset_summary">Mostrar botão de redefinição abaixo das estatísticas</string>
   <string name="settings_item_quick_reset_title">Redefinição rápida de estatísticas</string>
-  <string name="settings_item_records_summary">Melhor sequência: %1$s</string>
+  <string name="settings_item_records_summary">Melhor sequência &#8212; %1$s</string>
   <string name="settings_item_reset_stats_summary">Lançamentos registrados: %1$s</string>
   <string name="settings_item_secure_random_summary">Usar um gerador de números pseudoaleatórios criptograficamente seguro (CSPRNG)</string>
   <string name="settings_item_secure_random_title">Gerador de números aleatórios</string>
@@ -65,7 +66,9 @@
   <string name="settings_item_vibrate_title">Vibrar</string>
   <string name="settings_menu_title">Configurações</string>
   <string name="stats_reset_message">As estatísticas foram redefinidas</string>
+  <string name="streak">SEQUÊNCIA</string>
   <string name="streak_content_description">%1$d seguidos</string>
+  <string name="streak_face">%1$s: %2$s</string>
   <string name="tails">COROA</string>
   <string name="time">TEMPO</string>
   <string name="total">TOTAL</string>

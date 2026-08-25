@@ -2,6 +2,7 @@ package com.banasiak.coinflip.diagnostics
 
 import android.os.Parcelable
 import androidx.annotation.StringRes
+import com.banasiak.coinflip.common.Coin
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -15,6 +16,15 @@ data class DiagnosticsState(
   val heads: Long = 0,
   val tails: Long = 0,
   val total: Long = 0,
+  val changes: Long = 0,
+  val changesCount: String = "0",
+  val changesRatio: String = "[0%]",
+  // the run in progress: the loop resumes from state after a pause, so without these a run that
+  // spans the pause is split in two and both statistics come out quietly wrong
+  val runValue: Coin.Value = Coin.Value.UNKNOWN,
+  val currentRun: Long = 0,
+  val headsStreak: Long = 0,
+  val tailsStreak: Long = 0,
   val headsCount: String = "0",
   val headsRatio: String = "[0%]",
   val tailsCount: String = "0",

@@ -4,6 +4,7 @@
   <string name="about_fragment_title">关于抛硬币</string>
   <string name="about_menu_title">关于</string>
   <string name="app_name">抛硬币</string>
+  <string name="changes">变化次数</string>
   <string name="clear">清除</string>
   <string name="coin_animation">硬币动画</string>
   <string name="diagnostics_fragment_title">诊断测试</string>
@@ -47,7 +48,7 @@
   <string name="settings_item_force_title">摇动灵敏度</string>
   <string name="settings_item_quick_reset_summary">在统计数据下方显示重置按钮</string>
   <string name="settings_item_quick_reset_title">快速统计重置</string>
-  <string name="settings_item_records_summary">最佳连续记录：%1$s</string>
+  <string name="settings_item_records_summary">最佳连续记录&#8212;%1$s</string>
   <string name="settings_item_reset_stats_summary">已记录抛掷次数：%1$s</string>
   <string name="settings_item_secure_random_summary">使用加密安全的伪随机数生成器 (CSPRNG)</string>
   <string name="settings_item_secure_random_title">随机数生成器</string>
@@ -65,7 +66,9 @@
   <string name="settings_item_vibrate_title">振动</string>
   <string name="settings_menu_title">设置</string>
   <string name="stats_reset_message">统计数据已重置</string>
+  <string name="streak">连续</string>
   <string name="streak_content_description">连续 %1$d 次</string>
+  <string name="streak_face">%1$s：%2$s</string>
   <string name="tails">反面</string>
   <string name="time">时间</string>
   <string name="total">总计</string>

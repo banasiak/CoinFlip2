@@ -4,6 +4,7 @@
   <string name="about_fragment_title">À propos de Pile ou Face</string>
   <string name="about_menu_title">À propos</string>
   <string name="app_name">Pile ou Face</string>
+  <string name="changes">BASCULES</string>
   <string name="clear">Effacer</string>
   <string name="coin_animation">Animation de la pièce</string>
   <string name="diagnostics_fragment_title">Test diagnostique</string>
@@ -47,7 +48,7 @@
   <string name="settings_item_force_title">Sensibilité aux secousses</string>
   <string name="settings_item_quick_reset_summary">Afficher le bouton de réinitialisation sous les statistiques</string>
   <string name="settings_item_quick_reset_title">Réinitialisation rapide des statistiques</string>
-  <string name="settings_item_records_summary">Meilleure série : %1$s</string>
+  <string name="settings_item_records_summary">Meilleure série &#8212; %1$s</string>
   <string name="settings_item_reset_stats_summary">Lancers enregistrés : %1$s</string>
   <string name="settings_item_secure_random_summary">Utiliser un générateur de nombres pseudo-aléatoires cryptographiquement sûr (CSPRNG)</string>
   <string name="settings_item_secure_random_title">Générateur de nombres aléatoires</string>
@@ -65,7 +66,9 @@
   <string name="settings_item_vibrate_title">Vibrer</string>
   <string name="settings_menu_title">Paramètres</string>
   <string name="stats_reset_message">Les statistiques ont été réinitialisées</string>
+  <string name="streak">SÉRIE</string>
   <string name="streak_content_description">%1$d d’affilée</string>
+  <string name="streak_face">%1$s : %2$s</string>
   <string name="tails">PILE</string>
   <string name="time">TEMPS</string>
   <string name="total">TOTAL</string>

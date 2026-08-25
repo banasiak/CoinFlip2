@@ -5,6 +5,7 @@
   <string name="about_menu_title">About</string>
   <string name="about_mint_text" translatable="false">Quarter-dollar and Presidential $1 Coin images from the United States Mint. €1 Coin images from the European Central Bank.</string>
   <string name="app_name">Coin Flip</string>
+  <string name="changes">CHANGES</string>
   <string name="clear">Clear</string>
   <string name="coin_animation">Coin Animation</string>
   <string name="copyright_text" translatable="false">Copyright &#169; 2025 &#8212; Richard Banasiak</string>
@@ -50,7 +51,7 @@
   <string name="settings_item_force_title">Shake Sensitivity</string>
   <string name="settings_item_quick_reset_summary">Show reset button below statistics</string>
   <string name="settings_item_quick_reset_title">Quick Stats Reset</string>
-  <string name="settings_item_records_summary">Best streak: %1$s</string>
+  <string name="settings_item_records_summary">Best streak &#8212; %1$s</string>
   <string name="settings_item_reset_stats_summary">Flips recorded: %1$s</string>
   <string name="settings_item_secure_random_summary">Use a cryptographically secure pseudorandom number generator (CSPRNG)</string>
   <string name="settings_item_secure_random_title">Random Number Generator</string>
@@ -68,7 +69,9 @@
   <string name="settings_item_vibrate_title">Vibrate</string>
   <string name="settings_menu_title">Settings</string>
   <string name="stats_reset_message">Statistics Have Been Reset</string>
+  <string name="streak">STREAK</string>
   <string name="streak_content_description">%1$d in a row</string>
+  <string name="streak_face">%1$s: %2$s</string>
   <string name="tails">TAILS</string>
   <string name="time">TIME</string>
   <string name="total">TOTAL</string>
