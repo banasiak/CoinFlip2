@@ -183,6 +183,9 @@ private fun CoinDetails(state: MainState, postAction: (MainAction) -> Unit, land
 
 private const val PLACEHOLDER_GLYPH = "?"
 
+// backs the glyph off the ~97% of its box the fit below lands on, so it does not crowd the coin
+private const val PLACEHOLDER_FILL_RATIO = 0.9f
+
 // a multiplication sign and a numeral, so the run needs no translating; the words are left to the
 // content description, which keeps a plural rule per locale out of the most visible text in the app
 private const val STREAK_PREFIX = "×"
@@ -195,7 +198,7 @@ private const val STREAK_SIZE_RATIO = 0.55f
 private const val FIT_MARGIN = 0.98f
 
 // applied to both halves of the result line: it reserves the line's height before the first flip,
-// and keeping it a constant multiple of each font size is what lets the two centre against each other
+// and keeping it a constant multiple of each font size is what lets the two center against each other
 private const val RESULT_LINE_HEIGHT_RATIO = 1.25f
 
 @Composable
@@ -237,10 +240,10 @@ private fun CoinImage(state: MainState, flipToken: Int, size: Dp, coinPadding: D
             min(
               box.width / ink.width().coerceAtLeast(1),
               box.height / ink.height().coerceAtLeast(1)
-            )
+            ) * PLACEHOLDER_FILL_RATIO
           paint.getTextBounds(PLACEHOLDER_GLYPH, 0, PLACEHOLDER_GLYPH.length, ink)
           // drawText puts the origin on the baseline with the ink sitting asymmetrically around it,
-          // so centring the text run leaves the glyph high; centre the measured ink box instead
+          // so centering the text run leaves the glyph high; center the measured ink box instead
           drawContext.canvas.nativeCanvas.drawText(
             PLACEHOLDER_GLYPH,
             box.width / 2f - ink.exactCenterX(),
@@ -315,7 +318,7 @@ private fun ResultText(state: MainState, landscape: Boolean) {
 
     // a custom label long enough to wrap reads worse than a smaller one that fits, and once it wraps
     // there is nowhere for the run to sit beside it. Both halves shrink by one factor so the pair fits
-    // on a single line -- one factor, so the run keeps its proportion to the label and stays centred.
+    // on a single line -- one factor, so the run keeps its proportion to the label and stays centered.
     // The label is measured whether or not it is currently drawn, so the line does not change height
     // as a flip is revealed.
     val scale =

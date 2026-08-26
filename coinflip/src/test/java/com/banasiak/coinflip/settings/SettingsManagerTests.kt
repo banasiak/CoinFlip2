@@ -206,7 +206,7 @@ class SettingsManagerTests {
     }
 
     @Test
-    fun `an unrecognised streak face reads back as unknown`() {
+    fun `an unrecognized streak face reads back as unknown`() {
       // a value written by a future build, or corrupted -- it must not blow up the load
       val (_, settings) = manager(Settings.STREAK_VALUE.key to "SIDEWAYS", Settings.STREAK_COUNT.key to 3L)
 

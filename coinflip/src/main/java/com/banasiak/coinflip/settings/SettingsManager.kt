@@ -120,7 +120,7 @@ class SettingsManager @Inject constructor(private val prefs: SharedPreferences) 
     }
   }
 
-  /** The streak's face round-trips as its enum name; anything unrecognised means no run is in progress. */
+  /** The streak's face round-trips as its enum name; anything unrecognized means no run is in progress. */
   private fun String?.toCoinValue(): Coin.Value = Coin.Value.entries.firstOrNull { it.name == this } ?: Coin.Value.UNKNOWN
 
   private fun String?.toSensitivity(): Int =

@@ -396,7 +396,7 @@ class MainViewModelTests {
 
       val state = vm.stateFlow.value
       state.streakVisible shouldBeEqualTo false
-      // the result text keeps its old behaviour of starting blank
+      // the result text keeps its old behavior of starting blank
       state.resultVisible shouldBeEqualTo false
     }
 

@@ -64,7 +64,7 @@ holds the true run, including 1 — `MIN_DRAWN_STREAK` is the separate *display*
 meaningless `×1` off every single flip, and it gates the cold-start seeding too so the screen still
 opens blank when the standing run is 1. The run is drawn on the result's own line as `HEADS ×7`
 rather than taking a line of its own, because landscape has no vertical room to spare. It is two
-`Text`s in a centre-aligned `Row`, not one styled span: a span shares the result's baseline, which
+`Text`s in a center-aligned `Row`, not one styled span: a span shares the result's baseline, which
 leaves the smaller digits sitting low against tall capitals. It survives a cold start (that is the point — you show somebody your
 run hours later), which is why `onResume` seeds `result` from the persisted run so the number is
 named rather than floating alone under an unflipped coin. Beating your own record plays the `STREAK`
