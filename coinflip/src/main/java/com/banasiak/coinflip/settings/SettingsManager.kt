@@ -6,7 +6,6 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.core.content.edit
 import com.banasiak.coinflip.common.Coin
 import com.banasiak.coinflip.common.Stats
-import com.squareup.seismic.ShakeDetector
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -14,94 +13,80 @@ import javax.inject.Singleton
 @Singleton
 class SettingsManager @Inject constructor(private val prefs: SharedPreferences) {
   companion object {
-    // coin prefixes are lowercase identifiers, so a comma can never appear inside one
-    private const val FAVORITES_DELIMITER = ","
+    /** What a reset clears, named once so it cannot drift from what [persistStats] writes. */
+    private val STAT_SETTINGS =
+      listOf(
+        Setting.HEADS,
+        Setting.TAILS,
+        Setting.HEADS_RECORD,
+        Setting.TAILS_RECORD,
+        Setting.STREAK_VALUE,
+        Setting.STREAK_COUNT
+      )
   }
 
-  val coinPrefix get() = prefs.getString(Settings.COIN.key, Settings.COIN.default as String)!! // pinky swear
-  val customHeadsText get() = prefs.getString(Settings.CUSTOM_HEADS_TEXT.key, Settings.CUSTOM_HEADS_TEXT.default as String?)
-  val customTailsText get() = prefs.getString(Settings.CUSTOM_TAILS_TEXT.key, Settings.CUSTOM_TAILS_TEXT.default as String?)
-  val animationEnabled get() = prefs.getBoolean(Settings.ANIMATE.key, Settings.ANIMATE.default as Boolean)
-  val shakeEnabled get() = prefs.getBoolean(Settings.SHAKE.key, Settings.SHAKE.default as Boolean)
-  val soundEnabled get() = prefs.getBoolean(Settings.SOUND.key, Settings.SOUND.default as Boolean)
-  val showQuickReset get() = prefs.getBoolean(Settings.QUICK_RESET.key, Settings.QUICK_RESET.default as Boolean)
-  val showStats get() = prefs.getBoolean(Settings.STATS.key, Settings.STATS.default as Boolean)
-  val showStreak get() = prefs.getBoolean(Settings.STREAK.key, Settings.STREAK.default as Boolean)
-  val textEnabled get() = prefs.getBoolean(Settings.TEXT.key, Settings.TEXT.default as Boolean)
-  val vibrateEnabled get() = prefs.getBoolean(Settings.VIBRATE.key, Settings.VIBRATE.default as Boolean)
-  val diagnosticsIterations get() = prefs.getString(Settings.DIAGNOSTICS.key, Settings.DIAGNOSTICS.default as String)!!.toLong()
-  val dynamicColorsEnabled get() = prefs.getBoolean(Settings.DYNAMIC.key, Settings.DYNAMIC.default as Boolean)
-  val shakeSensitivity get() = prefs.getString(Settings.FORCE.key, Settings.FORCE.default as String).toSensitivity()
-  val forceValue get() = prefs.getString(Settings.FORCE.key, Settings.FORCE.default as String)!!
-  val secureRandom get() = prefs.getBoolean(Settings.SECURE_RANDOM.key, Settings.SECURE_RANDOM.default as Boolean)
+  val coinPrefix get() = prefs[Setting.COIN]
+  val customHeadsText get() = prefs[Setting.CUSTOM_HEADS_TEXT]
+  val customTailsText get() = prefs[Setting.CUSTOM_TAILS_TEXT]
+  val animationEnabled get() = prefs[Setting.ANIMATE]
+  val shakeEnabled get() = prefs[Setting.SHAKE]
+  val soundEnabled get() = prefs[Setting.SOUND]
+  val showQuickReset get() = prefs[Setting.QUICK_RESET]
+  val showStats get() = prefs[Setting.STATS]
+  val showStreak get() = prefs[Setting.STREAK]
+  val textEnabled get() = prefs[Setting.TEXT]
+  val vibrateEnabled get() = prefs[Setting.VIBRATE]
+  val diagnosticsIterations get() = prefs[Setting.DIAGNOSTICS]
+  val dynamicColorsEnabled get() = prefs[Setting.DYNAMIC]
+  val secureRandom get() = prefs[Setting.SECURE_RANDOM]
 
-  /** Coin prefixes the user has starred, stored as one delimited string so [update] keeps its simple contract. */
-  val favoriteCoins: Set<String>
-    get() =
-      prefs.getString(Settings.FAVORITES.key, Settings.FAVORITES.default as String)
-        .orEmpty()
-        .split(FAVORITES_DELIMITER)
-        .filter { it.isNotBlank() }
-        .toSet()
+  /** The choice the user made; [shakeSensitivity] is the threshold seismic wants for it. */
+  val force get() = prefs[Setting.FORCE]
+  val shakeSensitivity get() = force.sensitivity
+
+  /** Coin prefixes the user has starred. */
+  val favoriteCoins get() = prefs[Setting.FAVORITES]
 
   init {
     validateSchema()
   }
 
-  /** Persists a single preference value, mirroring the keys/types written by the old PreferenceFragmentCompat. */
-  fun update(setting: Settings, value: Any?) {
-    prefs.edit {
-      when (value) {
-        is Boolean -> putBoolean(setting.key, value)
-        is String -> putString(setting.key, value)
-        null -> putString(setting.key, null)
-        else -> throw IllegalArgumentException("Unsupported preference type for ${setting.key}: $value")
-      }
-    }
-  }
-
-  fun persistFavoriteCoins(values: Set<String>) {
-    update(Settings.FAVORITES, values.joinToString(FAVORITES_DELIMITER))
+  /** Persists a single preference. The setting carries its own type, so a mismatch will not compile. */
+  fun <T> update(setting: Setting<T>, value: T) {
+    prefs.edit { this[setting] = value }
   }
 
   fun loadStats(): Stats =
     Stats(
-      counts =
-        mapOf(
-          Coin.Value.HEADS to prefs.getLong(Settings.HEADS.key, Settings.HEADS.default as Long),
-          Coin.Value.TAILS to prefs.getLong(Settings.TAILS.key, Settings.TAILS.default as Long)
-        ),
-      records =
-        mapOf(
-          Coin.Value.HEADS to prefs.getLong(Settings.HEADS_RECORD.key, Settings.HEADS_RECORD.default as Long),
-          Coin.Value.TAILS to prefs.getLong(Settings.TAILS_RECORD.key, Settings.TAILS_RECORD.default as Long)
-        ),
-      streakValue = prefs.getString(Settings.STREAK_VALUE.key, Settings.STREAK_VALUE.default as String).toCoinValue(),
-      streak = prefs.getLong(Settings.STREAK_COUNT.key, Settings.STREAK_COUNT.default as Long)
+      counts = mapOf(Coin.Value.HEADS to prefs[Setting.HEADS], Coin.Value.TAILS to prefs[Setting.TAILS]),
+      records = mapOf(Coin.Value.HEADS to prefs[Setting.HEADS_RECORD], Coin.Value.TAILS to prefs[Setting.TAILS_RECORD]),
+      streakValue = prefs[Setting.STREAK_VALUE],
+      streak = prefs[Setting.STREAK_COUNT]
     )
 
   fun persistStats(stats: Stats) {
     prefs.edit {
-      putLong(Settings.HEADS.key, stats.count(Coin.Value.HEADS))
-      putLong(Settings.TAILS.key, stats.count(Coin.Value.TAILS))
-      putLong(Settings.HEADS_RECORD.key, stats.record(Coin.Value.HEADS))
-      putLong(Settings.TAILS_RECORD.key, stats.record(Coin.Value.TAILS))
-      putString(Settings.STREAK_VALUE.key, stats.streakValue.name)
-      putLong(Settings.STREAK_COUNT.key, stats.streak)
+      this[Setting.HEADS] = stats.count(Coin.Value.HEADS)
+      this[Setting.TAILS] = stats.count(Coin.Value.TAILS)
+      this[Setting.HEADS_RECORD] = stats.record(Coin.Value.HEADS)
+      this[Setting.TAILS_RECORD] = stats.record(Coin.Value.TAILS)
+      this[Setting.STREAK_VALUE] = stats.streakValue
+      this[Setting.STREAK_COUNT] = stats.streak
     }
   }
 
   fun resetStats() {
     prefs.edit {
-      remove(Settings.HEADS.key)
-        .remove(Settings.TAILS.key)
-        .remove(Settings.HEADS_RECORD.key)
-        .remove(Settings.TAILS_RECORD.key)
-        .remove(Settings.STREAK_VALUE.key)
-        .remove(Settings.STREAK_COUNT.key)
+      STAT_SETTINGS.forEach { remove(it.key) }
     }
   }
 
+  /**
+   * Registers for preference changes for as long as [listener] is strongly held *elsewhere*.
+   * SharedPreferences keeps its listeners weakly, so one that nothing else retains is collected and
+   * silently stops firing. The only caller is `RNG`, a singleton, which is why there is no
+   * unregister to match.
+   */
   fun registerChangeListener(listener: OnSharedPreferenceChangeListener) {
     prefs.registerOnSharedPreferenceChangeListener(listener)
   }
@@ -109,53 +94,13 @@ class SettingsManager @Inject constructor(private val prefs: SharedPreferences) 
   @SuppressLint("ApplySharedPref")
   private fun validateSchema() {
     // the old version of the app used keys with incompatible values -- don't bother migrating them, just reset everything
-    val schemaVersion = prefs.getInt(Settings.SCHEMA.key, Settings.SCHEMA.default as Int)
-    if (schemaVersion != Settings.SCHEMA.default) {
+    if (prefs[Setting.SCHEMA] != Setting.SCHEMA.default) {
       Timber.w("Old schema detected. Clearing all values from SharedPreferences!")
       // this needs to happen ASAP, otherwise the app may crash if it attempts to load data from a previous version
       prefs.edit(commit = true) {
         clear()
-        putInt(Settings.SCHEMA.key, Settings.SCHEMA.default)
+        this[Setting.SCHEMA] = Setting.SCHEMA.default
       }
     }
-  }
-
-  /** The streak's face round-trips as its enum name; anything unrecognized means no run is in progress. */
-  private fun String?.toCoinValue(): Coin.Value = Coin.Value.entries.firstOrNull { it.name == this } ?: Coin.Value.UNKNOWN
-
-  private fun String?.toSensitivity(): Int =
-    when (this) {
-      "low" -> ShakeDetector.SENSITIVITY_LIGHT
-      "medium" -> ShakeDetector.SENSITIVITY_MEDIUM
-      "high" -> ShakeDetector.SENSITIVITY_HARD
-      else -> ShakeDetector.SENSITIVITY_MEDIUM
-    }
-
-  enum class Settings(val key: String, val default: Any?) {
-    COIN("coin", "gw"), // George Washington dollar
-    CUSTOM_HEADS_TEXT("customHeadsText", null),
-    CUSTOM_TAILS_TEXT("customTailsText", null),
-    ANIMATE("animate", true),
-    SHAKE("shake", true),
-    SOUND("sound", true),
-    STATS("stats", true),
-    TEXT("text", true),
-    VIBRATE("vibrate", true),
-    DIAGNOSTICS("diagnostics", "100000"), // unfortunately the preference stores this as a string
-    DYNAMIC("dynamic", false),
-    QUICK_RESET("quickReset", false),
-    FORCE("force", "medium"),
-    SECURE_RANDOM("secureRandom", false),
-    FAVORITES("favoriteCoins", ""),
-    STREAK("streak", false),
-    HEADS("headsCount", 0L),
-    TAILS("tailsCount", 0L),
-    HEADS_RECORD("headsRecord", 0L),
-    TAILS_RECORD("tailsRecord", 0L),
-    STREAK_VALUE("streakValue", ""), // Coin.Value.name; "" reads back as UNKNOWN
-    STREAK_COUNT("streakCount", 0L),
-
-    // adding a key needs no bump -- validateSchema() only wipes on a mismatch, and an absent key reads its default
-    SCHEMA("schemaVersion", 7) // the old version of the app was '6'
   }
 }

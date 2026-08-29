@@ -52,8 +52,23 @@ CoinFlip2 is a Modern Android Development (MAD) coin-flipping app published on t
 - `Coin` — core flip logic; tracks `currentValue` to determine animation permutation (heads→heads, heads→tails, etc.). Deliberately holds *no* streak state: `DiagnosticsViewModel` runs `coin.flip()` in a loop up to 10,000,000 times, which would obliterate the user's run and records
 - `Stats` — the counts, the run of identical results in progress, and each face's longest run, as one value. `afterFlip()` folds a landed flip into all three. They travel together because reset and undo have to move all of them at once
 - `RNG` — wraps `kotlin.random.Random` / `SecureRandom`, listens for preference changes to hot-swap
-- `SettingsManager` — typed accessors over `SharedPreferences`; all preference keys defined in the `Settings` enum. `update()` deliberately accepts only `Boolean`, `String`, and `null` (and throws otherwise), so favorite coins are stored as one comma-delimited string rather than a `StringSet`. Adding a key needs no schema bump: `validateSchema()` wipes everything only on a version *mismatch*
-- `AnimationHelper` — generates frame-by-frame `DurationAnimationDrawable` for each of the 4 flip permutations; coin images are loaded by resource name prefix (e.g., `"gw"` → `gw_heads` / `gw_tails` drawables). A permutation with no frames gets *no map entry*, not an empty drawable — `getLastFrame()` reads index -1 on an empty one, which would defeat the caller's null check
+- `CoinType` / `CoinGroup` — the catalog of every coin the app ships. This used to be three parallel
+  `string-array`s in `res/values/arrays.xml` that only worked because they lined up index for index; one
+  enum makes the three columns a single row and the drift impossible. `prefix` is the identity — the string
+  SharedPreferences stores *and* the drawable name prefix — so `Setting.COIN.default` and `AnimationHelper`'s
+  `"random"` sentinel read it off the enum instead of repeating a literal. Declaration order is load-bearing:
+  the picker opens a new header only on a change of `group`, so the entries have to stay in unbroken runs.
+  `coinName` is a plain string rather than a `@StringRes` — the coin names were never translated, and holding
+  them in Kotlin says so outright where a `string-array` left every locale a permanent hole
+- `ShakeForce` — the three shake sensitivities as one enum: the string on disk, the label resource, and
+  the seismic threshold together. It is what `Setting.FORCE` decodes to, so the choice stays typed all the
+  way to the segmented control and the string exists only inside the setting. `SettingsManager` exposes both
+  halves — `force` for the control, `shakeSensitivity` for the detector — off one read, so a value this build
+  no longer offers falls back to medium in both. It used to shake at medium while the control showed nothing
+  selected at all. `stored` is spelled out rather than derived from the constant name it happens to match:
+  these strings are already on disk, so deriving them would let a rename invalidate them silently
+- `SettingsManager` — typed accessors over `SharedPreferences`, one per preference. Every key, default and encoding lives in `Setting`, a sealed `Setting<T>` whose subclasses each know how to read and write themselves, so `update(setting, value)` is checked at compile time and `prefs[Setting.X]` needs no cast. It replaced an enum with an `Any?` default, which could not carry a type — enums take no type parameter — and so cast at every use site, checked `update`'s argument at runtime, and left the Long-valued settings a persistence path of their own. Adding a key needs no schema bump: `validateSchema()` wipes everything only on a version *mismatch*
+- `AnimationHelper` — generates frame-by-frame `DurationAnimationDrawable` for each of the 4 flip permutations; coin images are loaded by resource name prefix (`CoinType.prefix`, e.g. `"gw"` → `gw_heads` / `gw_tails` drawables). A permutation with no frames gets *no map entry*, not an empty drawable — `getLastFrame()` reads index -1 on an empty one, which would defeat the caller's null check
 - `SoundHelper`, `VibrationHelper` — play sounds / haptics only when the corresponding setting is enabled. `STREAK` runs ~5.5s where the others run ~1s, so it is still sounding over the flips that follow it; `AppModule` sizes the `SoundPool` stream budget for that
 
 **Streaks** count *any* face repeating, not heads specifically — the app ships ~40 coins and custom
@@ -77,11 +92,12 @@ up to somebody.
 **Testing:** JUnit 5 with MockK for mocking, Kluent for assertions, Turbine for Flow testing. ViewModel tests use `@ExtendWith(MainDispatcherRule::class)` to swap `Dispatchers.Main` with `UnconfinedTestDispatcher`. Tests are in `coinflip/src/test/`; there is no `androidTest` source set, so nothing in Compose is covered.
 
 `FakeSharedPreferences` is an in-memory `SharedPreferences` used instead of mocking the interface, so
-tests can assert what the store ends up holding. `CoinResourcesTests` reads `res/` off disk to assert
-the three parallel coin arrays and the drawables they name by string concatenation stay in step —
-`build.gradle.kts` declares those files as test inputs so the guard is not skipped as up-to-date.
+tests can assert what the store ends up holding. `CoinResourcesTests` reads `res/drawable` off disk to assert every
+`CoinType` still ships the two faces it names by string concatenation, and that the catalog stays grouped —
+`build.gradle.kts` declares that directory as a test input so the guard is not skipped as up-to-date.
 
-**Coverage:** Kover, reported on the debug variant. 161 tests, ~58% of filtered lines; the biggest remaining gap is `AnimationHelper`'s bitmap pipeline, which needs Robolectric or instrumentation rather than plain unit tests. Generated (Hilt/Dagger) code, `@Composable`
+**Coverage:** Kover, reported on the debug variant. 157 tests, ~63% of filtered lines — some of that rise is the
+coin catalog, whose 80-odd declaration lines any test touching `CoinType` counts as covered. The biggest remaining gap is `AnimationHelper`'s bitmap pipeline, which needs Robolectric or instrumentation rather than plain unit tests. Generated (Hilt/Dagger) code, `@Composable`
 functions, and the theme declarations are filtered out in the `kover` block of `coinflip/build.gradle.kts`,
 so the number reflects testable logic only — remove the Compose exclusions if UI tests are ever added.
 Nothing gates the build: `koverVerify` runs as part of `check` but has no rules. CI is the single

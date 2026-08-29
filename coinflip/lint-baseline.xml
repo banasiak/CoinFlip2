@@ -2,17 +2,6 @@
 <issues format="6" by="lint 9.3.2" type="baseline" client="gradle" dependencies="false" name="AGP (9.3.2)" variant="all" version="9.3.2">
 
     <issue
-        id="Typos"
-        message="&quot;ok&quot; is usually capitalized as &quot;OK&quot;"
-        errorLine1="    &lt;item>ok&lt;/item>"
-        errorLine2="          ~~">
-        <location
-            file="src/main/res/values/arrays.xml"
-            line="125"
-            column="11"/>
-    </issue>
-
-    <issue
         id="MonochromeLauncherIcon"
         message="The application adaptive icon is missing a monochrome tag"
         errorLine1="&lt;adaptive-icon xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"

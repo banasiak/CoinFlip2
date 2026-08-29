@@ -13,6 +13,7 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.scale
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.BuildInfo
+import com.banasiak.coinflip.common.CoinType
 import com.banasiak.coinflip.ui.DurationAnimationDrawable
 import com.banasiak.coinflip.util.AnimationHelper.Permutation.HEADS_HEADS
 import com.banasiak.coinflip.util.AnimationHelper.Permutation.HEADS_TAILS
@@ -33,7 +34,6 @@ class AnimationHelper @Inject constructor(
 ) {
   companion object {
     private const val FRAME_DURATION = 20 // milliseconds
-    private const val RANDOM = "random"
   }
 
   // written on Dispatchers.IO and read on Main during flips, so publish as a single volatile reference swap
@@ -47,7 +47,7 @@ class AnimationHelper @Inject constructor(
   suspend fun loadAnimationsForCoin(prefix: String) {
     withContext(Dispatchers.IO) {
       // skip the bitmap work when the same coin is already loaded; "random" rerolls on every load
-      if (prefix == loadedPrefix && prefix != RANDOM) return@withContext
+      if (prefix == loadedPrefix && prefix != CoinType.RANDOM.prefix) return@withContext
       val startTime = clock.millis()
       val ids = getIdentifiersForPrefix(prefix)
       generateAnimations(ids.first, ids.second)
@@ -59,13 +59,7 @@ class AnimationHelper @Inject constructor(
   @SuppressLint("DiscouragedApi") // lol
   @VisibleForTesting
   internal fun getIdentifiersForPrefix(prefix: String): Pair<Int, Int> {
-    val newPrefix =
-      if (prefix == RANDOM) {
-        val entries = resources.getStringArray(R.array.coins_values).filterNot { it == RANDOM }
-        entries.random()
-      } else {
-        prefix
-      }
+    val newPrefix = if (prefix == CoinType.RANDOM.prefix) CoinType.flippable.random().prefix else prefix
     Timber.d("coin selected: $newPrefix")
     val heads = resources.getIdentifier("${newPrefix}_heads", "drawable", buildInfo.packageName)
     val tails = resources.getIdentifier("${newPrefix}_tails", "drawable", buildInfo.packageName)

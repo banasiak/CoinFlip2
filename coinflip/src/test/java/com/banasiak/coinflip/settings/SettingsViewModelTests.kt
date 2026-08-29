@@ -5,7 +5,6 @@ import com.banasiak.coinflip.MainDispatcherRule
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.Coin
 import com.banasiak.coinflip.common.Stats
-import com.banasiak.coinflip.settings.SettingsManager.Settings
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -35,7 +34,7 @@ class SettingsViewModelTests {
       every { settings.customTailsText } returns "SHIP"
       every { settings.dynamicColorsEnabled } returns true
       every { settings.secureRandom } returns true
-      every { settings.forceValue } returns "high"
+      every { settings.force } returns ShakeForce.HIGH
       every { settings.showStreak } returns true
       every { settings.loadStats() } returns
         Stats(
@@ -60,7 +59,7 @@ class SettingsViewModelTests {
           customTails = "SHIP",
           dynamic = true,
           secureRandom = true,
-          force = "high",
+          force = ShakeForce.HIGH,
           flipCount = 12,
           headsRecord = 4,
           tailsRecord = 3
@@ -73,7 +72,7 @@ class SettingsViewModelTests {
       val vm = viewModel()
       vm.postAction(SettingsAction.SetAnimate(false))
 
-      verify { settings.update(Settings.ANIMATE, false) }
+      verify { settings.update(Setting.ANIMATE, false) }
       vm.stateFlow.value.animate shouldBeEqualTo false
     }
 
@@ -83,7 +82,7 @@ class SettingsViewModelTests {
       val vm = viewModel()
       vm.postAction(SettingsAction.SetCoin("jfk"))
 
-      verify { settings.update(Settings.COIN, "jfk") }
+      verify { settings.update(Setting.COIN, "jfk") }
       vm.stateFlow.value.coin shouldBeEqualTo "jfk"
     }
 
@@ -93,7 +92,7 @@ class SettingsViewModelTests {
       val vm = viewModel()
       vm.postAction(SettingsAction.SetShake(false))
 
-      verify { settings.update(Settings.SHAKE, false) }
+      verify { settings.update(Setting.SHAKE, false) }
       vm.stateFlow.value.shake shouldBeEqualTo false
     }
 
@@ -103,7 +102,7 @@ class SettingsViewModelTests {
       val vm = viewModel()
       vm.postAction(SettingsAction.SetSound(false))
 
-      verify { settings.update(Settings.SOUND, false) }
+      verify { settings.update(Setting.SOUND, false) }
       vm.stateFlow.value.sound shouldBeEqualTo false
     }
 
@@ -113,7 +112,7 @@ class SettingsViewModelTests {
       val vm = viewModel()
       vm.postAction(SettingsAction.SetText(false))
 
-      verify { settings.update(Settings.TEXT, false) }
+      verify { settings.update(Setting.TEXT, false) }
       vm.stateFlow.value.text shouldBeEqualTo false
     }
 
@@ -123,7 +122,7 @@ class SettingsViewModelTests {
       val vm = viewModel()
       vm.postAction(SettingsAction.SetVibrate(false))
 
-      verify { settings.update(Settings.VIBRATE, false) }
+      verify { settings.update(Setting.VIBRATE, false) }
       vm.stateFlow.value.vibrate shouldBeEqualTo false
     }
 
@@ -133,7 +132,7 @@ class SettingsViewModelTests {
       val vm = viewModel()
       vm.postAction(SettingsAction.SetStats(false))
 
-      verify { settings.update(Settings.STATS, false) }
+      verify { settings.update(Setting.STATS, false) }
       vm.stateFlow.value.stats shouldBeEqualTo false
     }
 
@@ -143,7 +142,7 @@ class SettingsViewModelTests {
       val vm = viewModel()
       vm.postAction(SettingsAction.SetQuickReset(true))
 
-      verify { settings.update(Settings.QUICK_RESET, true) }
+      verify { settings.update(Setting.QUICK_RESET, true) }
       vm.stateFlow.value.quickReset shouldBeEqualTo true
     }
 
@@ -153,7 +152,7 @@ class SettingsViewModelTests {
       val vm = viewModel()
       vm.postAction(SettingsAction.SetSecureRandom(true))
 
-      verify { settings.update(Settings.SECURE_RANDOM, true) }
+      verify { settings.update(Setting.SECURE_RANDOM, true) }
       vm.stateFlow.value.secureRandom shouldBeEqualTo true
     }
 
@@ -163,7 +162,7 @@ class SettingsViewModelTests {
       val vm = viewModel()
       vm.postAction(SettingsAction.SetCustomHeads("CROWN"))
 
-      verify { settings.update(Settings.CUSTOM_HEADS_TEXT, "CROWN") }
+      verify { settings.update(Setting.CUSTOM_HEADS_TEXT, "CROWN") }
       vm.stateFlow.value.customHeads shouldBeEqualTo "CROWN"
     }
 
@@ -173,7 +172,7 @@ class SettingsViewModelTests {
       val vm = viewModel()
       vm.postAction(SettingsAction.SetCustomTails("SHIP"))
 
-      verify { settings.update(Settings.CUSTOM_TAILS_TEXT, "SHIP") }
+      verify { settings.update(Setting.CUSTOM_TAILS_TEXT, "SHIP") }
       vm.stateFlow.value.customTails shouldBeEqualTo "SHIP"
     }
 
@@ -181,10 +180,10 @@ class SettingsViewModelTests {
   fun set_force_persists_and_updates_state() =
     runTest {
       val vm = viewModel()
-      vm.postAction(SettingsAction.SetForce("high"))
+      vm.postAction(SettingsAction.SetForce(ShakeForce.HIGH))
 
-      verify { settings.update(Settings.FORCE, "high") }
-      vm.stateFlow.value.force shouldBeEqualTo "high"
+      verify { settings.update(Setting.FORCE, ShakeForce.HIGH) }
+      vm.stateFlow.value.force shouldBeEqualTo ShakeForce.HIGH
     }
 
   @Test
@@ -197,7 +196,7 @@ class SettingsViewModelTests {
         awaitItem() shouldBeEqualTo SettingsEffect.EnableRestartOnBack
       }
 
-      verify { settings.update(Settings.DYNAMIC, true) }
+      verify { settings.update(Setting.DYNAMIC, true) }
       vm.stateFlow.value.dynamic shouldBeEqualTo true
     }
 
