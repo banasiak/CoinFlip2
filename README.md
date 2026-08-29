@@ -16,10 +16,10 @@ Available on the [Google Play Store](https://play.google.com/store/apps/details?
 Tap the coin or shake the phone. It flips, lands, and tells you which side came up. That's the whole
 pitch, and everything else exists to make that one interaction pleasant:
 
-- **81 coins to flip** — all 51 state quarters (District of Columbia included), the George Washington
+- **82 coins to flip** — all 51 state quarters (District of Columbia included), the George Washington
   dollar, JFK half-dollar and Sacagawea dollar, 24 national euro designs, the Canadian loonie and
-  toonie, plus a two-headed dollar for when you'd rather not leave things to chance. Or pick
-  **Random** and let the app choose a different one every flip.
+  toonie, a two-headed dollar for when you'd rather not leave things to chance, and a Claude Code
+  coin. Or pick **Random** and let the app choose a different one every flip.
 - **Favorites** — star the coins you actually use and they collect in their own section at the top of
   the picker, so you're not scrolling past every state quarter to find the loonie.
 - **Custom labels** — call the sides whatever you like. Yes / No, Beer / Tacos, Ship / Crown.
@@ -41,9 +41,9 @@ Single-module Kotlin app, Jetpack Compose throughout, MVI-ish state management.
 | **State** | Per-feature `State` / `Action` / `Effect` triads; ViewModels expose `StateFlow` and a `SharedFlow` of one-shot effects |
 | **DI** | Hilt |
 | **Persistence** | `SharedPreferences` behind a typed `SettingsManager` |
-| **Testing** | JUnit 5, MockK, Kluent, Turbine — 142 unit tests |
+| **Testing** | JUnit 5, MockK, Kluent, Turbine |
 | **Coverage** | Kover, reported into every CI run's summary |
-| **Toolchain** | AGP 9 / Gradle 9 / Kotlin 2.3, `compileSdk` 37, `minSdk` 26 |
+| **Toolchain** | Versions live in [`gradle/libs.versions.toml`](gradle/libs.versions.toml); SDK levels in [`coinflip/build.gradle.kts`](coinflip/build.gradle.kts) |
 
 The coin animation is the one deliberate holdout: it's still an `ImageView` driven by a frame-by-frame
 `AnimationDrawable`, wrapped in an `AndroidView`. It was written that way in 2011, it works, and
@@ -77,7 +77,8 @@ The commit messages in that stretch were written by Claude as well, which goes s
 explaining their length.
 
 Coin images are from the [United States Mint](https://www.usmint.gov/) and the
-[European Central Bank](https://www.ecb.europa.eu/).
+[European Central Bank](https://www.ecb.europa.eu/), except the Claude Code coin, which wears
+[Claude Code](https://claude.com/claude-code)'s own mascot.
 
 ## License
 
