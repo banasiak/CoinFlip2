@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import com.banasiak.coinflip.common.Coin
 import com.banasiak.coinflip.common.CoinType
+import timber.log.Timber
 
 /**
  * One preference: its key, its default, and how it reads and writes itself.
@@ -88,7 +89,21 @@ sealed class Setting<T>(val key: String, val default: T) {
    * copy: what is read cannot be written through, and what is written cannot change underneath.
    */
   class StringSetSetting(key: String, default: Set<String> = emptySet()) : Setting<Set<String>>(key, default) {
-    override fun read(prefs: SharedPreferences): Set<String> = prefs.getStringSet(key, null)?.toSet() ?: default
+    /**
+     * [Setting.FAVORITES] held a delimited string before it held a set, and the schema version did
+     * not move with it, so a store written by an older build still has one under this key.
+     * `getStringSet` casts without checking and throws on it, which killed the settings screen as
+     * it opened. The stale value reads as [default] instead, and the first write puts a real set
+     * in its place. Favorites never shipped, so there is nothing here worth migrating -- only a
+     * crash worth not having.
+     */
+    override fun read(prefs: SharedPreferences): Set<String> =
+      try {
+        prefs.getStringSet(key, null)?.toSet() ?: default
+      } catch (e: ClassCastException) {
+        Timber.w(e, "Discarding a $key written before it was a string set")
+        default
+      }
 
     override fun write(editor: Editor, value: Set<String>) {
       editor.putStringSet(key, value.toMutableSet())

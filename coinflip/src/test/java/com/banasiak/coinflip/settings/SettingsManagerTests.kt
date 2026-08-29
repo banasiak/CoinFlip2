@@ -321,6 +321,25 @@ class SettingsManagerTests {
     }
 
     @Test
+    fun `a store written before favorites became a set reads as empty rather than throwing`() {
+      // the key held a delimited string, and the schema version did not move with the change, so
+      // validateSchema leaves it in place -- this is what an upgrade over an older build looks like
+      val (_, settings) = manager(Setting.SCHEMA.key to Setting.SCHEMA.default, Setting.FAVORITES.key to "gw,jfk")
+
+      settings.favoriteCoins shouldBeEqualTo emptySet()
+    }
+
+    @Test
+    fun `the first write replaces the stale string with a real set`() {
+      val (prefs, settings) = manager(Setting.FAVORITES.key to "gw,jfk")
+
+      settings.update(Setting.FAVORITES, setOf("loonie"))
+
+      prefs.values[Setting.FAVORITES.key] shouldBeEqualTo setOf("loonie")
+      settings.favoriteCoins shouldBeEqualTo setOf("loonie")
+    }
+
+    @Test
     fun `favorites survive alongside the other settings`() {
       val (_, settings) = manager(Setting.COIN.key to "jfk")
 
