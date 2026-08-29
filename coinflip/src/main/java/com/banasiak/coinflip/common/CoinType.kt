@@ -27,9 +27,8 @@ enum class CoinGroup(@param:StringRes val label: Int) {
  * `<prefix>_tails`. Nothing in the compiler notices a prefix whose drawables are missing, so that
  * pairing is what `CoinResourcesTests` reads off disk to check.
  *
- * [coinName] is a plain string rather than a `@StringRes`. These name particular coins and none of
- * them was ever translated; holding them here says so outright, where a `string-array` in
- * `res/values` left a permanent hole for every locale.
+ * [coinName] is a plain string rather than a `@StringRes`. Eventually they should be moved into
+ * String Resources and properly translated.
  */
 enum class CoinType(val prefix: String, val coinName: String, val group: CoinGroup) {
   GEORGE_WASHINGTON("gw", "George Washington Dollar", US),
@@ -112,6 +111,7 @@ enum class CoinType(val prefix: String, val coinName: String, val group: CoinGro
   SLOVENIA("slovenia", "Slovenia Euro", EURO),
   SPAIN("spain", "Spain Euro", EURO),
   VATICAN("vatican", "Vatican Euro", EURO),
+  CLAUDE("claude", "Claude Code", OTHER),
   TWO_FACE("twoface", "Two-Face Dollar", OTHER),
   RANDOM("random", "Random Coin", OTHER);
 
