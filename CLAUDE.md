@@ -71,7 +71,7 @@ CoinFlip2 is a Modern Android Development (MAD) coin-flipping app published on t
 - `AnimationHelper` — generates frame-by-frame `DurationAnimationDrawable` for each of the 4 flip permutations; coin images are loaded by resource name prefix (`CoinType.prefix`, e.g. `"gw"` → `gw_heads` / `gw_tails` drawables). A permutation with no frames gets *no map entry*, not an empty drawable — `getLastFrame()` reads index -1 on an empty one, which would defeat the caller's null check
 - `SoundHelper`, `VibrationHelper` — play sounds / haptics only when the corresponding setting is enabled. `STREAK` runs ~5.5s where the others run ~1s, so it is still sounding over the flips that follow it; `AppModule` sizes the `SoundPool` stream budget for that
 
-**Streaks** count *any* face repeating, not heads specifically — the app ships ~40 coins and custom
+**Streaks** count *any* face repeating, not heads specifically — the app ships 80-odd coins and custom
 labels and takes no side, so a run is "the same result again". The number is therefore never 0 and
 moves on every flip. `MainState.streakCount` is the *deferred* copy, held at 0 while a flip is
 mid-air exactly as `headsCount`/`tailsCount` are, so nothing reveals the result early. It always
@@ -96,8 +96,9 @@ tests can assert what the store ends up holding. `CoinResourcesTests` reads `res
 `CoinType` still ships the two faces it names by string concatenation, and that the catalog stays grouped —
 `build.gradle.kts` declares that directory as a test input so the guard is not skipped as up-to-date.
 
-**Coverage:** Kover, reported on the debug variant. 157 tests, ~63% of filtered lines — some of that rise is the
-coin catalog, whose 80-odd declaration lines any test touching `CoinType` counts as covered. The biggest remaining gap is `AnimationHelper`'s bitmap pipeline, which needs Robolectric or instrumentation rather than plain unit tests. Generated (Hilt/Dagger) code, `@Composable`
+**Coverage:** Kover, reported on the debug variant. Run `./gradlew :coinflip:koverHtmlReportDebug` for the
+figure rather than trusting one written down here, and read it knowing that `CoinType`'s 80-odd declaration
+lines count as covered the moment a test touches the enum, so it flatters a little. The biggest remaining gap is `AnimationHelper`'s bitmap pipeline, which needs Robolectric or instrumentation rather than plain unit tests. Generated (Hilt/Dagger) code, `@Composable`
 functions, and the theme declarations are filtered out in the `kover` block of `coinflip/build.gradle.kts`,
 so the number reflects testable logic only — remove the Compose exclusions if UI tests are ever added.
 Nothing gates the build: `koverVerify` runs as part of `check` but has no rules. CI is the single
@@ -112,9 +113,9 @@ Kotlin formatting is enforced by **ktlint**. Run `./gradlew :coinflip:format` be
 **Toolchain:** AGP 9 compiles Kotlin itself, so there is deliberately no `org.jetbrains.kotlin.android`
 plugin — re-adding it fails the build. The compose and parcelize compiler plugins are still applied
 separately, and `kotlin { compilerOptions { } }` still configures the compiler. `compileSdkMinor`
-selects the Android 37.1 platform. KSP lags Kotlin — 2.3.11 against Kotlin 2.4.10 — and that is
-fine under AGP 9: Hilt's codegen runs and the build is clean, so do not assume the two have to
-match. Verify before holding a Kotlin bump back on KSP's account.
+selects the minor revision of the platform. KSP's version trails Kotlin's, and that is fine under
+AGP 9: Hilt's codegen runs and the build is clean, so do not assume the two have to match. Verify
+before holding a Kotlin bump back on KSP's account.
 
 Dependabot is deliberately **not** configured for version updates; there is no `dependabot.yml`.
 Security alerts are a repository setting instead. Dependency bumps are done deliberately, and the
