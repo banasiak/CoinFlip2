@@ -1,8 +1,8 @@
 package com.banasiak.coinflip.common
 
 import com.banasiak.coinflip.FakeSharedPreferences
+import com.banasiak.coinflip.settings.Setting
 import com.banasiak.coinflip.settings.SettingsManager
-import com.banasiak.coinflip.settings.SettingsManager.Settings
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -54,22 +54,22 @@ class RNGTests {
     val rng = RNG(random, secureRandom, manager)
     rng.useSecureRandom.shouldBeFalse()
 
-    manager.update(Settings.SECURE_RANDOM, true)
+    manager.update(Setting.SECURE_RANDOM, true)
 
     rng.useSecureRandom.shouldBeTrue()
     rng.nextBoolean()
     verify(exactly = 1) { secureRandom.nextBoolean() }
     verify(exactly = 0) { random.nextBoolean() }
-    store.values[Settings.SECURE_RANDOM.key] shouldBeEqualTo true
+    store.values[Setting.SECURE_RANDOM.key] shouldBeEqualTo true
   }
 
   @Test
   fun `toggling back returns to the standard source`() {
-    val (_, manager) = realSettings(Settings.SECURE_RANDOM.key to true)
+    val (_, manager) = realSettings(Setting.SECURE_RANDOM.key to true)
     val rng = RNG(random, secureRandom, manager)
     rng.useSecureRandom.shouldBeTrue()
 
-    manager.update(Settings.SECURE_RANDOM, false)
+    manager.update(Setting.SECURE_RANDOM, false)
 
     rng.useSecureRandom.shouldBeFalse()
     rng.nextBoolean()
@@ -79,10 +79,10 @@ class RNGTests {
   @Test
   fun `an unrelated preference change does not disturb the source`() {
     // the callback fires for every key, so it has to filter rather than re-read on each write
-    val (_, manager) = realSettings(Settings.SECURE_RANDOM.key to true)
+    val (_, manager) = realSettings(Setting.SECURE_RANDOM.key to true)
     val rng = RNG(random, secureRandom, manager)
 
-    manager.update(Settings.COIN, "jfk")
+    manager.update(Setting.COIN, "jfk")
 
     rng.useSecureRandom.shouldBeTrue()
   }

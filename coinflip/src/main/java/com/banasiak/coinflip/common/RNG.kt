@@ -1,6 +1,7 @@
 package com.banasiak.coinflip.common
 
 import android.content.SharedPreferences
+import com.banasiak.coinflip.settings.Setting
 import com.banasiak.coinflip.settings.SettingsManager
 import timber.log.Timber
 import java.security.SecureRandom
@@ -34,7 +35,7 @@ class RNG @Inject constructor(
 
   override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
     // cache this value when the setting changes, so we don't have unnecessary SharedPreferences I/O
-    if (key == SettingsManager.Settings.SECURE_RANDOM.key) {
+    if (key == Setting.SECURE_RANDOM.key) {
       useSecureRandom = settings.secureRandom
     }
   }

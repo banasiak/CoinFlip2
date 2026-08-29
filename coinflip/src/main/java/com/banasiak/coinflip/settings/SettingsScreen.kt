@@ -47,7 +47,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -57,6 +56,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.banasiak.coinflip.R
+import com.banasiak.coinflip.common.CoinType
 import com.banasiak.coinflip.extensions.formatNumber
 import com.banasiak.coinflip.ui.TextInputDialog
 import com.banasiak.coinflip.ui.rememberEditableValue
@@ -126,11 +126,6 @@ fun SettingsView(
   // saveable so an open dialog survives configuration change and process death
   var openDialog by rememberSaveable { mutableStateOf(OpenDialog.NONE) }
 
-  val coinEntries = stringArrayResource(R.array.coins)
-  val coinValues = stringArrayResource(R.array.coins_values)
-  val coinGroups = stringArrayResource(R.array.coins_groups)
-  val forceEntries = stringArrayResource(R.array.force)
-  val forceValues = stringArrayResource(R.array.force_values)
   val headsDefault = stringResource(R.string.heads)
   val tailsDefault = stringResource(R.string.tails)
 
@@ -156,7 +151,7 @@ fun SettingsView(
         CategoryHeader(stringResource(R.string.settings_header_coin_title))
         PreferenceRow(
           title = stringResource(R.string.settings_item_coin_title),
-          summary = coinEntries.getOrNull(coinValues.indexOf(state.coin)),
+          summary = CoinType.fromPrefix(state.coin)?.coinName,
           onClick = { openDialog = OpenDialog.COIN }
         )
         SwitchPreference(
@@ -205,9 +200,8 @@ fun SettingsView(
         SegmentedPreference(
           title = stringResource(R.string.settings_item_force_title),
           summary = stringResource(R.string.settings_item_force_summary),
-          entries = forceEntries,
-          values = forceValues,
-          selectedValue = state.force,
+          options = ShakeForce.entries,
+          selected = state.force,
           // dependency: shake
           enabled = state.shake,
           onSelect = { postAction(SettingsAction.SetForce(it)) }
@@ -288,9 +282,6 @@ fun SettingsView(
     when (openDialog) {
       OpenDialog.COIN -> {
         CoinPicker(
-          entries = coinEntries,
-          values = coinValues,
-          groups = coinGroups,
           selectedValue = state.coin,
           favorites = state.favorites,
           onSelect = { postAction(SettingsAction.SetCoin(it)) },
@@ -396,11 +387,10 @@ private fun PreferenceRow(
 private fun SegmentedPreference(
   title: String,
   summary: String?,
-  entries: Array<String>,
-  values: Array<String>,
-  selectedValue: String,
+  options: List<ShakeForce>,
+  selected: ShakeForce,
   enabled: Boolean,
-  onSelect: (String) -> Unit
+  onSelect: (ShakeForce) -> Unit
 ) {
   Column(
     modifier =
@@ -415,12 +405,12 @@ private fun SegmentedPreference(
           .fillMaxWidth()
           .padding(top = Dimen.small)
     ) {
-      values.forEachIndexed { index, value ->
+      options.forEachIndexed { index, option ->
         SegmentedButton(
-          selected = value == selectedValue,
+          selected = option == selected,
           enabled = enabled,
-          onClick = { onSelect(value) },
-          shape = SegmentedButtonDefaults.itemShape(index = index, count = values.size),
+          onClick = { onSelect(option) },
+          shape = SegmentedButtonDefaults.itemShape(index = index, count = options.size),
           // the Material default paints the active segment with secondaryContainer, which in this
           // theme is the deep red used for HEADS -- follow the switches on primary instead
           colors =
@@ -435,7 +425,7 @@ private fun SegmentedPreference(
               disabledActiveBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = DISABLED_CONTAINER_ALPHA)
             )
         ) {
-          Text(entries.getOrNull(index) ?: value)
+          Text(stringResource(option.label))
         }
       }
     }

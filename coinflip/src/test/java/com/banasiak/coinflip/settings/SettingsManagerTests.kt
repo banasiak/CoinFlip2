@@ -3,16 +3,13 @@ package com.banasiak.coinflip.settings
 import com.banasiak.coinflip.FakeSharedPreferences
 import com.banasiak.coinflip.common.Coin
 import com.banasiak.coinflip.common.Stats
-import com.banasiak.coinflip.settings.SettingsManager.Settings
 import com.squareup.seismic.ShakeDetector
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldBeTrue
-import org.amshove.kluent.shouldContain
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 
 class SettingsManagerTests {
   private fun manager(vararg stored: Pair<String, Any>) = FakeSharedPreferences(stored.toMap()).let { it to SettingsManager(it) }
@@ -25,9 +22,9 @@ class SettingsManagerTests {
       val prefs =
         FakeSharedPreferences(
           mapOf(
-            Settings.SCHEMA.key to 6,
-            Settings.COIN.key to "jfk",
-            Settings.HEADS.key to 42L,
+            Setting.SCHEMA.key to 6,
+            Setting.COIN.key to "jfk",
+            Setting.HEADS.key to 42L,
             "someKeyThatNoLongerExists" to "junk"
           )
         )
@@ -36,13 +33,13 @@ class SettingsManagerTests {
       SettingsManager(prefs)
 
       // then only the stamped schema version survives
-      prefs.values shouldBeEqualTo mutableMapOf<String, Any>(Settings.SCHEMA.key to Settings.SCHEMA.default as Int)
+      prefs.values shouldBeEqualTo mutableMapOf<String, Any>(Setting.SCHEMA.key to Setting.SCHEMA.default)
     }
 
     @Test
     fun `the wipe is committed synchronously rather than applied`() {
       // the app reads preferences immediately after construction, so the clear cannot be left in flight
-      val prefs = FakeSharedPreferences(mapOf(Settings.SCHEMA.key to 6))
+      val prefs = FakeSharedPreferences(mapOf(Setting.SCHEMA.key to 6))
 
       SettingsManager(prefs)
 
@@ -55,9 +52,9 @@ class SettingsManagerTests {
       // given
       val stored =
         mapOf<String, Any>(
-          Settings.SCHEMA.key to Settings.SCHEMA.default as Int,
-          Settings.COIN.key to "jfk",
-          Settings.HEADS.key to 42L
+          Setting.SCHEMA.key to Setting.SCHEMA.default,
+          Setting.COIN.key to "jfk",
+          Setting.HEADS.key to 42L
         )
       val prefs = FakeSharedPreferences(stored)
 
@@ -99,7 +96,7 @@ class SettingsManagerTests {
       settings.dynamicColorsEnabled.shouldBeFalse()
       settings.secureRandom.shouldBeFalse()
       settings.diagnosticsIterations shouldBeEqualTo 100_000L
-      settings.forceValue shouldBeEqualTo "medium"
+      settings.force shouldBeEqualTo ShakeForce.MEDIUM
     }
 
     @Test
@@ -107,11 +104,11 @@ class SettingsManagerTests {
       val prefs =
         FakeSharedPreferences(
           mapOf(
-            Settings.COIN.key to "jfk",
-            Settings.CUSTOM_HEADS_TEXT.key to "CROWN",
-            Settings.CUSTOM_TAILS_TEXT.key to "SHIP",
-            Settings.ANIMATE.key to false,
-            Settings.DIAGNOSTICS.key to "250"
+            Setting.COIN.key to "jfk",
+            Setting.CUSTOM_HEADS_TEXT.key to "CROWN",
+            Setting.CUSTOM_TAILS_TEXT.key to "SHIP",
+            Setting.ANIMATE.key to false,
+            Setting.DIAGNOSTICS.key to "250"
           )
         )
 
@@ -123,6 +120,14 @@ class SettingsManagerTests {
       settings.animationEnabled.shouldBeFalse()
       settings.diagnosticsIterations shouldBeEqualTo 250L
     }
+
+    @Test
+    fun `a diagnostics count that is not a number falls back rather than throwing`() {
+      // it is stored as a string for the old inflater's sake, so the store can hold anything at all
+      val settings = SettingsManager(FakeSharedPreferences(mapOf(Setting.DIAGNOSTICS.key to "over nine thousand")))
+
+      settings.diagnosticsIterations shouldBeEqualTo 100_000L
+    }
   }
 
   @Nested
@@ -131,11 +136,11 @@ class SettingsManagerTests {
     fun `booleans and strings round trip`() {
       val (prefs, settings) = manager()
 
-      settings.update(Settings.ANIMATE, false)
-      settings.update(Settings.COIN, "jfk")
+      settings.update(Setting.ANIMATE, false)
+      settings.update(Setting.COIN, "jfk")
 
-      prefs.values[Settings.ANIMATE.key] shouldBeEqualTo false
-      prefs.values[Settings.COIN.key] shouldBeEqualTo "jfk"
+      prefs.values[Setting.ANIMATE.key] shouldBeEqualTo false
+      prefs.values[Setting.COIN.key] shouldBeEqualTo "jfk"
       settings.animationEnabled.shouldBeFalse()
       settings.coinPrefix shouldBeEqualTo "jfk"
     }
@@ -143,22 +148,12 @@ class SettingsManagerTests {
     @Test
     fun `a null value removes the key so the localized default applies again`() {
       // custom coin labels fall back to the localized default only while the key is absent
-      val (prefs, settings) = manager(Settings.CUSTOM_HEADS_TEXT.key to "CROWN")
+      val (prefs, settings) = manager(Setting.CUSTOM_HEADS_TEXT.key to "CROWN")
 
-      settings.update(Settings.CUSTOM_HEADS_TEXT, null)
+      settings.update(Setting.CUSTOM_HEADS_TEXT, null)
 
-      prefs.values.containsKey(Settings.CUSTOM_HEADS_TEXT.key).shouldBeFalse()
+      prefs.values.containsKey(Setting.CUSTOM_HEADS_TEXT.key).shouldBeFalse()
       settings.customHeadsText.shouldBeNull()
-    }
-
-    @Test
-    fun `an unsupported type is rejected without writing anything`() {
-      val (prefs, settings) = manager()
-
-      val error = assertThrows<IllegalArgumentException> { settings.update(Settings.DIAGNOSTICS, 250L) }
-
-      error.message!! shouldContain Settings.DIAGNOSTICS.key
-      prefs.values.shouldBeEqualTo(mutableMapOf<String, Any>())
     }
   }
 
@@ -198,7 +193,7 @@ class SettingsManagerTests {
 
     @Test
     fun `a missing side is persisted as zero rather than left stale`() {
-      val (_, settings) = manager(Settings.HEADS.key to 7L, Settings.TAILS.key to 5L)
+      val (_, settings) = manager(Setting.HEADS.key to 7L, Setting.TAILS.key to 5L)
 
       settings.persistStats(Stats(counts = mapOf(Coin.Value.HEADS to 8L)))
 
@@ -208,7 +203,7 @@ class SettingsManagerTests {
     @Test
     fun `an unrecognized streak face reads back as unknown`() {
       // a value written by a future build, or corrupted -- it must not blow up the load
-      val (_, settings) = manager(Settings.STREAK_VALUE.key to "SIDEWAYS", Settings.STREAK_COUNT.key to 3L)
+      val (_, settings) = manager(Setting.STREAK_VALUE.key to "SIDEWAYS", Setting.STREAK_COUNT.key to 3L)
 
       settings.loadStats() shouldBeEqualTo zeroed().copy(streakValue = Coin.Value.UNKNOWN, streak = 3L)
     }
@@ -217,19 +212,19 @@ class SettingsManagerTests {
     fun `resetting clears every counter and nothing else`() {
       val (prefs, settings) =
         manager(
-          Settings.HEADS.key to 7L,
-          Settings.TAILS.key to 5L,
-          Settings.HEADS_RECORD.key to 4L,
-          Settings.TAILS_RECORD.key to 3L,
-          Settings.STREAK_VALUE.key to Coin.Value.HEADS.name,
-          Settings.STREAK_COUNT.key to 2L,
-          Settings.COIN.key to "jfk"
+          Setting.HEADS.key to 7L,
+          Setting.TAILS.key to 5L,
+          Setting.HEADS_RECORD.key to 4L,
+          Setting.TAILS_RECORD.key to 3L,
+          Setting.STREAK_VALUE.key to Coin.Value.HEADS.name,
+          Setting.STREAK_COUNT.key to 2L,
+          Setting.COIN.key to "jfk"
         )
 
       settings.resetStats()
 
       settings.loadStats() shouldBeEqualTo zeroed()
-      prefs.values shouldBeEqualTo mutableMapOf<String, Any>(Settings.COIN.key to "jfk")
+      prefs.values shouldBeEqualTo mutableMapOf<String, Any>(Setting.COIN.key to "jfk")
     }
   }
 
@@ -237,20 +232,30 @@ class SettingsManagerTests {
   inner class ShakeSensitivity {
     @Test
     fun `each stored force maps to a seismic threshold`() {
-      manager(Settings.FORCE.key to "low").second.shakeSensitivity shouldBeEqualTo ShakeDetector.SENSITIVITY_LIGHT
-      manager(Settings.FORCE.key to "medium").second.shakeSensitivity shouldBeEqualTo ShakeDetector.SENSITIVITY_MEDIUM
-      manager(Settings.FORCE.key to "high").second.shakeSensitivity shouldBeEqualTo ShakeDetector.SENSITIVITY_HARD
+      manager(Setting.FORCE.key to "low").second.shakeSensitivity shouldBeEqualTo ShakeDetector.SENSITIVITY_LIGHT
+      manager(Setting.FORCE.key to "medium").second.shakeSensitivity shouldBeEqualTo ShakeDetector.SENSITIVITY_MEDIUM
+      manager(Setting.FORCE.key to "high").second.shakeSensitivity shouldBeEqualTo ShakeDetector.SENSITIVITY_HARD
+    }
+
+    @Test
+    fun `the stored string decodes back to the choice the user made`() {
+      manager(Setting.FORCE.key to "high").second.force shouldBeEqualTo ShakeForce.HIGH
+      // and falls back with the sensitivity, so the control never renders with nothing selected
+      manager(Setting.FORCE.key to "ludicrous").second.force shouldBeEqualTo ShakeForce.MEDIUM
     }
 
     @Test
     fun `an unrecognized force falls back to medium`() {
-      manager(Settings.FORCE.key to "ludicrous").second.shakeSensitivity shouldBeEqualTo ShakeDetector.SENSITIVITY_MEDIUM
+      manager(Setting.FORCE.key to "ludicrous").second.shakeSensitivity shouldBeEqualTo ShakeDetector.SENSITIVITY_MEDIUM
       manager().second.shakeSensitivity shouldBeEqualTo ShakeDetector.SENSITIVITY_MEDIUM
     }
 
     @Test
-    fun `the raw force value is exposed separately for the segmented control`() {
-      manager(Settings.FORCE.key to "high").second.forceValue shouldBeEqualTo "high"
+    fun `every force names a sensitivity of its own`() {
+      // two forces on the same threshold would give the user three buttons and two outcomes
+      val sensitivities = ShakeForce.entries.map { it.sensitivity }
+
+      sensitivities.distinct().size shouldBeEqualTo ShakeForce.entries.size
     }
   }
 
@@ -261,9 +266,9 @@ class SettingsManagerTests {
     val changed = mutableListOf<String?>()
 
     settings.registerChangeListener { _, key -> changed += key }
-    settings.update(Settings.SECURE_RANDOM, true)
+    settings.update(Setting.SECURE_RANDOM, true)
 
-    changed shouldBeEqualTo listOf(Settings.SECURE_RANDOM.key)
+    changed shouldBeEqualTo listOf(Setting.SECURE_RANDOM.key)
   }
 
   @Nested
@@ -274,36 +279,52 @@ class SettingsManagerTests {
     }
 
     @Test
-    fun `favorites round trip`() {
+    fun `favorites round trip as a set rather than an encoded string`() {
       val (prefs, settings) = manager()
 
-      settings.persistFavoriteCoins(setOf("gw", "jfk"))
+      settings.update(Setting.FAVORITES, setOf("gw", "jfk"))
 
       settings.favoriteCoins shouldBeEqualTo setOf("gw", "jfk")
-      // one delimited string, so update() keeps its Boolean/String/null contract
-      prefs.values[Settings.FAVORITES.key] shouldBeEqualTo "gw,jfk"
+      prefs.values[Setting.FAVORITES.key] shouldBeEqualTo setOf("gw", "jfk")
     }
 
     @Test
-    fun `clearing the last favorite leaves an empty set rather than a blank entry`() {
-      val (_, settings) = manager(Settings.FAVORITES.key to "gw")
+    fun `clearing the last favorite leaves an empty set`() {
+      val (_, settings) = manager(Setting.FAVORITES.key to mutableSetOf("gw"))
 
-      settings.persistFavoriteCoins(emptySet())
+      settings.update(Setting.FAVORITES, emptySet())
 
       settings.favoriteCoins shouldBeEqualTo emptySet()
     }
 
     @Test
-    fun `a stray delimiter does not produce a blank favorite`() {
-      // guards against an empty string surviving a split and matching no coin
-      manager(Settings.FAVORITES.key to ",gw,,jfk,").second.favoriteCoins shouldBeEqualTo setOf("gw", "jfk")
+    fun `mutating the set that was written does not reach the store`() {
+      val outgoing = mutableSetOf("gw")
+      val (_, settings) = manager()
+
+      settings.update(Setting.FAVORITES, outgoing)
+      outgoing += "jfk"
+
+      settings.favoriteCoins shouldBeEqualTo setOf("gw")
+    }
+
+    @Test
+    fun `mutating the store does not reach a set already read`() {
+      // getStringSet hands back the very instance it is holding, so the read has to be a snapshot
+      val stored = mutableSetOf("gw")
+      val (_, settings) = manager(Setting.FAVORITES.key to stored)
+
+      val read = settings.favoriteCoins
+      stored += "jfk"
+
+      read shouldBeEqualTo setOf("gw")
     }
 
     @Test
     fun `favorites survive alongside the other settings`() {
-      val (_, settings) = manager(Settings.COIN.key to "jfk")
+      val (_, settings) = manager(Setting.COIN.key to "jfk")
 
-      settings.persistFavoriteCoins(setOf("gw"))
+      settings.update(Setting.FAVORITES, setOf("gw"))
 
       settings.coinPrefix shouldBeEqualTo "jfk"
       settings.favoriteCoins shouldBeEqualTo setOf("gw")

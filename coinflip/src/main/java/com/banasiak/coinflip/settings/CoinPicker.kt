@@ -47,7 +47,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
@@ -55,26 +54,20 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.banasiak.coinflip.R
+import com.banasiak.coinflip.common.CoinGroup
+import com.banasiak.coinflip.common.CoinType
 import com.banasiak.coinflip.ui.theme.AppTheme
 import com.banasiak.coinflip.ui.theme.Dimen
 
-// the group keys in R.array.coins_groups, which runs parallel to coins_values
-internal val COIN_GROUP_LABELS =
-  mapOf(
-    "us" to R.string.settings_item_coin_group_us,
-    "canada" to R.string.settings_item_coin_group_canada,
-    "euro" to R.string.settings_item_coin_group_euro,
-    "other" to R.string.settings_item_coin_group_other
-  )
-
 internal sealed interface CoinListItem {
+  /** A [CoinGroup]'s header, or the favorites section, which is a pseudo-group with no coins of its own. */
   data class Group(@param:StringRes val title: Int) : CoinListItem
 
   /**
    * [inFavoritesSection] marks the copy rendered at the top. A starred coin appears twice, and
    * LazyColumn keys have to differ or it throws on the duplicate.
    */
-  data class Option(val label: String, val value: String, val inFavoritesSection: Boolean = false) : CoinListItem
+  data class Option(val coin: CoinType, val inFavoritesSection: Boolean = false) : CoinListItem
 }
 
 /**
@@ -84,9 +77,6 @@ internal sealed interface CoinListItem {
  */
 @Composable
 fun CoinPicker(
-  entries: Array<String>,
-  values: Array<String>,
-  groups: Array<String>,
   selectedValue: String,
   favorites: Set<String>,
   onSelect: (String) -> Unit,
@@ -98,15 +88,12 @@ fun CoinPicker(
     // a full-screen dialog, so it owns the whole window and draws edge to edge like a destination
     properties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)
   ) {
-    CoinPickerContent(entries, values, groups, selectedValue, favorites, onSelect, onToggleFavorite, onDismiss)
+    CoinPickerContent(selectedValue, favorites, onSelect, onToggleFavorite, onDismiss)
   }
 }
 
 @Composable
 private fun CoinPickerContent(
-  entries: Array<String>,
-  values: Array<String>,
-  groups: Array<String>,
   selectedValue: String,
   favorites: Set<String>,
   onSelect: (String) -> Unit,
@@ -114,10 +101,8 @@ private fun CoinPickerContent(
   onDismiss: () -> Unit
 ) {
   var query by rememberSaveable { mutableStateOf("") }
-  // keyed on the query alone: stringArrayResource hands back a fresh array on every composition,
-  // so an array key would compare unequal every time and never memoize anything
-  val items = remember(query, favorites) { buildCoinList(entries, values, groups, favorites, query) }
-  val thumbnails = rememberThumbnails(values)
+  val items = remember(query, favorites) { buildCoinList(CoinType.entries, favorites, query) }
+  val thumbnails = rememberThumbnails()
   val listState = rememberLazyListState()
 
   // Keyed on the query so editing or clearing the search lands on the top of the new results
@@ -127,7 +112,7 @@ private fun CoinPickerContent(
     if (query.isBlank() && favorites.isEmpty()) {
       // nothing pinned, so open on the coin that's already selected rather than at the top of a
       // very long list, keeping the row above it on screen so the group header isn't scrolled away
-      val index = items.indexOfFirst { it is CoinListItem.Option && it.value == selectedValue }
+      val index = items.indexOfFirst { it is CoinListItem.Option && it.coin.prefix == selectedValue }
       if (index > 0) listState.scrollToItem(index - 1)
     } else {
       // with favorites the top is the part worth landing on, and it is off-screen above otherwise
@@ -156,15 +141,15 @@ private fun CoinPickerContent(
                 }
                 is CoinListItem.Option -> {
                   CoinRow(
-                    label = item.label,
-                    thumbnail = thumbnails[item.value] ?: 0,
-                    selected = item.value == selectedValue,
-                    favorite = item.value in favorites,
+                    label = item.coin.coinName,
+                    thumbnail = thumbnails[item.coin.prefix] ?: 0,
+                    selected = item.coin.prefix == selectedValue,
+                    favorite = item.coin.prefix in favorites,
                     onClick = {
-                      onSelect(item.value)
+                      onSelect(item.coin.prefix)
                       onDismiss()
                     },
-                    onToggleFavorite = { onToggleFavorite(item.value) }
+                    onToggleFavorite = { onToggleFavorite(item.coin.prefix) }
                   )
                 }
               }
@@ -314,16 +299,15 @@ private fun EmptyResults() {
  */
 @SuppressLint("DiscouragedApi") // the coin drawables are only addressable by name, as in AnimationHelper
 @Composable
-private fun rememberThumbnails(values: Array<String>): Map<String, Int> {
+private fun rememberThumbnails(): Map<String, Int> {
   val resources = LocalResources.current
   val packageName = LocalContext.current.packageName
-  // unkeyed on purpose: these come from a static resource array that cannot change while the
-  // picker is open, and getIdentifier is slow enough that 160-odd repeat lookups would show
+  // unkeyed on purpose: the catalog is fixed at compile time, and getIdentifier is slow enough
+  // that 160-odd repeat lookups would show
   return remember {
-    values.associateWith { value ->
-      resources.rasterId("${value}_heads", packageName)
-        ?: resources.rasterId("${value}_tails", packageName)
-        ?: 0
+    CoinType.entries.associate { coin ->
+      val id = resources.rasterId("${coin.prefix}_heads", packageName) ?: resources.rasterId("${coin.prefix}_tails", packageName)
+      coin.prefix to (id ?: 0)
     }
   }
 }
@@ -357,47 +341,37 @@ private fun decodeThumbnail(resources: Resources, @DrawableRes id: Int, targetPx
 internal fun CoinListItem.key(): String =
   when (this) {
     is CoinListItem.Group -> "group-$title"
-    is CoinListItem.Option -> if (inFavoritesSection) "favorite-$value" else "coin-$value"
+    is CoinListItem.Option -> if (inFavoritesSection) "favorite-${coin.prefix}" else "coin-${coin.prefix}"
   }
 
 /** Filters by [query] and interleaves a header ahead of each group that still has matches. */
 @VisibleForTesting
 internal fun buildCoinList(
-  entries: Array<String>,
-  values: Array<String>,
-  groups: Array<String>,
+  coins: List<CoinType>,
   favorites: Set<String>,
   query: String
 ): List<CoinListItem> {
-  val matches = mutableListOf<Pair<Int, CoinListItem.Option>>()
-
-  values.forEachIndexed { index, value ->
-    val label = entries.getOrNull(index) ?: return@forEachIndexed
-    val group = COIN_GROUP_LABELS[groups.getOrNull(index)] ?: R.string.settings_item_coin_group_other
-    if (query.isBlank() || label.contains(query.trim(), ignoreCase = true)) {
-      matches += group to CoinListItem.Option(label, value)
-    }
-  }
+  val matches = coins.filter { query.isBlank() || it.coinName.contains(query.trim(), ignoreCase = true) }
 
   return buildList {
     // starred coins are repeated at the top rather than moved out, so the origin groups keep no
     // holes. Only while browsing though: a search has already narrowed the list, and showing one
     // hit under two headers reads as noise rather than as a shortcut.
     if (query.isBlank()) {
-      val starred = matches.map { it.second }.filter { it.value in favorites }
+      val starred = matches.filter { it.prefix in favorites }
       if (starred.isNotEmpty()) {
         add(CoinListItem.Group(R.string.settings_item_coin_group_favorites))
-        starred.forEach { add(it.copy(inFavoritesSection = true)) }
+        starred.forEach { add(CoinListItem.Option(it, inFavoritesSection = true)) }
       }
     }
 
-    var currentGroup: Int? = null
-    matches.forEach { (itemGroup, option) ->
-      if (itemGroup != currentGroup) {
-        add(CoinListItem.Group(itemGroup))
-        currentGroup = itemGroup
+    var currentGroup: CoinGroup? = null
+    matches.forEach { coin ->
+      if (coin.group != currentGroup) {
+        add(CoinListItem.Group(coin.group.label))
+        currentGroup = coin.group
       }
-      add(option)
+      add(CoinListItem.Option(coin))
     }
   }
 }
@@ -407,10 +381,7 @@ internal fun buildCoinList(
 fun CoinPickerPreview() {
   AppTheme {
     CoinPickerContent(
-      entries = stringArrayResource(R.array.coins),
-      values = stringArrayResource(R.array.coins_values),
-      groups = stringArrayResource(R.array.coins_groups),
-      selectedValue = "gw",
+      selectedValue = CoinType.GEORGE_WASHINGTON.prefix,
       favorites = setOf("gw", "jfk"),
       onSelect = { },
       onToggleFavorite = { },

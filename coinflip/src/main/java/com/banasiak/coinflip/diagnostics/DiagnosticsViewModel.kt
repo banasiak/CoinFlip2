@@ -13,6 +13,7 @@ import com.banasiak.coinflip.extensions.formatMilliseconds
 import com.banasiak.coinflip.extensions.formatNumber
 import com.banasiak.coinflip.extensions.restore
 import com.banasiak.coinflip.extensions.save
+import com.banasiak.coinflip.settings.Setting
 import com.banasiak.coinflip.settings.SettingsManager
 import com.banasiak.coinflip.util.SoundHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -92,7 +93,7 @@ class DiagnosticsViewModel @Inject constructor(
   /** Persists a new iteration count and restarts the test with it. */
   private fun onSetIterations(value: Long) {
     if (value !in 1L..MAX_ITERATIONS) return
-    settings.update(SettingsManager.Settings.DIAGNOSTICS, value.toString())
+    settings.update(Setting.DIAGNOSTICS, value)
 
     val running = diagnosticsJob
     diagnosticsJob =

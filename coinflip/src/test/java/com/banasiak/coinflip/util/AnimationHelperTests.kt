@@ -1,11 +1,13 @@
 package com.banasiak.coinflip.util
 
 import android.content.res.Resources
-import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.BuildInfo
+import com.banasiak.coinflip.common.CoinType
 import io.mockk.every
 import io.mockk.mockk
+import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeGreaterThan
 import org.amshove.kluent.shouldNotContain
 import org.junit.jupiter.api.Test
 import java.time.Clock
@@ -35,32 +37,30 @@ class AnimationHelperTests {
   @Test
   fun `random resolves to one of the real coins and never to itself`() {
     val requested = mutableListOf<String>()
-    every { resources.getStringArray(R.array.coins_values) } returns arrayOf("gw", "jfk", RANDOM)
     every { resources.getIdentifier(capture(requested), "drawable", PACKAGE) } returns 0
 
     repeat(100) { helper().getIdentifiersForPrefix(RANDOM) }
 
-    // both real coins turn up, and the sentinel never does
-    requested.toSet() shouldBeEqualTo setOf("gw_heads", "gw_tails", "jfk_heads", "jfk_tails")
-    requested shouldNotContain "${RANDOM}_heads"
+    // every draw names a coin that ships artwork, and the sentinel never does
+    val drawn = requested.map { it.substringBeforeLast('_') }.toSet()
+    drawn shouldNotContain RANDOM
+    drawn.filterNot { it in flippablePrefixes }.shouldBeEmpty()
   }
 
   @Test
   fun `random rerolls rather than sticking to one coin`() {
     val requested = mutableListOf<String>()
-    every { resources.getStringArray(R.array.coins_values) } returns arrayOf("gw", "jfk", RANDOM)
     every { resources.getIdentifier(capture(requested), "drawable", PACKAGE) } returns 0
 
     repeat(50) { helper().getIdentifiersForPrefix(RANDOM) }
 
     // each call draws again, so the heads requests are not all for the same coin
-    requested.filter { it.endsWith("_heads") }.distinct().size shouldBeEqualTo 2
+    requested.filter { it.endsWith("_heads") }.distinct().size shouldBeGreaterThan 1
   }
 
   @Test
   fun `both faces of a random draw come from the same coin`() {
     val requested = mutableListOf<String>()
-    every { resources.getStringArray(R.array.coins_values) } returns arrayOf("gw", "jfk", RANDOM)
     every { resources.getIdentifier(capture(requested), "drawable", PACKAGE) } returns 0
 
     repeat(50) { helper().getIdentifiersForPrefix(RANDOM) }
@@ -72,6 +72,7 @@ class AnimationHelperTests {
 
   companion object {
     private const val PACKAGE = "com.banasiak.coinflip"
-    private const val RANDOM = "random"
+    private val RANDOM = CoinType.RANDOM.prefix
+    private val flippablePrefixes = CoinType.flippable.map { it.prefix }.toSet()
   }
 }

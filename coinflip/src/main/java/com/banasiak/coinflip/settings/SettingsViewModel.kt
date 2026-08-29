@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.Coin
 import com.banasiak.coinflip.common.Stats
-import com.banasiak.coinflip.settings.SettingsManager.Settings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,20 +27,20 @@ class SettingsViewModel @Inject constructor(
 
   fun postAction(action: SettingsAction) {
     when (action) {
-      is SettingsAction.SetCoin -> persist(Settings.COIN, action.value) { copy(coin = action.value) }
+      is SettingsAction.SetCoin -> persist(Setting.COIN, action.value) { copy(coin = action.value) }
       is SettingsAction.ToggleFavoriteCoin -> onToggleFavoriteCoin(action.value)
-      is SettingsAction.SetAnimate -> persist(Settings.ANIMATE, action.value) { copy(animate = action.value) }
-      is SettingsAction.SetShake -> persist(Settings.SHAKE, action.value) { copy(shake = action.value) }
-      is SettingsAction.SetSound -> persist(Settings.SOUND, action.value) { copy(sound = action.value) }
-      is SettingsAction.SetText -> persist(Settings.TEXT, action.value) { copy(text = action.value) }
-      is SettingsAction.SetVibrate -> persist(Settings.VIBRATE, action.value) { copy(vibrate = action.value) }
-      is SettingsAction.SetStats -> persist(Settings.STATS, action.value) { copy(stats = action.value) }
-      is SettingsAction.SetStreak -> persist(Settings.STREAK, action.value) { copy(streak = action.value) }
-      is SettingsAction.SetQuickReset -> persist(Settings.QUICK_RESET, action.value) { copy(quickReset = action.value) }
-      is SettingsAction.SetCustomHeads -> persist(Settings.CUSTOM_HEADS_TEXT, action.value) { copy(customHeads = action.value) }
-      is SettingsAction.SetCustomTails -> persist(Settings.CUSTOM_TAILS_TEXT, action.value) { copy(customTails = action.value) }
-      is SettingsAction.SetSecureRandom -> persist(Settings.SECURE_RANDOM, action.value) { copy(secureRandom = action.value) }
-      is SettingsAction.SetForce -> persist(Settings.FORCE, action.value) { copy(force = action.value) }
+      is SettingsAction.SetAnimate -> persist(Setting.ANIMATE, action.value) { copy(animate = action.value) }
+      is SettingsAction.SetShake -> persist(Setting.SHAKE, action.value) { copy(shake = action.value) }
+      is SettingsAction.SetSound -> persist(Setting.SOUND, action.value) { copy(sound = action.value) }
+      is SettingsAction.SetText -> persist(Setting.TEXT, action.value) { copy(text = action.value) }
+      is SettingsAction.SetVibrate -> persist(Setting.VIBRATE, action.value) { copy(vibrate = action.value) }
+      is SettingsAction.SetStats -> persist(Setting.STATS, action.value) { copy(stats = action.value) }
+      is SettingsAction.SetStreak -> persist(Setting.STREAK, action.value) { copy(streak = action.value) }
+      is SettingsAction.SetQuickReset -> persist(Setting.QUICK_RESET, action.value) { copy(quickReset = action.value) }
+      is SettingsAction.SetCustomHeads -> persist(Setting.CUSTOM_HEADS_TEXT, action.value) { copy(customHeads = action.value) }
+      is SettingsAction.SetCustomTails -> persist(Setting.CUSTOM_TAILS_TEXT, action.value) { copy(customTails = action.value) }
+      is SettingsAction.SetSecureRandom -> persist(Setting.SECURE_RANDOM, action.value) { copy(secureRandom = action.value) }
+      is SettingsAction.SetForce -> persist(Setting.FORCE, action.value) { copy(force = action.value) }
       is SettingsAction.SetDynamic -> onSetDynamic(action.value)
       SettingsAction.ResetStats -> onResetStats()
       SettingsAction.UndoResetStats -> onUndoResetStats()
@@ -50,12 +49,11 @@ class SettingsViewModel @Inject constructor(
 
   private fun onToggleFavoriteCoin(value: String) {
     val favorites = if (value in state.favorites) state.favorites - value else state.favorites + value
-    settings.persistFavoriteCoins(favorites)
-    emit(state.copy(favorites = favorites))
+    persist(Setting.FAVORITES, favorites) { copy(favorites = favorites) }
   }
 
   private fun onSetDynamic(value: Boolean) {
-    persist(Settings.DYNAMIC, value) { copy(dynamic = value) }
+    persist(Setting.DYNAMIC, value) { copy(dynamic = value) }
     // dynamic colors can only be re-applied by recreating the activity, which the fragment does on back
     _effectFlow.tryEmit(SettingsEffect.EnableRestartOnBack)
   }
@@ -79,7 +77,7 @@ class SettingsViewModel @Inject constructor(
     emit(state.withStats(previous))
   }
 
-  private fun persist(setting: Settings, value: Any?, transform: SettingsState.() -> SettingsState) {
+  private fun <T> persist(setting: Setting<T>, value: T, transform: SettingsState.() -> SettingsState) {
     settings.update(setting, value)
     emit(state.transform())
   }
@@ -113,6 +111,6 @@ class SettingsViewModel @Inject constructor(
       customTails = settings.customTailsText,
       dynamic = settings.dynamicColorsEnabled,
       secureRandom = settings.secureRandom,
-      force = settings.forceValue
+      force = settings.force
     ).withStats(settings.loadStats())
 }

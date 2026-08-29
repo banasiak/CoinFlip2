@@ -6,6 +6,7 @@ import app.cash.turbine.test
 import com.banasiak.coinflip.MainDispatcherRule
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.Coin
+import com.banasiak.coinflip.settings.Setting
 import com.banasiak.coinflip.settings.SettingsManager
 import com.banasiak.coinflip.util.AnimationHelper
 import com.banasiak.coinflip.util.SoundHelper
@@ -58,7 +59,7 @@ class DiagnosticsViewModelTests {
       vm.postAction(DiagnosticsAction.SetIterations(2L))
       advanceUntilIdle()
 
-      verify { settingsManager.update(SettingsManager.Settings.DIAGNOSTICS, "2") }
+      verify { settingsManager.update(Setting.DIAGNOSTICS, 2L) }
       // asserted on the settled value rather than the emissions: the reset is conflated away by
       // StateFlow. A run that had already finished would early-return, so reaching 2 is what
       // proves the state was cleared and the loop restarted.
@@ -82,7 +83,7 @@ class DiagnosticsViewModelTests {
       vm.postAction(DiagnosticsAction.SetIterations(MAX_ITERATIONS + 1))
       advanceUntilIdle()
 
-      verify(exactly = 0) { settingsManager.update(SettingsManager.Settings.DIAGNOSTICS, any()) }
+      verify(exactly = 0) { settingsManager.update(Setting.DIAGNOSTICS, any()) }
       vm.stateFlow.value.iterations shouldBeEqualTo 1L
     }
 
