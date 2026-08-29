@@ -88,6 +88,20 @@
 
     <issue
         id="IconLocation"
+        message="Found bitmap drawable `res/drawable/claude_heads.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/claude_heads.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/claude_tails.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/claude_tails.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
         message="Found bitmap drawable `res/drawable/co_tails.webp` in densityless folder">
         <location
             file="src/main/res/drawable/co_tails.webp"/>
