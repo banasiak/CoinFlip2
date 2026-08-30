@@ -14,6 +14,7 @@ import androidx.core.graphics.scale
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.BuildInfo
 import com.banasiak.coinflip.common.CoinType
+import com.banasiak.coinflip.settings.Setting
 import com.banasiak.coinflip.ui.DurationAnimationDrawable
 import com.banasiak.coinflip.util.AnimationHelper.Permutation.HEADS_HEADS
 import com.banasiak.coinflip.util.AnimationHelper.Permutation.HEADS_TAILS
@@ -49,12 +50,29 @@ class AnimationHelper @Inject constructor(
       // skip the bitmap work when the same coin is already loaded; "random" rerolls on every load
       if (prefix == loadedPrefix && prefix != CoinType.RANDOM.prefix) return@withContext
       val startTime = clock.millis()
-      val ids = getIdentifiersForPrefix(prefix)
-      generateAnimations(ids.first, ids.second)
+      // a stored prefix can name a coin this build no longer ships, which resolves to no artwork at
+      // all -- fall back to the default coin rather than leave the screen with nothing to draw
+      val faces = facesForPrefix(prefix) ?: facesForPrefix(Setting.COIN.default)
       loadedPrefix = prefix
+      if (faces == null) {
+        Timber.w("No artwork for '$prefix', nor for the default coin. Leaving the coin unanimated.")
+        animations = emptyMap()
+        return@withContext
+      }
+      generateAnimations(faces.first, faces.second)
       Timber.i("Animations generated in: ${clock.millis() - startTime} milliseconds")
     }
   }
+
+  private fun facesForPrefix(prefix: String): Pair<BitmapDrawable, BitmapDrawable>? {
+    val (heads, tails) = getIdentifiersForPrefix(prefix)
+    return Pair(bitmapDrawable(heads) ?: return null, bitmapDrawable(tails) ?: return null)
+  }
+
+  // the coin drawables are addressed by name, so one this build no longer ships is a runtime fact
+  // rather than a build error; null here is what reaches the fallback above instead of crashing
+  private fun bitmapDrawable(@DrawableRes id: Int): BitmapDrawable? =
+    if (id == 0) null else ResourcesCompat.getDrawable(resources, id, null) as? BitmapDrawable
 
   @SuppressLint("DiscouragedApi") // lol
   @VisibleForTesting
@@ -66,26 +84,19 @@ class AnimationHelper @Inject constructor(
     return Pair(heads, tails)
   }
 
-  private fun generateAnimations(
-    @DrawableRes imageA: Int,
-    @DrawableRes imageB: Int
-  ) {
-    val drawableA = ResourcesCompat.getDrawable(resources, imageA, null)!!
-    val drawableB = ResourcesCompat.getDrawable(resources, imageB, null)!!
-    val drawableEdge = ResourcesCompat.getDrawable(resources, R.drawable.edge, null)!!
-    val drawableBackground = ResourcesCompat.getDrawable(resources, R.drawable.background, null)!!
-
-    val e = drawableEdge as BitmapDrawable
-    val bg = drawableBackground as BitmapDrawable
+  // a4 and b4 are the full-size faces; the narrower frames are derived from them here
+  private fun generateAnimations(a4: BitmapDrawable, b4: BitmapDrawable) {
+    // the edge and the backdrop ship with the app rather than being addressed by name, so unlike the
+    // faces they cannot go missing
+    val e = ResourcesCompat.getDrawable(resources, R.drawable.edge, null) as BitmapDrawable
+    val bg = ResourcesCompat.getDrawable(resources, R.drawable.background, null) as BitmapDrawable
 
     // create the individual animation frames for the heads side
-    val a4 = drawableA as BitmapDrawable
     val a3 = resizeBitmapDrawable(a4, bg, 0.75f)
     val a2 = resizeBitmapDrawable(a4, bg, 0.5f)
     val a1 = resizeBitmapDrawable(a4, bg, 0.25f)
 
     // create the individual animation frames for the tails side
-    val b4 = drawableB as BitmapDrawable
     val b3 = resizeBitmapDrawable(b4, bg, 0.75f)
     val b2 = resizeBitmapDrawable(b4, bg, 0.5f)
     val b1 = resizeBitmapDrawable(b4, bg, 0.25f)
