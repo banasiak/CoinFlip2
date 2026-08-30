@@ -101,6 +101,12 @@ fun MainView(
   flipToken: Int = 0
 ) {
   AppTheme(dynamicColor = state.dynamicColors) {
+    // the same two colors the result text and the stats counts use below, so the custom coin's rim
+    // cannot drift from them
+    val headsRim = MaterialTheme.colorScheme.secondary.toArgb()
+    val tailsRim = MaterialTheme.colorScheme.tertiary.toArgb()
+    LaunchedEffect(headsRim, tailsRim) { postAction(MainAction.SetRimColors(headsRim, tailsRim)) }
+
     Scaffold(
       // the display cutout sits alongside the content in landscape, not above it
       contentWindowInsets = WindowInsets.safeDrawing,

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.Coin
+import com.banasiak.coinflip.common.CustomCoin
 import com.banasiak.coinflip.extensions.restore
 import com.banasiak.coinflip.extensions.save
 import com.banasiak.coinflip.settings.SettingsManager
@@ -59,10 +60,15 @@ class MainViewModel @Inject constructor(
   // postAction() and viewModelScope coroutines all run on the main dispatcher, so a plain field suffices
   private var isFlipping = false
 
+  // the screen re-reports these on every composition, so there is nothing here to restore across
+  // process death
+  private var rimColors: AnimationHelper.RimColors? = null
+
   fun postAction(action: MainAction) {
     Timber.d("postAction(): $action")
     when (action) {
       MainAction.OnPause -> onPause()
+      is MainAction.SetRimColors -> onSetRimColors(action.heads, action.tails)
       MainAction.OnResume -> onResume()
       MainAction.ResetStats -> onResetStats()
       MainAction.TapAbout -> _effectFlow.tryEmit(MainEffect.ToAbout)
@@ -207,10 +213,25 @@ class MainViewModel @Inject constructor(
     vibrationHelper.vibrate(VibrationHelper.Vibration.THUD)
   }
 
+  private fun onSetRimColors(heads: Int, tails: Int) {
+    val colors = AnimationHelper.RimColors(heads, tails)
+    if (colors == rimColors) return
+    rimColors = colors
+    // a theme change has to redraw the custom coin's rim, and the helper is a singleton that
+    // outlives the activity recreation a light/dark switch causes. Guarded because RANDOM rerolls
+    // rather than taking the cache hit: an unconditional call would draw a second, different coin.
+    if (needsRimColors()) generateAnimations()
+  }
+
+  // whether the coin on screen is drawn in the theme's colors, and so has to follow them
+  private fun needsRimColors(): Boolean = settings.coinPrefix == CustomCoin.PREFIX && settings.customCoinRim
+
   private fun generateAnimations() {
+    val prefix = settings.coinPrefix
+    val rim = if (needsRimColors()) rimColors ?: return else null
+
     viewModelScope.launch {
-      val prefix = settings.coinPrefix
-      animationHelper.loadAnimationsForCoin(prefix)
+      animationHelper.loadAnimationsForCoin(prefix, rim)
     }
   }
 
