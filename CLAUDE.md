@@ -236,6 +236,40 @@ Each release adds standard rules that reflow working code rather than catch a de
 normally arrives as a wall of violations; the ones this project rejects are disabled there, and the
 next bump will likely need a few more added. Check what a new rule actually changes before adopting it.
 
+## Comments
+
+These rules are enforced in review. They govern **production code**; test files are exempt, and
+commenting the intent of a test is encouraged there.
+
+- **An inline comment warns about a constraint at that line — it does not explain why an approach was
+  chosen.** Write one only if changing that line without reading it would introduce a bug. "settled
+  before the write, not called off by it: called off, the face that is not being replaced survives on
+  disk and comes back" earns its place; "the run rides on the result's own line rather than taking a
+  line of its own" does not, because the code already shows that.
+- **Design reasoning goes in the commit message or in this file**, not inline, where it does not age
+  against the code. The Architecture section above is where it lands — the custom coin's five
+  invariants are there because they were too long to live at the lines they describe.
+- **Say it once, in the place with the most context.** A comment can flag a real constraint and still
+  be redundant. `buildCoinList` explains why the custom coin's star is permanent; the two comments
+  that restated it at `CoinRow`'s call site and on its `favorite` parameter were deleted. Grep before
+  adding one.
+- **KDoc is mandatory for a public API, and for any signature whose parameters or return value are
+  non-obvious** — `CustomCoinStore.thumbnail` documents that `targetPx` is approximate, and
+  `SettingsViewModel.thumbnail` repeats it because a caller reads the wrapper. A KDoc on anything
+  else has to earn its keep by preventing a footgun or documenting a genuinely complex function.
+  Everything else is `//`.
+- **"Public API" means the surface another part of the app calls, not every `public` declaration.**
+  A feature's MVI triad is not one: `*State`, `*Action` and `*Effect` are that screen's own
+  vocabulary, bundled with the ViewModel and the composable that read them, so a `data object` in a
+  sealed action hierarchy is finished the moment it is named. The stores, helpers and managers other
+  classes reach for are the surface this rule is about. `main` is the reference — it ships
+  `MainState`'s fields and every `SettingsAction` subclass undocumented, deliberately.
+- **Match the surrounding format.** In this codebase that means lowercase, no trailing period, and no
+  `/** */` for a one-line remark on a property or a constant. Read the neighbouring comments before
+  writing one.
+- Length is a judgment call, not a limit — a long comment is fine when the constraint is genuinely
+  intricate. It is the *content* rules above that decide whether it belongs.
+
 ## Localization
 
 The app ships English plus 12 translations (and an `es-MX` regional variant); none were done by a
