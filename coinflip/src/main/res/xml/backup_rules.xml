@@ -3,4 +3,8 @@
   <include
     domain="sharedpref"
     path="." />
+  <!-- the custom coin's artwork, so a restored device keeps the coin its prefs still name -->
+  <include
+    domain="file"
+    path="coins" />
 </full-backup-content>

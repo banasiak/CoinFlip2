@@ -4,10 +4,18 @@
     <include
       domain="sharedpref"
       path="." />
+    <!-- the custom coin's artwork, so a restored device keeps the coin its prefs still name -->
+    <include
+      domain="file"
+      path="coins" />
   </cloud-backup>
   <device-transfer>
     <include
       domain="sharedpref"
       path="." />
+    <!-- the custom coin's artwork, so a restored device keeps the coin its prefs still name -->
+    <include
+      domain="file"
+      path="coins" />
   </device-transfer>
 </data-extraction-rules>

@@ -52,6 +52,8 @@ CoinFlip2 is a Modern Android Development (MAD) coin-flipping app published on t
 - `Coin` — core flip logic; tracks `currentValue` to determine animation permutation (heads→heads, heads→tails, etc.). Deliberately holds *no* streak state: `DiagnosticsViewModel` runs `coin.flip()` in a loop up to 10,000,000 times, which would obliterate the user's run and records
 - `Stats` — the counts, the run of identical results in progress, and each face's longest run, as one value. `afterFlip()` folds a landed flip into all three. They travel together because reset and undo have to move all of them at once
 - `RNG` — wraps `kotlin.random.Random` / `SecureRandom`, listens for preference changes to hot-swap
+- `CustomCoin` / `CustomCoinStore` / `CoinImage` — the one coin whose artwork the user supplies.
+  See **The custom coin** below
 - `CoinType` / `CoinGroup` — the catalog of every coin the app ships. This used to be three parallel
   `string-array`s in `res/values/arrays.xml` that only worked because they lined up index for index; one
   enum makes the three columns a single row and the drift impossible. `prefix` is the identity — the string
@@ -68,8 +70,78 @@ CoinFlip2 is a Modern Android Development (MAD) coin-flipping app published on t
   selected at all. `stored` is spelled out rather than derived from the constant name it happens to match:
   these strings are already on disk, so deriving them would let a rename invalidate them silently
 - `SettingsManager` — typed accessors over `SharedPreferences`, one per preference. Every key, default and encoding lives in `Setting`, a sealed `Setting<T>` whose subclasses each know how to read and write themselves, so `update(setting, value)` is checked at compile time and `prefs[Setting.X]` needs no cast. It replaced an enum with an `Any?` default, which could not carry a type — enums take no type parameter — and so cast at every use site, checked `update`'s argument at runtime, and left the Long-valued settings a persistence path of their own. Adding a key needs no schema bump: `validateSchema()` wipes everything only on a version *mismatch*
-- `AnimationHelper` — generates frame-by-frame `DurationAnimationDrawable` for each of the 4 flip permutations; coin images are loaded by resource name prefix (`CoinType.prefix`, e.g. `"gw"` → `gw_heads` / `gw_tails` drawables). A permutation with no frames gets *no map entry*, not an empty drawable — `getLastFrame()` reads index -1 on an empty one, which would defeat the caller's null check
+- `AnimationHelper` — generates frame-by-frame `DurationAnimationDrawable` for each of the 4 flip
+  permutations. Resolution stops at *drawables*, not resource ids: a shipped coin comes from
+  `<prefix>_heads`/`<prefix>_tails` by name, the custom coin comes off disk, and either failing
+  reads as null and falls back to `Setting.COIN.default`. It used to dereference the ids with `!!`,
+  which turned a prefix the build no longer ships into a crash. A permutation with no frames gets
+  *no map entry*, not an empty drawable — `getLastFrame()` reads index -1 on an empty one, which
+  would defeat the caller's null check. The cache key is the prefix alone for a shipped coin; for
+  the custom coin it also carries the store's revision and the rim colors, because neither changes
+  the prefix and both have to force a redraw
 - `SoundHelper`, `VibrationHelper` — play sounds / haptics only when the corresponding setting is enabled. `STREAK` runs ~5.5s where the others run ~1s, so it is still sounding over the flips that follow it; `AppModule` sizes the `SoundPool` stream budget for that
+
+**The custom coin** is a single user-supplied heads/tails pair, mirroring the Custom Text row it
+sits beside. It is deliberately **not** a `CoinType`: catalog entries name drawables that ship in
+the APK, `CoinType.flippable` is the pool `RANDOM` draws from, and `CoinResourcesTests` asserts both
+about every entry. It rides the existing plumbing instead as a reserved prefix, `"custom"`, since
+`Setting.COIN` was always just a string. Settings is the *only* entry point — the coin picker
+selects and favorites, and launching a system picker out of a list of eighty coins would be a second
+job for one screen — so a half-configured coin exists in the Settings dialog and nowhere else. Once
+both faces are set it appears in the picker in `OTHER`, immediately before `RANDOM` (which keeps the
+sentinel last on screen as well as in the enum), and is permanently starred. That permanence lives
+in `buildCoinList`, not in `Setting.FAVORITES`: a stored star could be toggled off from its own row,
+and would outlive the artwork it names. Deleting it resets `Setting.COIN` when the custom coin was
+selected, since the entry leaves the picker with it. Nothing is unlinked up front: the coin reads as
+gone at once while the files stay put, and they go only when the snackbar's undo lapses — or when
+Settings closes, which settles a delete the departing snackbar would otherwise strand. So undo costs
+nothing, and no renamed leftovers accumulate. `validateSchema()` wipes prefs but not `filesDir/coins`, so a
+schema bump orphans the images rather than deleting somebody's photo — re-selecting brings the coin
+straight back.
+
+Four things about it are invisible in the code and easy to undo by accident:
+
+- **Faces are decoded raw and tagged mdpi — never density-scaled.** `res/drawable` carries no
+  density qualifier, so a shipped face is the mdpi baseline, but `ResourcesCompat.getDrawable`
+  leaves the *bitmap* at its stored 390px with `density = 160` and lets the drawable do the scaling
+  at draw time. `resizeBitmapDrawable` composites **raw pixels** against that 390px backdrop, so a
+  custom face pre-scaled to the display density overflows the canvas and every squashed frame is
+  clipped. `CustomCoinStore.decode` therefore decodes with `inScaled = false` and stamps
+  `density = DENSITY_MEDIUM`, reproducing exactly what the resource loader hands back. The trap is
+  a quiet one, and it was shipped once before being caught on a device: a pre-scaled face still
+  renders correctly at full size, because both routes report the same drawable intrinsic size, so
+  the coin looks right until it is halfway through a flip. `inMutable = true` belongs here too —
+  `Canvas` refuses an immutable bitmap and the rim is stroked straight onto this face.
+- **EXIF orientation needs the mirror, not just the rotation.** `ExifInterface.rotationDegrees`
+  reports only the rotation half of the tag, so the four mirrored orientations come back flipped —
+  and for `TRANSPOSE` and `TRANSVERSE` that rotation belongs to a decomposition whose mirror has
+  been dropped, leaving the picture a further 180° out. A Pixel camera writes `TRANSVERSE` for an
+  ordinary portrait photo, so this shipped with real photos landing on the coin upside down.
+  `CoinImage.orientationFor` maps all eight tags to a mirror-then-rotate pair instead, and is a pure
+  function so the table is unit-tested — the `Matrix` it feeds is not testable, but the decision is.
+  The crop screen's rotate and mirror buttons reuse that same `Orientation`, applied to the decoded
+  bitmap rather than to the drawing, which is what keeps `coverScale`/`clampOffset`/`cropRect` free
+  of any case for a turned image. The consequence is that the crop rect is in the *adjusted* image's
+  coordinates, so `CustomCoinStore.save` has to replay the adjustment before the rect means anything.
+
+- **The rim is optional, stroked at generation time, and neither baked in nor overlaid.** It is
+  what makes an arbitrary photo read as a coin, so it is on by default — but somebody who has
+  photographed a *real* coin wants neither the ring nor the tinted edge, and the switch in the
+  Custom Coin dialog turns both off together (`Setting.CUSTOM_COIN_RIM`, carried to `AnimationHelper`
+  as a null `RimColors`, which is also what a shipped coin passes). Not baked into the
+  stored file because the color follows the theme (`secondary` is a crimson in light and a pink in
+  dark, and either can come from Material You). Not drawn over the finished animation because
+  `resizeBitmapDrawable` squashes frames to a quarter width mid-flip, so a ring added afterwards
+  would stay round while the coin turned inside it. `MainScreen` reads the colors off the Material
+  scheme rather than through `ColorHelper`, which resolves the *View* theme's `colorPrimary` — a
+  parallel mechanism free to drift from the result text the rim is meant to match. Width is 5% of
+  the diameter, rounded from the Claude coin's measured 5.1%. The cache key carries the colors *and*
+  their absence, so switching the border off redraws the ring away rather than leaving it up.
+- **The edge is tinted as a copy.** Drawables resolved from resources share their `ConstantState`,
+  so a `ColorFilter` on `R.drawable.edge` would follow the shipped coins around any process that had
+  also drawn a custom one. `SRC_IN` loses nothing: the asset is a single flat `#696969` whose
+  thirty-odd distinct values differ only in alpha. One blended color rather than one per transition,
+  because the edge frame sits between the faces in every permutation and belongs to neither.
 
 **Streaks** count *any* face repeating, not heads specifically — the app ships 80-odd coins and custom
 labels and takes no side, so a run is "the same result again". The number is therefore never 0 and
@@ -98,7 +170,11 @@ tests can assert what the store ends up holding. `CoinResourcesTests` reads `res
 
 **Coverage:** Kover, reported on the debug variant. Run `./gradlew :coinflip:koverHtmlReportDebug` for the
 figure rather than trusting one written down here, and read it knowing that `CoinType`'s 80-odd declaration
-lines count as covered the moment a test touches the enum, so it flatters a little. The biggest remaining gap is `AnimationHelper`'s bitmap pipeline, which needs Robolectric or instrumentation rather than plain unit tests. Generated (Hilt/Dagger) code, `@Composable`
+lines count as covered the moment a test touches the enum, so it flatters a little. The biggest remaining gap is the bitmap pipeline — `AnimationHelper`'s frame generation and
+`CoinImage`'s crop, mask, rim and tint — which needs Robolectric or instrumentation rather than
+plain unit tests. That gap is why the crop's pan and zoom arithmetic is carved out of
+`CoinCropDialog` as `coverScale`/`clampOffset`/`cropRect`: Compose's geometry types are pure Kotlin,
+so the part that is easy to get wrong is testable even though the gestures around it are not. Generated (Hilt/Dagger) code, `@Composable`
 functions, and the theme declarations are filtered out in the `kover` block of `coinflip/build.gradle.kts`,
 so the number reflects testable logic only — remove the Compose exclusions if UI tests are ever added.
 Nothing gates the build: `koverVerify` runs as part of `check` but has no rules. CI is the single
@@ -131,7 +207,9 @@ next bump will likely need a few more added. Check what a new rule actually chan
 
 The app ships English plus 12 translations (and an `es-MX` regional variant); none were done by a
 human translator. Lint treats `MissingTranslation` as an **error**, so adding a translatable string
-means adding it to every locale in the same commit or `./gradlew :coinflip:check` fails.
+means adding it to every locale in the same commit or `./gradlew :coinflip:check` fails — including
+when that would otherwise split a feature's strings out into a commit of their own. `values-es-rMX`
+is overrides only and inherits the rest from `values-es`, so it is not one of the twelve.
 
 Read **[I18N.md](I18N.md)** before touching `res/values-*/strings.xml`. It records the coin-face
 terminology per locale and the rule behind it (portrait side = heads), the two idioms that run
