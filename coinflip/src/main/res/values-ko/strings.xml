@@ -7,6 +7,11 @@
   <string name="changes">변화</string>
   <string name="clear">지우기</string>
   <string name="coin_animation">동전 애니메이션</string>
+  <string name="coin_crop_failed">이 이미지를 열 수 없습니다.</string>
+  <string name="coin_crop_mirror">좌우 반전</string>
+  <string name="coin_crop_reset">초기화</string>
+  <string name="coin_crop_rotate">회전</string>
+  <string name="coin_crop_title">이미지 위치 조정</string>
   <string name="diagnostics_fragment_title">진단 검사</string>
   <string name="diagnostics_iterations_dialog">반복 횟수</string>
   <string name="diagnostics_iterations_range">최대: %1$s</string>

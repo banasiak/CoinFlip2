@@ -7,6 +7,11 @@
   <string name="changes">变化次数</string>
   <string name="clear">清除</string>
   <string name="coin_animation">硬币动画</string>
+  <string name="coin_crop_failed">无法打开该图片。</string>
+  <string name="coin_crop_mirror">镜像</string>
+  <string name="coin_crop_reset">重置</string>
+  <string name="coin_crop_rotate">旋转</string>
+  <string name="coin_crop_title">调整图片位置</string>
   <string name="diagnostics_fragment_title">诊断测试</string>
   <string name="diagnostics_iterations_dialog">迭代次数</string>
   <string name="diagnostics_iterations_range">最大值：%1$s</string>

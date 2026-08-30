@@ -7,6 +7,11 @@
   <string name="changes">CAMBI</string>
   <string name="clear">Cancella</string>
   <string name="coin_animation">Animazione della moneta</string>
+  <string name="coin_crop_failed">Impossibile aprire questa immagine.</string>
+  <string name="coin_crop_mirror">Rifletti</string>
+  <string name="coin_crop_reset">Reimposta</string>
+  <string name="coin_crop_rotate">Ruota</string>
+  <string name="coin_crop_title">Posiziona l\'immagine</string>
   <string name="diagnostics_fragment_title">Test diagnostico</string>
   <string name="diagnostics_iterations_dialog">Numero di iterazioni</string>
   <string name="diagnostics_iterations_range">Massimo: %1$s</string>

@@ -7,6 +7,11 @@
   <string name="changes">การเปลี่ยน</string>
   <string name="clear">ล้าง</string>
   <string name="coin_animation">ภาพเคลื่อนไหวเหรียญ</string>
+  <string name="coin_crop_failed">ไม่สามารถเปิดรูปภาพนี้ได้</string>
+  <string name="coin_crop_mirror">กลับด้าน</string>
+  <string name="coin_crop_reset">รีเซ็ต</string>
+  <string name="coin_crop_rotate">หมุน</string>
+  <string name="coin_crop_title">จัดตำแหน่งรูปภาพ</string>
   <string name="diagnostics_fragment_title">ทดสอบการวินิจฉัย</string>
   <string name="diagnostics_iterations_dialog">จำนวนการวนซ้ำ</string>
   <string name="diagnostics_iterations_range">สูงสุด: %1$s</string>

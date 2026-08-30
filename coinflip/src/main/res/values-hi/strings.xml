@@ -7,6 +7,11 @@
   <string name="changes">बदलाव</string>
   <string name="clear">साफ़ करें</string>
   <string name="coin_animation">सिक्का एनीमेशन</string>
+  <string name="coin_crop_failed">यह छवि नहीं खोली जा सकी।</string>
+  <string name="coin_crop_mirror">दर्पण</string>
+  <string name="coin_crop_reset">रीसेट करें</string>
+  <string name="coin_crop_rotate">घुमाएँ</string>
+  <string name="coin_crop_title">छवि को व्यवस्थित करें</string>
   <string name="diagnostics_fragment_title">नैदानिक परीक्षण</string>
   <string name="diagnostics_iterations_dialog">पुनरावृत्तियों की संख्या</string>
   <string name="diagnostics_iterations_range">अधिकतम: %1$s</string>

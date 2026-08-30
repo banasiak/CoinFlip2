@@ -7,6 +7,11 @@
   <string name="changes">BASCULES</string>
   <string name="clear">Effacer</string>
   <string name="coin_animation">Animation de la pièce</string>
+  <string name="coin_crop_failed">Impossible d\'ouvrir cette image.</string>
+  <string name="coin_crop_mirror">Miroir</string>
+  <string name="coin_crop_reset">Réinitialiser</string>
+  <string name="coin_crop_rotate">Pivoter</string>
+  <string name="coin_crop_title">Positionner l\'image</string>
   <string name="diagnostics_fragment_title">Test diagnostique</string>
   <string name="diagnostics_iterations_dialog">Nombre d\'itérations</string>
   <string name="diagnostics_iterations_range">Maximum : %1$s</string>

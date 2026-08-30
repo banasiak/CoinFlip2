@@ -7,6 +7,11 @@
   <string name="changes">変化</string>
   <string name="clear">クリア</string>
   <string name="coin_animation">コインアニメーション</string>
+  <string name="coin_crop_failed">この画像を開けませんでした。</string>
+  <string name="coin_crop_mirror">反転</string>
+  <string name="coin_crop_reset">リセット</string>
+  <string name="coin_crop_rotate">回転</string>
+  <string name="coin_crop_title">画像の位置を調整</string>
   <string name="diagnostics_fragment_title">診断テスト</string>
   <string name="diagnostics_iterations_dialog">反復回数</string>
   <string name="diagnostics_iterations_range">最大: %1$s</string>

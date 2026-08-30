@@ -7,6 +7,11 @@
   <string name="changes">DEĞİŞİM</string>
   <string name="clear">Temizle</string>
   <string name="coin_animation">Para animasyonu</string>
+  <string name="coin_crop_failed">Bu görsel açılamadı.</string>
+  <string name="coin_crop_mirror">Aynala</string>
+  <string name="coin_crop_reset">Sıfırla</string>
+  <string name="coin_crop_rotate">Döndür</string>
+  <string name="coin_crop_title">Görseli konumlandır</string>
   <string name="diagnostics_fragment_title">Teşhis testi</string>
   <string name="diagnostics_iterations_dialog">Yineleme sayısı</string>
   <string name="diagnostics_iterations_range">En fazla: %1$s</string>
