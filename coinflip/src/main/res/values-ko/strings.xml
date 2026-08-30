@@ -39,6 +39,7 @@
   <string name="settings_item_animation_title">애니메이션</string>
   <string name="settings_item_coin_empty">일치하는 동전이 없습니다</string>
   <string name="settings_item_coin_favorite_add">%1$s을(를) 즐겨찾기에 추가</string>
+  <string name="settings_item_coin_favorite_pinned">%1$s은(는) 항상 즐겨찾기에 있습니다</string>
   <string name="settings_item_coin_favorite_remove">%1$s을(를) 즐겨찾기에서 제거</string>
   <string name="settings_item_coin_group_canada">캐나다</string>
   <string name="settings_item_coin_group_euro">유로</string>
@@ -46,6 +47,15 @@
   <string name="settings_item_coin_group_other">기타</string>
   <string name="settings_item_coin_group_us">미국</string>
   <string name="settings_item_coin_title">동전 종류</string>
+  <string name="settings_item_custom_coin_border">테두리</string>
+  <string name="settings_item_custom_coin_choose">선택</string>
+  <string name="settings_item_custom_coin_delete">삭제</string>
+  <string name="settings_item_custom_coin_deleted">커스텀 동전을 삭제했습니다</string>
+  <string name="settings_item_custom_coin_empty">탭하여 만들기</string>
+  <string name="settings_item_custom_coin_replace">변경</string>
+  <string name="settings_item_custom_coin_selected">동전 생성됨, 현재 선택됨</string>
+  <string name="settings_item_custom_coin_title">커스텀 동전</string>
+  <string name="settings_item_custom_coin_unselected">동전 생성됨, %1$s에서 선택하세요</string>
   <string name="settings_item_custom_text_title">사용자 지정 텍스트</string>
   <string name="settings_item_dynamic_colors_summary">배경화면 색상 사용 (Android 12 이상)</string>
   <string name="settings_item_dynamic_colors_title">동적 색상 테마</string>

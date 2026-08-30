@@ -39,6 +39,7 @@
   <string name="settings_item_animation_title">แอนิเมชัน</string>
   <string name="settings_item_coin_empty">ไม่พบเหรียญที่ตรงกัน</string>
   <string name="settings_item_coin_favorite_add">เพิ่ม %1$s ในรายการโปรด</string>
+  <string name="settings_item_coin_favorite_pinned">%1$s อยู่ในรายการโปรดเสมอ</string>
   <string name="settings_item_coin_favorite_remove">นำ %1$s ออกจากรายการโปรด</string>
   <string name="settings_item_coin_group_canada">แคนาดา</string>
   <string name="settings_item_coin_group_euro">ยูโร</string>
@@ -46,6 +47,15 @@
   <string name="settings_item_coin_group_other">อื่น ๆ</string>
   <string name="settings_item_coin_group_us">สหรัฐอเมริกา</string>
   <string name="settings_item_coin_title">ประเภทเหรียญ</string>
+  <string name="settings_item_custom_coin_border">ขอบ</string>
+  <string name="settings_item_custom_coin_choose">เลือก</string>
+  <string name="settings_item_custom_coin_delete">ลบ</string>
+  <string name="settings_item_custom_coin_deleted">ลบเหรียญที่กำหนดเองแล้ว</string>
+  <string name="settings_item_custom_coin_empty">แตะเพื่อสร้าง</string>
+  <string name="settings_item_custom_coin_replace">เปลี่ยน</string>
+  <string name="settings_item_custom_coin_selected">สร้างเหรียญแล้ว กำลังใช้งานอยู่</string>
+  <string name="settings_item_custom_coin_title">เหรียญที่กำหนดเอง</string>
+  <string name="settings_item_custom_coin_unselected">สร้างเหรียญแล้ว เลือกได้ที่ %1$s</string>
   <string name="settings_item_custom_text_title">ข้อความที่กำหนดเอง</string>
   <string name="settings_item_dynamic_colors_summary">ใช้สีวอลเปเปอร์ (Android 12+)</string>
   <string name="settings_item_dynamic_colors_title">ธีมสีแบบไดนามิก</string>

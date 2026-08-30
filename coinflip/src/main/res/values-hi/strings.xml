@@ -39,6 +39,7 @@
   <string name="settings_item_animation_title">एनिमेशन</string>
   <string name="settings_item_coin_empty">कोई मेल खाता सिक्का नहीं</string>
   <string name="settings_item_coin_favorite_add">%1$s को पसंदीदा में जोड़ें</string>
+  <string name="settings_item_coin_favorite_pinned">%1$s हमेशा पसंदीदा में रहता है</string>
   <string name="settings_item_coin_favorite_remove">%1$s को पसंदीदा से हटाएं</string>
   <string name="settings_item_coin_group_canada">कनाडा</string>
   <string name="settings_item_coin_group_euro">यूरो</string>
@@ -46,6 +47,15 @@
   <string name="settings_item_coin_group_other">अन्य</string>
   <string name="settings_item_coin_group_us">संयुक्त राज्य अमेरिका</string>
   <string name="settings_item_coin_title">सिक्के का प्रकार</string>
+  <string name="settings_item_custom_coin_border">किनारा</string>
+  <string name="settings_item_custom_coin_choose">चुनें</string>
+  <string name="settings_item_custom_coin_delete">हटाएँ</string>
+  <string name="settings_item_custom_coin_deleted">अपना सिक्का हटाया गया</string>
+  <string name="settings_item_custom_coin_empty">बनाने के लिए टैप करें</string>
+  <string name="settings_item_custom_coin_replace">बदलें</string>
+  <string name="settings_item_custom_coin_selected">सिक्का बनाया गया, वर्तमान में चयनित</string>
+  <string name="settings_item_custom_coin_title">अपना सिक्का</string>
+  <string name="settings_item_custom_coin_unselected">सिक्का बनाया गया, इसे %1$s में चुनें</string>
   <string name="settings_item_custom_text_title">कस्टम टेक्स्ट</string>
   <string name="settings_item_dynamic_colors_summary">वॉलपेपर के रंगों का उपयोग करें (Android 12+)</string>
   <string name="settings_item_dynamic_colors_title">गतिशील रंग थीम</string>

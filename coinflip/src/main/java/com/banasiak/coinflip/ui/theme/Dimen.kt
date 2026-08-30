@@ -16,5 +16,13 @@ class Dimen {
 
     // leading artwork in the coin picker rows
     val coinThumbnail = 40.dp
+
+    // the ring drawn for a coin that has no artwork to show: the random coin, and a custom face
+    // that has not been set yet. Thin enough to read as an outline rather than as a coin of its own.
+    val coinOutline = 1.dp
+
+    // Material's icon-button footprint. A row whose trailing slot holds a static marker instead of
+    // a button has to reserve the same width, or everything before it shifts across.
+    val iconButton = 48.dp
   }
 }

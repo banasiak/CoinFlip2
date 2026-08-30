@@ -56,6 +56,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.CoinGroup
 import com.banasiak.coinflip.common.CoinType
+import com.banasiak.coinflip.common.CustomCoin
 import com.banasiak.coinflip.ui.theme.AppTheme
 import com.banasiak.coinflip.ui.theme.Dimen
 
@@ -68,6 +69,12 @@ internal sealed interface CoinListItem {
    * LazyColumn keys have to differ or it throws on the duplicate.
    */
   data class Option(val coin: CoinType, val inFavoritesSection: Boolean = false) : CoinListItem
+
+  /**
+   * The user's own coin. Not a [CoinListItem.Option] because it is not a [CoinType]: it owns no
+   * drawable in the APK and `RANDOM` must not draw it. It appears only once both faces are set.
+   */
+  data class Custom(val inFavoritesSection: Boolean = false) : CoinListItem
 }
 
 /**
@@ -79,6 +86,9 @@ internal sealed interface CoinListItem {
 fun CoinPicker(
   selectedValue: String,
   favorites: Set<String>,
+  customCoinReady: Boolean,
+  customRevision: Long,
+  loadThumbnail: (CustomCoin.Face, Int) -> ImageBitmap?,
   onSelect: (String) -> Unit,
   onToggleFavorite: (String) -> Unit,
   onDismiss: () -> Unit
@@ -88,7 +98,16 @@ fun CoinPicker(
     // a full-screen dialog, so it owns the whole window and draws edge to edge like a destination
     properties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)
   ) {
-    CoinPickerContent(selectedValue, favorites, onSelect, onToggleFavorite, onDismiss)
+    CoinPickerContent(
+      selectedValue,
+      favorites,
+      customCoinReady,
+      customRevision,
+      loadThumbnail,
+      onSelect,
+      onToggleFavorite,
+      onDismiss
+    )
   }
 }
 
@@ -96,13 +115,27 @@ fun CoinPicker(
 private fun CoinPickerContent(
   selectedValue: String,
   favorites: Set<String>,
+  customCoinReady: Boolean = false,
+  customRevision: Long = 0,
+  loadThumbnail: (CustomCoin.Face, Int) -> ImageBitmap? = { _, _ -> null },
   onSelect: (String) -> Unit,
   onToggleFavorite: (String) -> Unit,
   onDismiss: () -> Unit
 ) {
   var query by rememberSaveable { mutableStateOf("") }
-  val items = remember(query, favorites) { buildCoinList(CoinType.entries, favorites, query) }
+  val customName = stringResource(R.string.settings_item_custom_coin_title)
+  val items =
+    remember(query, favorites, customCoinReady) {
+      buildCoinList(CoinType.entries, favorites, query, customName.takeIf { customCoinReady })
+    }
   val thumbnails = rememberThumbnails()
+  val targetPx = with(LocalDensity.current) { Dimen.coinThumbnail.roundToPx() }
+  // keyed on the revision too: replacing the artwork leaves the prefix alone, so nothing else here
+  // would change
+  val customArt =
+    remember(customCoinReady, customRevision, targetPx) {
+      if (customCoinReady) loadThumbnail(CustomCoin.Face.HEADS, targetPx) else null
+    }
   val listState = rememberLazyListState()
 
   // Keyed on the query so editing or clearing the search lands on the top of the new results
@@ -142,7 +175,7 @@ private fun CoinPickerContent(
                 is CoinListItem.Option -> {
                   CoinRow(
                     label = item.coin.coinName,
-                    thumbnail = thumbnails[item.coin.prefix] ?: 0,
+                    thumbnail = rememberCoinArt(thumbnails[item.coin.prefix] ?: 0),
                     selected = item.coin.prefix == selectedValue,
                     favorite = item.coin.prefix in favorites,
                     onClick = {
@@ -150,6 +183,18 @@ private fun CoinPickerContent(
                       onDismiss()
                     },
                     onToggleFavorite = { onToggleFavorite(item.coin.prefix) }
+                  )
+                }
+                is CoinListItem.Custom -> {
+                  CoinRow(
+                    label = customName,
+                    thumbnail = customArt,
+                    selected = selectedValue == CustomCoin.PREFIX,
+                    favorite = null,
+                    onClick = {
+                      onSelect(CustomCoin.PREFIX)
+                      onDismiss()
+                    }
                   )
                 }
               }
@@ -205,11 +250,11 @@ private fun SearchField(query: String, onQueryChange: (String) -> Unit) {
 @Composable
 private fun CoinRow(
   label: String,
-  @DrawableRes thumbnail: Int,
+  thumbnail: ImageBitmap?,
   selected: Boolean,
-  favorite: Boolean,
+  favorite: Boolean?,
   onClick: () -> Unit,
-  onToggleFavorite: () -> Unit
+  onToggleFavorite: () -> Unit = { }
 ) {
   Row(
     modifier =
@@ -221,6 +266,7 @@ private fun CoinRow(
     horizontalArrangement = Arrangement.spacedBy(Dimen.medium)
   ) {
     CoinThumbnail(thumbnail)
+
     Text(
       text = label,
       modifier = Modifier.weight(1f),
@@ -233,28 +279,45 @@ private fun CoinRow(
         tint = MaterialTheme.colorScheme.primary
       )
     }
-    // an IconButton rather than a clickable Icon: the row is already selectable, so the star needs
-    // its own semantics node and its own 48dp target instead of being swallowed by the row
-    IconButton(onClick = onToggleFavorite) {
-      Icon(
-        painter = painterResource(if (favorite) R.drawable.star_filled else R.drawable.star),
-        contentDescription =
-          stringResource(
-            if (favorite) R.string.settings_item_coin_favorite_remove else R.string.settings_item_coin_favorite_add,
-            label
-          ),
-        tint = if (favorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
-      )
+    if (favorite != null) {
+      // an IconButton rather than a clickable Icon: the row is already selectable, so the star needs
+      // its own semantics node and its own 48dp target instead of being swallowed by the row
+      IconButton(onClick = onToggleFavorite) {
+        Icon(
+          painter = painterResource(if (favorite) R.drawable.star_filled else R.drawable.star),
+          contentDescription =
+            stringResource(
+              if (favorite) R.string.settings_item_coin_favorite_remove else R.string.settings_item_coin_favorite_add,
+              label
+            ),
+          tint = if (favorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+        )
+      }
+    } else {
+      // the custom coin is pinned rather than starred, so there is nothing here to toggle -- but the
+      // slot still has to be filled, or the check mark slides across into where the star would be.
+      // A Box rather than a disabled IconButton: this is a state, and nothing should invite a tap.
+      Box(modifier = Modifier.size(Dimen.iconButton), contentAlignment = Alignment.Center) {
+        Icon(
+          painter = painterResource(R.drawable.pin),
+          contentDescription = stringResource(R.string.settings_item_coin_favorite_pinned, label),
+          tint = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+      }
     }
   }
 }
 
+// a shipped coin's artwork, decoded once per row rather than on every recomposition of it
 @Composable
-private fun CoinThumbnail(@DrawableRes thumbnail: Int) {
+private fun rememberCoinArt(@DrawableRes id: Int): ImageBitmap? {
   val resources = LocalResources.current
   val targetPx = with(LocalDensity.current) { Dimen.coinThumbnail.roundToPx() }
-  val bitmap = remember(thumbnail, targetPx) { decodeThumbnail(resources, thumbnail, targetPx) }
+  return remember(id, targetPx) { decodeThumbnail(resources, id, targetPx) }
+}
 
+@Composable
+private fun CoinThumbnail(bitmap: ImageBitmap?) {
   Box(
     modifier = Modifier.size(Dimen.coinThumbnail),
     contentAlignment = Alignment.Center
@@ -340,18 +403,33 @@ private fun decodeThumbnail(resources: Resources, @DrawableRes id: Int, targetPx
 @VisibleForTesting
 internal fun CoinListItem.key(): String =
   when (this) {
-    is CoinListItem.Group -> "group-$title"
-    is CoinListItem.Option -> if (inFavoritesSection) "favorite-${coin.prefix}" else "coin-${coin.prefix}"
+    is CoinListItem.Group -> {
+      "group-$title"
+    }
+    is CoinListItem.Option -> {
+      if (inFavoritesSection) "favorite-${coin.prefix}" else "coin-${coin.prefix}"
+    }
+    is CoinListItem.Custom -> {
+      if (inFavoritesSection) "favorite-${CustomCoin.PREFIX}" else "coin-${CustomCoin.PREFIX}"
+    }
   }
 
-/** Filters by [query] and interleaves a header ahead of each group that still has matches. */
+/**
+ * Filters by [query] and interleaves a header ahead of each group that still has matches.
+ *
+ * [customCoin] is the user's coin: its localized name when both faces are set, and null otherwise,
+ * so one parameter carries both whether to list it and what to match a search against.
+ */
 @VisibleForTesting
 internal fun buildCoinList(
   coins: List<CoinType>,
   favorites: Set<String>,
-  query: String
+  query: String,
+  customCoin: String? = null
 ): List<CoinListItem> {
-  val matches = coins.filter { query.isBlank() || it.coinName.contains(query.trim(), ignoreCase = true) }
+  val trimmed = query.trim()
+  val matches = coins.filter { query.isBlank() || it.coinName.contains(trimmed, ignoreCase = true) }
+  val customMatches = customCoin != null && (query.isBlank() || customCoin.contains(trimmed, ignoreCase = true))
 
   return buildList {
     // starred coins are repeated at the top rather than moved out, so the origin groups keep no
@@ -359,19 +437,34 @@ internal fun buildCoinList(
     // hit under two headers reads as noise rather than as a shortcut.
     if (query.isBlank()) {
       val starred = matches.filter { it.prefix in favorites }
-      if (starred.isNotEmpty()) {
+      // the custom coin is permanently starred, and that lives here rather than in Setting.FAVORITES:
+      // a stored star could be toggled off from the row, and would outlive the artwork it names
+      if (starred.isNotEmpty() || customMatches) {
         add(CoinListItem.Group(R.string.settings_item_coin_group_favorites))
+        if (customMatches) add(CoinListItem.Custom(inFavoritesSection = true))
         starred.forEach { add(CoinListItem.Option(it, inFavoritesSection = true)) }
       }
     }
 
     var currentGroup: CoinGroup? = null
+    var customPlaced = false
     matches.forEach { coin ->
       if (coin.group != currentGroup) {
         add(CoinListItem.Group(coin.group.label))
         currentGroup = coin.group
       }
+      // ahead of RANDOM, so the sentinel stays last on screen as well as in the enum
+      if (customMatches && !customPlaced && coin == CoinType.RANDOM) {
+        add(CoinListItem.Custom())
+        customPlaced = true
+      }
       add(CoinListItem.Option(coin))
+    }
+
+    // a search can filter RANDOM out from under it, so it still needs somewhere to land
+    if (customMatches && !customPlaced) {
+      if (currentGroup != CoinGroup.OTHER) add(CoinListItem.Group(CoinGroup.OTHER.label))
+      add(CoinListItem.Custom())
     }
   }
 }
@@ -383,6 +476,7 @@ fun CoinPickerPreview() {
     CoinPickerContent(
       selectedValue = CoinType.GEORGE_WASHINGTON.prefix,
       favorites = setOf("gw", "jfk"),
+      customCoinReady = true,
       onSelect = { },
       onToggleFavorite = { },
       onDismiss = { }

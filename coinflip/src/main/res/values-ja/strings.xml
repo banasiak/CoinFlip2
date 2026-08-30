@@ -39,6 +39,7 @@
   <string name="settings_item_animation_title">アニメーション</string>
   <string name="settings_item_coin_empty">一致するコインがありません</string>
   <string name="settings_item_coin_favorite_add">%1$s をお気に入りに追加</string>
+  <string name="settings_item_coin_favorite_pinned">%1$sは常にお気に入りに表示されます</string>
   <string name="settings_item_coin_favorite_remove">%1$s をお気に入りから削除</string>
   <string name="settings_item_coin_group_canada">カナダ</string>
   <string name="settings_item_coin_group_euro">ユーロ</string>
@@ -46,6 +47,15 @@
   <string name="settings_item_coin_group_other">その他</string>
   <string name="settings_item_coin_group_us">アメリカ合衆国</string>
   <string name="settings_item_coin_title">コインの種類</string>
+  <string name="settings_item_custom_coin_border">縁取り</string>
+  <string name="settings_item_custom_coin_choose">選択</string>
+  <string name="settings_item_custom_coin_delete">削除</string>
+  <string name="settings_item_custom_coin_deleted">カスタムコインを削除しました</string>
+  <string name="settings_item_custom_coin_empty">タップして作成</string>
+  <string name="settings_item_custom_coin_replace">変更</string>
+  <string name="settings_item_custom_coin_selected">コインを作成済み、現在選択中</string>
+  <string name="settings_item_custom_coin_title">カスタムコイン</string>
+  <string name="settings_item_custom_coin_unselected">コインを作成済み、%1$sで選択してください</string>
   <string name="settings_item_custom_text_title">カスタムテキスト</string>
   <string name="settings_item_dynamic_colors_summary">壁紙の色を使用する (Android 12 以降)</string>
   <string name="settings_item_dynamic_colors_title">ダイナミックカラーテーマ</string>

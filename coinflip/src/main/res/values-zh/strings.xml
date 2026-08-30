@@ -39,6 +39,7 @@
   <string name="settings_item_animation_title">动画</string>
   <string name="settings_item_coin_empty">没有匹配的硬币</string>
   <string name="settings_item_coin_favorite_add">将 %1$s 添加到收藏</string>
+  <string name="settings_item_coin_favorite_pinned">%1$s 始终显示在收藏中</string>
   <string name="settings_item_coin_favorite_remove">将 %1$s 从收藏中移除</string>
   <string name="settings_item_coin_group_canada">加拿大</string>
   <string name="settings_item_coin_group_euro">欧元</string>
@@ -46,6 +47,15 @@
   <string name="settings_item_coin_group_other">其他</string>
   <string name="settings_item_coin_group_us">美国</string>
   <string name="settings_item_coin_title">硬币类型</string>
+  <string name="settings_item_custom_coin_border">边框</string>
+  <string name="settings_item_custom_coin_choose">选择</string>
+  <string name="settings_item_custom_coin_delete">删除</string>
+  <string name="settings_item_custom_coin_deleted">已删除自定义硬币</string>
+  <string name="settings_item_custom_coin_empty">点按以创建</string>
+  <string name="settings_item_custom_coin_replace">替换</string>
+  <string name="settings_item_custom_coin_selected">硬币已创建，当前已选择</string>
+  <string name="settings_item_custom_coin_title">自定义硬币</string>
+  <string name="settings_item_custom_coin_unselected">硬币已创建，请在%1$s中选择</string>
   <string name="settings_item_custom_text_title">自定义文本</string>
   <string name="settings_item_dynamic_colors_summary">使用壁纸颜色（Android 12+）</string>
   <string name="settings_item_dynamic_colors_title">动态色彩主题</string>

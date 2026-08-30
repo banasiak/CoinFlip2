@@ -146,6 +146,8 @@ sealed class Setting<T>(val key: String, val default: T) {
     val FORCE = EnumSetting("force", ShakeForce.MEDIUM, ShakeForce.entries) { it.stored }
     val SECURE_RANDOM = BooleanSetting("secureRandom", false)
     val FAVORITES = StringSetSetting("favoriteCoins")
+
+    val CUSTOM_COIN_RIM = BooleanSetting("customCoinRim", true)
     val STREAK = BooleanSetting("streak", false)
     val HEADS = LongSetting("headsCount", 0L)
     val TAILS = LongSetting("tailsCount", 0L)

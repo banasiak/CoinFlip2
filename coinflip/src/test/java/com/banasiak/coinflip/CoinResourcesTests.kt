@@ -2,8 +2,10 @@ package com.banasiak.coinflip
 
 import com.banasiak.coinflip.common.CoinGroup
 import com.banasiak.coinflip.common.CoinType
+import com.banasiak.coinflip.common.CustomCoin
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldNotContain
 import org.junit.jupiter.api.Test
 import java.io.File
 
@@ -17,6 +19,12 @@ class CoinResourcesTests {
   fun `coin prefixes and names are unique`() {
     CoinType.entries.map { it.prefix }.duplicates().shouldBeEmpty()
     CoinType.entries.map { it.coinName }.duplicates().shouldBeEmpty()
+  }
+
+  @Test
+  fun `no shipped coin claims the custom coin's prefix`() {
+    // the picker keys its rows on the prefix, and LazyColumn throws on two rows sharing one
+    CoinType.entries.map { it.prefix } shouldNotContain CustomCoin.PREFIX
   }
 
   @Test

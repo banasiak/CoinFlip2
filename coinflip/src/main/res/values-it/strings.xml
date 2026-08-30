@@ -39,6 +39,7 @@
   <string name="settings_item_animation_title">Animazione</string>
   <string name="settings_item_coin_empty">Nessuna moneta corrispondente</string>
   <string name="settings_item_coin_favorite_add">Aggiungi %1$s ai preferiti</string>
+  <string name="settings_item_coin_favorite_pinned">%1$s è sempre tra i preferiti</string>
   <string name="settings_item_coin_favorite_remove">Rimuovi %1$s dai preferiti</string>
   <string name="settings_item_coin_group_canada">Canada</string>
   <string name="settings_item_coin_group_euro">Euro</string>
@@ -46,6 +47,15 @@
   <string name="settings_item_coin_group_other">Altre</string>
   <string name="settings_item_coin_group_us">Stati Uniti</string>
   <string name="settings_item_coin_title">Tipo di moneta</string>
+  <string name="settings_item_custom_coin_border">Bordo</string>
+  <string name="settings_item_custom_coin_choose">Scegli</string>
+  <string name="settings_item_custom_coin_delete">Elimina</string>
+  <string name="settings_item_custom_coin_deleted">Moneta personalizzata eliminata</string>
+  <string name="settings_item_custom_coin_empty">Tocca per creare</string>
+  <string name="settings_item_custom_coin_replace">Sostituisci</string>
+  <string name="settings_item_custom_coin_selected">Moneta creata, attualmente selezionata</string>
+  <string name="settings_item_custom_coin_title">Moneta personalizzata</string>
+  <string name="settings_item_custom_coin_unselected">Moneta creata, selezionala in %1$s</string>
   <string name="settings_item_custom_text_title">Testo personalizzato</string>
   <string name="settings_item_dynamic_colors_summary">Utilizza i colori dello sfondo (Android 12+)</string>
   <string name="settings_item_dynamic_colors_title">Tema colore dinamico</string>
