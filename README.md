@@ -22,6 +22,10 @@ pitch, and everything else exists to make that one interaction pleasant:
   coin. Or pick **Random** and let the app choose a different one every flip.
 - **Favorites** — star the coins you actually use and they collect in their own section at the top of
   the picker, so you're not scrolling past every state quarter to find the loonie.
+- **Your own coin** — put your own artwork on the two faces. Pick a photo, frame it in a circular
+  crop with pan, zoom, rotate and mirror, and it joins the picker pinned to the top of your
+  favorites. The app rings it in the same colors it writes HEADS and TAILS in, so an arbitrary
+  picture still reads as a coin — switch the ring off if you photographed a real one.
 - **Custom labels** — call the sides whatever you like. Yes / No, Beer / Tacos, Ship / Crown.
 - **Heads and tails tallies**, with a quick-reset button if you want it.
 - **Material You** dynamic color on Android 12+, light and dark, portrait and landscape.
@@ -70,8 +74,9 @@ request and reports coverage into the run summary.
 ## Credits
 
 The 2026 refactor was done by **[Claude](https://claude.com/claude-code)** — landscape support, the
-rebuilt Settings screen, the searchable coin picker and favorites, corrections to all 13 translations,
-the unit test suite, the AGP 9 / Gradle 9 / SDK 37 migration, and most of the code in between — working
+rebuilt Settings screen, the searchable coin picker and favorites, custom coin faces, corrections to
+all 13 translations, the unit test suite, the AGP 9 / Gradle 9 / SDK 37 migration, and most of the
+code in between — working
 from direction, design decisions, and on-device testing by [@banasiak](https://github.com/banasiak).
 The commit messages in that stretch were written by Claude as well, which goes some way toward
 explaining their length.
