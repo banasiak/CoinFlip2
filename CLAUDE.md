@@ -53,7 +53,10 @@ CoinFlip2 is a Modern Android Development (MAD) coin-flipping app published on t
 - `Stats` — the counts, the run of identical results in progress, and each face's longest run, as one value. `afterFlip()` folds a landed flip into all three. They travel together because reset and undo have to move all of them at once
 - `RNG` — wraps `kotlin.random.Random` / `SecureRandom`, listens for preference changes to hot-swap
 - `CustomCoin` / `CustomCoinStore` / `CoinImage` — the one coin whose artwork the user supplies.
-  See **The custom coin** below
+  See **The custom coin** below. `revision` is the cache key for anything drawn from these files:
+  the prefix is `"custom"` before and after a replacement, and a face can be *cleared* without the
+  revision moving at all, so a `remember` over a thumbnail has to key on both it and whether the
+  face is set
 - `CoinType` / `CoinGroup` — the catalog of every coin the app ships. This used to be three parallel
   `string-array`s in `res/values/arrays.xml` that only worked because they lined up index for index; one
   enum makes the three columns a single row and the drift impossible. `prefix` is the identity — the string
@@ -78,7 +81,12 @@ CoinFlip2 is a Modern Android Development (MAD) coin-flipping app published on t
   *no map entry*, not an empty drawable — `getLastFrame()` reads index -1 on an empty one, which
   would defeat the caller's null check. The cache key is the prefix alone for a shipped coin; for
   the custom coin it also carries the store's revision and the rim colors, because neither changes
-  the prefix and both have to force a redraw
+  the prefix and both have to force a redraw. The cache is what makes it safe for `MainScreen` to
+  report the theme colors on every composition — but `RANDOM` deliberately opts out of it and
+  rerolls on every load, so a caller that regenerates unconditionally draws one coin and immediately
+  replaces it with a different one. `MainViewModel.onSetRimColors` therefore regenerates only when
+  the coin on screen is actually drawn in those colors (`needsRimColors()`); everything else already
+  loaded in `onResume`, moments earlier
 - `SoundHelper`, `VibrationHelper` — play sounds / haptics only when the corresponding setting is enabled. `STREAK` runs ~5.5s where the others run ~1s, so it is still sounding over the flips that follow it; `AppModule` sizes the `SoundPool` stream budget for that
 
 **The custom coin** is a single user-supplied heads/tails pair, mirroring the Custom Text row it
@@ -93,13 +101,21 @@ sentinel last on screen as well as in the enum), and is permanently starred. Tha
 in `buildCoinList`, not in `Setting.FAVORITES`: a stored star could be toggled off from its own row,
 and would outlive the artwork it names. Deleting it resets `Setting.COIN` when the custom coin was
 selected, since the entry leaves the picker with it. Nothing is unlinked up front: the coin reads as
-gone at once while the files stay put, and they go only when the snackbar's undo lapses — or when
-Settings closes, which settles a delete the departing snackbar would otherwise strand. So undo costs
-nothing, and no renamed leftovers accumulate. `validateSchema()` wipes prefs but not `filesDir/coins`, so a
+gone at once while the files stay put, so undo costs nothing and no renamed leftovers accumulate.
+Three things then settle the pending delete, and it needs all three because the snackbar can vanish
+without ever reporting either way — `repeatOnLifecycle(STARTED)` cancels the coroutine awaiting it,
+so merely rotating the device strands a delete with no undo left on screen. The snackbar lapsing
+untouched commits it; Settings closing commits it (`onCleared`, which runs *after* `viewModelScope` is cancelled, so
+the unlink goes to a scope on the store rather than blocking the main thread during teardown); and
+writing a new face commits it **before** the write. That last one is the subtle one and it used to
+be wrong: it called the delete *off* instead, which left the face that was not being replaced on
+disk, where `storedFaces` found it and rebuilt the coin the user had just deleted. The order is
+load-bearing in both directions — called off, the stale face survives; run after the write, it
+unlinks the file just written. `validateSchema()` wipes prefs but not `filesDir/coins`, so a
 schema bump orphans the images rather than deleting somebody's photo — re-selecting brings the coin
 straight back.
 
-Four things about it are invisible in the code and easy to undo by accident:
+Five things about it are invisible in the code and easy to undo by accident:
 
 - **Faces are decoded raw and tagged mdpi — never density-scaled.** `res/drawable` carries no
   density qualifier, so a shipped face is the mdpi baseline, but `ResourcesCompat.getDrawable`
@@ -123,6 +139,11 @@ Four things about it are invisible in the code and easy to undo by accident:
   bitmap rather than to the drawing, which is what keeps `coverScale`/`clampOffset`/`cropRect` free
   of any case for a turned image. The consequence is that the crop rect is in the *adjusted* image's
   coordinates, so `CustomCoinStore.save` has to replay the adjustment before the rect means anything.
+  Mirroring also has to negate the rotation alongside the toggle. `Orientation` is mirror-*then*-
+  rotate, and R(θ)·M·R(−θ) is a flip about the *other* axis, so without that the Mirror button flips
+  the picture left-to-right at 0° and top-to-bottom at 90° — one button doing two different visible
+  things depending on hidden state. Negating the turn is the identity M·R(θ) = R(−θ)·M, and all
+  eight orientations stay reachable either way, which is what makes the bug easy to miss.
 
 - **The rim is optional, stroked at generation time, and neither baked in nor overlaid.** It is
   what makes an arbitrary photo read as a coin, so it is on by default — but somebody who has
@@ -137,6 +158,18 @@ Four things about it are invisible in the code and easy to undo by accident:
   parallel mechanism free to drift from the result text the rim is meant to match. Width is 5% of
   the diameter, rounded from the Claude coin's measured 5.1%. The cache key carries the colors *and*
   their absence, so switching the border off redraws the ring away rather than leaving it up.
+- **The crop screen's turned copy is guarded and released, and the original is neither.** Rotating
+  or mirroring re-derives the displayed bitmap through `CoinImage.oriented`, which allocates a
+  second full-size copy beside the original — up to 16MB apiece at the 2048px decode bound, so a few
+  taps churn a lot of heap. Two rules keep that safe. It is wrapped in an `OutOfMemoryError` guard,
+  because `decodeBounded` bounds the *decode* and this allocation happens after it; unguarded, a
+  turn crashes the process where the identical failure one step earlier reaches the user as
+  `coin_crop_failed`. And the superseded copy is released from `DisposableEffect`'s `onDispose`,
+  **not** at the moment it is replaced — until the composition lets go of it, it is still what the
+  last frame drew, and recycling it there trades a memory problem for a use-after-recycle crash.
+  The identity check against `CropSource.Ready.bitmap` is load-bearing too: `oriented` returns the
+  *source itself* when the orientation is upright, so an unguarded recycle would take the original
+  with it and leave every later turn drawing from a dead bitmap.
 - **The edge is tinted as a copy.** Drawables resolved from resources share their `ConstantState`,
   so a `ColorFilter` on `R.drawable.edge` would follow the shipped coins around any process that had
   also drawn a custom one. `SRC_IN` loses nothing: the asset is a single flat `#696969` whose
