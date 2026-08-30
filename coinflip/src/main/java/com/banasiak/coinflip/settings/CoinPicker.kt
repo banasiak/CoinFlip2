@@ -7,6 +7,7 @@ import android.util.TypedValue
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -43,6 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalResources
@@ -329,7 +331,14 @@ private fun CoinThumbnail(bitmap: ImageBitmap?) {
         modifier = Modifier.fillMaxSize()
       )
     } else {
-      // "Random Coin" has no artwork of its own -- it rerolls a real coin on every flip
+      // "Random Coin" has no artwork of its own -- it rerolls a real coin on every flip -- so its
+      // coin is drawn instead. The ring gives the ? something to sit on, at the diameter the real
+      // thumbnails either side of it fill.
+      val outline = MaterialTheme.colorScheme.primary
+      val stroke = with(LocalDensity.current) { Dimen.coinOutline.toPx() }
+      Canvas(modifier = Modifier.fillMaxSize()) {
+        drawCircle(color = outline, radius = size.minDimension / 2f - stroke, style = Stroke(stroke))
+      }
       Text(
         text = "?",
         color = MaterialTheme.colorScheme.primary,
