@@ -39,6 +39,7 @@
   <string name="settings_item_animation_title">Animação</string>
   <string name="settings_item_coin_empty">Nenhuma moeda correspondente</string>
   <string name="settings_item_coin_favorite_add">Adicionar %1$s aos favoritos</string>
+  <string name="settings_item_coin_favorite_pinned">%1$s está sempre nos favoritos</string>
   <string name="settings_item_coin_favorite_remove">Remover %1$s dos favoritos</string>
   <string name="settings_item_coin_group_canada">Canadá</string>
   <string name="settings_item_coin_group_euro">Euro</string>
@@ -46,6 +47,15 @@
   <string name="settings_item_coin_group_other">Outras</string>
   <string name="settings_item_coin_group_us">Estados Unidos</string>
   <string name="settings_item_coin_title">Tipo de moeda</string>
+  <string name="settings_item_custom_coin_border">Borda</string>
+  <string name="settings_item_custom_coin_choose">Escolher</string>
+  <string name="settings_item_custom_coin_delete">Excluir</string>
+  <string name="settings_item_custom_coin_deleted">Moeda personalizada excluída</string>
+  <string name="settings_item_custom_coin_empty">Toque para criar</string>
+  <string name="settings_item_custom_coin_replace">Substituir</string>
+  <string name="settings_item_custom_coin_selected">Moeda criada, selecionada no momento</string>
+  <string name="settings_item_custom_coin_title">Moeda personalizada</string>
+  <string name="settings_item_custom_coin_unselected">Moeda criada, selecione-a em %1$s</string>
   <string name="settings_item_custom_text_title">Texto personalizado</string>
   <string name="settings_item_dynamic_colors_summary">Usar cores do papel de parede (Android 12+)</string>
   <string name="settings_item_dynamic_colors_title">Tema de cores dinâmicas</string>

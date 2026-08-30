@@ -1,5 +1,9 @@
 package com.banasiak.coinflip.settings
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -45,6 +49,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -57,6 +62,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.CoinType
+import com.banasiak.coinflip.common.CustomCoin
 import com.banasiak.coinflip.extensions.formatNumber
 import com.banasiak.coinflip.ui.TextInputDialog
 import com.banasiak.coinflip.ui.rememberEditableValue
@@ -65,7 +71,22 @@ import com.banasiak.coinflip.ui.theme.Dimen
 import com.banasiak.coinflip.ui.theme.Type
 import kotlinx.coroutines.launch
 
-private enum class OpenDialog { NONE, COIN, CUSTOM_TEXT }
+private enum class OpenDialog { NONE, COIN, CUSTOM_TEXT, CUSTOM_COIN }
+
+// what the Custom Coin row has to say about itself, kept apart from the composable that renders it
+// so the three states can be tested; getting SELECTED and UNSELECTED the wrong way round is the
+// easy mistake
+@VisibleForTesting
+internal enum class CustomCoinSummary { CREATE, UNSELECTED, SELECTED }
+
+@VisibleForTesting
+internal fun customCoinSummary(state: SettingsState): CustomCoinSummary =
+  when {
+    // a half-made coin counts as uncreated: until both faces are set there is nothing to select
+    !state.customCoinReady -> CustomCoinSummary.CREATE
+    state.coin == CustomCoin.PREFIX -> CustomCoinSummary.SELECTED
+    else -> CustomCoinSummary.UNSELECTED
+  }
 
 // divides the two faces' records; punctuation rather than a word, so it needs no translating
 private const val RECORD_SEPARATOR = "·"
@@ -100,9 +121,14 @@ fun SettingsScreen(
                   // with an actionLabel the default duration is Indefinite; match the legacy Snackbar.LENGTH_LONG
                   duration = SnackbarDuration.Long
                 )
-              if (result == SnackbarResult.ActionPerformed && effect.action != null) {
-                viewModel.postAction(effect.action)
-              }
+              // which way it went is the whole mechanism for a deferred action: tapping Undo calls
+              // it off, and letting the snackbar lapse is what finally commits it
+              val outcome =
+                when (result) {
+                  SnackbarResult.ActionPerformed -> effect.action
+                  SnackbarResult.Dismissed -> effect.onDismissed
+                }
+              outcome?.let { viewModel.postAction(it) }
             }
           }
           SettingsEffect.EnableRestartOnBack -> {
@@ -113,7 +139,28 @@ fun SettingsScreen(
     }
   }
 
-  SettingsView(state, viewModel::postAction, snackbarHostState, onNavigateBack)
+  // the launcher lives here rather than in SettingsView: that layer is what @PreviewLightDark
+  // renders, and there is no LocalActivityResultRegistryOwner behind a preview
+  var pendingFace by rememberSaveable { mutableStateOf<CustomCoin.Face?>(null) }
+  val pickImage =
+    rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+      val face = pendingFace
+      pendingFace = null
+      // the grant on this Uri dies with the activity, so it is read and copied rather than kept
+      if (uri != null && face != null) viewModel.postAction(SettingsAction.PickedCustomImage(uri, face))
+    }
+
+  SettingsView(
+    state = state,
+    postAction = viewModel::postAction,
+    snackbarHostState = snackbarHostState,
+    onNavigateBack = onNavigateBack,
+    onPickImage = { face ->
+      pendingFace = face
+      pickImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    },
+    loadThumbnail = viewModel::thumbnail
+  )
 }
 
 @Composable
@@ -121,7 +168,9 @@ fun SettingsView(
   state: SettingsState,
   postAction: (SettingsAction) -> Unit = { },
   snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-  onNavigateBack: () -> Unit = { }
+  onNavigateBack: () -> Unit = { },
+  onPickImage: (CustomCoin.Face) -> Unit = { },
+  loadThumbnail: (CustomCoin.Face, Int) -> ImageBitmap? = { _, _ -> null }
 ) {
   // saveable so an open dialog survives configuration change and process death
   var openDialog by rememberSaveable { mutableStateOf(OpenDialog.NONE) }
@@ -151,7 +200,12 @@ fun SettingsView(
         CategoryHeader(stringResource(R.string.settings_header_coin_title))
         PreferenceRow(
           title = stringResource(R.string.settings_item_coin_title),
-          summary = CoinType.fromPrefix(state.coin)?.coinName,
+          summary =
+            if (state.coin == CustomCoin.PREFIX) {
+              stringResource(R.string.settings_item_custom_coin_title)
+            } else {
+              CoinType.fromPrefix(state.coin)?.coinName
+            },
           onClick = { openDialog = OpenDialog.COIN }
         )
         SwitchPreference(
@@ -168,6 +222,28 @@ fun SettingsView(
           // dependency: text
           enabled = state.text,
           onClick = { openDialog = OpenDialog.CUSTOM_TEXT }
+        )
+        // the only way into the photo picker; the coin picker stays about choosing a coin
+        PreferenceRow(
+          title = stringResource(R.string.settings_item_custom_coin_title),
+          summary =
+            when (customCoinSummary(state)) {
+              CustomCoinSummary.CREATE -> {
+                stringResource(R.string.settings_item_custom_coin_empty)
+              }
+              CustomCoinSummary.SELECTED -> {
+                stringResource(R.string.settings_item_custom_coin_selected)
+              }
+              // names the row to send them to rather than repeating its label, so the two cannot
+              // disagree in a locale where one of them was translated differently
+              CustomCoinSummary.UNSELECTED -> {
+                stringResource(
+                  R.string.settings_item_custom_coin_unselected,
+                  stringResource(R.string.settings_item_coin_title)
+                )
+              }
+            },
+          onClick = { openDialog = OpenDialog.CUSTOM_COIN }
         )
 
         // ----- Flip: the switches run together, with the one non-switch control after them -----
@@ -284,6 +360,9 @@ fun SettingsView(
         CoinPicker(
           selectedValue = state.coin,
           favorites = state.favorites,
+          customCoinReady = state.customCoinReady,
+          customRevision = state.customRevision,
+          loadThumbnail = loadThumbnail,
           onSelect = { postAction(SettingsAction.SetCoin(it)) },
           onToggleFavorite = { postAction(SettingsAction.ToggleFavoriteCoin(it)) },
           onDismiss = { openDialog = OpenDialog.NONE }
@@ -302,7 +381,39 @@ fun SettingsView(
           onDismiss = { openDialog = OpenDialog.NONE }
         )
       }
+      OpenDialog.CUSTOM_COIN -> {
+        CustomCoinDialog(
+          faces = state.customFaces,
+          revision = state.customRevision,
+          rimEnabled = state.customRim,
+          loadThumbnail = loadThumbnail,
+          onPickImage = onPickImage,
+          onDelete = {
+            postAction(SettingsAction.DeleteCustomCoin)
+            // and close, so the undo can be reached. A Dialog is its own window, so the snackbar --
+            // which belongs to this screen's Scaffold -- draws beneath the dialog's scrim, and a tap
+            // aimed at Undo lands on the scrim and dismisses the dialog instead. Nothing about
+            // z-order fixes that; the snackbar has to be the topmost window to be tappable.
+            openDialog = OpenDialog.NONE
+          },
+          onRimChange = { postAction(SettingsAction.SetCustomRim(it)) },
+          onDismiss = { openDialog = OpenDialog.NONE }
+        )
+      }
       OpenDialog.NONE -> { }
+    }
+
+    // driven by state rather than by openDialog: the image arrives from the system picker, which
+    // outlives this composition, so what is being cropped has to survive with the ViewModel
+    state.pendingCrop?.let { pending ->
+      CoinCropDialog(
+        uri = pending.uri,
+        face = pending.face,
+        rimEnabled = state.customRim,
+        onConfirm = { crop, adjustment -> postAction(SettingsAction.CropCustomImage(crop, adjustment)) },
+        onFailed = { postAction(SettingsAction.CustomImageFailed) },
+        onDismiss = { postAction(SettingsAction.DismissCustomCrop) }
+      )
     }
   }
 }

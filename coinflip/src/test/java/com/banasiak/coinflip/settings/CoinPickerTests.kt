@@ -3,6 +3,7 @@ package com.banasiak.coinflip.settings
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.CoinGroup
 import com.banasiak.coinflip.common.CoinType
+import com.banasiak.coinflip.common.CustomCoin
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContain
 import org.amshove.kluent.shouldNotContain
@@ -15,6 +16,11 @@ class CoinPickerTests {
   // enum, so a fixture that could not exist would prove nothing
   private val coins =
     listOf(CoinType.GEORGE_WASHINGTON, CoinType.ALABAMA, CoinType.LOONIE, CoinType.TOONIE, CoinType.FRANCE)
+
+  // the OTHER group is where the custom coin lands, so those cases need a slice that has one
+  private val withOther = coins + listOf(CoinType.CLAUDE, CoinType.RANDOM)
+
+  private val customName = "Custom Coin"
 
   private fun build(query: String = "", favorites: Set<String> = emptySet()) = buildCoinList(coins, favorites, query)
 
@@ -144,5 +150,84 @@ class CoinPickerTests {
   @Test
   fun `a favorite that no longer exists in the catalog is ignored`() {
     build(favorites = setOf("doubloon")) shouldBeEqualTo build()
+  }
+
+  @Test
+  fun `the custom coin is absent until both its faces are set`() {
+    buildCoinList(withOther, emptySet(), query = "", customCoin = null)
+      .none { it is CoinListItem.Custom } shouldBeEqualTo true
+  }
+
+  @Test
+  fun `the custom coin sits in Other, immediately before Random`() {
+    val items = buildCoinList(withOther, emptySet(), query = "", customCoin = customName)
+
+    // CoinResourcesTests pins RANDOM last in the enum; this keeps it last on screen as well
+    items.dropWhile { it != CoinListItem.Group(CoinGroup.OTHER.label) } shouldBeEqualTo
+      listOf(
+        CoinListItem.Group(CoinGroup.OTHER.label),
+        CoinListItem.Option(CoinType.CLAUDE),
+        CoinListItem.Custom(),
+        CoinListItem.Option(CoinType.RANDOM)
+      )
+  }
+
+  @Test
+  fun `the custom coin is starred without being in the favorites set`() {
+    val items = buildCoinList(withOther, favorites = emptySet(), query = "", customCoin = customName)
+
+    // permanence lives here rather than in Setting.FAVORITES, so there is no stored star to unset
+    items.take(2) shouldBeEqualTo
+      listOf(CoinListItem.Group(favoritesHeader), CoinListItem.Custom(inFavoritesSection = true))
+  }
+
+  @Test
+  fun `the custom coin leads the favorites section, ahead of the starred coins`() {
+    val items =
+      buildCoinList(withOther, favorites = setOf(CoinType.LOONIE.prefix), query = "", customCoin = customName)
+
+    items.take(3) shouldBeEqualTo
+      listOf(
+        CoinListItem.Group(favoritesHeader),
+        CoinListItem.Custom(inFavoritesSection = true),
+        CoinListItem.Option(CoinType.LOONIE, inFavoritesSection = true)
+      )
+  }
+
+  @Test
+  fun `the custom coin's two rows carry different keys`() {
+    val keys = buildCoinList(withOther, emptySet(), query = "", customCoin = customName).map { it.key() }
+
+    keys.distinct().size shouldBeEqualTo keys.size
+    keys shouldContain "favorite-${CustomCoin.PREFIX}"
+    keys shouldContain "coin-${CustomCoin.PREFIX}"
+  }
+
+  @Test
+  fun `a search finds the custom coin by name and lists it under Other`() {
+    // "custom" matches no shipped coin, so RANDOM is filtered out from under it and the group
+    // header has to be opened for it instead
+    buildCoinList(withOther, emptySet(), query = "custom", customCoin = customName) shouldBeEqualTo
+      listOf(CoinListItem.Group(CoinGroup.OTHER.label), CoinListItem.Custom())
+  }
+
+  @Test
+  fun `a search still puts the custom coin ahead of Random when both match`() {
+    buildCoinList(withOther, emptySet(), query = "o", customCoin = "Coin of my own")
+      .filterIsInstance<CoinListItem>()
+      .dropWhile { it != CoinListItem.Custom() }
+      .take(2) shouldBeEqualTo listOf(CoinListItem.Custom(), CoinListItem.Option(CoinType.RANDOM))
+  }
+
+  @Test
+  fun `a search that misses the custom coin drops it entirely`() {
+    buildCoinList(withOther, emptySet(), query = "euro", customCoin = customName) shouldBeEqualTo
+      listOf(CoinListItem.Group(CoinGroup.EURO.label), CoinListItem.Option(CoinType.FRANCE))
+  }
+
+  @Test
+  fun `a search drops the custom coin's favorites row like any other`() {
+    buildCoinList(withOther, emptySet(), query = "custom", customCoin = customName)
+      .none { it is CoinListItem.Custom && it.inFavoritesSection } shouldBeEqualTo true
   }
 }

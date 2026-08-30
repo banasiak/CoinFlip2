@@ -39,6 +39,7 @@
   <string name="settings_item_animation_title">Animation</string>
   <string name="settings_item_coin_empty">Aucune pièce correspondante</string>
   <string name="settings_item_coin_favorite_add">Ajouter %1$s aux favoris</string>
+  <string name="settings_item_coin_favorite_pinned">%1$s est toujours dans les favoris</string>
   <string name="settings_item_coin_favorite_remove">Retirer %1$s des favoris</string>
   <string name="settings_item_coin_group_canada">Canada</string>
   <string name="settings_item_coin_group_euro">Euro</string>
@@ -46,6 +47,15 @@
   <string name="settings_item_coin_group_other">Autres</string>
   <string name="settings_item_coin_group_us">États-Unis</string>
   <string name="settings_item_coin_title">Type de pièce</string>
+  <string name="settings_item_custom_coin_border">Bordure</string>
+  <string name="settings_item_custom_coin_choose">Choisir</string>
+  <string name="settings_item_custom_coin_delete">Supprimer</string>
+  <string name="settings_item_custom_coin_deleted">Pièce personnalisée supprimée</string>
+  <string name="settings_item_custom_coin_empty">Appuyer pour créer</string>
+  <string name="settings_item_custom_coin_replace">Remplacer</string>
+  <string name="settings_item_custom_coin_selected">Pièce créée, actuellement sélectionnée</string>
+  <string name="settings_item_custom_coin_title">Pièce personnalisée</string>
+  <string name="settings_item_custom_coin_unselected">Pièce créée, à sélectionner dans %1$s</string>
   <string name="settings_item_custom_text_title">Texte personnalisé</string>
   <string name="settings_item_dynamic_colors_summary">Utiliser les couleurs du fond d\'écran (Android 12+)</string>
   <string name="settings_item_dynamic_colors_title">Thème de couleur dynamique</string>

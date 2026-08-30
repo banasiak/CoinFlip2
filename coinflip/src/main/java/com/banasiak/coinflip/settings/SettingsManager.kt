@@ -44,6 +44,9 @@ class SettingsManager @Inject constructor(private val prefs: SharedPreferences) 
   val force get() = prefs[Setting.FORCE]
   val shakeSensitivity get() = force.sensitivity
 
+  // whether the custom coin's faces are ringed. Off suits an image that is already a coin.
+  val customCoinRim get() = prefs[Setting.CUSTOM_COIN_RIM]
+
   /** Coin prefixes the user has starred. */
   val favoriteCoins get() = prefs[Setting.FAVORITES]
 
