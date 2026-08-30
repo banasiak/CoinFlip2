@@ -5,12 +5,14 @@ import app.cash.turbine.test
 import com.banasiak.coinflip.MainDispatcherRule
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.Coin
+import com.banasiak.coinflip.common.CustomCoin
 import com.banasiak.coinflip.common.Stats
 import com.banasiak.coinflip.settings.SettingsManager
 import com.banasiak.coinflip.ui.DurationAnimationDrawable
 import com.banasiak.coinflip.util.AnimationHelper
 import com.banasiak.coinflip.util.SoundHelper
 import com.banasiak.coinflip.util.VibrationHelper
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -412,5 +414,90 @@ class MainViewModelTests {
       val state = vm.stateFlow.value
       state.streakCount shouldBeEqualTo 0L
       state.stats.record(Coin.Value.HEADS) shouldBeEqualTo 0L
+    }
+
+  @Test
+  fun a_shipped_coin_loads_its_animations_without_waiting_for_the_theme() =
+    runTest {
+      // a shipped coin has no rim to draw, so it must not sit idle waiting for a color it never uses
+      every { settings.coinPrefix } returns "jfk"
+      val vm = viewModel()
+
+      vm.postAction(MainAction.OnResume)
+      advanceUntilIdle()
+
+      coVerify { animationHelper.loadAnimationsForCoin("jfk", null) }
+    }
+
+  @Test
+  fun the_custom_coin_waits_for_the_theme_before_drawing_its_rim() =
+    runTest {
+      // generating now would draw a black ring and immediately regenerate once the colors arrived
+      every { settings.coinPrefix } returns CustomCoin.PREFIX
+      every { settings.customCoinRim } returns true
+      val vm = viewModel()
+
+      vm.postAction(MainAction.OnResume)
+      advanceUntilIdle()
+
+      coVerify(exactly = 0) { animationHelper.loadAnimationsForCoin(any(), any()) }
+    }
+
+  @Test
+  fun the_custom_coin_loads_once_the_theme_reports_its_colors() =
+    runTest {
+      every { settings.coinPrefix } returns CustomCoin.PREFIX
+      every { settings.customCoinRim } returns true
+      val vm = viewModel()
+
+      vm.postAction(MainAction.OnResume)
+      vm.postAction(MainAction.SetRimColors(heads = 111, tails = 222))
+      advanceUntilIdle()
+
+      coVerify { animationHelper.loadAnimationsForCoin(CustomCoin.PREFIX, AnimationHelper.RimColors(111, 222)) }
+    }
+
+  @Test
+  fun a_theme_change_regenerates_the_animations() =
+    runTest {
+      // the helper is a singleton and survives the activity recreation a light/dark switch causes
+      every { settings.coinPrefix } returns CustomCoin.PREFIX
+      every { settings.customCoinRim } returns true
+      val vm = viewModel()
+
+      vm.postAction(MainAction.SetRimColors(heads = 111, tails = 222))
+      vm.postAction(MainAction.SetRimColors(heads = 333, tails = 444))
+      advanceUntilIdle()
+
+      coVerify { animationHelper.loadAnimationsForCoin(CustomCoin.PREFIX, AnimationHelper.RimColors(333, 444)) }
+    }
+
+  @Test
+  fun reporting_the_same_colors_again_does_not_regenerate() =
+    runTest {
+      every { settings.coinPrefix } returns CustomCoin.PREFIX
+      every { settings.customCoinRim } returns true
+      val vm = viewModel()
+
+      vm.postAction(MainAction.SetRimColors(heads = 111, tails = 222))
+      vm.postAction(MainAction.SetRimColors(heads = 111, tails = 222))
+      advanceUntilIdle()
+
+      coVerify(exactly = 1) { animationHelper.loadAnimationsForCoin(any(), any()) }
+    }
+
+  @Test
+  fun a_custom_coin_with_the_border_switched_off_draws_no_rim_and_does_not_wait() =
+    runTest {
+      // an image that is already a coin wants neither a ring nor a tinted edge, and with no rim to
+      // colour there is nothing for it to wait on
+      every { settings.coinPrefix } returns CustomCoin.PREFIX
+      every { settings.customCoinRim } returns false
+      val vm = viewModel()
+
+      vm.postAction(MainAction.OnResume)
+      advanceUntilIdle()
+
+      coVerify { animationHelper.loadAnimationsForCoin(CustomCoin.PREFIX, null) }
     }
 }

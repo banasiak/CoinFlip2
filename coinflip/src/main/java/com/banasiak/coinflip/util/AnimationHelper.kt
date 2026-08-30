@@ -5,15 +5,18 @@ import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
+import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.annotation.VisibleForTesting
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.scale
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.BuildInfo
 import com.banasiak.coinflip.common.CoinType
+import com.banasiak.coinflip.common.CustomCoin
 import com.banasiak.coinflip.settings.Setting
 import com.banasiak.coinflip.ui.DurationAnimationDrawable
 import com.banasiak.coinflip.util.AnimationHelper.Permutation.HEADS_HEADS
@@ -31,11 +34,19 @@ import javax.inject.Singleton
 class AnimationHelper @Inject constructor(
   private val buildInfo: BuildInfo,
   private val clock: Clock,
-  private val resources: Resources
+  private val resources: Resources,
+  private val customCoins: CustomCoinStore
 ) {
   companion object {
     private const val FRAME_DURATION = 20 // milliseconds
+
+    // the edge sits between the two faces, so it takes an even mix of their two rim colors
+    private const val EDGE_BLEND = 0.5f
   }
+
+  // the colors the custom coin's rim is drawn in; null for a shipped coin, which has its own
+  // artwork, and for a custom coin whose owner turned the rim off
+  data class RimColors(@param:ColorInt val heads: Int, @param:ColorInt val tails: Int)
 
   // written on Dispatchers.IO and read on Main during flips, so publish as a single volatile reference swap
   @Volatile
@@ -43,30 +54,63 @@ class AnimationHelper @Inject constructor(
     private set
 
   @Volatile
-  private var loadedPrefix: String? = null
+  private var loadedKey: String? = null
 
-  suspend fun loadAnimationsForCoin(prefix: String) {
+  suspend fun loadAnimationsForCoin(prefix: String, rim: RimColors?) {
     withContext(Dispatchers.IO) {
+      val key = cacheKey(prefix, rim)
       // skip the bitmap work when the same coin is already loaded; "random" rerolls on every load
-      if (prefix == loadedPrefix && prefix != CoinType.RANDOM.prefix) return@withContext
+      if (key == loadedKey && prefix != CoinType.RANDOM.prefix) return@withContext
       val startTime = clock.millis()
-      // a stored prefix can name a coin this build no longer ships, which resolves to no artwork at
-      // all -- fall back to the default coin rather than leave the screen with nothing to draw
-      val faces = facesForPrefix(prefix) ?: facesForPrefix(Setting.COIN.default)
-      loadedPrefix = prefix
+      // a stored prefix can name a coin this build no longer ships -- or a custom coin whose files
+      // have since been removed -- so fall back rather than leave the screen nothing to draw
+      val own = facesForPrefix(prefix, rim)
+      val faces = own ?: facesForPrefix(Setting.COIN.default, rim)
+      loadedKey = key
       if (faces == null) {
         Timber.w("No artwork for '$prefix', nor for the default coin. Leaving the coin unanimated.")
         animations = emptyMap()
         return@withContext
       }
-      generateAnimations(faces.first, faces.second)
+      // the edge is tinted only when the custom coin's own artwork is what actually loaded and its
+      // rim is on; a fallback to a shipped coin takes the shipped grey with it, and so does a coin
+      // the user asked to leave unringed
+      generateAnimations(faces.first, faces.second, edge(rim.takeIf { own != null && prefix == CustomCoin.PREFIX }))
       Timber.i("Animations generated in: ${clock.millis() - startTime} milliseconds")
     }
   }
 
-  private fun facesForPrefix(prefix: String): Pair<BitmapDrawable, BitmapDrawable>? {
+  // the revision is what puts a replaced face on screen -- the prefix stays "custom" across a
+  // re-upload -- and the colors are what survive a light/dark switch, which recreates the activity
+  // but not this singleton
+  @VisibleForTesting
+  internal fun cacheKey(prefix: String, rim: RimColors?): String =
+    if (prefix == CustomCoin.PREFIX) "$prefix:${customCoins.revision}:${rim?.heads}:${rim?.tails}" else prefix
+
+  private fun facesForPrefix(prefix: String, rim: RimColors?): Pair<BitmapDrawable, BitmapDrawable>? =
+    if (prefix == CustomCoin.PREFIX) customFaces(rim) else shippedFaces(prefix)
+
+  // the rim goes on the full-size face, before resizeBitmapDrawable squashes the frames: a ring
+  // added afterwards would stay round while the coin turned inside it
+  private fun customFaces(rim: RimColors?): Pair<BitmapDrawable, BitmapDrawable>? {
+    val (heads, tails) = customCoins.faces() ?: return null
+    if (rim != null) {
+      CoinImage.drawRim(heads, rim.heads)
+      CoinImage.drawRim(tails, rim.tails)
+    }
+    return Pair(heads.toDrawable(resources), tails.toDrawable(resources))
+  }
+
+  private fun shippedFaces(prefix: String): Pair<BitmapDrawable, BitmapDrawable>? {
     val (heads, tails) = getIdentifiersForPrefix(prefix)
     return Pair(bitmapDrawable(heads) ?: return null, bitmapDrawable(tails) ?: return null)
+  }
+
+  private fun edge(rim: RimColors?): BitmapDrawable {
+    val edge = ResourcesCompat.getDrawable(resources, R.drawable.edge, null) as BitmapDrawable
+    if (rim == null) return edge
+    val color = ColorUtils.blendARGB(rim.heads, rim.tails, EDGE_BLEND)
+    return CoinImage.tinted(edge.bitmap, color).toDrawable(resources)
   }
 
   // the coin drawables are addressed by name, so one this build no longer ships is a runtime fact
@@ -85,10 +129,9 @@ class AnimationHelper @Inject constructor(
   }
 
   // a4 and b4 are the full-size faces; the narrower frames are derived from them here
-  private fun generateAnimations(a4: BitmapDrawable, b4: BitmapDrawable) {
-    // the edge and the backdrop ship with the app rather than being addressed by name, so unlike the
-    // faces they cannot go missing
-    val e = ResourcesCompat.getDrawable(resources, R.drawable.edge, null) as BitmapDrawable
+  private fun generateAnimations(a4: BitmapDrawable, b4: BitmapDrawable, e: BitmapDrawable) {
+    // the backdrop ships with the app rather than being addressed by name, so unlike the faces it
+    // cannot go missing
     val bg = ResourcesCompat.getDrawable(resources, R.drawable.background, null) as BitmapDrawable
 
     // create the individual animation frames for the heads side
