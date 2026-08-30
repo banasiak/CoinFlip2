@@ -1,6 +1,9 @@
 package com.banasiak.coinflip.ui.theme
 
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.banasiak.coinflip.common.CustomCoin
 
 val md_theme_light_primary = Color(0xFF5455A9)
 val md_theme_light_onPrimary = Color(0xFFFFFFFF)
@@ -65,3 +68,15 @@ val md_theme_dark_outlineVariant = Color(0xFF47464F)
 val md_theme_dark_scrim = Color(0xFF000000)
 
 val seed = Color(0xFF6667AB)
+
+/**
+ * The color the app gives a coin face wherever it names one: `secondary` for heads, `tertiary` for
+ * tails, the same pair the result text and the stats counts use on the main screen. The custom
+ * coin's rim takes it too, so a face's label is drawn in the color that face's ring will be.
+ */
+@Composable
+fun CustomCoin.Face.faceColor(): Color =
+  when (this) {
+    CustomCoin.Face.HEADS -> MaterialTheme.colorScheme.secondary
+    CustomCoin.Face.TAILS -> MaterialTheme.colorScheme.tertiary
+  }

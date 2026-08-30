@@ -7,6 +7,11 @@
   <string name="changes">WECHSEL</string>
   <string name="clear">Löschen</string>
   <string name="coin_animation">Münzanimation</string>
+  <string name="coin_crop_failed">Dieses Bild konnte nicht geöffnet werden.</string>
+  <string name="coin_crop_mirror">Spiegeln</string>
+  <string name="coin_crop_reset">Zurücksetzen</string>
+  <string name="coin_crop_rotate">Drehen</string>
+  <string name="coin_crop_title">Bild positionieren</string>
   <string name="diagnostics_fragment_title">Diagnosetest</string>
   <string name="diagnostics_iterations_dialog">Anzahl der Iterationen</string>
   <string name="diagnostics_iterations_range">Maximum: %1$s</string>
