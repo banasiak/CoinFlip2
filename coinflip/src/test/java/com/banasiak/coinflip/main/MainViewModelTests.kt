@@ -5,6 +5,7 @@ import app.cash.turbine.test
 import com.banasiak.coinflip.MainDispatcherRule
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.Coin
+import com.banasiak.coinflip.common.CoinType
 import com.banasiak.coinflip.common.CustomCoin
 import com.banasiak.coinflip.common.Stats
 import com.banasiak.coinflip.settings.SettingsManager
@@ -370,7 +371,7 @@ class MainViewModelTests {
     }
 
   @Test
-  fun a_standing_run_of_one_is_not_worth_showing() =
+  fun a_standing_run_of_one_still_names_the_flip_that_made_it() =
     runTest {
       every { settings.showStreak } returns true
       every { settings.textEnabled } returns true
@@ -380,10 +381,11 @@ class MainViewModelTests {
       vm.postAction(MainAction.OnResume)
 
       val state = vm.stateFlow.value
-      // the run is still tracked -- it is simply not a run yet
+      // the run is still tracked -- it is simply not a run yet, and MIN_DRAWN_STREAK keeps the '×1' off the line
       state.streakCount shouldBeEqualTo 1L
-      // so the screen opens blank rather than naming last session's final flip
-      state.resultVisible shouldBeEqualTo false
+      // the flip it counts is the previous state, which comes back like any other
+      state.result.value shouldBeEqualTo Coin.Value.HEADS
+      state.resultVisible shouldBeEqualTo true
     }
 
   @Test
@@ -398,8 +400,9 @@ class MainViewModelTests {
 
       val state = vm.stateFlow.value
       state.streakVisible shouldBeEqualTo false
-      // the result text keeps its old behavior of starting blank
-      state.resultVisible shouldBeEqualTo false
+      // the run is not drawn, but the flip that made it is still the previous result
+      state.result.value shouldBeEqualTo Coin.Value.HEADS
+      state.resultVisible shouldBeEqualTo true
     }
 
   @Test
@@ -414,6 +417,163 @@ class MainViewModelTests {
       val state = vm.stateFlow.value
       state.streakCount shouldBeEqualTo 0L
       state.stats.record(Coin.Value.HEADS) shouldBeEqualTo 0L
+    }
+
+  @Test
+  fun a_cold_start_shows_the_face_the_last_flip_landed_on() =
+    runTest {
+      val animation: DurationAnimationDrawable = mockk(relaxed = true)
+      every { animationHelper.animations } returns mapOf(AnimationHelper.Permutation.TAILS_TAILS to animation)
+      every { settings.textEnabled } returns true
+      every { settings.loadStats() } returns Stats(streakValue = Coin.Value.TAILS, streak = 1L)
+
+      val vm = viewModel()
+      vm.postAction(MainAction.OnResume)
+      advanceUntilIdle()
+
+      val state = vm.stateFlow.value
+      state.result.value shouldBeEqualTo Coin.Value.TAILS
+      state.resultVisible shouldBeEqualTo true
+      state.coinImageType shouldBeEqualTo CoinImageType.IMAGE
+      state.animation shouldBeEqualTo animation
+      // the coin agrees with the screen, so the next flip animates away from the face it is showing
+      verify { coin.restoreFace(Coin.Value.TAILS) }
+    }
+
+  @Test
+  fun the_previous_result_is_back_on_screen_after_a_resume() =
+    runTest {
+      val animation: DurationAnimationDrawable = mockk(relaxed = true)
+      every { animationHelper.animations } returns mapOf(AnimationHelper.Permutation.HEADS_TAILS to animation)
+      every { settings.animationEnabled } returns false
+      every { settings.textEnabled } returns true
+      every { coin.flip() } returns Coin.Result(Coin.Value.TAILS, AnimationHelper.Permutation.HEADS_TAILS)
+
+      val vm = viewModel()
+      vm.postAction(MainAction.OnResume)
+      vm.postAction(MainAction.TapCoin)
+      vm.postAction(MainAction.OnPause)
+
+      // the flip went to disk on pause, and the screen reads it back
+      every { settings.loadStats() } returns Stats(counts = mapOf(Coin.Value.TAILS to 1L), streakValue = Coin.Value.TAILS, streak = 1L)
+      vm.postAction(MainAction.OnResume)
+
+      val state = vm.stateFlow.value
+      state.result.value shouldBeEqualTo Coin.Value.TAILS
+      state.resultVisible shouldBeEqualTo true
+      state.coinImageType shouldBeEqualTo CoinImageType.IMAGE
+      state.animation shouldBeEqualTo animation
+    }
+
+  @Test
+  fun a_resumed_result_is_relabelled_from_the_current_settings() =
+    runTest {
+      every { settings.textEnabled } returns true
+      every { settings.customHeadsText } returns "Aye"
+      every { settings.loadStats() } returns Stats(streakValue = Coin.Value.HEADS, streak = 3L)
+
+      val vm = viewModel()
+      vm.postAction(MainAction.OnResume)
+
+      // the label was edited in Settings while the screen was away; the face it names has not changed
+      vm.stateFlow.value.result.customLabel shouldBeEqualTo "Aye"
+    }
+
+  @Test
+  fun changing_the_coin_hides_the_result_until_the_next_flip() =
+    runTest {
+      val animation: DurationAnimationDrawable = mockk(relaxed = true)
+      every { animationHelper.animations } returns mapOf(AnimationHelper.Permutation.HEADS_HEADS to animation)
+      every { animationHelper.identity(any()) } answers { firstArg() }
+      every { settings.textEnabled } returns true
+      every { settings.showStreak } returns true
+      every { settings.loadStats() } returns Stats(streakValue = Coin.Value.HEADS, streak = 3L)
+
+      val vm = viewModel()
+      vm.postAction(MainAction.OnResume)
+      vm.stateFlow.value.resultVisible shouldBeEqualTo true
+
+      every { settings.coinPrefix } returns "jfk"
+      vm.postAction(MainAction.OnResume)
+      advanceUntilIdle()
+
+      val state = vm.stateFlow.value
+      // the new coin is a surprise until it is flipped, and the result that named the old one goes with it
+      state.coinImageType shouldBeEqualTo CoinImageType.PLACEHOLDER
+      state.resultVisible shouldBeEqualTo false
+      state.streakCount shouldBeEqualTo 0L
+      // only the display is cleared: the run itself stands, so the next flip continues it
+      state.stats.streak shouldBeEqualTo 3L
+    }
+
+  @Test
+  fun a_coin_changed_and_changed_back_is_not_a_change() =
+    runTest {
+      val animation: DurationAnimationDrawable = mockk(relaxed = true)
+      every { animationHelper.animations } returns mapOf(AnimationHelper.Permutation.HEADS_HEADS to animation)
+      every { animationHelper.identity(any()) } answers { firstArg() }
+      every { settings.textEnabled } returns true
+      every { settings.loadStats() } returns Stats(streakValue = Coin.Value.HEADS, streak = 3L)
+
+      val vm = viewModel()
+      vm.postAction(MainAction.OnResume)
+      // the comparison is against the coin the face on screen was drawn from, so a pick the screen
+      // never saw -- one selected in Settings and reversed before coming back -- is nothing to reset
+      vm.postAction(MainAction.OnResume)
+      advanceUntilIdle()
+
+      val state = vm.stateFlow.value
+      state.coinImageType shouldBeEqualTo CoinImageType.IMAGE
+      state.resultVisible shouldBeEqualTo true
+      state.streakCount shouldBeEqualTo 3L
+    }
+
+  @Test
+  fun the_random_coin_starts_over_on_every_resume() =
+    runTest {
+      val animation: DurationAnimationDrawable = mockk(relaxed = true)
+      every { animationHelper.animations } returns mapOf(AnimationHelper.Permutation.HEADS_HEADS to animation)
+      every { settings.coinPrefix } returns CoinType.RANDOM.prefix
+      every { settings.textEnabled } returns true
+      every { settings.showStreak } returns true
+      every { settings.loadStats() } returns Stats(streakValue = Coin.Value.HEADS, streak = 3L)
+
+      val vm = viewModel()
+      vm.postAction(MainAction.OnResume)
+      advanceUntilIdle()
+
+      // a different coin is drawn on every load, so the one on screen is never the one the run was flipped with
+      val state = vm.stateFlow.value
+      state.coinImageType shouldBeEqualTo CoinImageType.PLACEHOLDER
+      state.resultVisible shouldBeEqualTo false
+      state.streakCount shouldBeEqualTo 0L
+    }
+
+  @Test
+  fun resuming_mid_flip_does_not_reveal_the_result() =
+    runTest {
+      val animation: DurationAnimationDrawable = mockk(relaxed = true)
+      every { animation.duration(withoutLastFrames = 4) } returns 100L
+      every { animationHelper.animations } returns mapOf(AnimationHelper.Permutation.HEADS_HEADS to animation)
+      every { settings.animationEnabled } returns true
+      every { settings.textEnabled } returns true
+      every { coin.flip() } returns Coin.Result(Coin.Value.HEADS, AnimationHelper.Permutation.HEADS_HEADS)
+
+      val vm = viewModel()
+      vm.postAction(MainAction.OnResume)
+      vm.postAction(MainAction.TapCoin) // suspends at the animation delay
+      vm.postAction(MainAction.OnPause)
+      vm.postAction(MainAction.OnResume)
+
+      // the flip is still in the air: putting the previous state back would show what it lands on
+      val midAir = vm.stateFlow.value
+      midAir.resultVisible shouldBeEqualTo false
+      midAir.headsCount shouldBeEqualTo 0L
+      midAir.coinImageType shouldBeEqualTo CoinImageType.ANIMATION
+
+      advanceUntilIdle()
+
+      vm.stateFlow.value.resultVisible shouldBeEqualTo true
     }
 
   @Test

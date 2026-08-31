@@ -2,6 +2,7 @@ package com.banasiak.coinflip.util
 
 import android.content.res.Resources
 import com.banasiak.coinflip.common.BuildInfo
+import com.banasiak.coinflip.common.Coin
 import com.banasiak.coinflip.common.CoinType
 import com.banasiak.coinflip.common.CustomCoin
 import io.mockk.every
@@ -140,6 +141,32 @@ class AnimationHelperTests {
 
     helper().cacheKey("jfk", null) shouldBeEqualTo "jfk"
     helper().cacheKey("jfk", rim(1, 2)) shouldBeEqualTo "jfk"
+  }
+
+  @Test
+  fun `a shipped coin's identity is nothing but its prefix`() {
+    every { customCoins.revision } returns 99L
+
+    helper().identity("jfk") shouldBeEqualTo "jfk"
+  }
+
+  @Test
+  fun `the custom coin's identity moves with the revision, so a replaced face is a different coin`() {
+    every { customCoins.revision } returns 100L
+    val before = helper().identity(CustomCoin.PREFIX)
+
+    every { customCoins.revision } returns 200L
+
+    before shouldNotBeEqualTo helper().identity(CustomCoin.PREFIX)
+  }
+
+  @Test
+  fun `a face resolves to the permutation that leaves it showing`() {
+    // the coin restored on resume is the last frame of one of these, and a result that was not
+    // flipped this session has no permutation of its own
+    AnimationHelper.Permutation.landingOn(Coin.Value.HEADS) shouldBeEqualTo AnimationHelper.Permutation.HEADS_HEADS
+    AnimationHelper.Permutation.landingOn(Coin.Value.TAILS) shouldBeEqualTo AnimationHelper.Permutation.TAILS_TAILS
+    AnimationHelper.Permutation.landingOn(Coin.Value.UNKNOWN) shouldBeEqualTo AnimationHelper.Permutation.UNKNOWN
   }
 
   private fun rim(heads: Int, tails: Int) = AnimationHelper.RimColors(heads, tails)

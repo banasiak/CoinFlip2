@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.Coin
+import com.banasiak.coinflip.common.CoinType
 import com.banasiak.coinflip.common.CustomCoin
+import com.banasiak.coinflip.common.Stats
 import com.banasiak.coinflip.extensions.restore
 import com.banasiak.coinflip.extensions.save
 import com.banasiak.coinflip.settings.SettingsManager
@@ -43,7 +45,7 @@ class MainViewModel @Inject constructor(
   private val vibrationHelper: VibrationHelper,
   private val savedState: SavedStateHandle
 ) : ViewModel() {
-  private var state = savedState.restore() ?: MainState()
+  private var state = savedState.restore() ?: seededState()
     private set(value) {
       field = value
       // emit the new state when it changes
@@ -79,42 +81,62 @@ class MainViewModel @Inject constructor(
     }
   }
 
-  private fun onResume() {
-    generateAnimations()
+  private fun seededState(): MainState {
+    val face = settings.loadStats().streakValue
+    return MainState(result = Coin.Result(face, AnimationHelper.Permutation.landingOn(face)))
+  }
 
+  private fun onResume() {
     val instructions = if (settings.shakeEnabled) R.string.instructions_tap_shake else R.string.instructions_tap
     val stats = settings.loadStats()
-    val showStreak = settings.showStreak
-    // a run in progress is the thing the user wants to hold up and show somebody, so it is on screen
-    // before a single flip is made this session. Seeding the result from it names the run rather than
-    // leaving a bare number under a coin that has not been flipped yet. Below MIN_DRAWN_STREAK there
-    // is no run to show, so the screen opens blank the way it always did.
-    val standing = showStreak && stats.streak >= MIN_DRAWN_STREAK
 
     state =
       state.copy(
-        animation = null,
-        coinImageType = CoinImageType.PLACEHOLDER,
         dynamicColors = settings.dynamicColorsEnabled,
         instructionsText = instructions,
         labels = Pair(settings.customHeadsText, settings.customTailsText),
         paused = false,
         resetVisible = settings.showStats && settings.showQuickReset,
-        result =
-          if (standing) {
-            Coin.Result(stats.streakValue, AnimationHelper.Permutation.UNKNOWN, stats.streakValue.customLabel(settings))
-          } else {
-            state.result
-          },
-        resultVisible = standing && settings.textEnabled,
         shakeEnabled = settings.shakeEnabled,
         shakeSensitivity = settings.shakeSensitivity,
         stats = stats,
         statsVisible = settings.showStats,
-        streakVisible = showStreak,
+        streakVisible = settings.showStreak
+      )
+
+    // mid-flip, state.result already holds what the animation has not revealed yet: restoring the
+    // "previous" state here shows the result the coin is about to land on
+    if (!isFlipping) restoreDisplay(stats)
+
+    generateAnimations()
+  }
+
+  private fun restoreDisplay(stats: Stats) {
+    val identity = animationHelper.identity(settings.coinPrefix)
+    // a null drawnCoin is a cold start, not a coin change: the face rebuilt from the persisted run
+    // is the last result, which belongs to whichever coin is selected now
+    val surprise = settings.coinPrefix == CoinType.RANDOM.prefix || (state.drawnCoin != null && state.drawnCoin != identity)
+    val result =
+      if (surprise) {
+        Coin.Result(Coin.Value.UNKNOWN, AnimationHelper.Permutation.UNKNOWN, null)
+      } else {
+        // the label can have been edited in Settings while the screen was away; the face it names has not
+        state.result.copy(customLabel = state.result.value.customLabel(settings))
+      }
+    // the flip animation starts from the face the coin holds, so it has to be the one on screen
+    coin.restoreFace(result.value)
+
+    val animation = animationHelper.animations[result.permutation]
+    state =
+      state.copy(
+        animation = animation,
+        coinImageType = if (animation == null) CoinImageType.PLACEHOLDER else CoinImageType.IMAGE,
+        drawnCoin = identity,
+        result = result,
+        resultVisible = settings.textEnabled && result.value != Coin.Value.UNKNOWN,
         headsCount = stats.count(Coin.Value.HEADS),
         tailsCount = stats.count(Coin.Value.TAILS),
-        streakCount = stats.streak
+        streakCount = if (surprise) 0 else stats.streak
       )
   }
 
@@ -232,7 +254,14 @@ class MainViewModel @Inject constructor(
 
     viewModelScope.launch {
       animationHelper.loadAnimationsForCoin(prefix, rim)
+      showFace()
     }
+  }
+
+  private fun showFace() {
+    if (isFlipping) return
+    val animation = animationHelper.animations[state.result.permutation] ?: return
+    state = state.copy(animation = animation, coinImageType = CoinImageType.IMAGE)
   }
 
   private fun onResetStats() {

@@ -15,6 +15,7 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.scale
 import com.banasiak.coinflip.R
 import com.banasiak.coinflip.common.BuildInfo
+import com.banasiak.coinflip.common.Coin
 import com.banasiak.coinflip.common.CoinType
 import com.banasiak.coinflip.common.CustomCoin
 import com.banasiak.coinflip.settings.Setting
@@ -80,12 +81,16 @@ class AnimationHelper @Inject constructor(
     }
   }
 
-  // the revision is what puts a replaced face on screen -- the prefix stays "custom" across a
-  // re-upload -- and the colors are what survive a light/dark switch, which recreates the activity
-  // but not this singleton
+  /**
+   * What makes one coin's artwork a *different coin* rather than the same one redrawn: the prefix,
+   * plus [CustomCoinStore.revision] for the custom coin. Free of the rim colors, unlike [cacheKey].
+   */
+  fun identity(prefix: String): String = if (prefix == CustomCoin.PREFIX) "$prefix:${customCoins.revision}" else prefix
+
+  // the colors are what survive a light/dark switch, which recreates the activity but not this singleton
   @VisibleForTesting
   internal fun cacheKey(prefix: String, rim: RimColors?): String =
-    if (prefix == CustomCoin.PREFIX) "$prefix:${customCoins.revision}:${rim?.heads}:${rim?.tails}" else prefix
+    if (prefix == CustomCoin.PREFIX) "${identity(prefix)}:${rim?.heads}:${rim?.tails}" else prefix
 
   private fun facesForPrefix(prefix: String, rim: RimColors?): Pair<BitmapDrawable, BitmapDrawable>? =
     if (prefix == CustomCoin.PREFIX) customFaces(rim) else shippedFaces(prefix)
@@ -411,6 +416,16 @@ class AnimationHelper @Inject constructor(
     HEADS_TAILS,
     TAILS_HEADS,
     TAILS_TAILS,
-    UNKNOWN
+    UNKNOWN;
+
+    companion object {
+      /** The permutation whose last frame is [value]: the flip that leaves that face showing. */
+      fun landingOn(value: Coin.Value): Permutation =
+        when (value) {
+          Coin.Value.HEADS -> HEADS_HEADS
+          Coin.Value.TAILS -> TAILS_TAILS
+          Coin.Value.UNKNOWN -> UNKNOWN
+        }
+    }
   }
 }

@@ -36,6 +36,11 @@ class Coin @Inject constructor(
     return Result(next, permutation(current, next), next.customLabel(settings))
   }
 
+  /** Puts the coin back on [value], the face the screen is showing. [Value.UNKNOWN] is a no-op: nothing is on screen to agree with. */
+  fun restoreFace(value: Value) {
+    if (value != Value.UNKNOWN) currentValue = value
+  }
+
   fun isSecure(): Boolean = random.useSecureRandom
 
   private fun permutation(current: Value, next: Value): AnimationHelper.Permutation =

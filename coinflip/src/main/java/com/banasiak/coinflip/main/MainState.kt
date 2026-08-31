@@ -21,6 +21,7 @@ const val MIN_DRAWN_STREAK = 2L
 data class MainState(
   @IgnoredOnParcel val animation: DurationAnimationDrawable? = null,
   val coinImageType: CoinImageType = CoinImageType.PLACEHOLDER,
+  val drawnCoin: String? = null,
   val dynamicColors: Boolean = false,
   @param:StringRes val instructionsText: Int = R.string.instructions_tap_shake,
   val labels: Pair<String?, String?> = Pair(null, null),

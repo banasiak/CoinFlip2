@@ -102,6 +102,32 @@ class CoinTests {
   }
 
   @Test
+  fun `a restored face is where the next flip starts from`() {
+    // given a coin that has never flipped, so it holds its default face
+    every { rng.nextBoolean() } returns false // tails
+    val coin = Coin(rng, settings)
+
+    // when the screen reports the face it is showing
+    coin.restoreFace(Coin.Value.TAILS)
+
+    // then the flip after it animates from there rather than from the default
+    coin.flip().permutation shouldBe AnimationHelper.Permutation.TAILS_TAILS
+  }
+
+  @Test
+  fun `an unknown face leaves the coin on the one it holds`() {
+    // given nothing on screen for the coin to agree with
+    every { rng.nextBoolean() } returns true // heads
+    val coin = Coin(rng, settings)
+
+    // when
+    coin.restoreFace(Coin.Value.UNKNOWN)
+
+    // then the default face is still what the flip comes from
+    coin.flip().permutation shouldBe AnimationHelper.Permutation.HEADS_HEADS
+  }
+
+  @Test
   fun `the coin reports which source it is flipping with`() {
     every { rng.useSecureRandom } returns true
 

@@ -181,18 +181,48 @@ labels and takes no side, so a run is "the same result again". The number is the
 moves on every flip. `MainState.streakCount` is the *deferred* copy, held at 0 while a flip is
 mid-air exactly as `headsCount`/`tailsCount` are, so nothing reveals the result early. It always
 holds the true run, including 1 — `MIN_DRAWN_STREAK` is the separate *display* rule that keeps a
-meaningless `×1` off every single flip, and it gates the cold-start seeding too so the screen still
-opens blank when the standing run is 1. The run is drawn on the result's own line as `HEADS ×7`
+meaningless `×1` off every single flip. The run is drawn on the result's own line as `HEADS ×7`
 rather than taking a line of its own, because landscape has no vertical room to spare. It is two
 `Text`s in a center-aligned `Row`, not one styled span: a span shares the result's baseline, which
-leaves the smaller digits sitting low against tall capitals. It survives a cold start (that is the point — you show somebody your
-run hours later), which is why `onResume` seeds `result` from the persisted run so the number is
-named rather than floating alone under an unflipped coin. Beating your own record plays the `STREAK`
+leaves the smaller digits sitting low against tall capitals. It survives a cold start (that is the
+point — you show somebody your run hours later), on the back of the restore described below.
+Beating your own record plays the `STREAK`
 fanfare, but only from `FANFARE_THRESHOLD` (ten) up; below that a new record lands within the first
 few flips and the five-second sound would fire constantly. Ten also takes about 1,000 flips to reach,
 so the fanfare stays a rare event. The record itself lives in Settings, not on
 the main screen — a personal best is a trophy to look up, the run in progress is the number you hold
 up to somebody.
+
+**Resuming the main screen** puts back what the user left: the last result named, the face it landed
+on drawn, and the run it belongs to counted. It used to revert to the `?` glyph on every resume and
+hide the result unless a drawn streak was standing — a holdover from the first version of the app,
+fifteen years ago. Two things still reset it to `?` with the result line cleared: the user picking a
+different coin in Settings, and `RANDOM`, which draws a different coin every time it loads and would
+otherwise spoil its own surprise. Both are decided in `restoreDisplay` by comparing
+`AnimationHelper.identity()` against `MainState.drawnCoin`, the coin the face on screen was actually
+drawn from — which is why replacing the custom coin's artwork counts as a change, a rim redrawn for
+a new theme does not, and a coin picked in Settings and changed back before returning does not
+either. Only the *display* is cleared: `stats` keeps the run, so the flip after a coin change
+continues it rather than starting over.
+
+Three things about it are less obvious than the rule:
+
+- **A cold start has no drawable to restore, so it rebuilds one.** `MainState` dies with the process
+  and `animation` is `@IgnoredOnParcel` besides, so `seededState()` reads the face the last flip
+  landed on out of `Setting.STREAK_VALUE` and `Permutation.landingOn()` names the permutation whose
+  last frame is that face. `Coin.restoreFace()` is the other half: the flip animation begins on the
+  coin's `currentValue`, so a screen showing tails and a `Coin` freshly constructed on heads would
+  make the coin jump as the flip started. The screen reports the face on every resume, which also
+  resyncs it after `DiagnosticsViewModel` has flipped the singleton several million times.
+- **The artwork loads on `Dispatchers.IO`, so the face goes up in two places.** `restoreDisplay`
+  publishes the animation the helper already holds — an in-session resume is a cache hit, and
+  drawing `?` first would flash on every return from Settings — and `showFace()` publishes it again
+  once a load finishes, which is what a cold start and a theme change need.
+- **A flip in the air owns the screen until it lands.** `onResume` restores nothing while
+  `isFlipping`: `state.result` already holds the result the animation has not revealed yet, so
+  putting the "previous" state back mid-flip shows what the coin is about to land on. The counts
+  moved into `restoreDisplay` for the same reason, alongside `streakCount`, which was already
+  deferred.
 
 **Testing:** JUnit 5 with MockK for mocking, Kluent for assertions, Turbine for Flow testing. ViewModel tests use `@ExtendWith(MainDispatcherRule::class)` to swap `Dispatchers.Main` with `UnconfinedTestDispatcher`. Tests are in `coinflip/src/test/`; there is no `androidTest` source set, so nothing in Compose is covered.
 
