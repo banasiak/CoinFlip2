@@ -224,6 +224,32 @@ Three things about it are less obvious than the rule:
   moved into `restoreDisplay` for the same reason, alongside `streakCount`, which was already
   deferred.
 
+**The keyboard flickers when the Custom Text dialog's two fields hand focus over**, and it is
+Compose's doing, not this app's. A text field that loses focus ends its IME session, and Compose
+turns that into a hide — a deliberate divergence from how Views behave, argued out in the [design
+doc](https://docs.google.com/document/d/1o-y3NkfFPCBhfDekdVEEl41tqtjjqs8jOss6txNgqaw/edit?resourcekey=0-o728aLn51uXXnA4Pkpe88Q#heading=h.ieacosb5rizm)
+its source comment cites. Compose coalesces the stop and the next field's start when both land in
+one batch, but that start is asynchronous — it waits on the session mutex — so the hide escapes
+first, and Gboard runs the whole hide animation before the show that follows 16 ms later. Measured
+on a Pixel 9a with `ImeTracker`: ~370 ms of keyboard leaving and coming back, on a focus change
+whose two halves were 1 ms apart.
+
+Ruled out on device, so a future report about this dialog does not restart the search: it is not the
+dialog (two bare `OutlinedTextField`s on the Settings list do it too), not the legacy text field API
+(`TextFieldState` with `showKeyboardOnFocus = true` does it), not `TextInputDialog`'s shell, its
+`selectAll` selection or a cursor popup (empty fields do it), and not the tap path (the IME's Next
+key does it). `keyboardController.show()` on focus gain cannot help: the coalescer ignores a show
+queued after a stop (`if (startInput != false)`), and `KeyboardOptions` exposes no hide-on-blur
+opt-out. Two platform `EditText`s in the same app produce *no* IME traffic at all on the same
+transfer, which is the whole difference.
+
+The one fix that works is backing the fields with `AndroidView` and `TextInputEditText`. That trades
+the flicker for the M3 outlined styling, dynamic-color parity (a View theme beside a Compose one is
+the drift `ColorHelper` is already called out for) and the dialog's `@PreviewLightDark` preview, so
+it was considered and declined. Recheck after a Compose bump — the behavior is in
+`TextInputServiceAndroid.processInputCommands`; the tracker has plenty of neighbouring text-field
+keyboard bugs but none, as of August 2026, that names this one.
+
 **Testing:** JUnit 5 with MockK for mocking, Kluent for assertions, Turbine for Flow testing. ViewModel tests use `@ExtendWith(MainDispatcherRule::class)` to swap `Dispatchers.Main` with `UnconfinedTestDispatcher`. Tests are in `coinflip/src/test/`; there is no `androidTest` source set, so nothing in Compose is covered.
 
 `FakeSharedPreferences` is an in-memory `SharedPreferences` used instead of mocking the interface, so
