@@ -50,7 +50,17 @@ CoinFlip2 is a Modern Android Development (MAD) coin-flipping app published on t
 
 **Key domain classes:**
 - `Coin` — core flip logic; tracks `currentValue` to determine animation permutation (heads→heads, heads→tails, etc.). Deliberately holds *no* streak state: `DiagnosticsViewModel` runs `coin.flip()` in a loop up to 10,000,000 times, which would obliterate the user's run and records
-- `Stats` — the counts, the run of identical results in progress, and each face's longest run, as one value. `afterFlip()` folds a landed flip into all three. They travel together because reset and undo have to move all of them at once
+- `Stats` — the counts, the run of identical results in progress, and each face's longest run, as one
+  value. `afterFlip()` folds a landed flip into all three. They travel together because reset and undo
+  have to move all of them at once. Resetting them from Settings writes *immediately* and keeps the
+  displaced value in memory for the undo — deliberately not the deferred model the custom coin's delete
+  uses. Deferring buys that delete a free undo, since the alternative is renaming files aside and
+  renaming them back; it buys this nothing, because restoring is one `persistStats` of a value already
+  in hand. It would also cost something: a window where prefs and `SettingsState` disagree about whether
+  the reset happened, with a commit at `onCleared` racing the main screen's `onResume` for the same keys
+  when the user backs out during it. What makes the retained copy safe is that Settings has the stats to
+  itself for its whole life — `MainViewModel` writes them in `onPause` on the way out and reads them in
+  `onResume` on the way back, so nothing can move them underneath the copy
 - `RNG` — wraps `kotlin.random.Random` / `SecureRandom`, listens for preference changes to hot-swap
 - `CustomCoin` / `CustomCoinStore` / `CoinImage` — the one coin whose artwork the user supplies.
   See **The custom coin** below. `revision` is the cache key for anything drawn from these files:
