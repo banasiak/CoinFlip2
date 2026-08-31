@@ -28,6 +28,9 @@ pitch, and everything else exists to make that one interaction pleasant:
   picture still reads as a coin — switch the ring off if you photographed a real one.
 - **Custom labels** — call the sides whatever you like. Yes / No, Beer / Tacos, Ship / Crown.
 - **Heads and tails tallies**, with a quick-reset button if you want it.
+- **Streaks** — turn it on and a run of identical results counts up beside the result as HEADS ×7.
+  Your best run for each side is kept in Settings, and setting a new record of ten or more plays a
+  fanfare.
 - **Material You** dynamic color on Android 12+, light and dark, portrait and landscape.
 - **Secure random** — swap `kotlin.random.Random` for `java.security.SecureRandom` if you have strong
   feelings about entropy sources in a coin-flipping app. (You might!)
@@ -73,11 +76,11 @@ request and reports coverage into the run summary.
 
 ## Credits
 
-The 2026 refactor was done by **[Claude](https://claude.com/claude-code)** — landscape support, the
+The 2026 refactor was done by **[Claude](https://claude.ai/referral/iftfNLT1kQ)** — landscape support, the
 rebuilt Settings screen, the searchable coin picker and favorites, custom coin faces, corrections to
-all 13 translations, the unit test suite, the AGP 9 / Gradle 9 / SDK 37 migration, and most of the
-code in between — working
-from direction, design decisions, and on-device testing by [@banasiak](https://github.com/banasiak).
+all 13 translations, the bulk of the unit test suite, the AGP 9 / Gradle 9 / SDK 37 migration, and
+most of the code in between — working from direction, design decisions, and on-device testing by
+[@banasiak](https://github.com/banasiak).
 The commit messages in that stretch were written by Claude as well, which goes some way toward
 explaining their length.
 
@@ -87,4 +90,7 @@ Coin images are from the [United States Mint](https://www.usmint.gov/) and the
 
 ## License
 
-Public domain, via [the Unlicense](LICENSE). Do whatever you want with it.
+The source code is public domain, via [the Unlicense](LICENSE). Do whatever you want with it.
+
+The binaries are not: the coin images come from the sources named above and carry their own terms,
+which are not mine to waive.
