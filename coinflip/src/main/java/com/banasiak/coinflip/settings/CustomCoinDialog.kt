@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
@@ -36,34 +37,38 @@ import com.banasiak.coinflip.ui.theme.Dimen
 import com.banasiak.coinflip.ui.theme.faceColor
 
 /**
- * Sets the two images behind the custom coin, and is the only way into the photo picker.
+ * Sets the two faces behind one of the user's coins, and is the only way into the picker that
+ * supplies them.
  *
- * A coin with only one face set exists here and nowhere else -- it does not appear in the picker at
- * all until both are in place.
+ * A coin with only one face set exists here and nowhere else -- it does not appear in the coin
+ * picker at all until both are in place. Which picker a row opens is settled by [coin]: this dialog
+ * never asks, because a coin is entirely photographs or entirely emoji.
  */
 @Composable
 fun CustomCoinDialog(
+  coin: CustomCoin,
   faces: Set<CustomCoin.Face>,
   revision: Long,
   rimEnabled: Boolean,
   loadThumbnail: (CustomCoin.Face, Int) -> ImageBitmap?,
-  onPickImage: (CustomCoin.Face) -> Unit,
+  onPickFace: (CustomCoin.Face) -> Unit,
   onDelete: () -> Unit,
   onRimChange: (Boolean) -> Unit,
   onDismiss: () -> Unit
 ) {
   AlertDialog(
     onDismissRequest = onDismiss,
-    title = { Text(stringResource(R.string.settings_item_custom_coin_title)) },
+    title = { Text(stringResource(coin.title)) },
     text = {
       Column(verticalArrangement = Arrangement.spacedBy(Dimen.small)) {
         CustomCoin.Face.entries.forEach { face ->
           CustomFaceRow(
+            coin = coin,
             face = face,
             isSet = face in faces,
             revision = revision,
             loadThumbnail = loadThumbnail,
-            onPick = { onPickImage(face) }
+            onPick = { onPickFace(face) }
           )
         }
       }
@@ -76,12 +81,18 @@ fun CustomCoinDialog(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
       ) {
-        BorderToggle(
-          enabled = rimEnabled,
-          // weight so a long translation truncates rather than pushing OK off the dialog
-          modifier = Modifier.weight(1f, fill = false),
-          onChange = onRimChange
-        )
+        if (coin == CustomCoin.PHOTO) {
+          BorderToggle(
+            enabled = rimEnabled,
+            // weight so a long translation truncates rather than pushing OK off the dialog
+            modifier = Modifier.weight(1f, fill = false),
+            onChange = onRimChange
+          )
+        } else {
+          // the emoji coin is always ringed -- a flat disc with no ring reads as a sticker -- so
+          // there is no switch to show. Spacer keeps Delete and OK where they sit on the other coin.
+          Spacer(modifier = Modifier.weight(1f, fill = false))
+        }
         Row(verticalAlignment = Alignment.CenterVertically) {
           TextButton(
             // nothing to delete is not an error worth a snackbar, so the button simply goes quiet
@@ -122,6 +133,7 @@ private fun BorderToggle(enabled: Boolean, modifier: Modifier = Modifier, onChan
 
 @Composable
 private fun CustomFaceRow(
+  coin: CustomCoin,
   face: CustomCoin.Face,
   isSet: Boolean,
   revision: Long,
@@ -140,6 +152,7 @@ private fun CustomFaceRow(
   ) {
     Box(modifier = Modifier.size(Dimen.coinThumbnail), contentAlignment = Alignment.Center) {
       if (thumbnail != null) {
+        if (coin == CustomCoin.EMOJI) EmojiCoinBacking(face)
         Image(bitmap = thumbnail, contentDescription = null, modifier = Modifier.fillMaxSize())
       } else {
         // an outline rather than the picker's "?", which already means the random coin
@@ -173,11 +186,12 @@ private fun CustomFaceRow(
 fun CustomCoinDialogPreview() {
   AppTheme {
     CustomCoinDialog(
+      coin = CustomCoin.PHOTO,
       faces = setOf(CustomCoin.Face.HEADS),
       revision = 0,
       rimEnabled = true,
       loadThumbnail = { _, _ -> null },
-      onPickImage = { },
+      onPickFace = { },
       onDelete = { },
       onRimChange = { },
       onDismiss = { }

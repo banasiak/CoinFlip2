@@ -64,13 +64,13 @@ class MainViewModel @Inject constructor(
 
   // the screen re-reports these on every composition, so there is nothing here to restore across
   // process death
-  private var rimColors: AnimationHelper.RimColors? = null
+  private var coinColors: AnimationHelper.CoinColors? = null
 
   fun postAction(action: MainAction) {
     Timber.d("postAction(): $action")
     when (action) {
       MainAction.OnPause -> onPause()
-      is MainAction.SetRimColors -> onSetRimColors(action.heads, action.tails)
+      is MainAction.SetCoinColors -> onSetCoinColors(action.headsRim, action.tailsRim, action.fill)
       MainAction.OnResume -> onResume()
       MainAction.ResetStats -> onResetStats()
       MainAction.TapAbout -> _effectFlow.tryEmit(MainEffect.ToAbout)
@@ -235,25 +235,26 @@ class MainViewModel @Inject constructor(
     vibrationHelper.vibrate(VibrationHelper.Vibration.THUD)
   }
 
-  private fun onSetRimColors(heads: Int, tails: Int) {
-    val colors = AnimationHelper.RimColors(heads, tails)
-    if (colors == rimColors) return
-    rimColors = colors
-    // a theme change has to redraw the custom coin's rim, and the helper is a singleton that
-    // outlives the activity recreation a light/dark switch causes. Guarded because RANDOM rerolls
-    // rather than taking the cache hit: an unconditional call would draw a second, different coin.
-    if (needsRimColors()) generateAnimations()
+  private fun onSetCoinColors(headsRim: Int, tailsRim: Int, fill: Int) {
+    val colors = AnimationHelper.CoinColors(headsRim, tailsRim, fill)
+    if (colors == coinColors) return
+    coinColors = colors
+    // a theme change has to redraw a custom coin, and the helper is a singleton that outlives the
+    // activity recreation a light/dark switch causes. Guarded because RANDOM rerolls rather than
+    // taking the cache hit: an unconditional call would draw a second, different coin.
+    if (needsThemeColors()) generateAnimations()
   }
 
-  // whether the coin on screen is drawn in the theme's colors, and so has to follow them
-  private fun needsRimColors(): Boolean = settings.coinPrefix == CustomCoin.PREFIX && settings.customCoinRim
+  // whether the coin on screen is drawn in the theme's colors, and so has to follow them. Which of
+  // them it actually uses is AnimationHelper's to decide -- it is the one that knows the artwork.
+  private fun needsThemeColors(): Boolean = CustomCoin.forPrefix(settings.coinPrefix) != null
 
   private fun generateAnimations() {
     val prefix = settings.coinPrefix
-    val rim = if (needsRimColors()) rimColors ?: return else null
+    val colors = if (needsThemeColors()) coinColors ?: return else null
 
     viewModelScope.launch {
-      animationHelper.loadAnimationsForCoin(prefix, rim)
+      animationHelper.loadAnimationsForCoin(prefix, colors, settings.customCoinRim)
       showFace()
     }
   }

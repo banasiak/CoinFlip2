@@ -2,6 +2,7 @@ package com.banasiak.coinflip.ui.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.graphics.Color
 import com.banasiak.coinflip.common.CustomCoin
 
@@ -80,3 +81,13 @@ fun CustomCoin.Face.faceColor(): Color =
     CustomCoin.Face.HEADS -> MaterialTheme.colorScheme.secondary
     CustomCoin.Face.TAILS -> MaterialTheme.colorScheme.tertiary
   }
+
+/**
+ * The disc an emoji face is drawn on.
+ *
+ * Named once because three places draw it and they must not drift: the picker's preview, the
+ * thumbnail in Settings, and `MainScreen`, which reports it to `AnimationHelper` so the stored glyph
+ * gets the same disc the previews promised.
+ */
+val emojiDisc: Color
+  @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.primary

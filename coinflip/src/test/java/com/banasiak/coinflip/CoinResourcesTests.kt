@@ -24,7 +24,7 @@ class CoinResourcesTests {
   @Test
   fun `no shipped coin claims the custom coin's prefix`() {
     // the picker keys its rows on the prefix, and LazyColumn throws on two rows sharing one
-    CoinType.entries.map { it.prefix } shouldNotContain CustomCoin.PREFIX
+    CoinType.entries.map { it.prefix } shouldNotContain CustomCoin.PHOTO.prefix
   }
 
   @Test

@@ -20,7 +20,10 @@ class CoinPickerTests {
   // the OTHER group is where the custom coin lands, so those cases need a slice that has one
   private val withOther = coins + listOf(CoinType.CLAUDE, CoinType.RANDOM)
 
-  private val customName = "Custom Coin"
+  private val customName = "Photo Coin"
+  private val emojiName = "Emoji Coin"
+  private val photoOnly = mapOf(CustomCoin.PHOTO to customName)
+  private val bothCoins = mapOf(CustomCoin.PHOTO to customName, CustomCoin.EMOJI to emojiName)
 
   private fun build(query: String = "", favorites: Set<String> = emptySet()) = buildCoinList(coins, favorites, query)
 
@@ -153,81 +156,120 @@ class CoinPickerTests {
   }
 
   @Test
-  fun `the custom coin is absent until both its faces are set`() {
-    buildCoinList(withOther, emptySet(), query = "", customCoin = null)
+  fun `a custom coin is absent until both its faces are set`() {
+    buildCoinList(withOther, emptySet(), query = "", customCoins = emptyMap())
       .none { it is CoinListItem.Custom } shouldBeEqualTo true
   }
 
   @Test
-  fun `the custom coin sits in Other, immediately before Random`() {
-    val items = buildCoinList(withOther, emptySet(), query = "", customCoin = customName)
+  fun `a custom coin sits in Other, immediately before Random`() {
+    val items = buildCoinList(withOther, emptySet(), query = "", customCoins = photoOnly)
 
     // CoinResourcesTests pins RANDOM last in the enum; this keeps it last on screen as well
     items.dropWhile { it != CoinListItem.Group(CoinGroup.OTHER.label) } shouldBeEqualTo
       listOf(
         CoinListItem.Group(CoinGroup.OTHER.label),
         CoinListItem.Option(CoinType.CLAUDE),
-        CoinListItem.Custom(),
+        CoinListItem.Custom(CustomCoin.PHOTO),
         CoinListItem.Option(CoinType.RANDOM)
       )
   }
 
   @Test
   fun `the custom coin is starred without being in the favorites set`() {
-    val items = buildCoinList(withOther, favorites = emptySet(), query = "", customCoin = customName)
+    val items = buildCoinList(withOther, favorites = emptySet(), query = "", customCoins = photoOnly)
 
     // permanence lives here rather than in Setting.FAVORITES, so there is no stored star to unset
     items.take(2) shouldBeEqualTo
-      listOf(CoinListItem.Group(favoritesHeader), CoinListItem.Custom(inFavoritesSection = true))
+      listOf(CoinListItem.Group(favoritesHeader), CoinListItem.Custom(CustomCoin.PHOTO, inFavoritesSection = true))
   }
 
   @Test
   fun `the custom coin leads the favorites section, ahead of the starred coins`() {
     val items =
-      buildCoinList(withOther, favorites = setOf(CoinType.LOONIE.prefix), query = "", customCoin = customName)
+      buildCoinList(withOther, favorites = setOf(CoinType.LOONIE.prefix), query = "", customCoins = photoOnly)
 
     items.take(3) shouldBeEqualTo
       listOf(
         CoinListItem.Group(favoritesHeader),
-        CoinListItem.Custom(inFavoritesSection = true),
+        CoinListItem.Custom(CustomCoin.PHOTO, inFavoritesSection = true),
         CoinListItem.Option(CoinType.LOONIE, inFavoritesSection = true)
       )
   }
 
   @Test
   fun `the custom coin's two rows carry different keys`() {
-    val keys = buildCoinList(withOther, emptySet(), query = "", customCoin = customName).map { it.key() }
+    val keys = buildCoinList(withOther, emptySet(), query = "", customCoins = photoOnly).map { it.key() }
 
     keys.distinct().size shouldBeEqualTo keys.size
-    keys shouldContain "favorite-${CustomCoin.PREFIX}"
-    keys shouldContain "coin-${CustomCoin.PREFIX}"
+    keys shouldContain "favorite-${CustomCoin.PHOTO.prefix}"
+    keys shouldContain "coin-${CustomCoin.PHOTO.prefix}"
   }
 
   @Test
   fun `a search finds the custom coin by name and lists it under Other`() {
-    // "custom" matches no shipped coin, so RANDOM is filtered out from under it and the group
+    // "photo" matches no shipped coin, so RANDOM is filtered out from under it and the group
     // header has to be opened for it instead
-    buildCoinList(withOther, emptySet(), query = "custom", customCoin = customName) shouldBeEqualTo
-      listOf(CoinListItem.Group(CoinGroup.OTHER.label), CoinListItem.Custom())
+    buildCoinList(withOther, emptySet(), query = "photo", customCoins = photoOnly) shouldBeEqualTo
+      listOf(CoinListItem.Group(CoinGroup.OTHER.label), CoinListItem.Custom(CustomCoin.PHOTO))
   }
 
   @Test
   fun `a search still puts the custom coin ahead of Random when both match`() {
-    buildCoinList(withOther, emptySet(), query = "o", customCoin = "Coin of my own")
+    buildCoinList(withOther, emptySet(), query = "o", customCoins = mapOf(CustomCoin.PHOTO to "Coin of my own"))
       .filterIsInstance<CoinListItem>()
-      .dropWhile { it != CoinListItem.Custom() }
-      .take(2) shouldBeEqualTo listOf(CoinListItem.Custom(), CoinListItem.Option(CoinType.RANDOM))
+      .dropWhile { it != CoinListItem.Custom(CustomCoin.PHOTO) }
+      .take(2) shouldBeEqualTo listOf(CoinListItem.Custom(CustomCoin.PHOTO), CoinListItem.Option(CoinType.RANDOM))
   }
 
   @Test
   fun `a search that misses the custom coin drops it entirely`() {
-    buildCoinList(withOther, emptySet(), query = "euro", customCoin = customName) shouldBeEqualTo
+    buildCoinList(withOther, emptySet(), query = "euro", customCoins = photoOnly) shouldBeEqualTo
       listOf(CoinListItem.Group(CoinGroup.EURO.label), CoinListItem.Option(CoinType.FRANCE))
   }
 
   @Test
+  fun `both custom coins sit in Other in declaration order, still ahead of Random`() {
+    val items = buildCoinList(withOther, emptySet(), query = "", customCoins = bothCoins)
+
+    items.dropWhile { it != CoinListItem.Group(CoinGroup.OTHER.label) } shouldBeEqualTo
+      listOf(
+        CoinListItem.Group(CoinGroup.OTHER.label),
+        CoinListItem.Option(CoinType.CLAUDE),
+        CoinListItem.Custom(CustomCoin.PHOTO),
+        CoinListItem.Custom(CustomCoin.EMOJI),
+        CoinListItem.Option(CoinType.RANDOM)
+      )
+  }
+
+  @Test
+  fun `each custom coin appears only once its own faces are set`() {
+    val items = buildCoinList(withOther, emptySet(), query = "", customCoins = mapOf(CustomCoin.EMOJI to emojiName))
+
+    items.filterIsInstance<CoinListItem.Custom>().map { it.coin }.distinct() shouldBeEqualTo
+      listOf(CustomCoin.EMOJI)
+  }
+
+  @Test
+  fun `both custom coins are starred, and their four rows carry different keys`() {
+    val keys = buildCoinList(withOther, emptySet(), query = "", customCoins = bothCoins).map { it.key() }
+
+    keys.distinct().size shouldBeEqualTo keys.size
+    CustomCoin.entries.forEach { coin ->
+      keys shouldContain "favorite-${coin.prefix}"
+      keys shouldContain "coin-${coin.prefix}"
+    }
+  }
+
+  @Test
+  fun `a search matches each custom coin by its own name`() {
+    buildCoinList(withOther, emptySet(), query = "emoji", customCoins = bothCoins) shouldBeEqualTo
+      listOf(CoinListItem.Group(CoinGroup.OTHER.label), CoinListItem.Custom(CustomCoin.EMOJI))
+  }
+
+  @Test
   fun `a search drops the custom coin's favorites row like any other`() {
-    buildCoinList(withOther, emptySet(), query = "custom", customCoin = customName)
+    buildCoinList(withOther, emptySet(), query = "photo", customCoins = photoOnly)
       .none { it is CoinListItem.Custom && it.inFavoritesSection } shouldBeEqualTo true
   }
 }

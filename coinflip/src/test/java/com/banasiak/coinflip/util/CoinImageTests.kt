@@ -1,14 +1,16 @@
 package com.banasiak.coinflip.util
 
+import androidx.compose.ui.geometry.Offset
 import androidx.exifinterface.media.ExifInterface
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeLessOrEqualTo
 import org.junit.jupiter.api.Test
+import kotlin.math.sqrt
 
 /**
- * The sampling arithmetic and the EXIF orientation table. The rest of [CoinImage] draws, and
- * `Bitmap`/`Canvas` are android.jar stubs under plain unit tests -- see the Coverage note in
- * CLAUDE.md.
+ * The sampling arithmetic, the EXIF orientation table and the glyph fit. The rest of [CoinImage]
+ * draws, and `Bitmap`/`Canvas` are android.jar stubs under plain unit tests -- see the Coverage note
+ * in CLAUDE.md.
  */
 class CoinImageTests {
   @Test
@@ -105,5 +107,59 @@ class CoinImageTests {
     CoinImage.orientationFor(ExifInterface.ORIENTATION_UNDEFINED) shouldBeEqualTo CoinImage.Orientation.UPRIGHT
     CoinImage.orientationFor(0) shouldBeEqualTo CoinImage.Orientation.UPRIGHT
     CoinImage.orientationFor(99) shouldBeEqualTo CoinImage.Orientation.UPRIGHT
+  }
+
+  @Test
+  fun `a glyph is scaled by its measured ink, not by the font size`() {
+    // ink half the box it was measured at needs twice the fill fraction to reach that fraction
+    CoinImage.glyphScale(box = 100f, inkWidth = 50f, inkHeight = 50f, fill = 0.5f) shouldBeEqualTo 1f
+    CoinImage.glyphScale(box = 100f, inkWidth = 100f, inkHeight = 100f, fill = 0.5f) shouldBeEqualTo 0.5f
+  }
+
+  @Test
+  fun `the axis that overflows first is the one that fits`() {
+    // a wide glyph is bounded by its width and a tall one by its height, or a corner lands outside
+    CoinImage.glyphScale(box = 100f, inkWidth = 200f, inkHeight = 50f, fill = 1f) shouldBeEqualTo 0.5f
+    CoinImage.glyphScale(box = 100f, inkWidth = 50f, inkHeight = 200f, fill = 1f) shouldBeEqualTo 0.5f
+  }
+
+  @Test
+  fun `a glyph that inks its whole box still clears the rim`() {
+    // the constant is derived, not chosen: the square inscribed in the silhouette is 1/sqrt(2) of
+    // the diameter, and the ring eats RIM_FRACTION off each side. Raising the fill "so it looks
+    // bigger" puts a filled glyph's corners under the ring.
+    val corner = CoinImage.glyphScale(box = 1f, inkWidth = 1f, inkHeight = 1f) * sqrt(2f)
+
+    corner shouldBeLessOrEqualTo 1f - 2f * CoinImage.RIM_FRACTION
+  }
+
+  @Test
+  fun `ink that could not be measured does not divide by zero`() {
+    CoinImage.glyphScale(box = 100f, inkWidth = 0f, inkHeight = 0f).isFinite() shouldBeEqualTo true
+    CoinImage.glyphScale(box = 100f, inkWidth = -5f, inkHeight = -5f).isFinite() shouldBeEqualTo true
+    CoinImage.glyphScale(box = 0f, inkWidth = 10f, inkHeight = 10f) shouldBeEqualTo 1f
+  }
+
+  @Test
+  fun `the origin centres the measured ink rather than the text run`() {
+    // emoji ink sits entirely above the baseline, so both edges come back negative; centring the
+    // run instead of the ink is what leaves the glyph riding high
+    CoinImage.glyphOrigin(box = 100f, inkLeft = 0f, inkTop = -80f, inkRight = 80f, inkBottom = 0f) shouldBeEqualTo
+      Offset(10f, 90f)
+  }
+
+  @Test
+  fun `the fit is scale free, so the preview and the saved face agree`() {
+    // the picker draws at its own box and the store at 390; both go through these, and a ratio is
+    // the only thing that makes the two the same picture
+    val small = CoinImage.glyphScale(box = 100f, inkWidth = 40f, inkHeight = 60f)
+    val large = CoinImage.glyphScale(box = 390f, inkWidth = 156f, inkHeight = 234f)
+
+    small shouldBeEqualTo large
+
+    val origin = CoinImage.glyphOrigin(box = 100f, inkLeft = 10f, inkTop = -30f, inkRight = 50f, inkBottom = 10f)
+    val scaled = CoinImage.glyphOrigin(box = 200f, inkLeft = 20f, inkTop = -60f, inkRight = 100f, inkBottom = 20f)
+
+    scaled shouldBeEqualTo Offset(origin.x * 2f, origin.y * 2f)
   }
 }

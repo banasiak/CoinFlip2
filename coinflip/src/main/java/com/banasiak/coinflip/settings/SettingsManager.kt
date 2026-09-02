@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.core.content.edit
 import com.banasiak.coinflip.common.Coin
+import com.banasiak.coinflip.common.CustomCoin
 import com.banasiak.coinflip.common.Stats
 import timber.log.Timber
 import javax.inject.Inject
@@ -46,6 +47,21 @@ class SettingsManager @Inject constructor(private val prefs: SharedPreferences) 
 
   // whether the custom coin's faces are ringed. Off suits an image that is already a coin.
   val customCoinRim get() = prefs[Setting.CUSTOM_COIN_RIM]
+
+  // keyed by face so a caller does not have to know which Setting belongs to which side
+  val emojiFaces: Map<CustomCoin.Face, String>
+    get() =
+      buildMap {
+        prefs[Setting.EMOJI_HEADS]?.let { put(CustomCoin.Face.HEADS, it) }
+        prefs[Setting.EMOJI_TAILS]?.let { put(CustomCoin.Face.TAILS, it) }
+      }
+
+  fun setEmojiFace(face: CustomCoin.Face, emoji: String?) {
+    when (face) {
+      CustomCoin.Face.HEADS -> update(Setting.EMOJI_HEADS, emoji)
+      CustomCoin.Face.TAILS -> update(Setting.EMOJI_TAILS, emoji)
+    }
+  }
 
   /** Coin prefixes the user has starred. */
   val favoriteCoins get() = prefs[Setting.FAVORITES]

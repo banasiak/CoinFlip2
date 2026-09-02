@@ -22,6 +22,7 @@ import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
+import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -75,6 +76,8 @@ class SettingsViewModelTests {
           secureRandom = true,
           force = ShakeForce.HIGH,
           customRim = false,
+          // both coins are read on load, so an empty one is an entry rather than an absence
+          custom = CustomCoin.entries.associateWith { CustomCoinState() },
           flipCount = 12,
           headsRecord = 4,
           tailsRecord = 3
@@ -295,25 +298,25 @@ class SettingsViewModelTests {
       // so without the revision moving, the dialog goes on drawing the picture it already cached --
       // and it stays composed underneath the photo picker and the crop, so it never gets a fresh one
       val both = setOf(CustomCoin.Face.HEADS, CustomCoin.Face.TAILS)
-      every { customCoins.storedFaces } returns both
-      every { customCoins.revision } returns 1_000L
+      every { customCoins.storedFaces(CustomCoin.PHOTO) } returns both
+      every { customCoins.revision(CustomCoin.PHOTO) } returns 1_000L
       coEvery { customCoins.save(any(), any(), any(), any()) } returns true
       val vm = viewModel()
-      vm.stateFlow.value.customRevision shouldBeEqualTo 1_000L
+      vm.stateFlow.value.stateFor(CustomCoin.PHOTO).revision shouldBeEqualTo 1_000L
 
-      every { customCoins.revision } returns 2_000L
+      every { customCoins.revision(CustomCoin.PHOTO) } returns 2_000L
       vm.postAction(SettingsAction.PickedCustomImage(mockk<Uri>(), CustomCoin.Face.HEADS))
       vm.postAction(SettingsAction.CropCustomImage(IntRect(0, 0, 10, 10), CoinImage.Orientation.UPRIGHT))
       advanceUntilIdle()
 
-      vm.stateFlow.value.customFaces shouldBeEqualTo both
-      vm.stateFlow.value.customRevision shouldBeEqualTo 2_000L
+      vm.stateFlow.value.stateFor(CustomCoin.PHOTO).faces shouldBeEqualTo both
+      vm.stateFlow.value.stateFor(CustomCoin.PHOTO).revision shouldBeEqualTo 2_000L
     }
 
   @Test
   fun a_failed_save_leaves_the_revision_alone() =
     runTest {
-      every { customCoins.revision } returns 1_000L
+      every { customCoins.revision(CustomCoin.PHOTO) } returns 1_000L
       coEvery { customCoins.save(any(), any(), any(), any()) } returns false
       val vm = viewModel()
 
@@ -321,7 +324,7 @@ class SettingsViewModelTests {
       vm.postAction(SettingsAction.CropCustomImage(IntRect(0, 0, 10, 10), CoinImage.Orientation.UPRIGHT))
       advanceUntilIdle()
 
-      vm.stateFlow.value.customRevision shouldBeEqualTo 1_000L
+      vm.stateFlow.value.stateFor(CustomCoin.PHOTO).revision shouldBeEqualTo 1_000L
     }
 
   @Test
@@ -339,31 +342,31 @@ class SettingsViewModelTests {
     runTest {
       // the whole point of deferring: the screen reads as empty while the files are still there,
       // so an undo has something to come back to and nothing has to be renamed aside
-      every { customCoins.storedFaces } returns setOf(CustomCoin.Face.HEADS, CustomCoin.Face.TAILS)
-      every { settings.coinPrefix } returnsMany listOf(CustomCoin.PREFIX, Setting.COIN.default)
+      every { customCoins.storedFaces(CustomCoin.PHOTO) } returns setOf(CustomCoin.Face.HEADS, CustomCoin.Face.TAILS)
+      every { settings.coinPrefix } returnsMany listOf(CustomCoin.PHOTO.prefix, Setting.COIN.default)
       val vm = viewModel()
 
-      vm.postAction(SettingsAction.DeleteCustomCoin)
+      vm.postAction(SettingsAction.DeleteCustomCoin(CustomCoin.PHOTO))
 
-      vm.stateFlow.value.customFaces.shouldBeEmpty()
+      vm.stateFlow.value.stateFor(CustomCoin.PHOTO).faces.shouldBeEmpty()
       vm.stateFlow.value.coin shouldBeEqualTo Setting.COIN.default
-      coVerify(exactly = 0) { customCoins.deleteAll() }
+      coVerify(exactly = 0) { customCoins.deleteAll(CustomCoin.PHOTO) }
     }
 
   @Test
   fun deleting_offers_an_undo_and_a_commit_for_when_the_snackbar_lapses() =
     runTest {
-      every { customCoins.storedFaces } returns setOf(CustomCoin.Face.HEADS, CustomCoin.Face.TAILS)
+      every { customCoins.storedFaces(CustomCoin.PHOTO) } returns setOf(CustomCoin.Face.HEADS, CustomCoin.Face.TAILS)
       val vm = viewModel()
 
       vm.effectFlow.test {
-        vm.postAction(SettingsAction.DeleteCustomCoin)
+        vm.postAction(SettingsAction.DeleteCustomCoin(CustomCoin.PHOTO))
         awaitItem() shouldBeEqualTo
           SettingsEffect.ShowSnackbar(
-            message = R.string.settings_item_custom_coin_deleted,
+            message = R.string.settings_item_photo_coin_deleted,
             actionLabel = R.string.undo,
-            action = SettingsAction.UndoDeleteCustomCoin,
-            onDismissed = SettingsAction.CommitDeleteCustomCoin
+            action = SettingsAction.UndoDeleteCustomCoin(CustomCoin.PHOTO),
+            onDismissed = SettingsAction.CommitDeleteCustomCoin(CustomCoin.PHOTO)
           )
       }
     }
@@ -372,46 +375,46 @@ class SettingsViewModelTests {
   fun undoing_a_delete_restores_the_coin_and_never_touches_the_files() =
     runTest {
       val both = setOf(CustomCoin.Face.HEADS, CustomCoin.Face.TAILS)
-      every { customCoins.storedFaces } returns both
+      every { customCoins.storedFaces(CustomCoin.PHOTO) } returns both
       every { settings.coinPrefix } returnsMany
-        listOf(CustomCoin.PREFIX, Setting.COIN.default, CustomCoin.PREFIX)
+        listOf(CustomCoin.PHOTO.prefix, Setting.COIN.default, CustomCoin.PHOTO.prefix)
       val vm = viewModel()
 
-      vm.postAction(SettingsAction.DeleteCustomCoin)
-      vm.postAction(SettingsAction.UndoDeleteCustomCoin)
+      vm.postAction(SettingsAction.DeleteCustomCoin(CustomCoin.PHOTO))
+      vm.postAction(SettingsAction.UndoDeleteCustomCoin(CustomCoin.PHOTO))
 
-      vm.stateFlow.value.customFaces shouldBeEqualTo both
-      vm.stateFlow.value.coin shouldBeEqualTo CustomCoin.PREFIX
-      verify { settings.update(Setting.COIN, CustomCoin.PREFIX) }
-      coVerify(exactly = 0) { customCoins.deleteAll() }
+      vm.stateFlow.value.stateFor(CustomCoin.PHOTO).faces shouldBeEqualTo both
+      vm.stateFlow.value.coin shouldBeEqualTo CustomCoin.PHOTO.prefix
+      verify { settings.update(Setting.COIN, CustomCoin.PHOTO.prefix) }
+      coVerify(exactly = 0) { customCoins.deleteAll(CustomCoin.PHOTO) }
     }
 
   @Test
   fun the_snackbar_lapsing_is_what_finally_unlinks_the_files() =
     runTest {
-      every { customCoins.storedFaces } returns setOf(CustomCoin.Face.HEADS, CustomCoin.Face.TAILS)
+      every { customCoins.storedFaces(CustomCoin.PHOTO) } returns setOf(CustomCoin.Face.HEADS, CustomCoin.Face.TAILS)
       val vm = viewModel()
 
-      vm.postAction(SettingsAction.DeleteCustomCoin)
-      every { customCoins.storedFaces } returns emptySet()
-      vm.postAction(SettingsAction.CommitDeleteCustomCoin)
+      vm.postAction(SettingsAction.DeleteCustomCoin(CustomCoin.PHOTO))
+      every { customCoins.storedFaces(CustomCoin.PHOTO) } returns emptySet()
+      vm.postAction(SettingsAction.CommitDeleteCustomCoin(CustomCoin.PHOTO))
 
-      coVerify { customCoins.deleteAll() }
-      vm.stateFlow.value.customFaces.shouldBeEmpty()
+      coVerify { customCoins.deleteAll(CustomCoin.PHOTO) }
+      vm.stateFlow.value.stateFor(CustomCoin.PHOTO).faces.shouldBeEmpty()
     }
 
   @Test
   fun a_commit_after_an_undo_does_nothing() =
     runTest {
       // both arrive from the same snackbar, and only one of them may count
-      every { customCoins.storedFaces } returns setOf(CustomCoin.Face.HEADS, CustomCoin.Face.TAILS)
+      every { customCoins.storedFaces(CustomCoin.PHOTO) } returns setOf(CustomCoin.Face.HEADS, CustomCoin.Face.TAILS)
       val vm = viewModel()
 
-      vm.postAction(SettingsAction.DeleteCustomCoin)
-      vm.postAction(SettingsAction.UndoDeleteCustomCoin)
-      vm.postAction(SettingsAction.CommitDeleteCustomCoin)
+      vm.postAction(SettingsAction.DeleteCustomCoin(CustomCoin.PHOTO))
+      vm.postAction(SettingsAction.UndoDeleteCustomCoin(CustomCoin.PHOTO))
+      vm.postAction(SettingsAction.CommitDeleteCustomCoin(CustomCoin.PHOTO))
 
-      coVerify(exactly = 0) { customCoins.deleteAll() }
+      coVerify(exactly = 0) { customCoins.deleteAll(CustomCoin.PHOTO) }
     }
 
   @Test
@@ -419,41 +422,161 @@ class SettingsViewModelTests {
     runTest {
       // a rotation cancels the snackbar without it reporting either way, so a delete can still be
       // pending here -- and calling it off would leave the un-replaced face on disk to come back
-      every { customCoins.storedFaces } returns setOf(CustomCoin.Face.HEADS, CustomCoin.Face.TAILS)
+      every { customCoins.storedFaces(CustomCoin.PHOTO) } returns setOf(CustomCoin.Face.HEADS, CustomCoin.Face.TAILS)
       coEvery { customCoins.save(any(), any(), any(), any()) } returns true
       val vm = viewModel()
 
-      vm.postAction(SettingsAction.DeleteCustomCoin)
+      vm.postAction(SettingsAction.DeleteCustomCoin(CustomCoin.PHOTO))
       vm.postAction(SettingsAction.PickedCustomImage(mockk<Uri>(), CustomCoin.Face.HEADS))
       // only the replaced face survives the settled delete
-      every { customCoins.storedFaces } returns setOf(CustomCoin.Face.HEADS)
+      every { customCoins.storedFaces(CustomCoin.PHOTO) } returns setOf(CustomCoin.Face.HEADS)
       vm.postAction(SettingsAction.CropCustomImage(IntRect(0, 0, 10, 10), CoinImage.Orientation.UPRIGHT))
       advanceUntilIdle()
 
       coVerifyOrder {
-        customCoins.deleteAll()
+        customCoins.deleteAll(CustomCoin.PHOTO)
         customCoins.save(any(), any(), any(), any())
       }
-      vm.stateFlow.value.customFaces shouldBeEqualTo setOf(CustomCoin.Face.HEADS)
-      vm.stateFlow.value.customCoinReady.shouldBeFalse()
+      vm.stateFlow.value.stateFor(CustomCoin.PHOTO).faces shouldBeEqualTo setOf(CustomCoin.Face.HEADS)
+      vm.stateFlow.value.stateFor(CustomCoin.PHOTO).ready.shouldBeFalse()
 
       // and the commit the lost snackbar would have sent finds nothing left to do
-      vm.postAction(SettingsAction.CommitDeleteCustomCoin)
+      vm.postAction(SettingsAction.CommitDeleteCustomCoin(CustomCoin.PHOTO))
       advanceUntilIdle()
-      coVerify(exactly = 1) { customCoins.deleteAll() }
+      coVerify(exactly = 1) { customCoins.deleteAll(CustomCoin.PHOTO) }
+    }
+
+  @Test
+  fun an_emoji_face_is_written_and_moves_that_coins_revision() =
+    runTest {
+      every { customCoins.storedFaces(CustomCoin.EMOJI) } returns setOf(CustomCoin.Face.HEADS)
+      every { customCoins.revision(CustomCoin.EMOJI) } returns 1_000L
+      coEvery { customCoins.save(any<String>(), any()) } returns true
+      val vm = viewModel()
+
+      every { customCoins.revision(CustomCoin.EMOJI) } returns 2_000L
+      vm.postAction(SettingsAction.PickedCustomEmoji("\uD83C\uDF55", CustomCoin.Face.HEADS))
+      advanceUntilIdle()
+
+      coVerify { customCoins.save("\uD83C\uDF55", CustomCoin.Face.HEADS) }
+      vm.stateFlow.value.stateFor(CustomCoin.EMOJI).revision shouldBeEqualTo 2_000L
+    }
+
+  @Test
+  fun the_glyph_is_remembered_so_the_picker_reopens_on_it() =
+    runTest {
+      every { customCoins.storedFaces(CustomCoin.EMOJI) } returns setOf(CustomCoin.Face.HEADS)
+      every { settings.emojiFaces } returns mapOf(CustomCoin.Face.HEADS to "\uD83C\uDF55")
+      coEvery { customCoins.save(any<String>(), any()) } returns true
+      val vm = viewModel()
+
+      vm.postAction(SettingsAction.PickedCustomEmoji("\uD83C\uDF55", CustomCoin.Face.HEADS))
+      advanceUntilIdle()
+
+      verify { settings.setEmojiFace(CustomCoin.Face.HEADS, "\uD83C\uDF55") }
+      vm.stateFlow.value.stateFor(CustomCoin.EMOJI).emoji shouldBeEqualTo
+        mapOf(CustomCoin.Face.HEADS to "\uD83C\uDF55")
+    }
+
+  @Test
+  fun a_failed_emoji_save_says_so_and_records_nothing() =
+    runTest {
+      coEvery { customCoins.save(any<String>(), any()) } returns false
+      val vm = viewModel()
+
+      vm.effectFlow.test {
+        vm.postAction(SettingsAction.PickedCustomEmoji("\uD83C\uDF55", CustomCoin.Face.HEADS))
+        advanceUntilIdle()
+        awaitItem() shouldBeEqualTo
+          SettingsEffect.ShowSnackbar(R.string.settings_item_custom_coin_save_failed)
+      }
+
+      verify(exactly = 0) { settings.setEmojiFace(any(), any()) }
+    }
+
+  @Test
+  fun setting_an_emoji_face_settles_a_delete_that_is_still_waiting_before_writing() =
+    runTest {
+      // the same order the photo path depends on: called off instead of run, the face that is not
+      // being replaced survives on disk and rebuilds the coin the user had just deleted
+      every { customCoins.storedFaces(CustomCoin.EMOJI) } returns
+        setOf(CustomCoin.Face.HEADS, CustomCoin.Face.TAILS)
+      coEvery { customCoins.save(any<String>(), any()) } returns true
+      val vm = viewModel()
+
+      vm.postAction(SettingsAction.DeleteCustomCoin(CustomCoin.EMOJI))
+      every { customCoins.storedFaces(CustomCoin.EMOJI) } returns setOf(CustomCoin.Face.HEADS)
+      vm.postAction(SettingsAction.PickedCustomEmoji("\uD83C\uDF55", CustomCoin.Face.HEADS))
+      advanceUntilIdle()
+
+      coVerifyOrder {
+        customCoins.deleteAll(CustomCoin.EMOJI)
+        customCoins.save(any<String>(), any())
+      }
+      vm.stateFlow.value.stateFor(CustomCoin.EMOJI).ready.shouldBeFalse()
+    }
+
+  @Test
+  fun a_pending_delete_on_one_coin_is_not_settled_by_a_write_to_the_other() =
+    runTest {
+      // they share a directory and a snackbar mechanism; only the coin that was written may settle
+      every { customCoins.storedFaces(CustomCoin.PHOTO) } returns
+        setOf(CustomCoin.Face.HEADS, CustomCoin.Face.TAILS)
+      coEvery { customCoins.save(any<String>(), any()) } returns true
+      val vm = viewModel()
+
+      vm.postAction(SettingsAction.DeleteCustomCoin(CustomCoin.PHOTO))
+      vm.postAction(SettingsAction.PickedCustomEmoji("\uD83C\uDF55", CustomCoin.Face.HEADS))
+      advanceUntilIdle()
+
+      coVerify(exactly = 0) { customCoins.deleteAll(CustomCoin.PHOTO) }
+
+      // and the photo coin's own undo still has something to come back to
+      vm.postAction(SettingsAction.UndoDeleteCustomCoin(CustomCoin.PHOTO))
+      vm.stateFlow.value.stateFor(CustomCoin.PHOTO).ready.shouldBeTrue()
+    }
+
+  @Test
+  fun deleting_one_coin_leaves_the_other_selected() =
+    runTest {
+      // the selection is a single value, and only the coin that owned it may reset it
+      every { customCoins.storedFaces(CustomCoin.EMOJI) } returns
+        setOf(CustomCoin.Face.HEADS, CustomCoin.Face.TAILS)
+      every { settings.coinPrefix } returns CustomCoin.PHOTO.prefix
+      val vm = viewModel()
+
+      vm.postAction(SettingsAction.DeleteCustomCoin(CustomCoin.EMOJI))
+
+      verify(exactly = 0) { settings.update(Setting.COIN, Setting.COIN.default) }
+      vm.stateFlow.value.coin shouldBeEqualTo CustomCoin.PHOTO.prefix
+    }
+
+  @Test
+  fun leaving_settings_settles_a_delete_on_each_coin_that_was_waiting() =
+    runTest {
+      CustomCoin.entries.forEach {
+        every { customCoins.storedFaces(it) } returns setOf(CustomCoin.Face.HEADS, CustomCoin.Face.TAILS)
+      }
+      val vm = viewModel()
+      val store = ViewModelStore().apply { put("settings", vm) }
+
+      CustomCoin.entries.forEach { vm.postAction(SettingsAction.DeleteCustomCoin(it)) }
+      store.clear()
+
+      CustomCoin.entries.forEach { verify { customCoins.deleteAllDetached(it) } }
     }
 
   @Test
   fun deleting_with_nothing_set_does_nothing_at_all() =
     runTest {
-      every { customCoins.storedFaces } returns emptySet()
+      every { customCoins.storedFaces(CustomCoin.PHOTO) } returns emptySet()
       val vm = viewModel()
 
       vm.effectFlow.test {
-        vm.postAction(SettingsAction.DeleteCustomCoin)
+        vm.postAction(SettingsAction.DeleteCustomCoin(CustomCoin.PHOTO))
         expectNoEvents()
       }
-      coVerify(exactly = 0) { customCoins.deleteAll() }
+      coVerify(exactly = 0) { customCoins.deleteAll(CustomCoin.PHOTO) }
     }
 
   @Test
@@ -461,14 +584,14 @@ class SettingsViewModelTests {
     runTest {
       // the snackbar goes with the screen, so a pending delete would otherwise hang forever and
       // quietly undo itself. Walking away is a decision too.
-      every { customCoins.storedFaces } returns setOf(CustomCoin.Face.HEADS, CustomCoin.Face.TAILS)
+      every { customCoins.storedFaces(CustomCoin.PHOTO) } returns setOf(CustomCoin.Face.HEADS, CustomCoin.Face.TAILS)
       val vm = viewModel()
       val store = ViewModelStore().apply { put("settings", vm) }
 
-      vm.postAction(SettingsAction.DeleteCustomCoin)
+      vm.postAction(SettingsAction.DeleteCustomCoin(CustomCoin.PHOTO))
       store.clear()
 
-      verify { customCoins.deleteAllDetached() }
+      verify { customCoins.deleteAllDetached(CustomCoin.PHOTO) }
     }
 
   @Test
@@ -479,7 +602,7 @@ class SettingsViewModelTests {
 
       store.clear()
 
-      verify(exactly = 0) { customCoins.deleteAllDetached() }
+      verify(exactly = 0) { customCoins.deleteAllDetached(CustomCoin.PHOTO) }
     }
 
   @Test

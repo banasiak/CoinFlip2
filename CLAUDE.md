@@ -75,6 +75,16 @@ CoinFlip2 is a Modern Android Development (MAD) coin-flipping app published on t
   the picker opens a new header only on a change of `group`, so the entries have to stay in unbroken runs.
   `coinName` is a plain string rather than a `@StringRes` — the coin names were never translated, and holding
   them in Kotlin says so outright where a `string-array` left every locale a permanent hole
+- `EmojiCatalog` / `EmojiGroup` — the ~700 emoji the Emoji Coin's picker offers. A list of data
+  classes rather than an enum, and that difference from `CoinType` is deliberate: `CoinType` is an
+  enum because `prefix` is persisted and named at compile time, where nothing persists an emoji and
+  no code will ever name one. Seven hundred enum constants would be seven hundred invented names
+  nobody references, and would flatter Kover exactly the way `CoinType`'s declaration lines already
+  do. Declaration order is load-bearing the same way: `buildEmojiList` opens a header only on a
+  change of `group`. `keywords` is untranslated for the same reason `coinName` is — and nobody is
+  left without a way to find 🍕, because the grid, the headers and the jump bar are language-free and
+  the picker matches a pasted glyph, so the system keyboard's own localized search reaches anything
+  the device can draw
 - `ShakeForce` — the three shake sensitivities as one enum: the string on disk, the label resource, and
   the seismic threshold together. It is what `Setting.FORCE` decodes to, so the choice stays typed all the
   way to the segmented control and the string exists only inside the setting. `SettingsManager` exposes both
@@ -99,18 +109,31 @@ CoinFlip2 is a Modern Android Development (MAD) coin-flipping app published on t
   loaded in `onResume`, moments earlier
 - `SoundHelper`, `VibrationHelper` — play sounds / haptics only when the corresponding setting is enabled. `STREAK` runs ~5.5s where the others run ~1s, so it is still sounding over the flips that follow it; `AppModule` sizes the `SoundPool` stream budget for that
 
-**The custom coin** is a single user-supplied heads/tails pair, mirroring the Custom Text row it
-sits beside. It is deliberately **not** a `CoinType`: catalog entries name drawables that ship in
+**The custom coins** are two user-supplied heads/tails pairs, mirroring the Custom Text row they sit
+beside: a **Photo Coin** built from photographs, and an **Emoji Coin** built from emoji. The user can
+have one of each, and a coin is entirely one or the other. That split is not only a UX choice — it is
+what keeps the feature small. Because the kind is the *coin* rather than the *face*, the prefix
+answers every question about how a face is drawn, and nothing anywhere has to record which faces came
+from emoji. Mixing the two on one coin was considered and dropped for that reason as much as for the
+UX.
+
+They are deliberately **not** `CoinType`s: catalog entries name drawables that ship in
 the APK, `CoinType.flippable` is the pool `RANDOM` draws from, and `CoinResourcesTests` asserts both
-about every entry. It rides the existing plumbing instead as a reserved prefix, `"custom"`, since
-`Setting.COIN` was always just a string. Settings is the *only* entry point — the coin picker
+about every entry. They ride the existing plumbing instead as reserved prefixes, since
+`Setting.COIN` was always just a string. **`PHOTO.prefix` is `"custom"`, and stays that way** — the
+rename to "Photo Coin" is a label only. That string is already in `Setting.COIN` on every device
+where the coin was selected, and `AnimationHelper` falls back to the default coin for a prefix it
+cannot resolve rather than crashing, so renaming it would move somebody's coin *silently*. Same for
+`custom_heads.png` / `custom_tails.png`. Settings is the *only* entry point — the coin picker
 selects and favorites, and launching a system picker out of a list of eighty coins would be a second
-job for one screen — so a half-configured coin exists in the Settings dialog and nowhere else. Once
-both faces are set it appears in the picker in `OTHER`, immediately before `RANDOM` (which keeps the
-sentinel last on screen as well as in the enum), and is permanently starred. That permanence lives
-in `buildCoinList`, not in `Setting.FAVORITES`: a stored star could be toggled off from its own row,
-and would outlive the artwork it names. Deleting it resets `Setting.COIN` when the custom coin was
-selected, since the entry leaves the picker with it. Nothing is unlinked up front: the coin reads as
+job for one screen — so a half-configured coin exists in its Settings dialog and nowhere else. Once
+both its faces are set a coin appears in the picker in `OTHER`, immediately before `RANDOM` (which
+keeps the sentinel last on screen as well as in the enum), and is permanently starred. That
+permanence lives in `buildCoinList`, not in `Setting.FAVORITES`: a stored star could be toggled off
+from its own row, and would outlive the artwork it names. Deleting a coin resets `Setting.COIN` when
+that coin was selected, since the entry leaves the picker with it — and only then, because the
+selection is one value shared by two coins and deleting the other must not clear a record still owed
+to an undo. Nothing is unlinked up front: the coin reads as
 gone at once while the files stay put, so undo costs nothing and no renamed leftovers accumulate.
 Three things then settle the pending delete, and it needs all three because the snackbar can vanish
 without ever reporting either way — `repeatOnLifecycle(STARTED)` cancels the coroutine awaiting it,
@@ -121,11 +144,14 @@ writing a new face commits it **before** the write. That last one is the subtle 
 be wrong: it called the delete *off* instead, which left the face that was not being replaced on
 disk, where `storedFaces` found it and rebuilt the coin the user had just deleted. The order is
 load-bearing in both directions — called off, the stale face survives; run after the write, it
-unlinks the file just written. `validateSchema()` wipes prefs but not `filesDir/coins`, so a
-schema bump orphans the images rather than deleting somebody's photo — re-selecting brings the coin
-straight back.
+unlinks the file just written. All of that is now *per coin* — `deletePending` is a set, the three
+actions carry the coin they settle, and `CustomCoinStore.deleteAll` takes one too. That last one is
+the trap the split introduced: it used to unlink the whole directory, and the two coins share it, so
+deleting the Photo Coin would have taken the Emoji Coin with it. `validateSchema()` wipes prefs but
+not `filesDir/coins`, so a schema bump orphans the images rather than deleting somebody's photo —
+re-selecting brings the coin straight back.
 
-Five things about it are invisible in the code and easy to undo by accident:
+Eight things about them are invisible in the code and easy to undo by accident:
 
 - **Faces are decoded raw and tagged mdpi — never density-scaled.** `res/drawable` carries no
   density qualifier, so a shipped face is the mdpi baseline, but `ResourcesCompat.getDrawable`
@@ -155,12 +181,13 @@ Five things about it are invisible in the code and easy to undo by accident:
   things depending on hidden state. Negating the turn is the identity M·R(θ) = R(−θ)·M, and all
   eight orientations stay reachable either way, which is what makes the bug easy to miss.
 
-- **The rim is optional, stroked at generation time, and neither baked in nor overlaid.** It is
-  what makes an arbitrary photo read as a coin, so it is on by default — but somebody who has
-  photographed a *real* coin wants neither the ring nor the tinted edge, and the switch in the
-  Custom Coin dialog turns both off together (`Setting.CUSTOM_COIN_RIM`, carried to `AnimationHelper`
-  as a null `RimColors`, which is also what a shipped coin passes). Not baked into the
-  stored file because the color follows the theme (`secondary` is a crimson in light and a pink in
+- **The rim is optional on the Photo Coin only, stroked at generation time, and neither baked in nor
+  overlaid.** It is what makes an arbitrary photo read as a coin, so it is on by default — but
+  somebody who has photographed a *real* coin wants neither the ring nor the tinted edge, and the
+  switch in the Photo Coin dialog turns both off together (`Setting.CUSTOM_COIN_RIM`, carried to
+  `AnimationHelper` as a null `CoinColors`, which is also what a shipped coin passes). The Emoji
+  Coin overrides it and is always ringed — see below — so its dialog shows no switch at all.
+  Not baked into the stored file because the color follows the theme (`secondary` is a crimson in light and a pink in
   dark, and either can come from Material You). Not drawn over the finished animation because
   `resizeBitmapDrawable` squashes frames to a quarter width mid-flip, so a ring added afterwards
   would stay round while the coin turned inside it. `MainScreen` reads the colors off the Material
@@ -185,6 +212,46 @@ Five things about it are invisible in the code and easy to undo by accident:
   also drawn a custom one. `SRC_IN` loses nothing: the asset is a single flat `#696969` whose
   thirty-odd distinct values differ only in alpha. One blended color rather than one per transition,
   because the edge frame sits between the faces in every permutation and belongs to neither.
+- **The backdrop is transparent, so a drawn face needs a disc under it.** `R.drawable.background` is
+  a 390px square of nothing — `resizeBitmapDrawable` composites every frame onto it purely to get the
+  size right, not to get a background. A photographed face is opaque by accident, so this never
+  mattered until a face could be *drawn*. An emoji rendered on its own flips as a bare glyph with the
+  Settings screen showing through the coin, and only *mid-flip*, because the full-size frame looks
+  fine either way. The disc goes on at animation time in `primary`, like the rim and for the same
+  reason: it follows the theme, so it cannot be stored. `CoinImage.fillDisc` uses `DST_OVER`, so the
+  glyph is untouched and the circle's own antialiased edge becomes the silhouette — the same edge
+  `toCoinFace` gives a photograph — and it forces the alpha to 255 rather than trusting the caller,
+  because a colour 99% opaque would fail the same way, more quietly. The ring is not optional over
+  it: a flat disc with no ring reads as a sticker. `AnimationHelper` therefore overrides
+  `Setting.CUSTOM_COIN_RIM` for the Emoji Coin, and that override lives *there* rather than in
+  `MainViewModel` because it is the one class holding both the switch and `CustomCoinStore`. The
+  consequence is that `MainViewModel` passes the switch through instead of folding it into a null,
+  and asks only whether the selected coin is a custom one — so a Photo Coin with the border off now
+  waits a frame for the theme where it used to load immediately. The cache key carries the fill only
+  for the Emoji Coin, so that wait still costs nothing.
+- **The glyph fit is a ratio, which is what makes the preview a substitute for the crop screen.** An
+  emoji face skips `CoinCropDialog` entirely — a glyph has nothing to frame — and the picker's live
+  coin stands in for it. That is only honest because `CoinImage.glyphScale` and `glyphOrigin` are
+  ratios of the box they are handed, and both the picker and the stored face go through the one
+  `drawGlyph`: the 128dp preview and the 390px file are the same picture at two sizes. It is also why
+  `CustomCoinStore.coinSize()` stays private — a preview that asked the store how big the real face
+  is would couple itself to a number it does not need and still not be pixel-identical at a different
+  density. The fill fraction is derived, not chosen: 1/√2 for the square inscribed in the circle,
+  times 0.9 for the rim, is 0.636, and the constant is 0.62. Raising it "so it looks bigger" puts a
+  filled glyph's corners under the ring, which `CoinImageTests` asserts against the two constants
+  rather than against a number written down. Measuring the *ink* rather than trusting the font size
+  is the same technique `MainScreen`'s `?` placeholder uses, and for the same reason.
+- **Every catalogued emoji is a single code point, and the device gets a veto.** No variation
+  selector, no zero-width joiner, no skin-tone modifier, no regional-indicator flag: `Paint.hasGlyph`
+  is only dependable for single code points, and a sequence a font cannot compose lands on the coin
+  as two glyphs side by side. That one rule is what `EmojiCatalogTests` asserts, and it bars all four
+  of those at once. The catalog stops at Emoji 5.0 because that is the set Android 8.0 shipped and
+  8.0 is `minSdk`; `hasGlyph` filters it again at runtime for the OEM fonts that ship their own, and
+  is trustworthy for the same reason nothing else here has to be — it queries the same system
+  `Typeface` the `drawText` a moment later will use, so the picker cannot offer something the save
+  would render as tofu. A group nothing survives in loses its header along with its rows. `emoji2` is
+  on the classpath via appcompat and is no help: it substitutes glyphs through `EmojiSpan`, which
+  only paints via a `StaticLayout`, and `Canvas.drawText(String, …)` never consults it.
 
 **Streaks** count *any* face repeating, not heads specifically — the app ships 80-odd coins and custom
 labels and takes no side, so a run is "the same result again". The number is therefore never 0 and
@@ -313,7 +380,7 @@ commenting the intent of a test is encouraged there.
   disk and comes back" earns its place; "the run rides on the result's own line rather than taking a
   line of its own" does not, because the code already shows that.
 - **Design reasoning goes in the commit message or in this file**, not inline, where it does not age
-  against the code. The Architecture section above is where it lands — the custom coin's five
+  against the code. The Architecture section above is where it lands — the custom coins' eight
   invariants are there because they were too long to live at the lines they describe.
 - **Say it once, in the place with the most context.** A comment can flag a real constraint and still
   be redundant. `buildCoinList` explains why the custom coin's star is permanent; the two comments

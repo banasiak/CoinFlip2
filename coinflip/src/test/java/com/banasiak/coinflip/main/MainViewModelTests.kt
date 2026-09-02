@@ -586,78 +586,101 @@ class MainViewModelTests {
       vm.postAction(MainAction.OnResume)
       advanceUntilIdle()
 
-      coVerify { animationHelper.loadAnimationsForCoin("jfk", null) }
+      coVerify { animationHelper.loadAnimationsForCoin("jfk", null, any()) }
     }
 
   @Test
   fun the_custom_coin_waits_for_the_theme_before_drawing_its_rim() =
     runTest {
       // generating now would draw a black ring and immediately regenerate once the colors arrived
-      every { settings.coinPrefix } returns CustomCoin.PREFIX
+      every { settings.coinPrefix } returns CustomCoin.PHOTO.prefix
       every { settings.customCoinRim } returns true
       val vm = viewModel()
 
       vm.postAction(MainAction.OnResume)
       advanceUntilIdle()
 
-      coVerify(exactly = 0) { animationHelper.loadAnimationsForCoin(any(), any()) }
+      coVerify(exactly = 0) { animationHelper.loadAnimationsForCoin(any(), any(), any()) }
     }
 
   @Test
   fun the_custom_coin_loads_once_the_theme_reports_its_colors() =
     runTest {
-      every { settings.coinPrefix } returns CustomCoin.PREFIX
+      every { settings.coinPrefix } returns CustomCoin.PHOTO.prefix
       every { settings.customCoinRim } returns true
       val vm = viewModel()
 
       vm.postAction(MainAction.OnResume)
-      vm.postAction(MainAction.SetRimColors(heads = 111, tails = 222))
+      vm.postAction(MainAction.SetCoinColors(headsRim = 111, tailsRim = 222, fill = 9))
       advanceUntilIdle()
 
-      coVerify { animationHelper.loadAnimationsForCoin(CustomCoin.PREFIX, AnimationHelper.RimColors(111, 222)) }
+      coVerify { animationHelper.loadAnimationsForCoin(CustomCoin.PHOTO.prefix, AnimationHelper.CoinColors(111, 222, 9), true) }
     }
 
   @Test
   fun a_theme_change_regenerates_the_animations() =
     runTest {
       // the helper is a singleton and survives the activity recreation a light/dark switch causes
-      every { settings.coinPrefix } returns CustomCoin.PREFIX
+      every { settings.coinPrefix } returns CustomCoin.PHOTO.prefix
       every { settings.customCoinRim } returns true
       val vm = viewModel()
 
-      vm.postAction(MainAction.SetRimColors(heads = 111, tails = 222))
-      vm.postAction(MainAction.SetRimColors(heads = 333, tails = 444))
+      vm.postAction(MainAction.SetCoinColors(headsRim = 111, tailsRim = 222, fill = 9))
+      vm.postAction(MainAction.SetCoinColors(headsRim = 333, tailsRim = 444, fill = 9))
       advanceUntilIdle()
 
-      coVerify { animationHelper.loadAnimationsForCoin(CustomCoin.PREFIX, AnimationHelper.RimColors(333, 444)) }
+      coVerify { animationHelper.loadAnimationsForCoin(CustomCoin.PHOTO.prefix, AnimationHelper.CoinColors(333, 444, 9), true) }
     }
 
   @Test
   fun reporting_the_same_colors_again_does_not_regenerate() =
     runTest {
-      every { settings.coinPrefix } returns CustomCoin.PREFIX
+      every { settings.coinPrefix } returns CustomCoin.PHOTO.prefix
       every { settings.customCoinRim } returns true
       val vm = viewModel()
 
-      vm.postAction(MainAction.SetRimColors(heads = 111, tails = 222))
-      vm.postAction(MainAction.SetRimColors(heads = 111, tails = 222))
+      vm.postAction(MainAction.SetCoinColors(headsRim = 111, tailsRim = 222, fill = 9))
+      vm.postAction(MainAction.SetCoinColors(headsRim = 111, tailsRim = 222, fill = 9))
       advanceUntilIdle()
 
-      coVerify(exactly = 1) { animationHelper.loadAnimationsForCoin(any(), any()) }
+      coVerify(exactly = 1) { animationHelper.loadAnimationsForCoin(any(), any(), any()) }
     }
 
   @Test
-  fun a_custom_coin_with_the_border_switched_off_draws_no_rim_and_does_not_wait() =
+  fun the_border_switch_is_passed_through_rather_than_folded_into_the_colors() =
     runTest {
-      // an image that is already a coin wants neither a ring nor a tinted edge, and with no rim to
-      // colour there is nothing for it to wait on
-      every { settings.coinPrefix } returns CustomCoin.PREFIX
+      // an image that is already a coin wants neither a ring nor a tinted edge -- but the switch
+      // governs the photo coin alone, so which of the colors get used is AnimationHelper's call
+      every { settings.coinPrefix } returns CustomCoin.PHOTO.prefix
       every { settings.customCoinRim } returns false
+      val vm = viewModel()
+
+      vm.postAction(MainAction.OnResume)
+      vm.postAction(MainAction.SetCoinColors(headsRim = 111, tailsRim = 222, fill = 9))
+      advanceUntilIdle()
+
+      coVerify {
+        animationHelper.loadAnimationsForCoin(CustomCoin.PHOTO.prefix, AnimationHelper.CoinColors(111, 222, 9), false)
+      }
+    }
+
+  @Test
+  fun the_emoji_coin_also_waits_for_the_theme() =
+    runTest {
+      // it needs the disc as well as the ring, and both come off the Material scheme
+      every { settings.coinPrefix } returns CustomCoin.EMOJI.prefix
       val vm = viewModel()
 
       vm.postAction(MainAction.OnResume)
       advanceUntilIdle()
 
-      coVerify { animationHelper.loadAnimationsForCoin(CustomCoin.PREFIX, null) }
+      coVerify(exactly = 0) { animationHelper.loadAnimationsForCoin(any(), any(), any()) }
+
+      vm.postAction(MainAction.SetCoinColors(headsRim = 111, tailsRim = 222, fill = 9))
+      advanceUntilIdle()
+
+      coVerify {
+        animationHelper.loadAnimationsForCoin(CustomCoin.EMOJI.prefix, AnimationHelper.CoinColors(111, 222, 9), any())
+      }
     }
 }

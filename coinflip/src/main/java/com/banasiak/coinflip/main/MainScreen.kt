@@ -64,6 +64,7 @@ import com.banasiak.coinflip.extensions.formatNumber
 import com.banasiak.coinflip.ui.DurationAnimationDrawable
 import com.banasiak.coinflip.ui.theme.AppTheme
 import com.banasiak.coinflip.ui.theme.Dimen
+import com.banasiak.coinflip.ui.theme.emojiDisc
 import com.banasiak.coinflip.util.AnimationHelper
 import kotlin.math.min
 
@@ -101,11 +102,12 @@ fun MainView(
   flipToken: Int = 0
 ) {
   AppTheme(dynamicColor = state.dynamicColors) {
-    // the same two colors the result text and the stats counts use below, so the custom coin's rim
-    // cannot drift from them
+    // the same two colors the result text and the stats counts use below, so a custom coin's rim
+    // cannot drift from them. The disc under an emoji is the same primary the placeholder glyph is.
     val headsRim = MaterialTheme.colorScheme.secondary.toArgb()
     val tailsRim = MaterialTheme.colorScheme.tertiary.toArgb()
-    LaunchedEffect(headsRim, tailsRim) { postAction(MainAction.SetRimColors(headsRim, tailsRim)) }
+    val fill = emojiDisc.toArgb()
+    LaunchedEffect(headsRim, tailsRim, fill) { postAction(MainAction.SetCoinColors(headsRim, tailsRim, fill)) }
 
     Scaffold(
       // the display cutout sits alongside the content in landscape, not above it

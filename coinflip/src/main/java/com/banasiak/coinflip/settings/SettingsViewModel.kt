@@ -1,5 +1,6 @@
 package com.banasiak.coinflip.settings
 
+import androidx.annotation.StringRes
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.IntRect
@@ -34,12 +35,16 @@ class SettingsViewModel @Inject constructor(
   // the stats prior to a reset, retained so the user can undo the reset
   private var previousStats: Stats? = null
 
-  // the coin that was selected before a delete reset it, retained so the undo can put it back
+  // the prefix that was selected before a delete reset it, retained so the undo can put it back.
+  // One field for two coins is enough because only one of them can be the selected one, but every
+  // read of it is gated on the coin it belongs to so the other's delete cannot clear it
   private var deletedSelection: String? = null
 
-  // a delete the user has asked for but which has not touched the disk yet: it waits for the
-  // snackbar to give up on it, so undoing costs nothing and leaves no renamed files behind
-  private var deletePending = false
+  // deletes the user has asked for which have not touched the disk yet: each waits for the snackbar
+  // to give up on it, so undoing costs nothing and leaves no renamed files behind. A set rather
+  // than a flag because both coins can be waiting at once, and a write to one must not settle the
+  // other's
+  private val deletePending = mutableSetOf<CustomCoin>()
 
   fun postAction(action: SettingsAction) {
     when (action) {
@@ -61,38 +66,60 @@ class SettingsViewModel @Inject constructor(
       SettingsAction.ResetStats -> onResetStats()
       SettingsAction.UndoResetStats -> onUndoResetStats()
       is SettingsAction.PickedCustomImage -> emit(state.copy(pendingCrop = PendingCrop(action.uri, action.face)))
+      is SettingsAction.PickedCustomEmoji -> onPickedCustomEmoji(action.emoji, action.face)
       is SettingsAction.CropCustomImage -> onCropCustomImage(action.crop, action.adjustment)
       SettingsAction.DismissCustomCrop -> emit(state.copy(pendingCrop = null))
       SettingsAction.CustomImageFailed -> onCustomImageFailed()
-      SettingsAction.DeleteCustomCoin -> onDeleteCustomCoin()
-      SettingsAction.UndoDeleteCustomCoin -> onUndoDeleteCustomCoin()
-      SettingsAction.CommitDeleteCustomCoin -> onCommitDeleteCustomCoin()
+      is SettingsAction.DeleteCustomCoin -> onDeleteCustomCoin(action.coin)
+      is SettingsAction.UndoDeleteCustomCoin -> onUndoDeleteCustomCoin(action.coin)
+      is SettingsAction.CommitDeleteCustomCoin -> onCommitDeleteCustomCoin(action.coin)
       is SettingsAction.SetCustomRim -> persist(Setting.CUSTOM_COIN_RIM, action.value) { copy(customRim = action.value) }
     }
   }
 
   /** A face at roughly [targetPx], for the dialog that sets it. Null when the face is not set. */
-  fun thumbnail(face: CustomCoin.Face, targetPx: Int): ImageBitmap? =
-    customCoins.thumbnail(face, targetPx)?.asImageBitmap()
+  fun thumbnail(coin: CustomCoin, face: CustomCoin.Face, targetPx: Int): ImageBitmap? =
+    customCoins.thumbnail(coin, face, targetPx)?.asImageBitmap()
 
   private fun onCropCustomImage(crop: IntRect, adjustment: CoinImage.Orientation) {
     val pending = state.pendingCrop ?: return
     // closed before the write, so the dialog does not sit on screen through the decode
     emit(state.copy(pendingCrop = null))
     viewModelScope.launch {
-      // settled before the write, not called off by it: called off, the face that is not being
-      // replaced survives on disk and comes back; run after, it unlinks the file just written
-      if (deletePending) {
-        deletePending = false
-        deletedSelection = null
-        customCoins.deleteAll()
-      }
+      settlePendingDelete(CustomCoin.PHOTO)
       if (customCoins.save(pending.uri, pending.face, crop, adjustment)) {
-        emit(state.withCustomCoin())
+        emit(state.withCustomCoin(CustomCoin.PHOTO))
       } else {
         _effectFlow.tryEmit(SettingsEffect.ShowSnackbar(R.string.coin_crop_failed))
       }
     }
+  }
+
+  private fun onPickedCustomEmoji(emoji: String, face: CustomCoin.Face) {
+    // nothing to close: the picker lives in the composition and dismisses itself
+    viewModelScope.launch {
+      settlePendingDelete(CustomCoin.EMOJI)
+      if (customCoins.save(emoji, face)) {
+        settings.setEmojiFace(face, emoji)
+        emit(state.withCustomCoin(CustomCoin.EMOJI))
+      } else {
+        _effectFlow.tryEmit(SettingsEffect.ShowSnackbar(R.string.settings_item_custom_coin_save_failed))
+      }
+    }
+  }
+
+  /**
+   * Runs a delete of [coin] the snackbar never settled, **before** the write that follows it.
+   *
+   * Both directions of that order are load-bearing, and one of them shipped wrong. Called off
+   * instead of run -- which is what [clearPendingDelete] does, and why this is not that -- the face
+   * that is *not* being replaced survives on disk, where `storedFaces` finds it and rebuilds the
+   * coin the user had just deleted. Run after the write instead, it unlinks the file just written.
+   */
+  private suspend fun settlePendingDelete(coin: CustomCoin) {
+    if (!deletePending.remove(coin)) return
+    if (coin.prefix == deletedSelection) deletedSelection = null
+    customCoins.deleteAll(coin)
   }
 
   private fun onCustomImageFailed() {
@@ -100,50 +127,59 @@ class SettingsViewModel @Inject constructor(
     _effectFlow.tryEmit(SettingsEffect.ShowSnackbar(R.string.coin_crop_failed))
   }
 
-  private fun onDeleteCustomCoin() {
-    if (state.customFaces.isEmpty()) return
-    deletePending = true
-    // the entry leaves the picker with the artwork, so the selection cannot be left pointing at it
-    deletedSelection = state.coin.takeIf { it == CustomCoin.PREFIX }
-    if (deletedSelection != null) settings.update(Setting.COIN, Setting.COIN.default)
+  private fun onDeleteCustomCoin(coin: CustomCoin) {
+    if (state.stateFor(coin).faces.isEmpty()) return
+    deletePending += coin
+    // the entry leaves the picker with the artwork, so the selection cannot be left pointing at it.
+    // Assigned only when this coin is the one displaced, so deleting the other does not overwrite a
+    // record still owed to an undo
+    if (state.coin == coin.prefix) {
+      deletedSelection = coin.prefix
+      settings.update(Setting.COIN, Setting.COIN.default)
+    }
 
     // the coin reads as gone straight away even though the files are still there; the state is what
     // the screen should show, and what is on disk stays recoverable until the snackbar times out
-    emit(state.copy(coin = settings.coinPrefix, customFaces = emptySet()))
+    emit(state.copy(coin = settings.coinPrefix, custom = state.custom + (coin to CustomCoinState())))
     _effectFlow.tryEmit(
       SettingsEffect.ShowSnackbar(
-        message = R.string.settings_item_custom_coin_deleted,
+        message = deletedMessage(coin),
         actionLabel = R.string.undo,
-        action = SettingsAction.UndoDeleteCustomCoin,
-        onDismissed = SettingsAction.CommitDeleteCustomCoin
+        action = SettingsAction.UndoDeleteCustomCoin(coin),
+        onDismissed = SettingsAction.CommitDeleteCustomCoin(coin)
       )
     )
   }
 
-  private fun onUndoDeleteCustomCoin() {
-    if (!deletePending) return
+  private fun onUndoDeleteCustomCoin(coin: CustomCoin) {
+    if (coin !in deletePending) return
     // nothing was ever unlinked, so this only has to stop the commit and put the selection back
-    clearPendingDelete()
-    emit(state.copy(coin = settings.coinPrefix).withCustomCoin())
+    clearPendingDelete(coin)
+    emit(state.copy(coin = settings.coinPrefix).withCustomCoin(coin))
   }
 
-  private fun onCommitDeleteCustomCoin() {
-    if (!deletePending) return
-    deletePending = false
-    deletedSelection = null
+  private fun onCommitDeleteCustomCoin(coin: CustomCoin) {
+    if (coin !in deletePending) return
     viewModelScope.launch {
-      customCoins.deleteAll()
-      emit(state.withCustomCoin())
+      settlePendingDelete(coin)
+      emit(state.withCustomCoin(coin))
     }
   }
 
   // calls the delete off, restoring the selection it had already reset
-  private fun clearPendingDelete() {
-    if (!deletePending) return
-    deletePending = false
-    deletedSelection?.let { settings.update(Setting.COIN, it) }
+  private fun clearPendingDelete(coin: CustomCoin) {
+    if (!deletePending.remove(coin)) return
+    if (deletedSelection != coin.prefix) return
+    settings.update(Setting.COIN, coin.prefix)
     deletedSelection = null
   }
+
+  @StringRes
+  private fun deletedMessage(coin: CustomCoin): Int =
+    when (coin) {
+      CustomCoin.PHOTO -> R.string.settings_item_photo_coin_deleted
+      CustomCoin.EMOJI -> R.string.settings_item_emoji_coin_deleted
+    }
 
   private fun onToggleFavoriteCoin(value: String) {
     val favorites = if (value in state.favorites) state.favorites - value else state.favorites + value
@@ -180,11 +216,9 @@ class SettingsViewModel @Inject constructor(
    * hang forever and quietly undo itself. Walking away is a decision too, and it settles this one.
    */
   override fun onCleared() {
-    if (deletePending) {
-      deletePending = false
-      // detached: viewModelScope is already cancelled by the time this runs
-      customCoins.deleteAllDetached()
-    }
+    // detached: viewModelScope is already cancelled by the time this runs
+    deletePending.forEach { customCoins.deleteAllDetached(it) }
+    deletePending.clear()
     super.onCleared()
   }
 
@@ -199,12 +233,16 @@ class SettingsViewModel @Inject constructor(
   }
 
   /**
-   * Copies over both halves of what the custom coin's rows draw: which faces exist, and the
-   * revision behind them. They travel together because replacing a face moves only the second, and
-   * a thumbnail keyed on the first alone would go on showing the image it cached.
+   * Copies over everything one custom coin's rows draw: which faces exist, the revision behind them,
+   * and the glyphs for the emoji coin. Faces and revision travel together because replacing a face
+   * moves only the second, and a thumbnail keyed on the first alone would go on showing the image
+   * it cached.
    */
-  private fun SettingsState.withCustomCoin(): SettingsState =
-    copy(customFaces = customCoins.storedFaces, customRevision = customCoins.revision)
+  private fun SettingsState.withCustomCoin(coin: CustomCoin): SettingsState {
+    val faces = customCoins.storedFaces(coin)
+    val emoji = if (coin == CustomCoin.EMOJI) settings.emojiFaces.filterKeys { it in faces } else emptyMap()
+    return copy(custom = custom + (coin to CustomCoinState(faces, customCoins.revision(coin), emoji)))
+  }
 
   /** Copies over every figure the Statistics section shows, so a reset and its undo cannot disagree. */
   private fun SettingsState.withStats(stats: Stats): SettingsState =
@@ -232,5 +270,7 @@ class SettingsViewModel @Inject constructor(
       secureRandom = settings.secureRandom,
       force = settings.force,
       customRim = settings.customCoinRim
-    ).withCustomCoin().withStats(settings.loadStats())
+    ).withCustomCoin(CustomCoin.PHOTO)
+      .withCustomCoin(CustomCoin.EMOJI)
+      .withStats(settings.loadStats())
 }

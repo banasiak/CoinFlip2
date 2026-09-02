@@ -13,6 +13,7 @@ import android.graphics.Rect
 import android.net.Uri
 import androidx.annotation.ColorInt
 import androidx.annotation.VisibleForTesting
+import androidx.compose.ui.geometry.Offset
 import androidx.core.graphics.createBitmap
 import androidx.exifinterface.media.ExifInterface
 import timber.log.Timber
@@ -40,6 +41,18 @@ object CoinImage {
    * survives the scale down to a 390px coin; it is here to bound an untrusted decode.
    */
   private const val MAX_SOURCE_EDGE = 2048
+
+  /**
+   * How much of a face's width an emoji's measured ink fills.
+   *
+   * Derived rather than chosen. The largest square that fits inside the silhouette is 1/sqrt(2) of
+   * its diameter, and the rim eats [RIM_FRACTION] off each side, which leaves 0.707 * 0.9 = 0.636.
+   * Some emoji ink their whole box, so anything above that puts their corners under the ring.
+   */
+  private const val GLYPH_FILL_FRACTION = 0.62f
+
+  // see [fillDisc]: the disc has to be opaque, whatever the caller hands over
+  private const val OPAQUE = 0xFF000000.toInt()
 
   /**
    * Decodes [uri] with its longest edge at or under [maxEdge], honoring the EXIF orientation tag.
@@ -211,5 +224,84 @@ object CoinImage {
         if (orientation.degrees != 0f) postRotate(orientation.degrees)
       }
     return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
+  }
+
+  /**
+   * The multiplier a text size needs so ink measured at that size fills [fill] of a [box]-square
+   * face.
+   *
+   * A font size is not a glyph size, and emoji differ wildly in how much of their em box they ink,
+   * so this scales by what was *measured*. Everything is a ratio of [box], which is what lets the
+   * picker's preview and the stored face agree without either knowing the other's size.
+   */
+  @VisibleForTesting
+  internal fun glyphScale(box: Float, inkWidth: Float, inkHeight: Float, fill: Float = GLYPH_FILL_FRACTION): Float {
+    if (box <= 0f) return 1f
+    val target = box * fill
+    return minOf(target / inkWidth.coerceAtLeast(1f), target / inkHeight.coerceAtLeast(1f))
+  }
+
+  /**
+   * Where `drawText` has to put its origin for measured ink to land in the middle of a [box]-square
+   * face.
+   *
+   * The edges arrive as numbers rather than as a `Rect`: that is an android.jar stub which throws
+   * under plain unit tests, and this is the arithmetic worth testing. `drawText` positions the
+   * *baseline*, with the ink sitting asymmetrically around it, so centering the text run leaves the
+   * glyph high -- this centers the measured ink box instead.
+   */
+  @VisibleForTesting
+  internal fun glyphOrigin(box: Float, inkLeft: Float, inkTop: Float, inkRight: Float, inkBottom: Float): Offset =
+    Offset(box / 2f - (inkLeft + inkRight) / 2f, box / 2f - (inkTop + inkBottom) / 2f)
+
+  /**
+   * Draws [emoji] fitted and centred into a [box]-square area of [canvas], in whatever colors the
+   * system emoji font supplies.
+   *
+   * Shared by the stored face and the picker's live preview, and scale-free. That sharing is the
+   * whole of what makes the preview honest enough to stand in for a crop step.
+   */
+  fun drawGlyph(canvas: Canvas, emoji: String, box: Float) {
+    val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply { textSize = box }
+    val ink = Rect()
+    paint.getTextBounds(emoji, 0, emoji.length, ink)
+    paint.textSize *= glyphScale(box, ink.width().toFloat(), ink.height().toFloat())
+    paint.getTextBounds(emoji, 0, emoji.length, ink)
+    val origin = glyphOrigin(box, ink.left.toFloat(), ink.top.toFloat(), ink.right.toFloat(), ink.bottom.toFloat())
+    canvas.drawText(emoji, origin.x, origin.y, paint)
+  }
+
+  /**
+   * [emoji] as a [size]-square coin face, on transparency.
+   *
+   * No disc: the color behind an emoji follows the Material theme, so it goes on at animation time
+   * through [fillDisc] rather than being stored. Handed to [toCoinFace] rather than clipped here so
+   * the silhouette comes off exactly one code path and the two sources cannot drift; at
+   * [GLYPH_FILL_FRACTION] that clip does nothing, and is there for a font whose metrics lie.
+   */
+  fun toEmojiFace(emoji: String, size: Int): Bitmap {
+    val square = createBitmap(size, size)
+    drawGlyph(Canvas(square), emoji, size.toFloat())
+    return toCoinFace(square, Rect(0, 0, size, size), size).also { square.recycle() }
+  }
+
+  /**
+   * Fills [face]'s silhouette with [color] underneath whatever is already drawn on it, in place.
+   *
+   * `DST_OVER` rather than a fresh bitmap composited the other way round: it paints only where the
+   * face is transparent, so the glyph is untouched and the circle's own antialiased edge becomes
+   * the silhouette -- the same edge [toCoinFace] gives a photograph. The alpha is forced because
+   * the animation composites frames onto a transparent backdrop, where a disc even slightly
+   * translucent shows the screen through the coin.
+   */
+  fun fillDisc(face: Bitmap, @ColorInt color: Int) {
+    val radius = face.width / 2f
+    val paint =
+      Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        this.color = color or OPAQUE
+        xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OVER)
+      }
+
+    Canvas(face).drawCircle(radius, radius, radius, paint)
   }
 }

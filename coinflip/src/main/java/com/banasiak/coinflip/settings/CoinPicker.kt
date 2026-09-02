@@ -61,6 +61,9 @@ import com.banasiak.coinflip.common.CoinType
 import com.banasiak.coinflip.common.CustomCoin
 import com.banasiak.coinflip.ui.theme.AppTheme
 import com.banasiak.coinflip.ui.theme.Dimen
+import com.banasiak.coinflip.ui.theme.emojiDisc
+import com.banasiak.coinflip.ui.theme.faceColor
+import com.banasiak.coinflip.util.CoinImage
 
 internal sealed interface CoinListItem {
   /** A [CoinGroup]'s header, or the favorites section, which is a pseudo-group with no coins of its own. */
@@ -73,10 +76,11 @@ internal sealed interface CoinListItem {
   data class Option(val coin: CoinType, val inFavoritesSection: Boolean = false) : CoinListItem
 
   /**
-   * The user's own coin. Not a [CoinListItem.Option] because it is not a [CoinType]: it owns no
-   * drawable in the APK and `RANDOM` must not draw it. It appears only once both faces are set.
+   * One of the user's own coins. Not a [CoinListItem.Option] because it is not a [CoinType]: it owns
+   * no drawable in the APK and `RANDOM` must not draw it. Each appears only once both its faces are
+   * set.
    */
-  data class Custom(val inFavoritesSection: Boolean = false) : CoinListItem
+  data class Custom(val coin: CustomCoin, val inFavoritesSection: Boolean = false) : CoinListItem
 }
 
 /**
@@ -88,9 +92,8 @@ internal sealed interface CoinListItem {
 fun CoinPicker(
   selectedValue: String,
   favorites: Set<String>,
-  customCoinReady: Boolean,
-  customRevision: Long,
-  loadThumbnail: (CustomCoin.Face, Int) -> ImageBitmap?,
+  custom: Map<CustomCoin, CustomCoinState>,
+  loadThumbnail: (CustomCoin, CustomCoin.Face, Int) -> ImageBitmap?,
   onSelect: (String) -> Unit,
   onToggleFavorite: (String) -> Unit,
   onDismiss: () -> Unit
@@ -100,16 +103,7 @@ fun CoinPicker(
     // a full-screen dialog, so it owns the whole window and draws edge to edge like a destination
     properties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)
   ) {
-    CoinPickerContent(
-      selectedValue,
-      favorites,
-      customCoinReady,
-      customRevision,
-      loadThumbnail,
-      onSelect,
-      onToggleFavorite,
-      onDismiss
-    )
+    CoinPickerContent(selectedValue, favorites, custom, loadThumbnail, onSelect, onToggleFavorite, onDismiss)
   }
 }
 
@@ -117,26 +111,24 @@ fun CoinPicker(
 private fun CoinPickerContent(
   selectedValue: String,
   favorites: Set<String>,
-  customCoinReady: Boolean = false,
-  customRevision: Long = 0,
-  loadThumbnail: (CustomCoin.Face, Int) -> ImageBitmap? = { _, _ -> null },
+  custom: Map<CustomCoin, CustomCoinState> = emptyMap(),
+  loadThumbnail: (CustomCoin, CustomCoin.Face, Int) -> ImageBitmap? = { _, _, _ -> null },
   onSelect: (String) -> Unit,
   onToggleFavorite: (String) -> Unit,
   onDismiss: () -> Unit
 ) {
   var query by rememberSaveable { mutableStateOf("") }
-  val customName = stringResource(R.string.settings_item_custom_coin_title)
-  val items =
-    remember(query, favorites, customCoinReady) {
-      buildCoinList(CoinType.entries, favorites, query, customName.takeIf { customCoinReady })
-    }
+  val ready = CustomCoin.entries.filter { custom[it]?.ready == true }
+  val names = ready.associateWith { stringResource(it.title) }
+  val items = remember(query, favorites, names) { buildCoinList(CoinType.entries, favorites, query, names) }
   val thumbnails = rememberThumbnails()
   val targetPx = with(LocalDensity.current) { Dimen.coinThumbnail.roundToPx() }
-  // keyed on the revision too: replacing the artwork leaves the prefix alone, so nothing else here
+  // keyed on the revisions too: replacing the artwork leaves the prefix alone, so nothing else here
   // would change
+  val revisions = ready.map { custom[it]?.revision }
   val customArt =
-    remember(customCoinReady, customRevision, targetPx) {
-      if (customCoinReady) loadThumbnail(CustomCoin.Face.HEADS, targetPx) else null
+    remember(revisions, targetPx) {
+      ready.associateWith { loadThumbnail(it, CustomCoin.Face.HEADS, targetPx) }
     }
   val listState = rememberLazyListState()
 
@@ -163,7 +155,7 @@ private fun CoinPickerContent(
       Column(modifier = Modifier.padding(contentPadding)) {
         SearchField(query = query, onQueryChange = { query = it })
         if (items.isEmpty()) {
-          EmptyResults()
+          EmptyResults(R.string.settings_item_coin_empty)
         } else {
           LazyColumn(
             state = listState,
@@ -189,12 +181,15 @@ private fun CoinPickerContent(
                 }
                 is CoinListItem.Custom -> {
                   CoinRow(
-                    label = customName,
-                    thumbnail = customArt,
-                    selected = selectedValue == CustomCoin.PREFIX,
+                    label = names[item.coin].orEmpty(),
+                    thumbnail = customArt[item.coin],
+                    // the emoji coin is stored as a bare glyph, so its disc and ring are drawn here
+                    // for the same reason they are drawn at animation time: they follow the theme
+                    decorated = item.coin == CustomCoin.EMOJI,
+                    selected = selectedValue == item.coin.prefix,
                     favorite = null,
                     onClick = {
-                      onSelect(CustomCoin.PREFIX)
+                      onSelect(item.coin.prefix)
                       onDismiss()
                     }
                   )
@@ -225,7 +220,7 @@ private fun CoinPickerTopBar(onDismiss: () -> Unit) {
 }
 
 @Composable
-private fun SearchField(query: String, onQueryChange: (String) -> Unit) {
+internal fun SearchField(query: String, onQueryChange: (String) -> Unit) {
   OutlinedTextField(
     value = query,
     onValueChange = onQueryChange,
@@ -256,6 +251,7 @@ private fun CoinRow(
   selected: Boolean,
   favorite: Boolean?,
   onClick: () -> Unit,
+  decorated: Boolean = false,
   onToggleFavorite: () -> Unit = { }
 ) {
   Row(
@@ -267,7 +263,7 @@ private fun CoinRow(
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.spacedBy(Dimen.medium)
   ) {
-    CoinThumbnail(thumbnail)
+    CoinThumbnail(thumbnail, decorated)
 
     Text(
       text = label,
@@ -319,12 +315,13 @@ private fun rememberCoinArt(@DrawableRes id: Int): ImageBitmap? {
 }
 
 @Composable
-private fun CoinThumbnail(bitmap: ImageBitmap?) {
+private fun CoinThumbnail(bitmap: ImageBitmap?, decorated: Boolean = false) {
   Box(
     modifier = Modifier.size(Dimen.coinThumbnail),
     contentAlignment = Alignment.Center
   ) {
     if (bitmap != null) {
+      if (decorated) EmojiCoinBacking(CustomCoin.Face.HEADS)
       Image(
         bitmap = bitmap,
         contentDescription = null,
@@ -350,9 +347,9 @@ private fun CoinThumbnail(bitmap: ImageBitmap?) {
 }
 
 @Composable
-private fun EmptyResults() {
+internal fun EmptyResults(@StringRes message: Int) {
   Text(
-    text = stringResource(R.string.settings_item_coin_empty),
+    text = stringResource(message),
     modifier =
       Modifier
         .fillMaxWidth()
@@ -419,26 +416,31 @@ internal fun CoinListItem.key(): String =
       if (inFavoritesSection) "favorite-${coin.prefix}" else "coin-${coin.prefix}"
     }
     is CoinListItem.Custom -> {
-      if (inFavoritesSection) "favorite-${CustomCoin.PREFIX}" else "coin-${CustomCoin.PREFIX}"
+      if (inFavoritesSection) "favorite-${coin.prefix}" else "coin-${coin.prefix}"
     }
   }
 
 /**
  * Filters by [query] and interleaves a header ahead of each group that still has matches.
  *
- * [customCoin] is the user's coin: its localized name when both faces are set, and null otherwise,
- * so one parameter carries both whether to list it and what to match a search against.
+ * [customCoins] holds the localized name of each of the user's coins that is ready to flip, so one
+ * parameter carries both which of them to list and what to match a search against. Iterated in
+ * [CustomCoin] declaration order, so the two always appear in the same order.
  */
 @VisibleForTesting
 internal fun buildCoinList(
   coins: List<CoinType>,
   favorites: Set<String>,
   query: String,
-  customCoin: String? = null
+  customCoins: Map<CustomCoin, String> = emptyMap()
 ): List<CoinListItem> {
   val trimmed = query.trim()
   val matches = coins.filter { query.isBlank() || it.coinName.contains(trimmed, ignoreCase = true) }
-  val customMatches = customCoin != null && (query.isBlank() || customCoin.contains(trimmed, ignoreCase = true))
+  val customMatches =
+    CustomCoin.entries.filter { coin ->
+      val name = customCoins[coin] ?: return@filter false
+      query.isBlank() || name.contains(trimmed, ignoreCase = true)
+    }
 
   return buildList {
     // starred coins are repeated at the top rather than moved out, so the origin groups keep no
@@ -446,11 +448,12 @@ internal fun buildCoinList(
     // hit under two headers reads as noise rather than as a shortcut.
     if (query.isBlank()) {
       val starred = matches.filter { it.prefix in favorites }
-      // the custom coin is permanently starred, and that lives here rather than in Setting.FAVORITES:
-      // a stored star could be toggled off from the row, and would outlive the artwork it names
-      if (starred.isNotEmpty() || customMatches) {
+      // the custom coins are permanently starred, and that lives here rather than in
+      // Setting.FAVORITES: a stored star could be toggled off from its own row, and would outlive
+      // the artwork it names
+      if (starred.isNotEmpty() || customMatches.isNotEmpty()) {
         add(CoinListItem.Group(R.string.settings_item_coin_group_favorites))
-        if (customMatches) add(CoinListItem.Custom(inFavoritesSection = true))
+        customMatches.forEach { add(CoinListItem.Custom(it, inFavoritesSection = true)) }
         starred.forEach { add(CoinListItem.Option(it, inFavoritesSection = true)) }
       }
     }
@@ -463,17 +466,17 @@ internal fun buildCoinList(
         currentGroup = coin.group
       }
       // ahead of RANDOM, so the sentinel stays last on screen as well as in the enum
-      if (customMatches && !customPlaced && coin == CoinType.RANDOM) {
-        add(CoinListItem.Custom())
+      if (!customPlaced && coin == CoinType.RANDOM) {
+        customMatches.forEach { add(CoinListItem.Custom(it)) }
         customPlaced = true
       }
       add(CoinListItem.Option(coin))
     }
 
-    // a search can filter RANDOM out from under it, so it still needs somewhere to land
-    if (customMatches && !customPlaced) {
+    // a search can filter RANDOM out from under them, so they still need somewhere to land
+    if (customMatches.isNotEmpty() && !customPlaced) {
       if (currentGroup != CoinGroup.OTHER) add(CoinListItem.Group(CoinGroup.OTHER.label))
-      add(CoinListItem.Custom())
+      customMatches.forEach { add(CoinListItem.Custom(it)) }
     }
   }
 }
@@ -485,10 +488,29 @@ fun CoinPickerPreview() {
     CoinPickerContent(
       selectedValue = CoinType.GEORGE_WASHINGTON.prefix,
       favorites = setOf("gw", "jfk"),
-      customCoinReady = true,
+      custom = CustomCoin.entries.associateWith { CustomCoinState(CustomCoin.Face.entries.toSet()) },
       onSelect = { },
       onToggleFavorite = { },
       onDismiss = { }
     )
+  }
+}
+
+/**
+ * The disc and ring an emoji face is drawn on, behind a thumbnail of the stored glyph.
+ *
+ * The file itself is only the glyph, on transparency -- the color follows the Material theme, so it
+ * goes on at animation time and has to be reproduced anywhere a face is previewed. Shared by the
+ * coin picker and the Custom Coin dialog so the two cannot disagree about what the coin looks like.
+ */
+@Composable
+internal fun EmojiCoinBacking(face: CustomCoin.Face) {
+  val disc = emojiDisc
+  val rim = face.faceColor()
+  Canvas(modifier = Modifier.fillMaxSize()) {
+    val radius = size.minDimension / 2f
+    val width = size.minDimension * CoinImage.RIM_FRACTION
+    drawCircle(color = disc, radius = radius)
+    drawCircle(color = rim, radius = radius - width / 2f, style = Stroke(width))
   }
 }

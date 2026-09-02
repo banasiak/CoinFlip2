@@ -148,6 +148,12 @@ sealed class Setting<T>(val key: String, val default: T) {
     val FAVORITES = StringSetSetting("favoriteCoins")
 
     val CUSTOM_COIN_RIM = BooleanSetting("customCoinRim", true)
+
+    // which glyph each emoji face was made from, so the picker reopens on it. Only a convenience:
+    // the PNG is the artwork, and the disc behind it follows the prefix, so losing these to a
+    // schema wipe costs the preselection and nothing else.
+    val EMOJI_HEADS = OptionalStringSetting("emojiHeads")
+    val EMOJI_TAILS = OptionalStringSetting("emojiTails")
     val STREAK = BooleanSetting("streak", false)
     val HEADS = LongSetting("headsCount", 0L)
     val TAILS = LongSetting("tailsCount", 0L)

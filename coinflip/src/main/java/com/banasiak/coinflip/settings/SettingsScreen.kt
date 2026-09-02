@@ -71,22 +71,48 @@ import com.banasiak.coinflip.ui.theme.Dimen
 import com.banasiak.coinflip.ui.theme.Type
 import kotlinx.coroutines.launch
 
-private enum class OpenDialog { NONE, COIN, CUSTOM_TEXT, CUSTOM_COIN }
+private enum class OpenDialog { NONE, COIN, CUSTOM_TEXT, PHOTO_COIN, EMOJI_COIN }
 
-// what the Custom Coin row has to say about itself, kept apart from the composable that renders it
+// what a custom coin's row has to say about itself, kept apart from the composable that renders it
 // so the three states can be tested; getting SELECTED and UNSELECTED the wrong way round is the
 // easy mistake
 @VisibleForTesting
 internal enum class CustomCoinSummary { CREATE, UNSELECTED, SELECTED }
 
 @VisibleForTesting
-internal fun customCoinSummary(state: SettingsState): CustomCoinSummary =
+internal fun customCoinSummary(state: SettingsState, coin: CustomCoin): CustomCoinSummary =
   when {
     // a half-made coin counts as uncreated: until both faces are set there is nothing to select
-    !state.customCoinReady -> CustomCoinSummary.CREATE
-    state.coin == CustomCoin.PREFIX -> CustomCoinSummary.SELECTED
+    !state.stateFor(coin).ready -> CustomCoinSummary.CREATE
+    state.coin == coin.prefix -> CustomCoinSummary.SELECTED
     else -> CustomCoinSummary.UNSELECTED
   }
+
+/** One custom coin's row: its own title, and the same three summaries for either kind. */
+@Composable
+private fun CustomCoinRow(state: SettingsState, coin: CustomCoin, onClick: () -> Unit) {
+  PreferenceRow(
+    title = stringResource(coin.title),
+    summary =
+      when (customCoinSummary(state, coin)) {
+        CustomCoinSummary.CREATE -> {
+          stringResource(R.string.settings_item_custom_coin_empty)
+        }
+        CustomCoinSummary.SELECTED -> {
+          stringResource(R.string.settings_item_custom_coin_selected)
+        }
+        // names the row to send them to rather than repeating its label, so the two cannot
+        // disagree in a locale where one of them was translated differently
+        CustomCoinSummary.UNSELECTED -> {
+          stringResource(
+            R.string.settings_item_custom_coin_unselected,
+            stringResource(R.string.settings_item_coin_title)
+          )
+        }
+      },
+    onClick = onClick
+  )
+}
 
 // divides the two faces' records; punctuation rather than a word, so it needs no translating
 private const val RECORD_SEPARATOR = "·"
@@ -170,10 +196,15 @@ fun SettingsView(
   snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
   onNavigateBack: () -> Unit = { },
   onPickImage: (CustomCoin.Face) -> Unit = { },
-  loadThumbnail: (CustomCoin.Face, Int) -> ImageBitmap? = { _, _ -> null }
+  loadThumbnail: (CustomCoin, CustomCoin.Face, Int) -> ImageBitmap? = { _, _, _ -> null }
 ) {
   // saveable so an open dialog survives configuration change and process death
   var openDialog by rememberSaveable { mutableStateOf(OpenDialog.NONE) }
+
+  // which face the emoji picker is open for. Here rather than in SettingsState, unlike pendingCrop:
+  // no other process is involved, so nothing can tear this composition down while the picker is up
+  // that rememberSaveable does not already survive
+  var emojiFace by rememberSaveable { mutableStateOf<CustomCoin.Face?>(null) }
 
   val headsDefault = stringResource(R.string.heads)
   val tailsDefault = stringResource(R.string.tails)
@@ -201,11 +232,8 @@ fun SettingsView(
         PreferenceRow(
           title = stringResource(R.string.settings_item_coin_title),
           summary =
-            if (state.coin == CustomCoin.PREFIX) {
-              stringResource(R.string.settings_item_custom_coin_title)
-            } else {
-              CoinType.fromPrefix(state.coin)?.coinName
-            },
+            CustomCoin.forPrefix(state.coin)?.let { stringResource(it.title) }
+              ?: CoinType.fromPrefix(state.coin)?.coinName,
           onClick = { openDialog = OpenDialog.COIN }
         )
         SwitchPreference(
@@ -223,28 +251,9 @@ fun SettingsView(
           enabled = state.text,
           onClick = { openDialog = OpenDialog.CUSTOM_TEXT }
         )
-        // the only way into the photo picker; the coin picker stays about choosing a coin
-        PreferenceRow(
-          title = stringResource(R.string.settings_item_custom_coin_title),
-          summary =
-            when (customCoinSummary(state)) {
-              CustomCoinSummary.CREATE -> {
-                stringResource(R.string.settings_item_custom_coin_empty)
-              }
-              CustomCoinSummary.SELECTED -> {
-                stringResource(R.string.settings_item_custom_coin_selected)
-              }
-              // names the row to send them to rather than repeating its label, so the two cannot
-              // disagree in a locale where one of them was translated differently
-              CustomCoinSummary.UNSELECTED -> {
-                stringResource(
-                  R.string.settings_item_custom_coin_unselected,
-                  stringResource(R.string.settings_item_coin_title)
-                )
-              }
-            },
-          onClick = { openDialog = OpenDialog.CUSTOM_COIN }
-        )
+        // the only way into either face picker; the coin picker stays about choosing a coin
+        CustomCoinRow(state, CustomCoin.PHOTO) { openDialog = OpenDialog.PHOTO_COIN }
+        CustomCoinRow(state, CustomCoin.EMOJI) { openDialog = OpenDialog.EMOJI_COIN }
 
         // ----- Flip: the switches run together, with the one non-switch control after them -----
         CategoryHeader(stringResource(R.string.settings_header_flip_title))
@@ -360,8 +369,7 @@ fun SettingsView(
         CoinPicker(
           selectedValue = state.coin,
           favorites = state.favorites,
-          customCoinReady = state.customCoinReady,
-          customRevision = state.customRevision,
+          custom = state.custom,
           loadThumbnail = loadThumbnail,
           onSelect = { postAction(SettingsAction.SetCoin(it)) },
           onToggleFavorite = { postAction(SettingsAction.ToggleFavoriteCoin(it)) },
@@ -381,15 +389,17 @@ fun SettingsView(
           onDismiss = { openDialog = OpenDialog.NONE }
         )
       }
-      OpenDialog.CUSTOM_COIN -> {
+      OpenDialog.PHOTO_COIN, OpenDialog.EMOJI_COIN -> {
+        val coin = if (openDialog == OpenDialog.PHOTO_COIN) CustomCoin.PHOTO else CustomCoin.EMOJI
         CustomCoinDialog(
-          faces = state.customFaces,
-          revision = state.customRevision,
+          coin = coin,
+          faces = state.stateFor(coin).faces,
+          revision = state.stateFor(coin).revision,
           rimEnabled = state.customRim,
-          loadThumbnail = loadThumbnail,
-          onPickImage = onPickImage,
+          loadThumbnail = { face, targetPx -> loadThumbnail(coin, face, targetPx) },
+          onPickFace = { face -> if (coin == CustomCoin.PHOTO) onPickImage(face) else emojiFace = face },
           onDelete = {
-            postAction(SettingsAction.DeleteCustomCoin)
+            postAction(SettingsAction.DeleteCustomCoin(coin))
             // and close, so the undo can be reached. A Dialog is its own window, so the snackbar --
             // which belongs to this screen's Scaffold -- draws beneath the dialog's scrim, and a tap
             // aimed at Undo lands on the scrim and dismisses the dialog instead. Nothing about
@@ -401,6 +411,19 @@ fun SettingsView(
         )
       }
       OpenDialog.NONE -> { }
+    }
+
+    // a sibling of the dialog above rather than an OpenDialog of its own: the Custom Coin dialog
+    // stays composed underneath, which is what refreshes its thumbnail on the revision alone
+    emojiFace?.let { face ->
+      val emoji = state.stateFor(CustomCoin.EMOJI).emoji
+      EmojiPicker(
+        face = face,
+        initialEmoji = emoji[face],
+        otherEmoji = emoji[if (face == CustomCoin.Face.HEADS) CustomCoin.Face.TAILS else CustomCoin.Face.HEADS],
+        onConfirm = { postAction(SettingsAction.PickedCustomEmoji(it, face)) },
+        onDismiss = { emojiFace = null }
+      )
     }
 
     // driven by state rather than by openDialog: the image arrives from the system picker, which

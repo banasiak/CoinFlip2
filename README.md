@@ -77,10 +77,10 @@ request and reports coverage into the run summary.
 ## Credits
 
 The 2026 refactor was done by **[Claude](https://claude.ai/referral/iftfNLT1kQ)** — landscape support, the
-rebuilt Settings screen, the searchable coin picker and favorites, custom coin faces, corrections to
-all 13 translations, the bulk of the unit test suite, the AGP 9 / Gradle 9 / SDK 37 migration, and
-most of the code in between — working from direction, design decisions, and on-device testing by
-[@banasiak](https://github.com/banasiak).
+rebuilt Settings screen, the searchable coin picker and favorites, the photo and emoji custom
+coins, corrections to all 13 translations, the bulk of the unit test suite, the AGP 9 / Gradle 9 /
+SDK 37 migration, and most of the code in between — working from direction, design decisions, and
+on-device testing by [@banasiak](https://github.com/banasiak).
 The commit messages in that stretch were written by Claude as well, which goes some way toward
 explaining their length.
 

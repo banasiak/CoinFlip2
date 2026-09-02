@@ -76,22 +76,22 @@ class AnimationHelperTests {
 
   @Test
   fun `a shipped coin's cache key is nothing but its prefix`() {
-    every { customCoins.revision } returns 99L
+    every { customCoins.revision(any()) } returns 99L
 
     // the revision and the rim belong to the custom coin; keying a shipped one on them would
     // regenerate eighty coins' worth of bitmaps every time the theme changed
-    helper().cacheKey("jfk", rim(1, 2)) shouldBeEqualTo "jfk"
-    helper().cacheKey("jfk", rim(3, 4)) shouldBeEqualTo "jfk"
+    helper().cacheKey("jfk", rim(1, 2), true) shouldBeEqualTo "jfk"
+    helper().cacheKey("jfk", rim(3, 4), true) shouldBeEqualTo "jfk"
   }
 
   @Test
   fun `the custom coin's key moves with the revision, so a replaced face is redrawn`() {
     // the prefix stays "custom" across a re-upload, so without this the old artwork would stay up
-    every { customCoins.revision } returns 100L
-    val before = helper().cacheKey(CustomCoin.PREFIX, rim(1, 2))
+    every { customCoins.revision(any()) } returns 100L
+    val before = helper().cacheKey(CustomCoin.PHOTO.prefix, rim(1, 2), true)
 
-    every { customCoins.revision } returns 200L
-    val after = helper().cacheKey(CustomCoin.PREFIX, rim(1, 2))
+    every { customCoins.revision(any()) } returns 200L
+    val after = helper().cacheKey(CustomCoin.PHOTO.prefix, rim(1, 2), true)
 
     before shouldNotBeEqualTo after
   }
@@ -99,65 +99,65 @@ class AnimationHelperTests {
   @Test
   fun `the custom coin's key moves with the rim colors, so a theme change is redrawn`() {
     // a light/dark switch recreates the activity but not this singleton, so the key is what notices
-    every { customCoins.revision } returns 100L
+    every { customCoins.revision(any()) } returns 100L
 
-    helper().cacheKey(CustomCoin.PREFIX, rim(1, 2)) shouldNotBeEqualTo
-      helper().cacheKey(CustomCoin.PREFIX, rim(1, 3))
-    helper().cacheKey(CustomCoin.PREFIX, rim(1, 2)) shouldNotBeEqualTo
-      helper().cacheKey(CustomCoin.PREFIX, rim(9, 2))
+    helper().cacheKey(CustomCoin.PHOTO.prefix, rim(1, 2), true) shouldNotBeEqualTo
+      helper().cacheKey(CustomCoin.PHOTO.prefix, rim(1, 3), true)
+    helper().cacheKey(CustomCoin.PHOTO.prefix, rim(1, 2), true) shouldNotBeEqualTo
+      helper().cacheKey(CustomCoin.PHOTO.prefix, rim(9, 2), true)
   }
 
   @Test
   fun `an unchanged custom coin keeps its key, so nothing is regenerated for free`() {
-    every { customCoins.revision } returns 100L
+    every { customCoins.revision(any()) } returns 100L
 
-    helper().cacheKey(CustomCoin.PREFIX, rim(1, 2)) shouldBeEqualTo
-      helper().cacheKey(CustomCoin.PREFIX, rim(1, 2))
+    helper().cacheKey(CustomCoin.PHOTO.prefix, rim(1, 2), true) shouldBeEqualTo
+      helper().cacheKey(CustomCoin.PHOTO.prefix, rim(1, 2), true)
   }
 
   @Test
   fun `switching the border off keys differently, so the ring is redrawn away`() {
-    every { customCoins.revision } returns 100L
+    every { customCoins.revision(any()) } returns 100L
 
     // a null rim means no ring and an untinted edge; it has to force a regeneration like any other
     // change, or the coin keeps the ring the user just turned off
-    helper().cacheKey(CustomCoin.PREFIX, null) shouldNotBeEqualTo
-      helper().cacheKey(CustomCoin.PREFIX, rim(1, 2))
+    helper().cacheKey(CustomCoin.PHOTO.prefix, null, true) shouldNotBeEqualTo
+      helper().cacheKey(CustomCoin.PHOTO.prefix, rim(1, 2), true)
   }
 
   @Test
   fun `an unringed custom coin still keys on its revision`() {
-    every { customCoins.revision } returns 100L
-    val before = helper().cacheKey(CustomCoin.PREFIX, null)
+    every { customCoins.revision(any()) } returns 100L
+    val before = helper().cacheKey(CustomCoin.PHOTO.prefix, null, true)
 
-    every { customCoins.revision } returns 200L
+    every { customCoins.revision(any()) } returns 200L
 
-    before shouldNotBeEqualTo helper().cacheKey(CustomCoin.PREFIX, null)
+    before shouldNotBeEqualTo helper().cacheKey(CustomCoin.PHOTO.prefix, null, true)
   }
 
   @Test
   fun `a shipped coin keys on its prefix whether or not a rim is passed`() {
-    every { customCoins.revision } returns 100L
+    every { customCoins.revision(any()) } returns 100L
 
-    helper().cacheKey("jfk", null) shouldBeEqualTo "jfk"
-    helper().cacheKey("jfk", rim(1, 2)) shouldBeEqualTo "jfk"
+    helper().cacheKey("jfk", null, true) shouldBeEqualTo "jfk"
+    helper().cacheKey("jfk", rim(1, 2), true) shouldBeEqualTo "jfk"
   }
 
   @Test
   fun `a shipped coin's identity is nothing but its prefix`() {
-    every { customCoins.revision } returns 99L
+    every { customCoins.revision(any()) } returns 99L
 
     helper().identity("jfk") shouldBeEqualTo "jfk"
   }
 
   @Test
   fun `the custom coin's identity moves with the revision, so a replaced face is a different coin`() {
-    every { customCoins.revision } returns 100L
-    val before = helper().identity(CustomCoin.PREFIX)
+    every { customCoins.revision(any()) } returns 100L
+    val before = helper().identity(CustomCoin.PHOTO.prefix)
 
-    every { customCoins.revision } returns 200L
+    every { customCoins.revision(any()) } returns 200L
 
-    before shouldNotBeEqualTo helper().identity(CustomCoin.PREFIX)
+    before shouldNotBeEqualTo helper().identity(CustomCoin.PHOTO.prefix)
   }
 
   @Test
@@ -169,9 +169,10 @@ class AnimationHelperTests {
     AnimationHelper.Permutation.landingOn(Coin.Value.UNKNOWN) shouldBeEqualTo AnimationHelper.Permutation.UNKNOWN
   }
 
-  private fun rim(heads: Int, tails: Int) = AnimationHelper.RimColors(heads, tails)
+  private fun rim(heads: Int, tails: Int) = AnimationHelper.CoinColors(heads, tails, FILL)
 
   companion object {
+    private const val FILL = 7
     private const val PACKAGE = "com.banasiak.coinflip"
     private val RANDOM = CoinType.RANDOM.prefix
     private val flippablePrefixes = CoinType.flippable.map { it.prefix }.toSet()

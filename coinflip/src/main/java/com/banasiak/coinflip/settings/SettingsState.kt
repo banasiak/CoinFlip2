@@ -22,10 +22,8 @@ data class SettingsState(
   val secureRandom: Boolean = Setting.SECURE_RANDOM.default,
   val force: ShakeForce = Setting.FORCE.default,
   val favorites: Set<String> = Setting.FAVORITES.default,
-  val customFaces: Set<CustomCoin.Face> = emptySet(),
-  // replacing an image leaves the face set either way, so this is what tells a cached thumbnail
-  // that the file underneath it changed
-  val customRevision: Long = 0,
+  // one entry per coin the user has started building; absent means nothing set yet
+  val custom: Map<CustomCoin, CustomCoinState> = emptyMap(),
   val customRim: Boolean = Setting.CUSTOM_COIN_RIM.default,
   // the picked image waiting to be framed, which is also what puts the crop dialog on screen
   val pendingCrop: PendingCrop? = null,
@@ -35,8 +33,19 @@ data class SettingsState(
   val headsRecord: Long = 0,
   val tailsRecord: Long = 0
 ) {
+  fun stateFor(coin: CustomCoin): CustomCoinState = custom[coin] ?: CustomCoinState()
+}
+
+data class CustomCoinState(
+  val faces: Set<CustomCoin.Face> = emptySet(),
+  // replacing an image leaves the face set either way, so this is what tells a cached thumbnail
+  // that the file underneath it changed
+  val revision: Long = 0,
+  // which glyph each face was made from, for the picker to reopen on. Empty for the photo coin.
+  val emoji: Map<CustomCoin.Face, String> = emptyMap()
+) {
   // both faces set, which is what makes the coin selectable at all
-  val customCoinReady: Boolean get() = customFaces.size == CustomCoin.Face.entries.size
+  val ready: Boolean get() = faces.size == CustomCoin.Face.entries.size
 }
 
 data class PendingCrop(val uri: Uri, val face: CustomCoin.Face)
@@ -65,17 +74,21 @@ sealed class SettingsAction {
   data object UndoResetStats : SettingsAction()
   data class PickedCustomImage(val uri: Uri, val face: CustomCoin.Face) : SettingsAction()
 
+  // no crop and no staging, unlike a photo: a glyph has nothing to frame, so this writes
+  data class PickedCustomEmoji(val emoji: String, val face: CustomCoin.Face) : SettingsAction()
+
   // the crop is in the pixels of the image *as adjusted*, so the adjustment travels with it
   data class CropCustomImage(val crop: IntRect, val adjustment: CoinImage.Orientation) : SettingsAction()
   data object DismissCustomCrop : SettingsAction()
   data object CustomImageFailed : SettingsAction()
 
-  // nothing is unlinked yet: the files go when the snackbar offering the undo gives up on it
-  data object DeleteCustomCoin : SettingsAction()
-  data object UndoDeleteCustomCoin : SettingsAction()
+  // nothing is unlinked yet: the files go when the snackbar offering the undo gives up on it. The
+  // coin travels with all three because both can be pending at once and the snackbar only shows one
+  data class DeleteCustomCoin(val coin: CustomCoin) : SettingsAction()
+  data class UndoDeleteCustomCoin(val coin: CustomCoin) : SettingsAction()
 
   // the snackbar went away untouched, so the delete it was holding open now happens
-  data object CommitDeleteCustomCoin : SettingsAction()
+  data class CommitDeleteCustomCoin(val coin: CustomCoin) : SettingsAction()
   data class SetCustomRim(val value: Boolean) : SettingsAction()
 }
 

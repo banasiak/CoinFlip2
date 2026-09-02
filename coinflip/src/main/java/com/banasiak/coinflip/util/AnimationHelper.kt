@@ -45,9 +45,17 @@ class AnimationHelper @Inject constructor(
     private const val EDGE_BLEND = 0.5f
   }
 
-  // the colors the custom coin's rim is drawn in; null for a shipped coin, which has its own
-  // artwork, and for a custom coin whose owner turned the rim off
-  data class RimColors(@param:ColorInt val heads: Int, @param:ColorInt val tails: Int)
+  /**
+   * The theme colors a custom coin is drawn in; null for a shipped coin, which has its own artwork.
+   *
+   * The two rims are per face, as the result text and the stats counts are. [fill] is the disc an
+   * emoji sits on and is one color for the whole coin, because it is a surface rather than a label.
+   */
+  data class CoinColors(
+    @param:ColorInt val headsRim: Int,
+    @param:ColorInt val tailsRim: Int,
+    @param:ColorInt val fill: Int
+  )
 
   // written on Dispatchers.IO and read on Main during flips, so publish as a single volatile reference swap
   @Volatile
@@ -57,51 +65,75 @@ class AnimationHelper @Inject constructor(
   @Volatile
   private var loadedKey: String? = null
 
-  suspend fun loadAnimationsForCoin(prefix: String, rim: RimColors?) {
+  suspend fun loadAnimationsForCoin(prefix: String, colors: CoinColors?, rimEnabled: Boolean) {
     withContext(Dispatchers.IO) {
-      val key = cacheKey(prefix, rim)
+      val key = cacheKey(prefix, colors, rimEnabled)
       // skip the bitmap work when the same coin is already loaded; "random" rerolls on every load
       if (key == loadedKey && prefix != CoinType.RANDOM.prefix) return@withContext
       val startTime = clock.millis()
       // a stored prefix can name a coin this build no longer ships -- or a custom coin whose files
       // have since been removed -- so fall back rather than leave the screen nothing to draw
-      val own = facesForPrefix(prefix, rim)
-      val faces = own ?: facesForPrefix(Setting.COIN.default, rim)
+      val own = facesForPrefix(prefix, colors, rimEnabled)
+      val faces = own ?: facesForPrefix(Setting.COIN.default, colors, rimEnabled)
       loadedKey = key
       if (faces == null) {
         Timber.w("No artwork for '$prefix', nor for the default coin. Leaving the coin unanimated.")
         animations = emptyMap()
         return@withContext
       }
-      // the edge is tinted only when the custom coin's own artwork is what actually loaded and its
+      // the edge is tinted only when a custom coin's own artwork is what actually loaded and its
       // rim is on; a fallback to a shipped coin takes the shipped grey with it, and so does a coin
       // the user asked to leave unringed
-      generateAnimations(faces.first, faces.second, edge(rim.takeIf { own != null && prefix == CustomCoin.PREFIX }))
+      val loaded = CustomCoin.forPrefix(prefix)?.takeIf { own != null }
+      generateAnimations(faces.first, faces.second, edge(loaded?.let { rimFor(it, colors, rimEnabled) }))
       Timber.i("Animations generated in: ${clock.millis() - startTime} milliseconds")
     }
   }
 
   /**
    * What makes one coin's artwork a *different coin* rather than the same one redrawn: the prefix,
-   * plus [CustomCoinStore.revision] for the custom coin. Free of the rim colors, unlike [cacheKey].
+   * plus [CustomCoinStore.revision] for a custom coin. Free of the theme colors, unlike [cacheKey].
    */
-  fun identity(prefix: String): String = if (prefix == CustomCoin.PREFIX) "$prefix:${customCoins.revision}" else prefix
+  fun identity(prefix: String): String =
+    CustomCoin.forPrefix(prefix)?.let { "$prefix:${customCoins.revision(it)}" } ?: prefix
 
   // the colors are what survive a light/dark switch, which recreates the activity but not this singleton
   @VisibleForTesting
-  internal fun cacheKey(prefix: String, rim: RimColors?): String =
-    if (prefix == CustomCoin.PREFIX) "${identity(prefix)}:${rim?.heads}:${rim?.tails}" else prefix
+  internal fun cacheKey(prefix: String, colors: CoinColors?, rimEnabled: Boolean): String {
+    val coin = CustomCoin.forPrefix(prefix) ?: return prefix
+    val rim = rimFor(coin, colors, rimEnabled)
+    return "${identity(prefix)}:${rim?.headsRim}:${rim?.tailsRim}:${fillFor(coin, colors)}"
+  }
 
-  private fun facesForPrefix(prefix: String, rim: RimColors?): Pair<BitmapDrawable, BitmapDrawable>? =
-    if (prefix == CustomCoin.PREFIX) customFaces(rim) else shippedFaces(prefix)
+  /**
+   * The rim [coin] is actually drawn with, which is not always the one the user asked for: an emoji
+   * face is a flat disc, and without the ring it reads as a sticker rather than a coin, so
+   * `Setting.CUSTOM_COIN_RIM` governs the photo coin alone.
+   */
+  private fun rimFor(coin: CustomCoin, colors: CoinColors?, rimEnabled: Boolean): CoinColors? =
+    colors.takeIf { rimEnabled || coin == CustomCoin.EMOJI }
 
-  // the rim goes on the full-size face, before resizeBitmapDrawable squashes the frames: a ring
-  // added afterwards would stay round while the coin turned inside it
-  private fun customFaces(rim: RimColors?): Pair<BitmapDrawable, BitmapDrawable>? {
-    val (heads, tails) = customCoins.faces() ?: return null
+  // only the emoji coin is stored on transparency; a photographed face is already opaque, and
+  // filling behind it would thicken the antialiased silhouette it shares with the shipped coins
+  private fun fillFor(coin: CustomCoin, colors: CoinColors?): Int? =
+    colors?.fill?.takeIf { coin == CustomCoin.EMOJI }
+
+  private fun facesForPrefix(prefix: String, colors: CoinColors?, rimEnabled: Boolean): Pair<BitmapDrawable, BitmapDrawable>? {
+    val coin = CustomCoin.forPrefix(prefix) ?: return shippedFaces(prefix)
+    return customFaces(coin, rimFor(coin, colors, rimEnabled), fillFor(coin, colors))
+  }
+
+  // both go on the full-size face, before resizeBitmapDrawable squashes the frames: a ring added
+  // afterwards would stay round while the coin turned inside it
+  private fun customFaces(coin: CustomCoin, rim: CoinColors?, fill: Int?): Pair<BitmapDrawable, BitmapDrawable>? {
+    val (heads, tails) = customCoins.faces(coin) ?: return null
+    if (fill != null) {
+      CoinImage.fillDisc(heads, fill)
+      CoinImage.fillDisc(tails, fill)
+    }
     if (rim != null) {
-      CoinImage.drawRim(heads, rim.heads)
-      CoinImage.drawRim(tails, rim.tails)
+      CoinImage.drawRim(heads, rim.headsRim)
+      CoinImage.drawRim(tails, rim.tailsRim)
     }
     return Pair(heads.toDrawable(resources), tails.toDrawable(resources))
   }
@@ -111,10 +143,10 @@ class AnimationHelper @Inject constructor(
     return Pair(bitmapDrawable(heads) ?: return null, bitmapDrawable(tails) ?: return null)
   }
 
-  private fun edge(rim: RimColors?): BitmapDrawable {
+  private fun edge(rim: CoinColors?): BitmapDrawable {
     val edge = ResourcesCompat.getDrawable(resources, R.drawable.edge, null) as BitmapDrawable
     if (rim == null) return edge
-    val color = ColorUtils.blendARGB(rim.heads, rim.tails, EDGE_BLEND)
+    val color = ColorUtils.blendARGB(rim.headsRim, rim.tailsRim, EDGE_BLEND)
     return CoinImage.tinted(edge.bitmap, color).toDrawable(resources)
   }
 
