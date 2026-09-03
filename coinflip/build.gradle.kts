@@ -18,8 +18,8 @@ android {
     applicationId = "com.banasiak.coinflip"
     minSdk = 26
     targetSdk = 37
-    versionCode = 77
-    versionName = "2026/08"
+    versionCode = 78
+    versionName = "2026/09"
   }
   buildFeatures {
     buildConfig = true
