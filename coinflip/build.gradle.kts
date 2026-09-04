@@ -89,7 +89,7 @@ kover {
   }
 }
 
-val ktlint: Configuration by configurations.creating
+val ktlint = configurations.create("ktlint")
 
 dependencies {
   implementation(platform(libs.androidx.compose.bom))
@@ -130,18 +130,19 @@ dependencies {
   }
 }
 
-val ktlintCheck by tasks.registering(JavaExec::class) {
-  group = LifecycleBasePlugin.VERIFICATION_GROUP
-  description = "Check Kotlin code style"
-  classpath = ktlint
-  mainClass.set("com.pinterest.ktlint.Main")
-  // see https://pinterest.github.io/ktlint/install/cli/#command-line-usage for more information
-  args(
-    "**/src/**/*.kt",
-    "**.kts",
-    "!**/build/**"
-  )
-}
+val ktlintCheck =
+  tasks.register<JavaExec>("ktlintCheck") {
+    group = LifecycleBasePlugin.VERIFICATION_GROUP
+    description = "Check Kotlin code style"
+    classpath = ktlint
+    mainClass.set("com.pinterest.ktlint.Main")
+    // see https://pinterest.github.io/ktlint/install/cli/#command-line-usage for more information
+    args(
+      "**/src/**/*.kt",
+      "**.kts",
+      "!**/build/**"
+    )
+  }
 
 tasks.check {
   dependsOn(ktlintCheck)
