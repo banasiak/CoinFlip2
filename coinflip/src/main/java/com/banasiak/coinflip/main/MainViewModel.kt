@@ -193,7 +193,9 @@ class MainViewModel @Inject constructor(
       _effectFlow.emit(MainEffect.FlipCoin)
 
       if (animationEnabled) {
-        // an obtuse way of pausing while the animation renders, proceeding 80 ms (4 frames, or 1/2 flip) before completion
+        // hold back the last 4 frames (80 ms): onFlipFinished plays the landing sound and the THUD
+        // haptic, and firing those a beat early is what makes them land with the coin settling
+        // rather than trailing it. Latency compensation, not slack -- at 0 the audio arrives late
         animation?.duration(withoutLastFrames = 4)?.let {
           Timber.d("animation delay: $it ms")
           // vibrate while animating

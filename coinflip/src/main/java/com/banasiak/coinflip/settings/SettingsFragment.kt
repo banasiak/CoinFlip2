@@ -1,5 +1,8 @@
 package com.banasiak.coinflip.settings
 
+import android.animation.Animator
+import android.animation.AnimatorInflater
+import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +18,19 @@ import dagger.hilt.android.AndroidEntryPoint
 class SettingsFragment : Fragment() {
   private val viewModel: SettingsViewModel by viewModels()
   private lateinit var onBackPressedCallback: OnBackPressedCallback
+
+  // the slide has to cover the whole window and an animator resource can only carry a fixed
+  // dimension; AppActivity handles orientation itself, so nothing would re-inflate a value measured
+  // against a width the app no longer has
+  override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator? {
+    if (nextAnim == 0) return null
+    val width = resources.displayMetrics.widthPixels.toFloat()
+    // the end edge is the left one in RTL, so the panel travels the other way
+    val distance = if (resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL) -width else width
+    return AnimatorInflater.loadAnimator(requireContext(), nextAnim).apply {
+      if (this is ObjectAnimator) setFloatValues(if (enter) distance else 0f, if (enter) 0f else distance)
+    }
+  }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
     ComposeView(requireContext()).apply {

@@ -268,6 +268,11 @@ private fun CoinImage(state: MainState, flipToken: Int, size: Dp, coinPadding: D
             ImageView(context).apply {
               scaleType = ImageView.ScaleType.CENTER_INSIDE
               contentDescription = context.getString(R.string.coin_animation)
+              // a view built here is never mid-flip -- the running animation belonged to the view
+              // that has gone -- so seed it with the landed face. CoinImageType.ANIMATION is a
+              // no-op in update below, which would otherwise leave a view recreated by navigation
+              // blank until the next state change
+              setImageDrawable(state.animation?.getLastFrame())
             }.also { imageViewRef.value = it }
           },
           update = { imageView ->

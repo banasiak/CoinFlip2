@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- distance is a placeholder: the fragment replaces the values with the real window width and the
+     direction it is travelling, because an animator resource can only carry a fixed dimension -->
+<objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+  android:duration="@integer/nav_anim_duration"
+  android:propertyName="translationX"
+  android:valueFrom="400dp"
+  android:valueTo="0dp"
+  android:valueType="floatType"
+  />

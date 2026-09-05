@@ -38,6 +38,69 @@ CoinFlip2 is a Modern Android Development (MAD) coin-flipping app published on t
 - `SettingsFragment` — preferences screen
 - `AboutFragment` / `DiagnosticsFragment` — `BottomSheetDialogFragment` dialogs
 
+**Predictive back is enabled** (`android:enableOnBackInvokedCallback="true"`), which is what makes
+the back gesture *animate under the finger* instead of firing once it is released. At `targetSdk` 37
+the flag no longer governs the system-level animations — those are on regardless — so what it buys
+is the in-app half, and these things have to hold together for that:
+
+- Settings slides in from the end edge and back out to it, drawn over main the whole way, and main
+  does not move. The animations are **`res/animator`, not `res/anim` and not `androidx.transition`**.
+  `FragmentManager` seeks an `Animator` (`AnimatorEffect.onProgress` drives `setCurrentPlayTime`) and
+  can only play an `Animation` start to finish, so the four `res/anim` slide files this replaced made
+  a gesture the user was still dragging play like a button press. One `slide_x` resource serves both
+  directions; the fragment sets which way it travels.
+- **The z-order is why this is not `androidx.transition`.** The arriving screen has to slide in *over*
+  the one being left behind, and a `Transition` cannot do that here: it animates a disappearing view
+  by moving it into the container's `ViewOverlay`, which draws after every child no matter what, so
+  the outgoing screen sits on top and no elevation can lift the arriving one above it. Animators
+  leave both views as ordinary children, where `translationZ` works.
+- **Nothing lifts anything: the container's own child order already does it.** Settings' view is
+  added after main's on the way in, and on a pop `FragmentStateManager` re-inserts main's view
+  *below* the one added after it — so settings draws over main in both directions for free. This is
+  the reason the animation reads as one screen sliding over another rather than two screens
+  crossing. A design wanting main on *top* would have to fight that with `translationZ`, which is
+  what the previous version of this transition did.
+- **Main recedes rather than moving.** It scales to 0.75 about its own centre and fades out as
+  settings slides over it, and comes back the same way. Scale is unitless, so these two resources
+  need none of the code-side measuring `slide_x` does. Main also could not simply be left alone:
+  without an animator of its own `FragmentManager` applies the container change immediately and
+  main's view is gone before the screen sliding over it has finished, baring the window behind.
+- **The slide distance is set in code, not in the resource.** An animator resource can only carry a
+  fixed dimension and the slide has to cover the whole window; `AppActivity` declares `configChanges`
+  for orientation, so nothing recreates these fragments on a rotation and a value baked into XML would
+  outlive the width it was measured against. `onCreateAnimator` inflates the declared animator and
+  replaces its values, which keeps duration and interpolator in the resource where they belong. Only
+  `SettingsFragment` overrides it — `scale_in` and `scale_out` carry no distance and run as declared.
+- **A fade-through disqualifies a transition from being seeked**, which is worth knowing before
+  reaching for `MaterialSharedAxis` again. Its secondary provider is a `FadeThroughProvider` with a
+  0.35 threshold: the outgoing view reaches alpha 0 at exactly the progress the incoming view starts
+  to rise from 0. Played in 300ms that crossover is invisible; held under a thumb it is an empty
+  window, and predictive back parks the user in it for a good part of the drag.
+- `androidx.fragment` is pinned to 1.9.0 by an explicit `fragment-ktx` dependency. What the app calls
+  of it — `by viewModels()` and `onCreateAnimator` — has been there since 1.0, so the pin reads as
+  surplus and the version is the whole point of it: Navigation 2.10.0 still asks for fragment 1.6.2,
+  and seekable fragment effects arrived in 1.7.0 — drop the dependency and predictive back degrades
+  in silence to the non-interactive pop.
+- The About and Diagnostics sheets need no code at all. `BottomSheetBehavior` implements Material's
+  `MaterialBackHandler` and `BottomSheetDialog` runs the `MaterialBackOrchestrator` itself, so the
+  sheet scales down and slides out with the gesture the moment the manifest flag is set. That is
+  API 34+ only: below it the orchestrator registers a plain callback with no progress.
+
+One trap is worth recording because it cost three cycles and looks nothing like its cause. Under
+`androidx.transition` the screen being left behind went completely blank the instant the gesture
+started, and the transition itself was innocent — it was faithfully animating an empty view. Moving a
+disappearing view into the `ViewOverlay` detaches it from the window, and `ComposeView`'s default
+strategy disposes the composition on exactly that event. A `setBackgroundColor` on the same root kept
+animating throughout, because that is a View property and survives what the composition does not,
+which is what finally identified it. The animator path never detaches the view, so no
+`ViewCompositionStrategy` is needed now — but any return to `androidx.transition` needs
+`DisposeOnViewTreeLifecycleDestroyed` on both fragments.
+
+`SettingsFragment`'s `OnBackPressedCallback` is the one place the gesture stays dead. While it is
+enabled — the dynamic color preference changed, so the activity has to be recreated on the way out —
+it consumes back to `finish()` and relaunch, and an enabled callback that reports no progress means
+the system draws no preview. There is no fragment pop to seek in that case, only an activity restart.
+
 **UI is fully migrated to Jetpack Compose.** Fragments create a `ComposeView` in `onCreateView` and render a `*Screen` composable (e.g., `MainFragment` → `MainScreen`, `SettingsFragment` → `SettingsScreen`). Each Compose screen follows a two-layer pattern: `*Screen(viewModel)` collects state, `*View(state, postAction)` is the pure composable (used by `@PreviewLightDark`). The Compose theme is in `ui/theme/` (`AppTheme`), which honors the dynamic-color preference on API 31+. The coin animation still uses `AndroidView` wrapping an `ImageView` with `DurationAnimationDrawable`.
 
 **State management pattern (MVI-style):**

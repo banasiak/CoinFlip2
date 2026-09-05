@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- shared by every animator in the main<->settings transition: the slide and the scale have to
+       run for the same time or the screen arriving lands before the one behind it has finished -->
+  <integer name="nav_anim_duration">450</integer>
+
+  <!-- scale_out and scale_in are mirror images of each other, so both ends are shared and not just
+       the collapsed one: an endpoint that drifts on one side leaves the main screen fractionally
+       short of full size, or fractionally transparent, every time it comes back -->
+  <item name="nav_scale_collapsed" format="float" type="dimen">0.75</item>
+  <item name="nav_scale_full" format="float" type="dimen">1.0</item>
+  <item name="nav_alpha_hidden" format="float" type="dimen">0.0</item>
+  <item name="nav_alpha_visible" format="float" type="dimen">1.0</item>
+</resources>

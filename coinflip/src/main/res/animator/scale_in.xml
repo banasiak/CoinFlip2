@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+  <objectAnimator
+    android:duration="@integer/nav_anim_duration"
+    android:propertyName="scaleX"
+    android:valueFrom="@dimen/nav_scale_collapsed"
+    android:valueTo="@dimen/nav_scale_full"
+    android:valueType="floatType"
+    />
+  <objectAnimator
+    android:duration="@integer/nav_anim_duration"
+    android:propertyName="scaleY"
+    android:valueFrom="@dimen/nav_scale_collapsed"
+    android:valueTo="@dimen/nav_scale_full"
+    android:valueType="floatType"
+    />
+  <objectAnimator
+    android:duration="@integer/nav_anim_duration"
+    android:propertyName="alpha"
+    android:valueFrom="@dimen/nav_alpha_hidden"
+    android:valueTo="@dimen/nav_alpha_visible"
+    android:valueType="floatType"
+    />
+</set>
