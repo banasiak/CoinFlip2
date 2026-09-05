@@ -9,13 +9,16 @@
     android:name="com.banasiak.coinflip.main.MainFragment"
     android:label="fragment_main"
     >
+    <!-- animator, not anim: FragmentManager seeks an Animator and can only play an Animation
+         start to finish, which drops the pop back to a non-interactive one with no warning.
+         settings uses the one slide resource in both directions; the fragment sets which way -->
     <action
       android:id="@+id/toSettings"
       app:destination="@id/settingsFragment"
-      app:enterAnim="@anim/slide_enter"
-      app:exitAnim="@anim/slide_exit"
-      app:popEnterAnim="@anim/slide_enter_pop"
-      app:popExitAnim="@anim/slide_exit_pop"
+      app:enterAnim="@animator/slide_x"
+      app:exitAnim="@animator/scale_out"
+      app:popEnterAnim="@animator/scale_in"
+      app:popExitAnim="@animator/slide_x"
       />
     <action
       android:id="@+id/toDiagnostics"
