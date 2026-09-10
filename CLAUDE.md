@@ -6,6 +6,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 CoinFlip2 is a Modern Android Development (MAD) coin-flipping app published on the Google Play Store. It is a single-module Android app (`coinflip`) written in Kotlin.
 
+The app's proper name is **Simple Coin Flip** — that is the Play Store listing, and has been the
+name since the 2011 original. `app_name` is deliberately the shorter **Coin Flip**, so the label
+under the launcher icon is not ellipsized; every locale follows the same rule with a short native
+form (`Münzwurf`, `Pile ou Face`, `抛硬币`) rather than a translation of the full name, and the full
+name appears nowhere in `res/`. The two are not drift and neither is a typo. Use the proper name in
+prose — anything linking to the store listing especially, so the name matches the page the reader
+lands on — and leave `app_name` short.
+
 ## Build & Development Commands
 
 ```bash
