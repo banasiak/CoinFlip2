@@ -419,3 +419,17 @@ Read **[I18N.md](I18N.md)** before touching `res/values-*/strings.xml`. It recor
 terminology per locale and the rule behind it (portrait side = heads), the two idioms that run
 backwards against that rule, which strings are still unreviewed machine output, and the regional
 variant's partial-override design.
+
+## Promo video
+
+`promo/` renders the Google Play promo video from the app's own artwork, using Node, Playwright and
+ffmpeg. It sits outside the Gradle build and CI. Read **[promo/README.md](promo/README.md)** before
+changing it. Three things in the app reach into it, and nothing fails when they drift:
+
+- It parses `CoinType.kt` with a regex that expects each entry on one line as
+  `NAME("prefix", "Name", GROUP)`. Reshape that constructor and the video's coin wall silently
+  loses coins.
+- Its phone screens are redrawn from the Compose layouts' dp values and color schemes, not
+  recorded. A UI change reaches the video only when `sizzle.js` is updated to match.
+- Its end card says "Free. No ads. No tracking. Open source." Adding an ad or analytics SDK, or
+  the `INTERNET` permission, means re-checking that line.

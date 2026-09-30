@@ -1,0 +1,73 @@
+# Promo video
+
+The Google Play promo video, rendered from the app's own artwork rather than edited by hand: the
+coin faces come straight out of `coinflip/src/main/res/drawable`, the catalog is read out of
+`CoinType.kt`, and the flip is the frame sequence `AnimationHelper` builds, at the same 20 ms per
+frame. Change the catalog or the artwork and a re-render picks it up. The one coin never shown is
+Claude Code, an easter egg rather than a real coin (`OFF_WALL` in `sizzle.js`). The catalog count
+still includes it, so the number on screen matches what the app ships.
+
+```bash
+cd promo
+npm ci --ignore-scripts
+FFMPEG=/path/to/ffmpeg node render.mjs        # out/sizzle.mp4, 1920x1080 at 50 fps
+node render.mjs --jobs 2                      # the same with 2 workers (default: one per core)
+node render.mjs --still 2.5,12.8              # single frames, as out/still-<t>.png
+node render.mjs --audio                       # the soundtrack alone, and its buses, as out/stem-*.wav
+```
+
+`ffmpeg` is taken from `$FFMPEG`, else from the `PATH`, and needs `libx264`. Playwright drives a
+headless Chromium; if its browser is not installed, `npx playwright install chromium`.
+
+- `sizzle.js` draws every frame as a pure function of time, so any frame renders on its own. The
+  timeline is pinned to a 120 bpm grid, and each flip is scheduled by the beat it lands on.
+  Sections are timed from their own start (`BRAND_AT`, `TAP`, ... `END` near the top of the
+  timeline), so lengthening one moves everything after it, soundtrack included. Keep section
+  starts and flip landings on multiples of 0.5 s.
+- That independence is what `render.mjs` parallelizes: workers take interleaved frames and one
+  encoder takes them in order. Drawing a frame costs ~30 ms; the capture is most of the rest,
+  which is why it uses Chromium's fast PNG rather than Playwright's screenshot (~115 ms against
+  ~625 ms, identical pixels). Renders with different `--jobs` are not byte-identical, and that is
+  not a frame-order bug: a handful of frames in the streak burst differ by a few hundred pixels on
+  one small particle, because Chromium's cache of downscaled images depends on what the page drew
+  before. It reproduces with no parallelism at all, and every other frame matches exactly.
+- The streak's flips are the one exception to the app's frame sequence. They run at double speed,
+  where stepping through the app's frames strobes between the same two widths, so that coin turns
+  continuously instead, with each video frame blurred across its 20 ms (`drawSpin`).
+- Fonts are bundled, never taken from the system. Roboto and Noto Color Emoji both come from
+  pinned Fontsource packages, and `setup()` refuses to render if the emoji font did not load. The
+  pizza and taco "photos" are emoji, and on a machine with no emoji font of its own they drew as
+  empty boxes.
+- `audio.mjs` synthesizes the soundtrack from the cues the page schedules. Nothing in it is
+  sampled. The app's own `res/raw` sounds are Super Mario Bros. sound effects, which a public
+  promo video cannot carry.
+- The phone screens are redrawn from the Compose layouts' dp values and the app's color schemes,
+  not screen-recorded, because nothing here runs an emulator. They are faithful to the layout
+  but are a reconstruction, so re-check them after a UI change.
+- The catalog is parsed from `CoinType.kt` by a regex that expects each entry on one line as
+  `NAME("prefix", "Name", GROUP)`. Change that constructor's shape and the wall silently loses
+  coins, with no build failure to say so.
+- The end card claims "Free. No ads. No tracking. Open source." Each claim was checked against the
+  build: there is no ad or analytics SDK, and the only system permission is `VIBRATE` (not even
+  `INTERNET`). The merged manifest's one other entry is androidx's app-private
+  `DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`. The source is under the Unlicense. Re-check the
+  claims when the app's dependencies or permissions change.
+
+## Checking a render
+
+```bash
+ffprobe out/sizzle.mp4                                            # 1920x1080, 50 fps, yuv420p bt709, AAC 48 kHz stereo
+ffmpeg -i out/sizzle.mp4 -map 0:a -af ebur128=peak=true -f null -  # I ≈ -14 LUFS, true peak ≤ -1.5 dBFS
+mkdir -p out/review && ffmpeg -i out/sizzle.mp4 -vf "fps=4,scale=480:270,tile=4x4" out/review/sheet-%02d.png
+```
+
+The contact sheets are the quickest way to review a cut: every caption should settle before the
+next one arrives, and every result should read the face the coin landed on. If a render looks
+wrong, re-run it with `--jobs 1` to tell a parallelism bug from a drawing one. Nothing under `out/`
+is committed.
+
+## Publishing
+
+Google Play takes the video as a YouTube URL, not a file: upload `out/sizzle.mp4` to YouTube as a
+public or unlisted video with ads off and no age restriction, then paste its URL into the Video
+field of the app's main store listing in Play Console.
