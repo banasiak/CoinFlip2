@@ -254,21 +254,24 @@ function reverb(inL, inR, room = 0.84, damp = 0.25) {
 }
 
 // ---------------------------------------------------------------------------------------------
-// harmony: C G Am F from the drop at 4 s, with the hook and the ending voiced to lead into it
+// harmony: C G Am F from the drop, with the hook, the fanfare and the ending voiced to lead into
+// what follows them
 
 const CHORDS = { C: [0, 4, 7], G: [7, 11, 14], Am: [9, 12, 16], F: [5, 9, 12] };
 const LOOP = ['C', 'G', 'Am', 'F'];
 
-function chordAt(t) {
-  if (t < 1.5) return 'Am';
-  if (t < 2.5) return 'G';
-  if (t < 3.0) return 'C';
-  if (t < 4.0) return 'G';
-  if (t >= 30) return 'C';
-  if (t >= 28) return 'G';
-  if (t >= 27.5) return 'F';
-  if (t >= 25.5) return 'C';
-  return LOOP[Math.floor((t - 4) / 2) % 4];
+function harmony(marks) {
+  return (t) => {
+    if (t < 1.5) return 'Am';
+    if (t < 2.5) return 'G';
+    if (t < 3.0) return 'C';
+    if (t < marks.drop) return 'G';
+    if (t >= marks.end) return 'C';
+    if (t >= marks.end - 2) return 'G';
+    if (t >= marks.outro) return 'F';
+    if (t >= marks.record) return 'C';
+    return LOOP[Math.floor((t - marks.drop) / 2) % 4];
+  };
 }
 
 function voiced(chord, lo) {
@@ -282,11 +285,14 @@ function voiced(chord, lo) {
 // ---------------------------------------------------------------------------------------------
 
 /**
- * The finished soundtrack as a 48 kHz stereo WAV. With `stems`, also the four buses before the mix,
- * as WAVs keyed by name, for balancing them.
+ * The finished soundtrack as a 48 kHz stereo WAV. `marks` are the section starts the picture is cut
+ * to (see MARKS in sizzle.js). With `stems`, also the four buses before the mix, as WAVs keyed by
+ * name, for balancing them.
  */
-export function synthesize(cues, duration, { stems = false } = {}) {
+export function synthesize(cues, duration, marks, { stems = false } = {}) {
   const N = Math.ceil(duration * SR);
+  const { drop, arp, wall, streak, record, outro, end } = marks;
+  const chordAt = harmony(marks);
   const bus = () => [new Float32Array(N), new Float32Array(N)];
   const drums = bus();
   const music = bus(); // ducked under the kick
@@ -311,46 +317,46 @@ export function synthesize(cues, duration, { stems = false } = {}) {
 
   const at = (type) => cues.filter((c) => c.type === type);
   const during = (t, a, b) => t >= a - 1e-6 && t < b - 1e-6;
-  const grooving = (t) => during(t, 4, 25.5) || during(t, 27.5, 30);
+  const grooving = (t) => during(t, drop, record) || during(t, outro, end);
 
   // drums
-  const kicks = [0, 0.5, 1.0, 2.5, 3.0, 3.5, 30.0];
-  for (let t = 4; t < 30; t += BEAT) if (grooving(t)) kicks.push(t);
+  const kicks = [0, 0.5, 1.0, 2.5, 3.0, 3.5, end];
+  for (let t = drop; t < end; t += BEAT) if (grooving(t)) kicks.push(t);
   const kickSig = kick();
   for (const t of kicks) place(drums, t, kickSig, 0.85);
-  for (let t = 4.5; t < 30; t += 2 * BEAT) if (grooving(t)) place(drums, t, clap(Math.round(t * 100)), 0.32, 0, 0.25);
-  for (let t = 4 + BEAT / 2; t < 30; t += BEAT) {
+  for (let t = drop + BEAT; t < end; t += 2 * BEAT) if (grooving(t)) place(drums, t, clap(Math.round(t * 100)), 0.32, 0, 0.25);
+  for (let t = drop + BEAT / 2; t < end; t += BEAT) {
     if (grooving(t)) place(drums, t, hat(Math.round(t * 1000)), 0.16, 0.25);
   }
-  for (let t = 20; t < 24; t += BEAT / 2) place(drums, t, hat(Math.round(t * 777)), 0.07, -0.3);
+  for (let t = streak - 4; t < streak; t += BEAT / 2) place(drums, t, hat(Math.round(t * 777)), 0.07, -0.3);
   // snare rolls into the drop and into the end card
-  for (const [a, b] of [[3.0, 4.0], [29.0, 30.0]]) {
+  for (const [a, b] of [[drop - 1, drop], [end - 1, end]]) {
     for (let t = a; t < b - 1e-6; t += BEAT / 4) {
       const p = (t - a) / (b - a);
       place(drums, t, snare(Math.round(t * 1000)), 0.08 + 0.3 * p, 0, 0.2);
     }
   }
-  for (const t of [4.0, 12.0, 24.0, 30.0]) place(drums, t, crash(Math.round(t)), 0.22, 0, 0.3);
+  for (const t of [drop, wall, streak, end]) place(drums, t, crash(Math.round(t)), 0.22, 0, 0.3);
 
   // bass, pad, arpeggio
-  for (let t = 4; t < 30; t += BEAT / 2) {
+  for (let t = drop; t < end; t += BEAT / 2) {
     if (!grooving(t)) continue;
     const root = 36 + (CHORDS[chordAt(t)][0] % 12);
     place(music, t, bass(hz(root), BEAT / 2 - 0.01), 0.3);
   }
-  let segStart = 4;
-  for (let t = 4; t <= 30.001; t += BEAT) {
-    if (t >= 30 || chordAt(t) !== chordAt(segStart)) {
+  let segStart = drop;
+  for (let t = drop; t <= end + 0.001; t += BEAT) {
+    if (t >= end || chordAt(t) !== chordAt(segStart)) {
       place(music, segStart, pad(voiced(chordAt(segStart), 55).map(hz), t - segStart + 0.3), 0.045, 0, 0.35);
       segStart = t;
     }
   }
   const pattern = [0, 1, 2, 1, 0, 1, 2, 3];
-  for (let t = 6; t < 30; t += BEAT / 4) {
+  for (let t = arp; t < end; t += BEAT / 4) {
     if (!grooving(t)) continue;
     const notes = voiced(chordAt(t), 67);
     notes.push(notes[0] + 12);
-    const step = Math.round((t - 6) / (BEAT / 4));
+    const step = Math.round((t - arp) / (BEAT / 4));
     const vel = step % 4 === 0 ? 1 : 0.7;
     place(music, t, pluck(hz(notes[pattern[step % 8]]), 0.35), 0.06 * vel, step % 2 ? 0.35 : -0.35, 0.45);
   }
@@ -364,8 +370,8 @@ export function synthesize(cues, duration, { stems = false } = {}) {
   place(music, 2.5, bass(hz(36), 0.5), 0.3);
 
   // the end: a held C major chord with a brass voicing on top
-  place(sfx, 30.0, pad([36, 43, 48, 52, 55, 60].map(hz), 3.0, 0.01, 2.2), 0.09, 0, 0.5);
-  for (const m of [60, 64, 67, 72]) place(sfx, 30.0, brass(hz(m), 2.6), 0.08, 0, 0.45);
+  place(sfx, end, pad([36, 43, 48, 52, 55, 60].map(hz), 3.0, 0.01, 2.2), 0.09, 0, 0.5);
+  for (const m of [60, 64, 67, 72]) place(sfx, end, brass(hz(m), 2.6), 0.08, 0, 0.45);
 
   // sound effects from the picture's cues
   const n = noiseGen(99);

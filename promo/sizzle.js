@@ -8,7 +8,6 @@ const W = 1920;
 const H = 1080;
 // the app advances its flip animation every 20 ms, so at 50 fps one video frame is one app frame
 const FPS = 50;
-const DURATION = 33;
 
 const RES = '../coinflip/src/main/res/';
 
@@ -144,7 +143,7 @@ async function setup() {
   IMG.taco = makePhoto('taco');
   CUSTOM = makeCustomCoin();
   buildWall();
-  return { fps: FPS, duration: DURATION, cues: CUES };
+  return { fps: FPS, duration: DURATION, cues: CUES, marks: MARKS };
 }
 
 // the "photos" the custom coin is made from: a slice on a gingham tablecloth, a taco on tiles
@@ -600,6 +599,17 @@ function tap(x, y, t, at) {
 const CUES = [];
 const cue = (t, type, extra = {}) => CUES.push({ t, type, ...extra });
 
+// where each section starts; the times inside a section are offsets from its start, so a section
+// can be lengthened without re-timing everything after it
+const TAP = 6.0;
+const WALL_AT = TAP + 9.5;
+const RANDOM_AT = WALL_AT + 4.0;
+const CUSTOM_AT = RANDOM_AT + 3.5;
+const STREAK_AT = CUSTOM_AT + 9.0;
+const THEMES_AT = STREAK_AT + 3.5;
+const END = THEMES_AT + 2.5;
+const DURATION = END + 3.0;
+
 function flipCues(flips, final = 'land') {
   flips.forEach((f, i) => {
     cue(f.t0, 'spin', { speed: f.speed });
@@ -607,7 +617,7 @@ function flipCues(flips, final = 'land') {
   });
 }
 
-// 1. hook: "Heads or tails?" and a coin tossed in from below
+// 1. hook: "Heads or Tails?" and a coin tossed in from below
 const HOOK_FLIP = mkFlip('HT', 2.5);
 cue(0.0, 'hit');
 cue(0.5, 'hit');
@@ -623,11 +633,11 @@ function sceneHook(t) {
     [
       { s: 'Heads ', color: DARK.heads },
       { s: 'or ', color: INK, delay: 0.5 },
-      { s: 'tails?', color: DARK.tails, delay: 1.0 },
+      { s: 'Tails?', color: DARK.tails, delay: 1.0 },
     ],
     W / 2, 250, o, t, 0.0, 2.95,
   );
-  kline('Let the coin decide.', W / 2, 250, o, t, 3.1);
+  kline('Let the coin decide!', W / 2, 250, o, t, 3.1);
 
   const f = HOOK_FLIP;
   const restY = 610;
@@ -683,14 +693,18 @@ function sceneBrand(t) {
 }
 
 // 3. the main screen: tap, shake, tally
-const TAP_FLIPS = [mkFlip('HH', 8.0), mkFlip('HT', 10.0), mkFlip('TH', 11.0)];
-const TAP_AT = 7.05;
-const SHAKE = [8.55, 9.25];
-cue(6.0, 'rise');
+const COPY_TAP = [TAP + 0.2, TAP + 3.35];
+const COPY_SHAKE = [TAP + 3.6, TAP + 6.85];
+const COPY_SCORE = TAP + 7.1;
+const TAP_FLIPS = [mkFlip('HH', TAP + 2.5), mkFlip('HT', TAP + 6.0), mkFlip('TH', TAP + 8.5)];
+const TAP_AT = TAP + 1.55;
+const SHAKE = [TAP + 4.55, TAP + 5.25];
+cue(TAP, 'rise');
 cue(TAP_AT, 'tap');
 cue(SHAKE[0], 'shake', { until: SHAKE[1] });
 flipCues(TAP_FLIPS);
-cue(10.5, 'swish');
+cue(COPY_SHAKE[0], 'swish');
+cue(COPY_SCORE, 'swish');
 
 function tally(flips, t, heads, tails) {
   const s = flipAt(flips, t);
@@ -705,12 +719,12 @@ function tally(flips, t, heads, tails) {
 
 function sceneTap(t) {
   background(t);
-  copyBlock(t, 6.2, 8.3, ['Tap to flip.'], ['Tap the coin. It spins, lands,', 'and calls it.']);
-  copyBlock(t, 8.5, 10.3, ['Or shake it.'], ['Give your phone a shake.', 'You choose how hard it takes.']);
-  copyBlock(t, 10.5, Infinity, ['Keep score.'], ['Heads and tails, tallied', 'as you go.']);
+  copyBlock(t, ...COPY_TAP, ['Tap to flip.'], ['Tap the coin. It spins, lands,', 'and calls it.']);
+  copyBlock(t, ...COPY_SHAKE, ['Or shake it.'], ['Give your phone a shake.', 'You choose how hard it takes.']);
+  copyBlock(t, COPY_SCORE, Infinity, ['Keep score.'], ['Heads and tails, tallied', 'as you go.']);
 
-  const rise = outCubic(seg(t, 6.0, 6.5));
-  const zoom = 1 + 0.3 * inOutCubic(seg(t, 10.5, 11.3));
+  const rise = outCubic(seg(t, TAP, TAP + 0.5));
+  const zoom = 1 + 0.3 * inOutCubic(seg(t, COPY_SCORE, COPY_SCORE + 0.8));
   const cy = lerp(1700, 540, rise) - (STATS_Y - SH / 2) * (zoom - 1);
   let rot = 0;
   let dx = 0;
@@ -755,15 +769,14 @@ function shakeMarks(cx, cy, t, damp) {
 // 4. the catalog
 const WALL = [];
 const CATS = [
-  { t: 13.5, cat: 'state', parts: [{ s: '51', color: GOLD }, { s: ' state quarters' }] },
-  { t: 14.0, cat: 'euro', parts: [{ s: '24', color: GOLD }, { s: ' euro designs' }] },
-  { t: 14.5, cat: 'canada', parts: [{ s: 'Loonie & Toonie' }] },
-  { t: 15.0, cat: 'twoface', parts: [{ s: 'A ' }, { s: 'two-headed', color: GOLD }, { s: ' dollar' }] },
+  { t: WALL_AT + 2.0, cat: 'state', parts: [{ s: '51', color: GOLD }, { s: ' state quarters' }] },
+  { t: WALL_AT + 2.5, cat: 'euro', parts: [{ s: '24', color: GOLD }, { s: ' euro designs' }] },
+  { t: WALL_AT + 3.0, cat: 'canada', parts: [{ s: 'Loonie & Toonie' }] },
+  { t: WALL_AT + 3.5, cat: 'twoface', parts: [{ s: 'A ' }, { s: 'two-headed', color: GOLD }, { s: ' dollar' }] },
 ];
-const RANDOM_AT = 15.5;
-const RANDOM_RUN = ['gw', 'loonie', 'spain', 'hi', 'toonie', 'jfk'];
-const RANDOM_SWAPS = [15.95, 16.2, 16.45, 16.7, 16.95];
-cue(12.0, 'cut');
+const RANDOM_RUN = ['gw', 'loonie', 'spain', 'hi'];
+const RANDOM_SWAPS = [RANDOM_AT + 1.0, RANDOM_AT + 1.75, RANDOM_AT + 2.5];
+cue(WALL_AT, 'cut');
 CATS.forEach((c) => cue(c.t, 'pop'));
 cue(RANDOM_AT, 'gather');
 RANDOM_SWAPS.forEach((s) => cue(s, 'flick'));
@@ -787,7 +800,7 @@ function buildWall() {
     tile.y = H / 2 + (row - 3) * 140;
     const d = Math.hypot(c - 5.5, row - 3) / dmax;
     tile.d = d;
-    tile.tIn = 12.05 + 0.9 * d + (r() - 0.5) * 0.1;
+    tile.tIn = WALL_AT + 0.05 + 0.9 * d + (r() - 0.5) * 0.1;
     WALL.push(tile);
   });
   WALL.filter((w) => w.kind === 'coin').forEach((w) => cue(w.tIn, 'tick'));
@@ -822,7 +835,7 @@ function wallTile(tile, t, x, y, d, alpha) {
 
 function sceneWall(t) {
   background(t);
-  const zoom = 1 + 0.05 * seg(t, 12.0, RANDOM_AT);
+  const zoom = 1 + 0.05 * seg(t, WALL_AT, RANDOM_AT);
   const active = [...CATS].reverse().find((c) => t >= c.t);
   const idx = active ? CATS.indexOf(active) : -1;
   const dim = 0.16;
@@ -856,8 +869,8 @@ function sceneWall(t) {
   ctx.restore();
 
   // the count, over a pool of shade so it reads against the coins
-  const cIn = seg(t, 12.1, 12.35);
-  const cOut = 1 - seg(t, 13.3, 13.45);
+  const cIn = seg(t, WALL_AT + 0.1, WALL_AT + 0.35);
+  const cOut = 1 - seg(t, WALL_AT + 1.75, WALL_AT + 1.9);
   const ca = Math.min(cIn, cOut);
   if (ca > 0) {
     ctx.save();
@@ -942,16 +955,19 @@ function randomCoin(t) {
 }
 
 // 5 + 6. the custom coin, cropped and then named
-const CROP_H = [17.25, 17.95];
-const OK_1 = 18.05;
-const SLIDE_1 = [18.1, 18.35];
-const DRAG = [18.4, 18.8];
-const OK_2 = 18.9;
-const BACK = [18.95, 19.35];
-const TAP_2 = 19.4;
-const CUSTOM_FLIPS = [mkFlip('HT', 20.25), mkFlip('TH', 23.0)];
-const RETYPE = [21.05, 21.55];
-cue(17.0, 'cut');
+const C = CUSTOM_AT;
+const COPY_MAKE = [C + 0.1, C + 5.5];
+const COPY_NAME = C + 5.7;
+const CROP_H = [C + 0.5, C + 1.5];
+const OK_1 = C + 1.75;
+const SLIDE_1 = [C + 1.85, C + 2.2];
+const DRAG = [C + 2.4, C + 3.0];
+const OK_2 = C + 3.2;
+const BACK = [C + 3.3, C + 3.75];
+const TAP_2 = C + 4.1;
+const CUSTOM_FLIPS = [mkFlip('HT', C + 5.0), mkFlip('TH', C + 8.0)];
+const RETYPE = [C + 5.9, C + 6.4];
+cue(C, 'cut');
 cue(CROP_H[0], 'pinch', { until: CROP_H[1] });
 cue(OK_1, 'tap');
 cue(SLIDE_1[0], 'swish');
@@ -959,7 +975,7 @@ cue(OK_2, 'tap');
 cue(BACK[0], 'swish');
 cue(TAP_2, 'tap');
 flipCues(CUSTOM_FLIPS);
-cue(21.0, 'swish');
+cue(COPY_NAME, 'swish');
 for (let i = 0; i < 10; i++) cue(RETYPE[0] + (i * (RETYPE[1] - RETYPE[0])) / 10, 'key');
 
 function retyped(from, to, t) {
@@ -971,8 +987,8 @@ function retyped(from, to, t) {
 
 function sceneCustom(t) {
   background(t);
-  copyBlock(t, 17.1, 20.85, ['Make your', 'own coin.'], ['Pick a photo for each side,', 'then pinch and drag to frame it.']);
-  copyBlock(t, 21.0, Infinity, ['Name the', 'sides.'], ['Yes or no. Pizza or tacos.', 'Call them whatever you like.']);
+  copyBlock(t, ...COPY_MAKE, ['Make your', 'own coin.'], ['Pick a photo for each side,', 'then pinch and drag to frame it.']);
+  copyBlock(t, COPY_NAME, Infinity, ['Name the', 'sides.'], ['Yes or no. Pizza or tacos.', 'Call them whatever you like.']);
 
   phone(1300, 540, 1, 0, () => {
     if (t < SLIDE_1[1]) {
@@ -1064,9 +1080,9 @@ function customMain(t) {
 }
 
 // 7. streaks
-const STREAK_FLIPS = [mkFlip('HH', 24.5, 2), mkFlip('HH', 25.0, 2), mkFlip('HH', 25.5, 2)];
+const STREAK_FLIPS = [mkFlip('HH', STREAK_AT + 0.5, 2), mkFlip('HH', STREAK_AT + 1.0, 2), mkFlip('HH', STREAK_AT + 1.5, 2)];
 const RECORD = STREAK_FLIPS[2].land;
-cue(24.0, 'cut');
+cue(STREAK_AT, 'cut');
 flipCues(STREAK_FLIPS, 'fanfare');
 cue(RECORD, 'burst');
 
@@ -1086,7 +1102,7 @@ function sceneStreak(t) {
   shock(cx, cy, 215, t, RECORD, GOLD, 260, 0.7);
   shock(cx, cy, 215, t, RECORD + 0.12, DARK.heads, 220, 0.7);
   resultLine(cx, 850, 'HEADS', n, DARK.heads, 150, bump);
-  kline('Chase a streak.', W / 2, 180, { size: 104, weight: 900, color: INK, align: 'center', ls: -2 }, t, 24.05);
+  kline('Chase a streak.', W / 2, 180, { size: 104, weight: 900, color: INK, align: 'center', ls: -2 }, t, STREAK_AT + 0.05);
   kline('Beat your best run of 10 or more for a fanfare.', W / 2, 990, { ...CAP, align: 'center', size: 42 }, t, RECORD + 0.3);
 }
 
@@ -1118,26 +1134,26 @@ function particles(t, cx, cy) {
 
 // 8. themes and the rest of the feature list
 const THEMES = [
-  { t: 27.5, th: DARK },
-  { t: 28.0, th: LIGHT },
-  { t: 28.5, th: MOSS },
-  { t: 29.0, th: OCEAN },
-  { t: 29.5, th: CORAL },
+  { t: THEMES_AT, th: DARK },
+  { t: THEMES_AT + 0.5, th: LIGHT },
+  { t: THEMES_AT + 1.0, th: MOSS },
+  { t: THEMES_AT + 1.5, th: OCEAN },
+  { t: THEMES_AT + 2.0, th: CORAL },
 ];
 const CHIPS = [
-  { t: 27.6, s: 'Light & dark', x: 690, y: 330, align: 'right', dot: DARK.heads },
-  { t: 28.05, s: 'Material You', x: 1230, y: 430, align: 'left', dot: '#8ECFF2' },
-  { t: 28.55, s: 'Sound & haptics', x: 690, y: 560, align: 'right', dot: DARK.tails },
-  { t: 29.05, s: '13 languages', x: 1230, y: 680, align: 'left', dot: GOLD },
-  { t: 29.55, s: 'Secure random', x: 690, y: 790, align: 'right', dot: DARK.primary },
+  { t: THEMES_AT + 0.1, s: 'Light & dark', x: 690, y: 330, align: 'right', dot: DARK.heads },
+  { t: THEMES_AT + 0.55, s: 'Material You', x: 1230, y: 430, align: 'left', dot: '#8ECFF2' },
+  { t: THEMES_AT + 1.05, s: 'Sound & haptics', x: 690, y: 560, align: 'right', dot: DARK.tails },
+  { t: THEMES_AT + 1.55, s: '13 languages', x: 1230, y: 680, align: 'left', dot: GOLD },
+  { t: THEMES_AT + 2.05, s: 'Secure random', x: 690, y: 790, align: 'right', dot: DARK.primary },
 ];
-cue(27.5, 'rise');
+cue(THEMES_AT, 'rise');
 THEMES.slice(1).forEach((th) => cue(th.t, 'theme'));
 CHIPS.forEach((c) => cue(c.t, 'pop'));
 
 function sceneThemes(t) {
   background(t);
-  const rise = outCubic(seg(t, 27.5, 27.85));
+  const rise = outCubic(seg(t, THEMES_AT, THEMES_AT + 0.35));
   const cy = lerp(1700, 540, rise);
   let i = 0;
   while (i + 1 < THEMES.length && t >= THEMES[i + 1].t) i++;
@@ -1197,7 +1213,6 @@ function chip(c, t) {
 }
 
 // 9. end card
-const END = 30.0;
 cue(END, 'wipe');
 cue(END, 'final');
 
@@ -1206,7 +1221,7 @@ function sceneEnd(t) {
   brandWipe(t, END, W / 2, 540);
   logo(W / 2, 380, 380, t, END + 0.12);
   kline('Simple Coin Flip', W / 2, 790, { size: 140, weight: 900, color: '#FFFFFF', align: 'center', ls: -3 }, t, END + 0.45);
-  kline("Flip a coin, even if you don’t have one.", W / 2, 880, { size: 48, weight: 500, color: '#E8E6FF', align: 'center' }, t, END + 0.75);
+  kline('Free. No ads. No tracking. Open source.', W / 2, 880, { size: 48, weight: 500, color: '#E8E6FF', align: 'center' }, t, END + 0.75);
   ctx.restore();
   const fade = seg(t, DURATION - 0.7, DURATION - 0.05);
   if (fade > 0) {
@@ -1220,13 +1235,16 @@ function sceneEnd(t) {
 const SCENES = [
   { from: 0, to: 4.45, draw: sceneHook },
   { from: 4.0, to: 6.0, draw: sceneBrand },
-  { from: 6.0, to: 12.0, draw: sceneTap },
-  { from: 12.0, to: 17.0, draw: sceneWall },
-  { from: 17.0, to: 24.0, draw: sceneCustom },
-  { from: 24.0, to: 27.5, draw: sceneStreak },
-  { from: 27.5, to: 30.45, draw: sceneThemes },
-  { from: 30.0, to: DURATION + 1, draw: sceneEnd },
+  { from: TAP, to: WALL_AT, draw: sceneTap },
+  { from: WALL_AT, to: CUSTOM_AT, draw: sceneWall },
+  { from: CUSTOM_AT, to: STREAK_AT, draw: sceneCustom },
+  { from: STREAK_AT, to: THEMES_AT, draw: sceneStreak },
+  { from: THEMES_AT, to: END + 0.45, draw: sceneThemes },
+  { from: END, to: DURATION + 1, draw: sceneEnd },
 ];
+
+// the section starts the soundtrack is arranged around
+const MARKS = { drop: 4.0, arp: TAP, wall: WALL_AT, streak: STREAK_AT, record: RECORD, outro: THEMES_AT, end: END };
 
 function renderFrame(t) {
   ctx.setTransform(1, 0, 0, 1, 0, 0);

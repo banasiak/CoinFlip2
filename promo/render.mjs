@@ -122,11 +122,11 @@ async function main() {
     const wav = path.join(out, 'soundtrack.wav');
     if (argv.includes('--audio')) {
       // the soundtrack alone, with its buses beside it, for balancing the mix without re-rendering
-      const parts = synthesize(meta.cues, meta.duration, { stems: true });
+      const parts = synthesize(meta.cues, meta.duration, meta.marks, { stems: true });
       for (const [name, data] of Object.entries(parts)) fs.writeFileSync(path.join(out, `stem-${name}.wav`), data);
       return;
     }
-    fs.writeFileSync(wav, synthesize(meta.cues, meta.duration));
+    fs.writeFileSync(wav, synthesize(meta.cues, meta.duration, meta.marks));
     const frames = Math.round(meta.duration * meta.fps);
     const enc = encoder(path.join(out, 'sizzle.mp4'), meta.fps, wav);
     const done = new Promise((resolve, reject) => {

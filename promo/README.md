@@ -8,7 +8,7 @@ frame. Change the catalog or the artwork and a re-render picks it up.
 ```bash
 cd promo
 npm install
-FFMPEG=/path/to/ffmpeg node render.mjs        # out/sizzle.mp4, 1920x1080 at 50 fps, ~33 s
+FFMPEG=/path/to/ffmpeg node render.mjs        # out/sizzle.mp4, 1920x1080 at 50 fps, ~41 s
 node render.mjs --still 2.5,12.8              # single frames, as out/still-<t>.png
 node render.mjs --audio                       # the soundtrack alone, and its buses, as out/stem-*.wav
 ```
