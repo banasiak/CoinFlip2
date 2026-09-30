@@ -74,6 +74,10 @@ Two supporting documents are worth reading before touching related code:
 `check` runs the build, unit tests, Android lint and ktlint. CI runs the same thing on every pull
 request and reports coverage into the run summary.
 
+The Play Store promo video is rendered rather than edited. [`promo/`](promo/README.md) draws it
+from the app's own coin artwork and catalog with Playwright and ffmpeg, so a re-render picks up a
+new coin.
+
 ## Credits
 
 The 2026 refactor was done by **[Claude](https://claude.ai/referral/iftfNLT1kQ)** — landscape support, the
