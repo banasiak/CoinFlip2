@@ -9,6 +9,7 @@ frame. Change the catalog or the artwork and a re-render picks it up.
 cd promo
 npm install
 FFMPEG=/path/to/ffmpeg node render.mjs        # out/sizzle.mp4, 1920x1080 at 50 fps, ~41 s
+node render.mjs --jobs 2                      # the same with 2 workers (default: one per core)
 node render.mjs --still 2.5,12.8              # single frames, as out/still-<t>.png
 node render.mjs --audio                       # the soundtrack alone, and its buses, as out/stem-*.wav
 ```
@@ -18,6 +19,12 @@ headless Chromium; if its browser is not installed, `npx playwright install chro
 
 - `sizzle.js` draws every frame as a pure function of time, so any frame renders on its own. The
   timeline is pinned to a 120 bpm grid, and each flip is scheduled by the beat it lands on.
+  Sections are timed from their own start (`TAP`, `WALL_AT`, ... `END` near the top of the
+  timeline), so lengthening one moves everything after it, soundtrack included.
+- That independence is what `render.mjs` parallelizes: workers take interleaved frames and one
+  encoder takes them in order. Drawing a frame costs ~30 ms; the capture is most of the rest,
+  which is why it uses Chromium's fast PNG rather than Playwright's screenshot (~115 ms against
+  ~625 ms, identical pixels).
 - `audio.mjs` synthesizes the soundtrack from the cues the page schedules. Nothing in it is
   sampled. The app's own `res/raw` sounds are Super Mario Bros. sound effects, which a public
   promo video cannot carry.

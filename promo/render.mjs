@@ -1,7 +1,8 @@
-// Renders sizzle.html to out/sizzle.mp4, one screenshot per frame, with a soundtrack synthesized
+// Renders sizzle.html to out/sizzle.mp4, one capture per frame, with a soundtrack synthesized
 // from the cues the page schedules.
 //
-//   node render.mjs                  the whole video
+//   node render.mjs                  the whole video, drawn by one worker per core
+//   node render.mjs --jobs 2         ...or by this many
 //   node render.mjs --still 2.5,12.8 single frames, as out/still-<t>.png
 //   node render.mjs --audio          the soundtrack alone, and its buses, as out/stem-*.wav
 //
@@ -9,6 +10,7 @@
 
 import fs from 'node:fs';
 import http from 'node:http';
+import os from 'node:os';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -91,31 +93,51 @@ function encoder(file, fps, audio) {
   return spawn(process.env.FFMPEG ?? 'ffmpeg', args, { stdio: ['pipe', 'inherit', 'inherit'] });
 }
 
+// Playwright's own screenshot compresses its PNG as hard as zlib allows, which costs ~20x the time
+// it takes to draw the frame; Chromium's fast PNG is just as lossless
+async function capture(cdp) {
+  const { data } = await cdp.send('Page.captureScreenshot', { format: 'png', optimizeForSpeed: true });
+  return Buffer.from(data, 'base64');
+}
+
+async function openPage(browser, port) {
+  // a context apiece, so each worker gets a renderer process of its own
+  const context = await browser.newContext({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
+  const page = await context.newPage();
+  const errors = [];
+  page.on('pageerror', (e) => errors.push(e));
+  page.on('console', (m) => console.log(`[page] ${m.text()}`));
+  await page.goto(`http://127.0.0.1:${port}/promo/sizzle.html`);
+  const meta = await page.evaluate(() => window.setup());
+  const cdp = await context.newCDPSession(page);
+  const frame = async (t) => {
+    await page.evaluate((time) => window.renderFrame(time), t);
+    if (errors.length) throw errors[0];
+    return capture(cdp);
+  };
+  return { meta, frame };
+}
+
+function option(argv, name) {
+  const i = argv.indexOf(name);
+  return i >= 0 ? argv[i + 1] : null;
+}
+
 async function main() {
   const argv = process.argv.slice(2);
-  const stillArg = argv.indexOf('--still');
-  const stills = stillArg >= 0 ? argv[stillArg + 1].split(',').map(Number) : null;
+  const stills = option(argv, '--still')?.split(',').map(Number);
+  const jobs = Math.max(1, Number(option(argv, '--jobs')) || os.availableParallelism());
 
   fs.mkdirSync(out, { recursive: true });
   const server = await serve();
   const browser = await chromium.launch();
   try {
-    const page = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
-    const errors = [];
-    page.on('pageerror', (e) => errors.push(e));
-    page.on('console', (m) => console.log(`[page] ${m.text()}`));
-    await page.goto(`http://127.0.0.1:${server.address().port}/promo/sizzle.html`);
-    const meta = await page.evaluate(() => window.setup());
-    const draw = async (t) => {
-      await page.evaluate((time) => window.renderFrame(time), t);
-      if (errors.length) throw errors[0];
-    };
+    const port = server.address().port;
+    const first = await openPage(browser, port);
+    const { meta } = first;
 
     if (stills) {
-      for (const t of stills) {
-        await draw(t);
-        await page.screenshot({ path: path.join(out, `still-${t.toFixed(2)}.png`) });
-      }
+      for (const t of stills) fs.writeFileSync(path.join(out, `still-${t.toFixed(2)}.png`), await first.frame(t));
       return;
     }
 
@@ -127,21 +149,45 @@ async function main() {
       return;
     }
     fs.writeFileSync(wav, synthesize(meta.cues, meta.duration, meta.marks));
+
     const frames = Math.round(meta.duration * meta.fps);
+    const workers = [first, ...(await Promise.all(Array.from({ length: jobs - 1 }, () => openPage(browser, port))))];
     const enc = encoder(path.join(out, 'sizzle.mp4'), meta.fps, wav);
     const done = new Promise((resolve, reject) => {
       enc.on('close', (code) => (code ? reject(new Error(`ffmpeg exited with ${code}`)) : resolve()));
     });
+
+    // the workers take interleaved frames and the encoder is fed strictly in order from whatever has
+    // arrived. A worker more than two rounds ahead of the encoder waits, or a slow encode would
+    // buffer the whole video's PNGs in memory; the worker owning the next frame is never the one
+    // held back, so this cannot deadlock
+    const ready = new Map();
+    let next = 0;
+    let writing = Promise.resolve();
+    const flush = async () => {
+      while (ready.has(next)) {
+        const png = ready.get(next);
+        ready.delete(next);
+        next++;
+        if (!enc.stdin.write(png)) await new Promise((r) => enc.stdin.once('drain', r));
+        if (next % 50 === 0) process.stdout.write(`\rframe ${next}/${frames}  ${((Date.now() - started) / 1000).toFixed(0)}s`);
+      }
+    };
     const started = Date.now();
-    for (let f = 0; f < frames; f++) {
-      await draw(f / meta.fps);
-      const png = await page.screenshot({ type: 'png' });
-      if (!enc.stdin.write(png)) await new Promise((r) => enc.stdin.once('drain', r));
-      if (f % 50 === 0) process.stdout.write(`\rframe ${f}/${frames}  ${((Date.now() - started) / 1000).toFixed(0)}s`);
-    }
+    await Promise.all(
+      workers.map(async (w, k) => {
+        for (let f = k; f < frames; f += jobs) {
+          while (f - next >= 2 * jobs) await new Promise((r) => setTimeout(r, 5));
+          ready.set(f, await w.frame(f / meta.fps));
+          writing = writing.then(flush);
+        }
+      }),
+    );
+    await writing;
     enc.stdin.end();
     await done;
-    process.stdout.write(`\rwrote out/sizzle.mp4 (${frames} frames) in ${((Date.now() - started) / 1000).toFixed(0)}s\n`);
+    const secs = ((Date.now() - started) / 1000).toFixed(0);
+    process.stdout.write(`\rwrote out/sizzle.mp4 (${frames} frames, ${jobs} workers) in ${secs}s\n`);
   } finally {
     await browser.close();
     server.close();
