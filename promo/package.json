@@ -1,0 +1,13 @@
+{
+  "name": "coinflip-promo",
+  "private": true,
+  "type": "module",
+  "description": "Renders the Google Play promo video from the app's own artwork",
+  "scripts": {
+    "render": "node render.mjs"
+  },
+  "devDependencies": {
+    "@fontsource/roboto": "5.3.0",
+    "playwright": "1.56.1"
+  }
+}
