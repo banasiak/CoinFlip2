@@ -111,11 +111,11 @@ is the in-app half, and these things have to hold together for that:
   0.35 threshold: the outgoing view reaches alpha 0 at exactly the progress the incoming view starts
   to rise from 0. Played in 300ms that crossover is invisible; held under a thumb it is an empty
   window, and predictive back parks the user in it for a good part of the drag.
-- `androidx.fragment` is pinned to 1.9.0 by an explicit `fragment-ktx` dependency. What the app calls
-  of it — `by viewModels()` and `onCreateAnimator` — has been there since 1.0, so the pin reads as
-  surplus and the version is the whole point of it: Navigation 2.10.0 still asks for fragment 1.6.2,
-  and seekable fragment effects arrived in 1.7.0 — drop the dependency and predictive back degrades
-  in silence to the non-interactive pop.
+- `androidx.fragment` is pinned by an explicit `fragment-ktx` dependency. What the app calls of it —
+  `by viewModels()` and `onCreateAnimator` — has been there since 1.0, so the pin reads as surplus
+  and the version is the whole point of it: Navigation still asks for fragment 1.6.2 (its POM, as of
+  2.10.2), and seekable fragment effects arrived in 1.7.0 — drop the dependency and predictive back
+  degrades in silence to the non-interactive pop. Recheck the POM when bumping Navigation.
 - The About and Diagnostics sheets need no code at all, in either form. `BottomSheetBehavior`
   implements Material's `MaterialBackHandler`, as `SideSheetBehavior` does through `Sheet`, and
   `BottomSheetDialog` and `SheetDialog` each run a `MaterialBackOrchestrator` themselves, so the sheet
