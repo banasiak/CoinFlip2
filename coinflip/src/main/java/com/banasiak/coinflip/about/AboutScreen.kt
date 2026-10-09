@@ -36,7 +36,7 @@ fun AboutView(state: AboutState, postAction: (AboutAction) -> Unit = { }) {
         modifier =
           Modifier
             .padding(
-              horizontal = Dimen.large,
+              horizontal = Dimen.medium,
               vertical = Dimen.large
             )
             .verticalScroll(rememberScrollState())
