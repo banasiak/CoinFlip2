@@ -317,8 +317,8 @@ export function shortFanfare() {
 
 export const SOUNDS = {
   // the coin in the air: a soft whir that swells each time it turns edge-on, timed from the flip's
-  // first frame. speed, frame and lead are the video's when it passes them: its streak flips at
-  // double speed, its frames are the declared 20 ms, and it has no latency to lead
+  // first frame. speed, frame and lead are the video's when it passes them: its streak flips faster
+  // than the app's, its frame is its own, and it has no latency to lead
   spin: (speed = 1, seed = 11, { frame = APP_FRAME, lead = APP_LEAD } = {}) => {
     const w = whoosh(SPIN_LENGTH / speed, 1500, 900, seed, 0.6);
     // the middle of the edge-on frame

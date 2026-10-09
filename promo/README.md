@@ -2,16 +2,17 @@
 
 The Google Play promo video, rendered from the app's own artwork rather than edited by hand: the
 coin faces come straight out of `coinflip/src/main/res/drawable`, the catalog is read out of
-`CoinType.kt`, and the flip is the frame sequence `AnimationHelper` builds, at the 20 ms per frame
-it declares. A phone shows each of those frames for 16.7 ms, so the app's flip is a little quicker
-than the video's. Change the catalog or the artwork and a re-render picks it up. The one coin never shown is
+`CoinType.kt`, and the flip is the frame sequence `AnimationHelper` builds, one to each video frame
+at 60 fps. That is the rate a phone shows them at, one 16.7 ms vsync apiece rather than the 20 ms
+the drawable declares, so the video's flip runs at the app's speed. Change the catalog or the
+artwork and a re-render picks it up. The one coin never shown is
 Claude Code, an easter egg rather than a real coin (`OFF_WALL` in `sizzle.js`). The catalog count
 still includes it, so the number on screen matches what the app ships.
 
 ```bash
 cd promo
 npm ci --ignore-scripts
-FFMPEG=/path/to/ffmpeg node render.mjs        # out/sizzle.mp4, 1920x1080 at 50 fps
+FFMPEG=/path/to/ffmpeg node render.mjs        # out/sizzle.mp4, 1920x1080 at 60 fps
 node render.mjs --jobs 2                      # the same with 2 workers (default: one per core)
 node render.mjs --still 2.5,12.8              # single frames, as out/still-<t>.png
 node render.mjs --audio                       # the soundtrack alone, and its buses, as out/stem-*.wav
@@ -35,9 +36,10 @@ after `sounds.mjs`, commit only the files whose design changed and restore the r
   not a frame-order bug: a handful of frames in the streak burst differ by a few hundred pixels on
   one small particle, because Chromium's cache of downscaled images depends on what the page drew
   before. It reproduces with no parallelism at all, and every other frame matches exactly.
-- The streak's flips are the one exception to the app's frame sequence. They run at double speed,
-  where stepping through the app's frames strobes between the same two widths, so that coin turns
-  continuously instead, with each video frame blurred across its 20 ms (`drawSpin`).
+- The streak's flips are the one exception to the app's frame sequence. They run faster than the
+  app's, back to back, where stepping through the app's frames strobes between a couple of widths,
+  so that coin turns continuously instead, with each video frame blurred across its whole length
+  (`drawSpin`).
 - Fonts are bundled, never taken from the system. Roboto and Noto Color Emoji both come from
   pinned Fontsource packages, and `setup()` refuses to render if the emoji font did not load. The
   pizza and taco "photos" are emoji, and on a machine with no emoji font of its own they drew as
@@ -52,9 +54,9 @@ after `sounds.mjs`, commit only the files whose design changed and restore the r
   matched to the loudness of the original sound it stands in for, which the app still offers as its
   Classic set, so switching sets leaves the volume where it was; `spin` replaced nothing and takes
   the coin's gain. Its swells fall on the flip's edge-on frames: the app's copy is timed to the
-  frames a phone actually shows and set ahead of them for the delay before a sound starts, and the
-  video renders its own from the same design at its 20 ms frames. The video cuts it at each landing,
-  where the app stops it.
+  frames a phone actually shows and set ahead of them for the delay before a sound starts. The
+  video's copy is the same design on the same frames, with no lead, since the video has no start
+  latency. The video cuts it at each landing, where the app stops it.
 - The phone screens are redrawn from the Compose layouts' dp values and the app's color schemes,
   not screen-recorded, because nothing here runs an emulator. They are faithful to the layout
   but are a reconstruction, so re-check them after a UI change.
@@ -70,7 +72,7 @@ after `sounds.mjs`, commit only the files whose design changed and restore the r
 ## Checking a render
 
 ```bash
-ffprobe out/sizzle.mp4                                            # 1920x1080, 50 fps, yuv420p bt709, AAC 48 kHz stereo
+ffprobe out/sizzle.mp4                                            # 1920x1080, 60 fps, yuv420p bt709, AAC 48 kHz stereo
 ffmpeg -i out/sizzle.mp4 -map 0:a -af ebur128=peak=true -f null -  # I ≈ -14 LUFS, true peak ≤ -1.5 dBFS
 mkdir -p out/review && ffmpeg -i out/sizzle.mp4 -vf "fps=4,scale=480:270,tile=4x4" out/review/sheet-%02d.png
 ```
