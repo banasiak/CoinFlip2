@@ -11,6 +11,11 @@ import kotlinx.parcelize.Parcelize
  */
 const val MAX_ITERATIONS = 10_000_000L
 
+// a ratio with nothing to divide by reads as zero rather than NaN: the defaults below, and CHANGES
+// over a one-flip run, which has no transitions
+internal fun formatRatio(numerator: Long, denominator: Long): String =
+  "%.2f%%".format(if (denominator > 0) numerator * 100.0 / denominator else 0.0)
+
 @Parcelize
 data class DiagnosticsState(
   val heads: Long = 0,
@@ -18,7 +23,7 @@ data class DiagnosticsState(
   val total: Long = 0,
   val changes: Long = 0,
   val changesCount: String = "0",
-  val changesRatio: String = "[0%]",
+  val changesRatio: String = formatRatio(0, 0),
   // the run in progress: the loop resumes from state after a pause, so without these a run that
   // spans the pause is split in two and both statistics come out quietly wrong
   val runValue: Coin.Value = Coin.Value.UNKNOWN,
@@ -26,11 +31,10 @@ data class DiagnosticsState(
   val headsStreak: Long = 0,
   val tailsStreak: Long = 0,
   val headsCount: String = "0",
-  val headsRatio: String = "[0%]",
+  val headsRatio: String = formatRatio(0, 0),
   val tailsCount: String = "0",
-  val tailsRatio: String = "[0%]",
+  val tailsRatio: String = formatRatio(0, 0),
   val totalCount: String = "0",
-  val totalRatio: String = "[0%]",
   val startTime: Long = 0,
   val elapsedTime: Long = 0,
   val formattedTime: String = "",

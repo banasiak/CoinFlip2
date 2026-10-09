@@ -12,12 +12,4 @@ object Type {
   val settingsHeader: TextStyle
     @Composable @ReadOnlyComposable
     get() = MaterialTheme.typography.titleMedium.copy(fontSize = 18.sp)
-
-  val diagnosticsLabel: TextStyle
-    @Composable @ReadOnlyComposable
-    get() = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp)
-
-  val diagnosticsValue: TextStyle
-    @Composable @ReadOnlyComposable
-    get() = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp)
 }

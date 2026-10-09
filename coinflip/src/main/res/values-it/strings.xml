@@ -89,7 +89,6 @@
   <string name="streak_content_description">%1$d di fila</string>
   <string name="streak_face">%1$s: %2$s</string>
   <string name="tails">CROCE</string>
-  <string name="time">TEMPO</string>
   <string name="total">TOTALE</string>
   <string name="turbo_mode">Modalità Turbo attivata &#127812;</string>
   <string name="undo">Annulla</string>
