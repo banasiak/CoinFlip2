@@ -10,6 +10,7 @@ sealed class AboutAction {
   data object Back : AboutAction()
   data object Donate : AboutAction()
   data object RateApp : AboutAction()
+  data object SourceCode : AboutAction()
   data object Website : AboutAction()
 }
 

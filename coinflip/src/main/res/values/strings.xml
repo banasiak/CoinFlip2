@@ -20,7 +20,7 @@
   <string name="diagnostics_iterations_summary">iterations</string>
   <string name="diagnostics_menu_title">Diagnostics</string>
   <string name="donate">Donate to EFF.org</string>
-  <string name="donate_text">If you like this app, please consider making a donation to the Electronic Frontier Foundation. &#10084;</string>
+  <string name="donate_text">If you like this app, please consider making a donation to the Electronic Frontier Foundation.</string>
   <string name="empty" translatable="false" />
   <string name="force_high">High</string>
   <string name="force_low">Low</string>
@@ -87,6 +87,7 @@
   <string name="settings_menu_title">Settings</string>
   <string name="sound_style_classic">Classic</string>
   <string name="sound_style_modern">Modern</string>
+  <string name="source_code">Source Code on GitHub</string>
   <string name="stats_reset_message">Statistics Have Been Reset</string>
   <string name="streak">STREAK</string>
   <string name="streak_content_description">%1$d in a row</string>

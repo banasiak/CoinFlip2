@@ -18,7 +18,7 @@
   <string name="diagnostics_iterations_summary">迭代</string>
   <string name="diagnostics_menu_title">诊断</string>
   <string name="donate">捐赠给 EFF.org</string>
-  <string name="donate_text">如果您喜欢这个应用程序，请考虑向电子前沿基金会捐款。❤</string>
+  <string name="donate_text">如果您喜欢这个应用程序，请考虑向电子前沿基金会捐款。</string>
   <string name="force_high">高</string>
   <string name="force_low">低</string>
   <string name="force_medium">中</string>
@@ -84,6 +84,7 @@
   <string name="settings_menu_title">设置</string>
   <string name="sound_style_classic">经典</string>
   <string name="sound_style_modern">现代</string>
+  <string name="source_code">GitHub 上的源代码</string>
   <string name="stats_reset_message">统计数据已重置</string>
   <string name="streak">连续</string>
   <string name="streak_content_description">连续 %1$d 次</string>

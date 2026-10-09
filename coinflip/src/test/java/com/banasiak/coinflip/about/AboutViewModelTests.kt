@@ -70,6 +70,18 @@ class AboutViewModelTests {
     }
 
   @Test
+  fun `source code button`() =
+    runTest {
+      val vm = viewModel()
+
+      vm.effectFlow.test {
+        vm.postAction(AboutAction.SourceCode)
+        awaitItem() shouldBeEqualTo AboutEffect.LaunchUrl("https://github.com/banasiak/CoinFlip2")
+        ensureAllEventsConsumed()
+      }
+    }
+
+  @Test
   fun `website button`() =
     runTest {
       val vm = viewModel()

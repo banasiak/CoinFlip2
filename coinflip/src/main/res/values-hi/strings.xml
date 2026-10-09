@@ -18,7 +18,7 @@
   <string name="diagnostics_iterations_summary">पुनरावृत्ति</string>
   <string name="diagnostics_menu_title">निदान</string>
   <string name="donate">EFF.org को दान करें</string>
-  <string name="donate_text">यदि आपको यह ऐप पसंद है, तो कृपया इलेक्ट्रॉनिक फ्रंटियर फाउंडेशन को दान देने पर विचार करें. ❤</string>
+  <string name="donate_text">यदि आपको यह ऐप पसंद है, तो कृपया इलेक्ट्रॉनिक फ्रंटियर फाउंडेशन को दान देने पर विचार करें.</string>
   <string name="force_high">उच्च</string>
   <string name="force_low">कम</string>
   <string name="force_medium">मध्यम</string>
@@ -84,6 +84,7 @@
   <string name="settings_menu_title">सेटिंग्स</string>
   <string name="sound_style_classic">क्लासिक</string>
   <string name="sound_style_modern">आधुनिक</string>
+  <string name="source_code">GitHub पर सोर्स कोड</string>
   <string name="stats_reset_message">आँकड़े रीसेट कर दिए गए हैं</string>
   <string name="streak">सिलसिला</string>
   <string name="streak_content_description">लगातार %1$d</string>
