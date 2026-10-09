@@ -1,6 +1,5 @@
 package com.banasiak.coinflip.diagnostics
 
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,17 +12,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.banasiak.coinflip.extensions.launchUrl
 import com.banasiak.coinflip.extensions.navigateBack
+import com.banasiak.coinflip.ui.AdaptiveSheetDialogFragment
 import com.banasiak.coinflip.util.ColorHelper
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class DiagnosticsFragment : BottomSheetDialogFragment() {
+class DiagnosticsFragment : AdaptiveSheetDialogFragment() {
   @Inject
   lateinit var colorHelper: ColorHelper
 
@@ -33,12 +30,6 @@ class DiagnosticsFragment : BottomSheetDialogFragment() {
     ComposeView(requireContext()).apply {
       setContent { DiagnosticsScreen(viewModel) }
     }
-
-  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    val dialog = super.onCreateDialog(savedInstanceState)
-    (dialog as BottomSheetDialog).behavior.state = BottomSheetBehavior.STATE_EXPANDED
-    return dialog
-  }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
