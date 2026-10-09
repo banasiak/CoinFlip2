@@ -31,6 +31,7 @@ class SettingsManager @Inject constructor(private val prefs: SharedPreferences) 
   val animationEnabled get() = prefs[Setting.ANIMATE]
   val shakeEnabled get() = prefs[Setting.SHAKE]
   val soundEnabled get() = prefs[Setting.SOUND]
+  val soundStyle get() = prefs[Setting.SOUND_STYLE]
   val showQuickReset get() = prefs[Setting.QUICK_RESET]
   val showStats get() = prefs[Setting.STATS]
   val showStreak get() = prefs[Setting.STREAK]

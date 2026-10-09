@@ -136,6 +136,7 @@ sealed class Setting<T>(val key: String, val default: T) {
     val ANIMATE = BooleanSetting("animate", true)
     val SHAKE = BooleanSetting("shake", true)
     val SOUND = BooleanSetting("sound", true)
+    val SOUND_STYLE = EnumSetting("soundStyle", SoundStyle.MODERN, SoundStyle.entries) { it.stored }
     val STATS = BooleanSetting("stats", true)
     val TEXT = BooleanSetting("text", true)
     val VIBRATE = BooleanSetting("vibrate", true)

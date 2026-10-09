@@ -69,6 +69,8 @@
   <string name="settings_item_secure_random_title">乱数ジェネレータ</string>
   <string name="settings_item_shake_summary">デバイスを振ってコインを投げる</string>
   <string name="settings_item_shake_title">シェイク</string>
+  <string name="settings_item_sound_style_summary">再生する効果音</string>
+  <string name="settings_item_sound_style_title">サウンドの種類</string>
   <string name="settings_item_sound_summary">コイントス後に音を鳴らす</string>
   <string name="settings_item_sound_title">音</string>
   <string name="settings_item_stats_summary">現在の合計を表示する</string>
@@ -80,6 +82,8 @@
   <string name="settings_item_vibrate_summary">コイントス時に振動する</string>
   <string name="settings_item_vibrate_title">振動</string>
   <string name="settings_menu_title">設定</string>
+  <string name="sound_style_classic">クラシック</string>
+  <string name="sound_style_modern">モダン</string>
   <string name="stats_reset_message">統計がリセットされました</string>
   <string name="streak">連続</string>
   <string name="streak_content_description">%1$d回連続</string>

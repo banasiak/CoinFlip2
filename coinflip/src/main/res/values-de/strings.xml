@@ -69,6 +69,8 @@
   <string name="settings_item_secure_random_title">Zufallszahlengenerator</string>
   <string name="settings_item_shake_summary">Gerät schütteln, um die Münze zu werfen</string>
   <string name="settings_item_shake_title">Schütteln</string>
+  <string name="settings_item_sound_style_summary">Abzuspielende Soundeffekte</string>
+  <string name="settings_item_sound_style_title">Klangstil</string>
   <string name="settings_item_sound_summary">Ton nach dem Münzwurf abspielen</string>
   <string name="settings_item_sound_title">Ton</string>
   <string name="settings_item_stats_summary">Laufende Summe anzeigen</string>
@@ -80,6 +82,8 @@
   <string name="settings_item_vibrate_summary">Beim Münzwurf vibrieren</string>
   <string name="settings_item_vibrate_title">Vibrieren</string>
   <string name="settings_menu_title">Einstellungen</string>
+  <string name="sound_style_classic">Klassisch</string>
+  <string name="sound_style_modern">Modern</string>
   <string name="stats_reset_message">Statistiken wurden zurückgesetzt</string>
   <string name="streak">SERIE</string>
   <string name="streak_content_description">%1$d hintereinander</string>

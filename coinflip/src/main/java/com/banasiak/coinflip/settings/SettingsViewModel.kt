@@ -48,6 +48,7 @@ class SettingsViewModel @Inject constructor(
       is SettingsAction.SetAnimate -> persist(Setting.ANIMATE, action.value) { copy(animate = action.value) }
       is SettingsAction.SetShake -> persist(Setting.SHAKE, action.value) { copy(shake = action.value) }
       is SettingsAction.SetSound -> persist(Setting.SOUND, action.value) { copy(sound = action.value) }
+      is SettingsAction.SetSoundStyle -> persist(Setting.SOUND_STYLE, action.value) { copy(soundStyle = action.value) }
       is SettingsAction.SetText -> persist(Setting.TEXT, action.value) { copy(text = action.value) }
       is SettingsAction.SetVibrate -> persist(Setting.VIBRATE, action.value) { copy(vibrate = action.value) }
       is SettingsAction.SetStats -> persist(Setting.STATS, action.value) { copy(stats = action.value) }
@@ -221,6 +222,7 @@ class SettingsViewModel @Inject constructor(
       animate = settings.animationEnabled,
       shake = settings.shakeEnabled,
       sound = settings.soundEnabled,
+      soundStyle = settings.soundStyle,
       text = settings.textEnabled,
       vibrate = settings.vibrateEnabled,
       stats = settings.showStats,

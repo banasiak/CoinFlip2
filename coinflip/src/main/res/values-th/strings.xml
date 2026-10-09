@@ -69,6 +69,8 @@
   <string name="settings_item_secure_random_title">ตัวสร้างตัวเลขสุ่ม</string>
   <string name="settings_item_shake_summary">เขย่าอุปกรณ์เพื่อพลิกเหรียญ</string>
   <string name="settings_item_shake_title">เขย่า</string>
+  <string name="settings_item_sound_style_summary">เอฟเฟกต์เสียงที่จะเล่น</string>
+  <string name="settings_item_sound_style_title">รูปแบบเสียง</string>
   <string name="settings_item_sound_summary">เล่นเสียงหลังจากพลิกเหรียญ</string>
   <string name="settings_item_sound_title">เสียง</string>
   <string name="settings_item_stats_summary">แสดงผลรวมสะสม</string>
@@ -80,6 +82,8 @@
   <string name="settings_item_vibrate_summary">สั่นเมื่อพลิกเหรียญ</string>
   <string name="settings_item_vibrate_title">สั่น</string>
   <string name="settings_menu_title">การตั้งค่า</string>
+  <string name="sound_style_classic">คลาสสิก</string>
+  <string name="sound_style_modern">สมัยใหม่</string>
   <string name="stats_reset_message">สถิติถูกรีเซ็ตแล้ว</string>
   <string name="streak">ต่อเนื่อง</string>
   <string name="streak_content_description">%1$d ครั้งติดต่อกัน</string>

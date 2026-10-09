@@ -69,6 +69,8 @@
   <string name="settings_item_secure_random_title">Generador de números aleatorios</string>
   <string name="settings_item_shake_summary">Agite el dispositivo para lanzar una moneda</string>
   <string name="settings_item_shake_title">Agitar</string>
+  <string name="settings_item_sound_style_summary">Efectos de sonido que se reproducen</string>
+  <string name="settings_item_sound_style_title">Estilo de sonido</string>
   <string name="settings_item_sound_summary">Reproducir sonido después del lanzamiento de una moneda</string>
   <string name="settings_item_sound_title">Sonido</string>
   <string name="settings_item_stats_summary">Mostrar el total acumulado</string>
@@ -80,6 +82,8 @@
   <string name="settings_item_vibrate_summary">Vibrar al lanzar una moneda</string>
   <string name="settings_item_vibrate_title">Vibrar</string>
   <string name="settings_menu_title">Ajustes</string>
+  <string name="sound_style_classic">Clásico</string>
+  <string name="sound_style_modern">Moderno</string>
   <string name="stats_reset_message">Las estadísticas se han restablecido</string>
   <string name="streak">RACHA</string>
   <string name="streak_content_description">%1$d seguidos</string>
