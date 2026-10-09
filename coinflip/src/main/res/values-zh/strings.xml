@@ -69,6 +69,8 @@
   <string name="settings_item_secure_random_title">随机数生成器</string>
   <string name="settings_item_shake_summary">摇动设备抛硬币</string>
   <string name="settings_item_shake_title">摇动</string>
+  <string name="settings_item_sound_style_summary">要播放的音效</string>
+  <string name="settings_item_sound_style_title">音效风格</string>
   <string name="settings_item_sound_summary">抛硬币后播放声音</string>
   <string name="settings_item_sound_title">声音</string>
   <string name="settings_item_stats_summary">显示累计总数</string>
@@ -80,6 +82,8 @@
   <string name="settings_item_vibrate_summary">抛硬币时振动</string>
   <string name="settings_item_vibrate_title">振动</string>
   <string name="settings_menu_title">设置</string>
+  <string name="sound_style_classic">经典</string>
+  <string name="sound_style_modern">现代</string>
   <string name="stats_reset_message">统计数据已重置</string>
   <string name="streak">连续</string>
   <string name="streak_content_description">连续 %1$d 次</string>

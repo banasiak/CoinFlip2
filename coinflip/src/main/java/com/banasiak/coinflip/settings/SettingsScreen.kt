@@ -246,7 +246,7 @@ fun SettingsView(
           onClick = { openDialog = OpenDialog.CUSTOM_COIN }
         )
 
-        // ----- Flip: the switches run together, with the one non-switch control after them -----
+        // ----- Flip: each choice sits under the switch it depends on -----
         CategoryHeader(stringResource(R.string.settings_header_flip_title))
         SwitchPreference(
           title = stringResource(R.string.settings_item_animation_title),
@@ -259,6 +259,16 @@ fun SettingsView(
           summary = stringResource(R.string.settings_item_sound_summary),
           checked = state.sound,
           onCheckedChange = { postAction(SettingsAction.SetSound(it)) }
+        )
+        SegmentedPreference(
+          title = stringResource(R.string.settings_item_sound_style_title),
+          summary = stringResource(R.string.settings_item_sound_style_summary),
+          options = SoundStyle.entries,
+          selected = state.soundStyle,
+          label = { it.label },
+          // dependency: sound
+          enabled = state.sound,
+          onSelect = { postAction(SettingsAction.SetSoundStyle(it)) }
         )
         SwitchPreference(
           title = stringResource(R.string.settings_item_vibrate_title),
@@ -278,6 +288,7 @@ fun SettingsView(
           summary = stringResource(R.string.settings_item_force_summary),
           options = ShakeForce.entries,
           selected = state.force,
+          label = { it.label },
           // dependency: shake
           enabled = state.shake,
           onSelect = { postAction(SettingsAction.SetForce(it)) }
@@ -495,13 +506,14 @@ private fun PreferenceRow(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SegmentedPreference(
+private fun <T> SegmentedPreference(
   title: String,
   summary: String?,
-  options: List<ShakeForce>,
-  selected: ShakeForce,
+  options: List<T>,
+  selected: T,
+  label: (T) -> Int,
   enabled: Boolean,
-  onSelect: (ShakeForce) -> Unit
+  onSelect: (T) -> Unit
 ) {
   Column(
     modifier =
@@ -536,7 +548,7 @@ private fun SegmentedPreference(
               disabledActiveBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = DISABLED_CONTAINER_ALPHA)
             )
         ) {
-          Text(stringResource(option.label))
+          Text(stringResource(label(option)))
         }
       }
     }

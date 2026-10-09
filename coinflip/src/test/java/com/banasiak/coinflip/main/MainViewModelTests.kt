@@ -1,6 +1,7 @@
 package com.banasiak.coinflip.main
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.banasiak.coinflip.MainDispatcherRule
 import com.banasiak.coinflip.R
@@ -13,10 +14,15 @@ import com.banasiak.coinflip.ui.DurationAnimationDrawable
 import com.banasiak.coinflip.util.AnimationHelper
 import com.banasiak.coinflip.util.SoundHelper
 import com.banasiak.coinflip.util.VibrationHelper
+import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import io.mockk.verifyOrder
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
@@ -34,6 +40,19 @@ class MainViewModelTests {
   private val savedStateHandle: SavedStateHandle = mockk()
 
   private fun viewModel(): MainViewModel = MainViewModel(animationHelper, coin, settings, soundHelper, vibrationHelper, savedStateHandle)
+
+  /**
+   * A flip whose landing frame draws at [drawsAt] ms. With null it never draws, as on a screen that
+   * stops drawing mid-flip, and the wait gives up at 100 ms the way the drawable's does.
+   */
+  private fun flipAnimation(drawsAt: Long? = 60L): DurationAnimationDrawable {
+    val animation: DurationAnimationDrawable = mockk(relaxed = true)
+    coEvery { animation.awaitFrames(withoutFinal = 4) } coAnswers {
+      delay(drawsAt ?: 100L)
+      drawsAt != null
+    }
+    return animation
+  }
 
   @BeforeEach
   fun beforeEach() {
@@ -192,15 +211,14 @@ class MainViewModelTests {
   @Test
   fun animated_flip_defers_counts_and_ignores_taps_until_landed() =
     runTest {
-      val animation: DurationAnimationDrawable = mockk(relaxed = true)
-      every { animation.duration(withoutLastFrames = 4) } returns 100L
+      val animation = flipAnimation()
       every { animationHelper.animations } returns mapOf(AnimationHelper.Permutation.HEADS_HEADS to animation)
       every { settings.animationEnabled } returns true
       every { settings.textEnabled } returns true
       every { coin.flip() } returns Coin.Result(Coin.Value.HEADS, AnimationHelper.Permutation.HEADS_HEADS)
 
       val vm = viewModel()
-      vm.postAction(MainAction.TapCoin) // suspends at the animation delay
+      vm.postAction(MainAction.TapCoin) // suspends until the landing frame draws
 
       // mid-air: the flip is recorded internally but not yet revealed
       val midAir = vm.stateFlow.value
@@ -279,8 +297,7 @@ class MainViewModelTests {
   @Test
   fun the_run_is_held_back_until_the_flip_lands() =
     runTest {
-      val animation: DurationAnimationDrawable = mockk(relaxed = true)
-      every { animation.duration(withoutLastFrames = 4) } returns 100L
+      val animation = flipAnimation()
       every { animationHelper.animations } returns mapOf(AnimationHelper.Permutation.HEADS_HEADS to animation)
       every { settings.animationEnabled } returns true
       every { settings.showStreak } returns true
@@ -288,7 +305,7 @@ class MainViewModelTests {
 
       val vm = viewModel()
       vm.postAction(MainAction.OnResume)
-      vm.postAction(MainAction.TapCoin) // suspends at the animation delay
+      vm.postAction(MainAction.TapCoin) // suspends until the landing frame draws
 
       // mid-air: the run is recorded but not yet drawn, same as the counts
       vm.stateFlow.value.stats.streak shouldBeEqualTo 1L
@@ -550,10 +567,115 @@ class MainViewModelTests {
     }
 
   @Test
+  fun an_animated_flip_whirs_from_the_tap_until_it_lands() =
+    runTest {
+      val animation = flipAnimation()
+      every { animationHelper.animations } returns mapOf(AnimationHelper.Permutation.HEADS_HEADS to animation)
+      every { settings.animationEnabled } returns true
+      every { coin.flip() } returns Coin.Result(Coin.Value.HEADS, AnimationHelper.Permutation.HEADS_HEADS)
+
+      val vm = viewModel()
+      vm.postAction(MainAction.TapCoin) // suspends until the landing frame draws
+
+      // mid-air: whirring, and not yet stopped
+      verify(exactly = 1) { soundHelper.startSpin() }
+      verify(exactly = 0) { soundHelper.stopSpin() }
+
+      advanceUntilIdle()
+
+      // landed: the whir stops before the landing sound plays over it
+      verifyOrder {
+        soundHelper.startSpin()
+        soundHelper.stopSpin()
+        soundHelper.playSound(SoundHelper.Sound.COIN)
+      }
+    }
+
+  @Test
+  fun a_flip_lands_when_its_frame_draws_rather_than_when_its_declared_timing_runs_out() =
+    runTest {
+      val animation = flipAnimation(drawsAt = 60L)
+      every { animationHelper.animations } returns mapOf(AnimationHelper.Permutation.HEADS_HEADS to animation)
+      every { settings.animationEnabled } returns true
+      every { settings.textEnabled } returns true
+      every { coin.flip() } returns Coin.Result(Coin.Value.HEADS, AnimationHelper.Permutation.HEADS_HEADS)
+
+      val vm = viewModel()
+      vm.postAction(MainAction.TapCoin)
+
+      // a phone draws frames faster than they declare, so the frame comes before the 100 ms is up
+      advanceTimeBy(59)
+      vm.stateFlow.value.resultVisible shouldBeEqualTo false
+      advanceTimeBy(2)
+      vm.stateFlow.value.resultVisible shouldBeEqualTo true
+      verify { soundHelper.playSound(SoundHelper.Sound.COIN) }
+      // holding back the last four frames
+      coVerify { animation.awaitFrames(withoutFinal = 4) }
+    }
+
+  @Test
+  fun a_flip_whose_frame_never_draws_still_lands_when_the_wait_gives_up() =
+    runTest {
+      val animation = flipAnimation(drawsAt = null)
+      every { animationHelper.animations } returns mapOf(AnimationHelper.Permutation.HEADS_HEADS to animation)
+      every { settings.animationEnabled } returns true
+      every { settings.textEnabled } returns true
+      every { coin.flip() } returns Coin.Result(Coin.Value.HEADS, AnimationHelper.Permutation.HEADS_HEADS)
+
+      val vm = viewModel()
+      vm.postAction(MainAction.TapCoin)
+
+      // the screen stopped drawing, so the wait gives up: the flip has to land anyway, or the spin
+      // vibration would repeat until something stopped it
+      advanceTimeBy(99)
+      vm.stateFlow.value.resultVisible shouldBeEqualTo false
+      advanceTimeBy(2)
+      vm.stateFlow.value.resultVisible shouldBeEqualTo true
+      verify(exactly = 1) { vibrationHelper.stop() }
+      verify(exactly = 1) { soundHelper.stopSpin() }
+      verify { soundHelper.playSound(SoundHelper.Sound.COIN) }
+    }
+
+  @Test
+  fun a_flip_without_animation_makes_no_whir() =
+    runTest {
+      every { settings.animationEnabled } returns false
+      every { coin.flip() } returns Coin.Result(Coin.Value.HEADS, AnimationHelper.Permutation.HEADS_HEADS)
+
+      val vm = viewModel()
+      vm.postAction(MainAction.TapCoin)
+      advanceUntilIdle()
+
+      // the whir is timed to the animation, so with nothing animating there is nothing to time it to
+      verify(exactly = 0) { soundHelper.startSpin() }
+      verify { soundHelper.playSound(SoundHelper.Sound.COIN) }
+    }
+
+  @Test
+  fun a_flip_cancelled_mid_air_stops_the_whir_and_the_vibration() =
+    runTest {
+      val animation = flipAnimation()
+      every { animationHelper.animations } returns mapOf(AnimationHelper.Permutation.HEADS_HEADS to animation)
+      every { settings.animationEnabled } returns true
+      every { coin.flip() } returns Coin.Result(Coin.Value.HEADS, AnimationHelper.Permutation.HEADS_HEADS)
+
+      val vm = viewModel()
+      vm.postAction(MainAction.TapCoin) // suspends until the landing frame draws
+
+      // what the screen closing mid-flip does to the flip's coroutine
+      vm.viewModelScope.cancel()
+      advanceUntilIdle()
+
+      verify(exactly = 1) { soundHelper.stopSpin() }
+      verify(exactly = 1) { vibrationHelper.stop() }
+      // it never landed, so nothing plays for the landing
+      verify(exactly = 0) { soundHelper.playSound(any()) }
+    }
+
+  @Test
   fun resuming_mid_flip_does_not_reveal_the_result() =
     runTest {
-      val animation: DurationAnimationDrawable = mockk(relaxed = true)
-      every { animation.duration(withoutLastFrames = 4) } returns 100L
+      val animation = flipAnimation()
       every { animationHelper.animations } returns mapOf(AnimationHelper.Permutation.HEADS_HEADS to animation)
       every { settings.animationEnabled } returns true
       every { settings.textEnabled } returns true
@@ -561,7 +683,7 @@ class MainViewModelTests {
 
       val vm = viewModel()
       vm.postAction(MainAction.OnResume)
-      vm.postAction(MainAction.TapCoin) // suspends at the animation delay
+      vm.postAction(MainAction.TapCoin) // suspends until the landing frame draws
       vm.postAction(MainAction.OnPause)
       vm.postAction(MainAction.OnResume)
 

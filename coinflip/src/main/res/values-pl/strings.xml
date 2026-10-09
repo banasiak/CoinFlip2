@@ -69,6 +69,8 @@
   <string name="settings_item_secure_random_title">Generator liczb losowych</string>
   <string name="settings_item_shake_summary">Potrząśnij urządzeniem, aby rzucić monetą</string>
   <string name="settings_item_shake_title">Potrząsanie</string>
+  <string name="settings_item_sound_style_summary">Odtwarzane efekty dźwiękowe</string>
+  <string name="settings_item_sound_style_title">Styl dźwięku</string>
   <string name="settings_item_sound_summary">Odtwórz dźwięk po rzucie monetą</string>
   <string name="settings_item_sound_title">Dźwięk</string>
   <string name="settings_item_stats_summary">Wyświetl sumę bieżącą</string>
@@ -80,6 +82,8 @@
   <string name="settings_item_vibrate_summary">Wibruj przy rzucie monetą</string>
   <string name="settings_item_vibrate_title">Wibracje</string>
   <string name="settings_menu_title">Ustawienia</string>
+  <string name="sound_style_classic">Klasyczny</string>
+  <string name="sound_style_modern">Nowoczesny</string>
   <string name="stats_reset_message">Statystyki zostały zresetowane</string>
   <string name="streak">SERIA</string>
   <string name="streak_content_description">%1$d z rzędu</string>

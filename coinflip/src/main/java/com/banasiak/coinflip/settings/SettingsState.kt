@@ -11,6 +11,7 @@ data class SettingsState(
   val animate: Boolean = Setting.ANIMATE.default,
   val shake: Boolean = Setting.SHAKE.default,
   val sound: Boolean = Setting.SOUND.default,
+  val soundStyle: SoundStyle = Setting.SOUND_STYLE.default,
   val text: Boolean = Setting.TEXT.default,
   val vibrate: Boolean = Setting.VIBRATE.default,
   val stats: Boolean = Setting.STATS.default,
@@ -49,6 +50,7 @@ sealed class SettingsAction {
   data class SetAnimate(val value: Boolean) : SettingsAction()
   data class SetShake(val value: Boolean) : SettingsAction()
   data class SetSound(val value: Boolean) : SettingsAction()
+  data class SetSoundStyle(val value: SoundStyle) : SettingsAction()
   data class SetText(val value: Boolean) : SettingsAction()
   data class SetVibrate(val value: Boolean) : SettingsAction()
   data class SetStats(val value: Boolean) : SettingsAction()

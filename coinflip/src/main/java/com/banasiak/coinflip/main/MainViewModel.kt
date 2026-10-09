@@ -15,7 +15,6 @@ import com.banasiak.coinflip.util.AnimationHelper
 import com.banasiak.coinflip.util.SoundHelper
 import com.banasiak.coinflip.util.VibrationHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -193,15 +192,22 @@ class MainViewModel @Inject constructor(
       _effectFlow.emit(MainEffect.FlipCoin)
 
       if (animationEnabled) {
-        // hold back the last 4 frames (80 ms): onFlipFinished plays the landing sound and the THUD
-        // haptic, and firing those a beat early is what makes them land with the coin settling
-        // rather than trailing it. Latency compensation, not slack -- at 0 the audio arrives late
-        animation?.duration(withoutLastFrames = 4)?.let {
-          Timber.d("animation delay: $it ms")
-          // vibrate while animating
+        animation?.let {
+          // vibrate and whir while animating
           vibrationHelper.vibrate(VibrationHelper.Vibration.SPIN)
-          delay(it)
-          vibrationHelper.stop()
+          soundHelper.startSpin()
+          try {
+            // hold back the last 4 frames: onFlipFinished plays the landing sound and the THUD
+            // haptic, and firing those a beat early is what makes them land with the coin settling
+            // rather than trailing it. Latency compensation, not slack -- at 0 the audio arrives late.
+            // Awaited, not delayed: a frame lasts whole vsyncs rather than its declared 20 ms, so a
+            // delay summed from the durations lands after the coin does
+            if (!it.awaitFrames(withoutFinal = 4)) Timber.d("the flip stopped drawing, landed on its declared timing")
+          } finally {
+            // a flip cancelled mid-air, by the screen closing, would otherwise leave both running
+            vibrationHelper.stop()
+            soundHelper.stopSpin()
+          }
         }
       }
 

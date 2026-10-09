@@ -97,6 +97,7 @@ class SettingsManagerTests {
       settings.secureRandom.shouldBeFalse()
       settings.diagnosticsIterations shouldBeEqualTo 100_000L
       settings.force shouldBeEqualTo ShakeForce.MEDIUM
+      settings.soundStyle shouldBeEqualTo SoundStyle.MODERN
     }
 
     @Test
@@ -257,6 +258,14 @@ class SettingsManagerTests {
 
       sensitivities.distinct().size shouldBeEqualTo ShakeForce.entries.size
     }
+  }
+
+  @Test
+  fun `the stored sound style decodes back to the choice the user made`() {
+    manager(Setting.SOUND_STYLE.key to "classic").second.soundStyle shouldBeEqualTo SoundStyle.CLASSIC
+    manager(Setting.SOUND_STYLE.key to "modern").second.soundStyle shouldBeEqualTo SoundStyle.MODERN
+    // a value this build does not know plays the default set rather than leaving the control blank
+    manager(Setting.SOUND_STYLE.key to "orchestral").second.soundStyle shouldBeEqualTo SoundStyle.MODERN
   }
 
   @Test
