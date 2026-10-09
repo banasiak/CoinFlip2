@@ -89,7 +89,6 @@
   <string name="streak_content_description">%1$d ครั้งติดต่อกัน</string>
   <string name="streak_face">%1$s: %2$s</string>
   <string name="tails">ก้อย</string>
-  <string name="time">เวลา</string>
   <string name="total">รวม</string>
   <string name="turbo_mode">เปิดใช้งานโหมดเทอร์โบ &#127812;</string>
   <string name="undo">เลิกทำ</string>

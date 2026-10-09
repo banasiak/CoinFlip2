@@ -105,17 +105,17 @@ class DiagnosticsViewModelTests {
           total = 1,
           changes = 0,
           changesCount = "0",
-          changesRatio = "[0.00%]",
+          // one flip follows nothing, so there are no transitions to take a share of
+          changesRatio = "0.00%",
           runValue = Coin.Value.HEADS,
           currentRun = 1,
           headsStreak = 1,
           tailsStreak = 0,
           headsCount = "1",
-          headsRatio = "[100.00%]",
+          headsRatio = "100.00%",
           tailsCount = "0",
-          tailsRatio = "[0.00%]",
+          tailsRatio = "0.00%",
           totalCount = "1",
-          totalRatio = "[100.00%]",
           startTime = 1000L,
           elapsedTime = 1500L,
           formattedTime = "1.500"
@@ -146,17 +146,16 @@ class DiagnosticsViewModelTests {
           total = 1,
           changes = 0,
           changesCount = "0",
-          changesRatio = "[0.00%]",
+          changesRatio = "0.00%",
           runValue = Coin.Value.TAILS,
           currentRun = 1,
           headsStreak = 0,
           tailsStreak = 1,
           headsCount = "0",
-          headsRatio = "[0.00%]",
+          headsRatio = "0.00%",
           tailsCount = "1",
-          tailsRatio = "[100.00%]",
+          tailsRatio = "100.00%",
           totalCount = "1",
-          totalRatio = "[100.00%]",
           startTime = 1000L,
           elapsedTime = 1500L,
           formattedTime = "1.500"
@@ -193,20 +192,21 @@ class DiagnosticsViewModelTests {
           heads = 2,
           tails = 3,
           total = 5,
-          // H T H T T -- three changes, and the run left open at the end is two long
+          // H T H T T -- three changes, and the run left open at the end is two long. The share is
+          // over the four transitions between five flips, not over the flips: 3 / 4, where it read
+          // 3 / 5 = 60% before
           changes = 3,
           changesCount = "3",
-          changesRatio = "[60.00%]",
+          changesRatio = "75.00%",
           runValue = Coin.Value.TAILS,
           currentRun = 2,
           headsStreak = 1,
           tailsStreak = 2,
           headsCount = "2",
-          headsRatio = "[40.00%]",
+          headsRatio = "40.00%",
           tailsCount = "3",
-          tailsRatio = "[60.00%]",
+          tailsRatio = "60.00%",
           totalCount = "5",
-          totalRatio = "[100.00%]",
           startTime = 1000L,
           elapsedTime = 1500L,
           formattedTime = "1.500"
@@ -216,6 +216,59 @@ class DiagnosticsViewModelTests {
         awaitItem() shouldBeEqualTo initialState
         vm.postAction(DiagnosticsAction.Start)
         awaitItem() shouldBeEqualTo expectedState
+      }
+    }
+
+  @Test
+  fun shares_are_over_the_flips_so_far_not_the_target() =
+    runTest {
+      every { settingsManager.diagnosticsIterations } returns 200L
+      every { coin.flip() } returnsMany
+        List(100) { Coin.Result(Coin.Value.HEADS, AnimationHelper.Permutation.HEADS_HEADS) } +
+        List(100) { Coin.Result(Coin.Value.TAILS, AnimationHelper.Permutation.TAILS_TAILS) }
+
+      val vm = viewModel()
+
+      vm.stateFlow.test {
+        awaitItem() // initial
+        vm.postAction(DiagnosticsAction.Start)
+
+        // the first batch lands at 100 flips, all of them heads. Over the 200-flip target this read
+        // 50%, as though the run were already balanced
+        val firstBatch = awaitItem()
+        firstBatch.total shouldBeEqualTo 100L
+        firstBatch.headsRatio shouldBeEqualTo "100.00%"
+        firstBatch.tailsRatio shouldBeEqualTo "0.00%"
+
+        // the final shares are unchanged by the denominator, because total == iterations by then
+        val finalBatch = awaitItem()
+        finalBatch.total shouldBeEqualTo 200L
+        finalBatch.headsRatio shouldBeEqualTo "50.00%"
+        finalBatch.tailsRatio shouldBeEqualTo "50.00%"
+        // one change, from the hundredth flip to the hundred-and-first, over 199 transitions
+        finalBatch.changesRatio shouldBeEqualTo "0.50%"
+      }
+    }
+
+  @Test
+  fun alternating_flips_read_exactly_100_percent_changes() =
+    runTest {
+      every { settingsManager.diagnosticsIterations } returns 4L
+      every { coin.flip() } returnsMany
+        listOf(
+          Coin.Result(Coin.Value.HEADS, AnimationHelper.Permutation.TAILS_HEADS),
+          Coin.Result(Coin.Value.TAILS, AnimationHelper.Permutation.HEADS_TAILS),
+          Coin.Result(Coin.Value.HEADS, AnimationHelper.Permutation.TAILS_HEADS),
+          Coin.Result(Coin.Value.TAILS, AnimationHelper.Permutation.HEADS_TAILS)
+        )
+
+      val vm = viewModel()
+
+      vm.stateFlow.test {
+        awaitItem() // initial
+        vm.postAction(DiagnosticsAction.Start)
+        // the least random sequence there is: every transition a change. Over the flips this read 75%
+        awaitItem().changesRatio shouldBeEqualTo "100.00%"
       }
     }
 

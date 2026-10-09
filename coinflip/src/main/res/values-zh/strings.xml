@@ -89,7 +89,6 @@
   <string name="streak_content_description">连续 %1$d 次</string>
   <string name="streak_face">%1$s：%2$s</string>
   <string name="tails">反面</string>
-  <string name="time">时间</string>
   <string name="total">总计</string>
   <string name="turbo_mode">Turbo 模式已激活 &#127812;</string>
   <string name="undo">撤消</string>

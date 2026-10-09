@@ -89,7 +89,6 @@
   <string name="streak_content_description">%1$d회 연속</string>
   <string name="streak_face">%1$s: %2$s</string>
   <string name="tails">뒷면</string>
-  <string name="time">시간</string>
   <string name="total">합계</string>
   <string name="turbo_mode">터보 모드 활성화됨 &#127812;</string>
   <string name="undo">실행 취소</string>

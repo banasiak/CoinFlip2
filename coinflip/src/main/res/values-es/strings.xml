@@ -89,7 +89,6 @@
   <string name="streak_content_description">%1$d seguidos</string>
   <string name="streak_face">%1$s: %2$s</string>
   <string name="tails">CRUZ</string>
-  <string name="time">TIEMPO</string>
   <string name="total">TOTAL</string>
   <string name="turbo_mode">Modo Turbo activado &#127812;</string>
   <string name="undo">Deshacer</string>

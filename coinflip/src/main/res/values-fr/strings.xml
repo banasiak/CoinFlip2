@@ -89,7 +89,6 @@
   <string name="streak_content_description">%1$d d’affilée</string>
   <string name="streak_face">%1$s : %2$s</string>
   <string name="tails">PILE</string>
-  <string name="time">TEMPS</string>
   <string name="total">TOTAL</string>
   <string name="turbo_mode">Mode Turbo activé &#127812;</string>
   <string name="undo">Annuler</string>
