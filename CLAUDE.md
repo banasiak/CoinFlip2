@@ -44,7 +44,30 @@ lands on — and leave `app_name` short.
 **Single Activity, Fragment-based navigation:** `AppActivity` hosts a Navigation Component graph (`nav_graph.xml`). Fragments are the top-level destinations:
 - `MainFragment` — coin flip screen (start destination)
 - `SettingsFragment` — preferences screen
-- `AboutFragment` / `DiagnosticsFragment` — `BottomSheetDialogFragment` dialogs
+- `AboutFragment` / `DiagnosticsFragment` — sheets through `AdaptiveSheetDialogFragment`: a bottom
+  sheet in portrait and a side sheet in landscape
+
+**The About and Diagnostics sheets take their form from the window's shape.**
+`AdaptiveSheetDialogFragment` opens a `SideSheetDialog` docked to the end edge when the window is
+wider than it is tall, `MainView`'s own rule, so a TV always gets one, and the expanded
+`BottomSheetDialog` otherwise. Its KDoc covers why the form then holds across a rotation. It extends
+`BottomSheetDialogFragment`, not `AppCompatDialogFragment`, because that class's only other
+overrides are `dismiss()` and `dismissAllowingStateLoss()`, which animate a programmatic dismissal
+and fall through to the plain one for any dialog that is not a `BottomSheetDialog`. The portrait
+sheet keeps the animation and the side sheet loses nothing. Material ships no
+`SideSheetDialogFragment` to extend instead. The side sheet is 360dp wide rather than Material's
+256dp so the Diagnostics cards fit: the widest count a run can show, 10,000,000, takes 120dp of a
+card's 128dp interior there, so every value is at full size with 8dp to spare, and a narrower sheet
+shrinks them all.
+
+The side sheet keeps `SheetDialog`'s default of fitting system windows, which its own layout sets on
+both its container and its coordinator. It therefore sits inside the status bar, the navigation bar
+and the camera cutout rather than running under them, so no content ever needs padding away from
+them. The cost is cosmetic: the scrim shows above and below the sheet, and in reverse landscape a
+strip of it separates the sheet from the edge the cutout is on. Running the sheet edge to edge was
+considered and declined. It takes `setFitsSystemWindows(false)` and then padding only the docked
+edge of the content by hand, because a view receives the window's insets on every side whether it
+touches that edge or not.
 
 **Predictive back is enabled** (`android:enableOnBackInvokedCallback="true"`), which is what makes
 the back gesture *animate under the finger* instead of firing once it is released. At `targetSdk` 37
@@ -89,10 +112,11 @@ is the in-app half, and these things have to hold together for that:
   surplus and the version is the whole point of it: Navigation 2.10.0 still asks for fragment 1.6.2,
   and seekable fragment effects arrived in 1.7.0 — drop the dependency and predictive back degrades
   in silence to the non-interactive pop.
-- The About and Diagnostics sheets need no code at all. `BottomSheetBehavior` implements Material's
-  `MaterialBackHandler` and `BottomSheetDialog` runs the `MaterialBackOrchestrator` itself, so the
-  sheet scales down and slides out with the gesture the moment the manifest flag is set. That is
-  API 34+ only: below it the orchestrator registers a plain callback with no progress.
+- The About and Diagnostics sheets need no code at all, in either form. `BottomSheetBehavior`
+  implements Material's `MaterialBackHandler`, as `SideSheetBehavior` does through `Sheet`, and
+  `BottomSheetDialog` and `SheetDialog` each run a `MaterialBackOrchestrator` themselves, so the sheet
+  scales down and slides out with the gesture the moment the manifest flag is set. That is API 34+
+  only: below it the orchestrator registers a plain callback with no progress.
 
 One trap is worth recording because it cost three cycles and looks nothing like its cause. Under
 `androidx.transition` the screen being left behind went completely blank the instant the gesture
