@@ -89,7 +89,6 @@
   <string name="streak_content_description">%1$d回連続</string>
   <string name="streak_face">%1$s: %2$s</string>
   <string name="tails">裏</string>
-  <string name="time">時間</string>
   <string name="total">合計</string>
   <string name="turbo_mode">ターボモードが有効化されました &#127812;</string>
   <string name="undo">元に戻す</string>

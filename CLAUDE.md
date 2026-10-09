@@ -374,6 +374,44 @@ it was considered and declined. Recheck after a Compose bump — the behavior is
 `TextInputServiceAndroid.processInputCommands`; the tracker has plenty of neighbouring text-field
 keyboard bugs but none, as of August 2026, that names this one.
 
+**The Diagnostics sheet is a 2×2 grid of equal-width cards**, each holding a caption, one value and
+its detail lines, under a progress bar for the run. It replaced a table whose rows were split by
+fixed weights, and those should not come back. A weight divides a row by its width, not by what it
+holds, so the label, the count and the ratio competed for one budget and moving weight only moved
+the clip: `3f32604` chased it from the ratio into the count. The label column also rendered the
+user's custom face labels at any length. In a card each value has the card's full width to itself,
+and the caption is the one place a long custom label is cut off, with an ellipsis.
+
+The faces lead with their share and TOTAL and CHANGES with their count, and the four values share
+one text size, fitted once to the widest value a card can show rather than to each value as it
+changes. That is the iteration count, formatted, or a full 100.00% share, whichever is wider. Both
+have to be measured: a short run's count is narrower than a share. Tabular figures are what make
+those two the widest, because every digit is the same width and the longest string of each kind
+wins. The size therefore holds for the whole run and only shrinks below `headlineSmall` where one of
+them would not fit, such as 320dp or a large font scale. The detail lines are fitted too, to the
+widest count alone, because the face cards' counts sit among them and a detail line is otherwise
+free to wrap: at 320dp and a font scale of 2.0 an unfitted count broke mid-number.
+
+Two things that look like improvements were measured on a Pixel 9a, in debug builds over
+1,000,000-flip runs, and cost too much:
+
+- **Per-value `autoSize`** (`TextAutoSize.StepBased`) refits each value with a binary search of text
+  layouts every time it changes, which is four values every batch. The median frame went from
+  `main`'s 18–19 ms to 40–46 ms.
+- **Equal-height rows through `IntrinsicSize.Min`** measure every card twice per batch. Even with
+  the values fitted once, they held the median at 24 ms. Without them it is 17–18 ms, so cards in a
+  row may end up different heights when TOTAL's time wraps. That is accepted; a clipped count is
+  not.
+
+The two percentages are over different denominators on purpose:
+
+- **A face's share is over the flips so far**, not over the run's target. Over the target both faces
+  climbed from 0% and only met near 50% on the final frame, so the one thing worth watching, the
+  balance settling, could not be seen. The final values are the same either way.
+- **CHANGES is over transitions**, `total - 1`, because n flips have n − 1 of them. Over the flips,
+  a strictly alternating sequence — the very case the statistic exists to catch — read (n − 1)/n
+  rather than 100%.
+
 **Testing:** JUnit 5 with MockK for mocking, Kluent for assertions, Turbine for Flow testing. ViewModel tests use `@ExtendWith(MainDispatcherRule::class)` to swap `Dispatchers.Main` with `UnconfinedTestDispatcher`. Tests are in `coinflip/src/test/`; there is no `androidTest` source set, so nothing in Compose is covered.
 
 `FakeSharedPreferences` is an in-memory `SharedPreferences` used instead of mocking the interface, so

@@ -89,7 +89,6 @@
   <string name="streak_content_description">%1$d hintereinander</string>
   <string name="streak_face">%1$s: %2$s</string>
   <string name="tails">ZAHL</string>
-  <string name="time">ZEIT</string>
   <string name="total">GESAMT</string>
   <string name="turbo_mode">Turbo-Modus aktiviert &#127812;</string>
   <string name="undo">Rückgängig</string>

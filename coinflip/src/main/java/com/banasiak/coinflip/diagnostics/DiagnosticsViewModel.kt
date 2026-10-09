@@ -191,7 +191,8 @@ class DiagnosticsViewModel @Inject constructor(
               total = total,
               changes = changes,
               changesCount = changes.formatNumber(),
-              changesRatio = formatRatio(changes, state.iterations),
+              // n flips have n - 1 transitions: over n, a strictly alternating sequence reads short of 100%
+              changesRatio = formatRatio(changes, total - 1),
               runValue = runValue,
               currentRun = run,
               headsStreak = headsStreak,
@@ -199,9 +200,8 @@ class DiagnosticsViewModel @Inject constructor(
               headsCount = heads.formatNumber(),
               tailsCount = tails.formatNumber(),
               totalCount = total.formatNumber(),
-              headsRatio = formatRatio(heads, state.iterations),
-              tailsRatio = formatRatio(tails, state.iterations),
-              totalRatio = formatRatio(total, state.iterations),
+              headsRatio = formatRatio(heads, total),
+              tailsRatio = formatRatio(tails, total),
               elapsedTime = elapsedTime,
               formattedTime = elapsedTime.formatMilliseconds()
             )
@@ -242,10 +242,4 @@ class DiagnosticsViewModel @Inject constructor(
       // really don't care about divide by zero exceptions (or anything else that might go wrong with this)
     }
   }
-
-  private fun formatRatio(numerator: Long, denominator: Long): String =
-    "[" +
-      "%.2f".format(
-        (numerator.toDouble() / denominator.toDouble()) * 100
-      ) + "%]"
 }

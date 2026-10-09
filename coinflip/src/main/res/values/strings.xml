@@ -92,7 +92,6 @@
   <string name="streak_content_description">%1$d in a row</string>
   <string name="streak_face">%1$s: %2$s</string>
   <string name="tails">TAILS</string>
-  <string name="time">TIME</string>
   <string name="total">TOTAL</string>
   <string name="turbo_mode">Turbo Mode Activated &#127812;</string>
   <string name="undo">Undo</string>
