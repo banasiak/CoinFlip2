@@ -18,7 +18,7 @@
   <string name="diagnostics_iterations_summary">반복</string>
   <string name="diagnostics_menu_title">진단</string>
   <string name="donate">EFF.org에 기부하기</string>
-  <string name="donate_text">이 앱이 마음에 드신다면 Electronic Frontier Foundation에 기부해 주시기 바랍니다. ❤</string>
+  <string name="donate_text">이 앱이 마음에 드신다면 Electronic Frontier Foundation에 기부해 주시기 바랍니다.</string>
   <string name="force_high">높음</string>
   <string name="force_low">낮음</string>
   <string name="force_medium">중간</string>
@@ -84,6 +84,7 @@
   <string name="settings_menu_title">설정</string>
   <string name="sound_style_classic">클래식</string>
   <string name="sound_style_modern">모던</string>
+  <string name="source_code">GitHub의 소스 코드</string>
   <string name="stats_reset_message">통계가 재설정되었습니다</string>
   <string name="streak">연속</string>
   <string name="streak_content_description">%1$d회 연속</string>

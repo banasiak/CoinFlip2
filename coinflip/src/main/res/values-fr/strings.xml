@@ -18,7 +18,7 @@
   <string name="diagnostics_iterations_summary">itérations</string>
   <string name="diagnostics_menu_title">Diagnostic</string>
   <string name="donate">Faire un don à EFF.org</string>
-  <string name="donate_text">Si vous aimez cette application, pensez à faire un don à l\'Electronic Frontier Foundation. ❤</string>
+  <string name="donate_text">Si vous aimez cette application, pensez à faire un don à l\'Electronic Frontier Foundation.</string>
   <string name="force_high">Élevé</string>
   <string name="force_low">Faible</string>
   <string name="force_medium">Moyen</string>
@@ -84,6 +84,7 @@
   <string name="settings_menu_title">Paramètres</string>
   <string name="sound_style_classic">Classique</string>
   <string name="sound_style_modern">Moderne</string>
+  <string name="source_code">Code source sur GitHub</string>
   <string name="stats_reset_message">Les statistiques ont été réinitialisées</string>
   <string name="streak">SÉRIE</string>
   <string name="streak_content_description">%1$d d’affilée</string>

@@ -81,9 +81,10 @@ val ColorScheme.headsColor: Color get() = secondary
 val ColorScheme.tailsColor: Color get() = tertiary
 
 /**
- * The fill of the app's cards: the Diagnostics cards and that sheet's empty progress track. The
- * palette defines no `surfaceContainer` roles, so `surfaceVariant` is the only container color the
- * app sets for itself, and the cards match only because each one reads it from here.
+ * The fill of the app's cards: the Diagnostics cards, that sheet's empty progress track, and
+ * About's card of links. The palette defines no `surfaceContainer` roles, so `surfaceVariant` is
+ * the only container color the app sets for itself, and the cards match only because each one reads
+ * it from here.
  */
 val ColorScheme.cardColor: Color get() = surfaceVariant
 

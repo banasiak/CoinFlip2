@@ -17,6 +17,7 @@ class AboutViewModel @Inject constructor(
 ) : ViewModel() {
   private val donateUrl = "https://eff.org/donate"
   private val rateUrl = "market://details?id=${buildInfo.packageName}"
+  private val sourceUrl = "https://github.com/banasiak/CoinFlip2"
   private val websiteUrl = "https://www.banasiak.com"
 
   private var state = AboutState(buildInfo.versionName, buildInfo.versionCode, settings.dynamicColorsEnabled)
@@ -31,6 +32,7 @@ class AboutViewModel @Inject constructor(
       is AboutAction.Back -> _effectFlow.tryEmit(AboutEffect.NavBack)
       is AboutAction.Donate -> _effectFlow.tryEmit(AboutEffect.LaunchUrl(donateUrl))
       is AboutAction.RateApp -> _effectFlow.tryEmit(AboutEffect.LaunchUrl(rateUrl))
+      is AboutAction.SourceCode -> _effectFlow.tryEmit(AboutEffect.LaunchUrl(sourceUrl))
       is AboutAction.Website -> _effectFlow.tryEmit(AboutEffect.LaunchUrl(websiteUrl))
     }
   }

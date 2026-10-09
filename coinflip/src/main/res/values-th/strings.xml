@@ -18,7 +18,7 @@
   <string name="diagnostics_iterations_summary">การวนซ้ำ</string>
   <string name="diagnostics_menu_title">การวินิจฉัย</string>
   <string name="donate">บริจาคให้กับ EFF.org</string>
-  <string name="donate_text">หากคุณชอบแอปนี้ โปรดพิจารณาบริจาคให้กับ Electronic Frontier Foundation &#10084;</string>
+  <string name="donate_text">หากคุณชอบแอปนี้ โปรดพิจารณาบริจาคให้กับ Electronic Frontier Foundation</string>
   <string name="force_high">สูง</string>
   <string name="force_low">ต่ำ</string>
   <string name="force_medium">ปานกลาง</string>
@@ -84,6 +84,7 @@
   <string name="settings_menu_title">การตั้งค่า</string>
   <string name="sound_style_classic">คลาสสิก</string>
   <string name="sound_style_modern">สมัยใหม่</string>
+  <string name="source_code">ซอร์สโค้ดบน GitHub</string>
   <string name="stats_reset_message">สถิติถูกรีเซ็ตแล้ว</string>
   <string name="streak">ต่อเนื่อง</string>
   <string name="streak_content_description">%1$d ครั้งติดต่อกัน</string>

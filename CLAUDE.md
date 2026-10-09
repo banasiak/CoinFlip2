@@ -69,6 +69,10 @@ considered and declined. It takes `setFitsSystemWindows(false)` and then padding
 edge of the content by hand, because a view receives the window's insets on every side whether it
 touches that edge or not.
 
+**About's copyright line is a link that does not look like one, on purpose.** It opens the owner's
+website, and it is plain body text with a click handler: no link color, no underline, no role.
+Leave it that way. The links meant to be found are the rows in the card beneath it.
+
 **Predictive back is enabled** (`android:enableOnBackInvokedCallback="true"`), which is what makes
 the back gesture *animate under the finger* instead of firing once it is released. At `targetSdk` 37
 the flag no longer governs the system-level animations — those are on regardless — so what it buys

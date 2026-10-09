@@ -18,7 +18,7 @@
   <string name="diagnostics_iterations_summary">反復</string>
   <string name="diagnostics_menu_title">診断</string>
   <string name="donate">EFF.org に寄付する</string>
-  <string name="donate_text">このアプリが気に入ったら、電子フロンティア財団への寄付をご検討ください。❤</string>
+  <string name="donate_text">このアプリが気に入ったら、電子フロンティア財団への寄付をご検討ください。</string>
   <string name="force_high">高</string>
   <string name="force_low">低</string>
   <string name="force_medium">中</string>
@@ -84,6 +84,7 @@
   <string name="settings_menu_title">設定</string>
   <string name="sound_style_classic">クラシック</string>
   <string name="sound_style_modern">モダン</string>
+  <string name="source_code">GitHub のソースコード</string>
   <string name="stats_reset_message">統計がリセットされました</string>
   <string name="streak">連続</string>
   <string name="streak_content_description">%1$d回連続</string>
