@@ -1,5 +1,6 @@
 package com.banasiak.coinflip.ui.theme
 
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -70,13 +71,26 @@ val md_theme_dark_scrim = Color(0xFF000000)
 val seed = Color(0xFF6667AB)
 
 /**
- * The color the app gives a coin face wherever it names one: `secondary` for heads, `tertiary` for
- * tails, the same pair the result text and the stats counts use on the main screen. The custom
- * coin's rim takes it too, so a face's label is drawn in the color that face's ring will be.
+ * The color the app gives heads wherever it names that face: the main screen's result and count,
+ * the custom coin's rim and its dialogs, and the Diagnostics cards. Every one of those reads it from
+ * here, so a face is never drawn in two colors.
  */
+val ColorScheme.headsColor: Color get() = secondary
+
+/** The color the app gives tails wherever it names that face; see [headsColor]. */
+val ColorScheme.tailsColor: Color get() = tertiary
+
+/**
+ * The fill of the app's cards: the Diagnostics cards and that sheet's empty progress track. The
+ * palette defines no `surfaceContainer` roles, so `surfaceVariant` is the only container color the
+ * app sets for itself, and the cards match only because each one reads it from here.
+ */
+val ColorScheme.cardColor: Color get() = surfaceVariant
+
+/** This face's color, [headsColor] or [tailsColor], from the current theme. */
 @Composable
 fun CustomCoin.Face.faceColor(): Color =
   when (this) {
-    CustomCoin.Face.HEADS -> MaterialTheme.colorScheme.secondary
-    CustomCoin.Face.TAILS -> MaterialTheme.colorScheme.tertiary
+    CustomCoin.Face.HEADS -> MaterialTheme.colorScheme.headsColor
+    CustomCoin.Face.TAILS -> MaterialTheme.colorScheme.tailsColor
   }

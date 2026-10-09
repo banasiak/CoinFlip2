@@ -50,6 +50,9 @@ import com.banasiak.coinflip.ui.digitsOnly
 import com.banasiak.coinflip.ui.rememberEditableValue
 import com.banasiak.coinflip.ui.theme.AppTheme
 import com.banasiak.coinflip.ui.theme.Dimen
+import com.banasiak.coinflip.ui.theme.cardColor
+import com.banasiak.coinflip.ui.theme.headsColor
+import com.banasiak.coinflip.ui.theme.tailsColor
 
 // tabular figures: every digit is the same width, so the longest count and a full share are the
 // widest strings a card shows, which is what its styles are fitted to, and a number ticking every
@@ -100,14 +103,14 @@ fun DiagnosticsView(state: DiagnosticsState, postAction: (DiagnosticsAction) -> 
           progress = { if (state.iterations > 0) (state.total.toFloat() / state.iterations).coerceIn(0f, 1f) else 0f },
           modifier = Modifier.fillMaxWidth().height(Dimen.small),
           // the default secondaryContainer is a shade of the heads color in this palette
-          trackColor = MaterialTheme.colorScheme.surfaceVariant,
+          trackColor = MaterialTheme.colorScheme.cardColor,
           drawStopIndicator = {}
         )
 
         Spacer(modifier = Modifier.height(Dimen.medium))
 
-        val headsColor = MaterialTheme.colorScheme.secondary
-        val tailsColor = MaterialTheme.colorScheme.tertiary
+        val headsColor = MaterialTheme.colorScheme.headsColor
+        val tailsColor = MaterialTheme.colorScheme.tailsColor
         val runColor = MaterialTheme.colorScheme.primary
         // STREAK -- an observation rather than a test, so it is shown without a reference value:
         // the longest run varies too widely between healthy runs for one to mean anything
@@ -257,7 +260,7 @@ private fun RowScope.StatCard(
 ) {
   Card(
     modifier = Modifier.weight(1f),
-    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.cardColor)
   ) {
     Column(modifier = Modifier.padding(CARD_PADDING)) {
       Text(
