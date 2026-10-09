@@ -51,9 +51,9 @@ after `sounds.mjs`, commit only the files whose design changed and restore the r
   apart. Its record fanfare is only the opening of `streak` (`shortFanfare`), because the app's ~5 s
   fanfare would overrun the streak section. `sounds.mjs` refuses to write a sound longer than
   SoundPool holds, 5.46 s, since anything past that is cut off without a word. Each landing sound is
-  matched to the loudness of the original sound it stands in for, which the app still offers as its
-  Classic set, so switching sets leaves the volume where it was; `spin` replaced nothing and takes
-  the coin's gain. Its swells fall on the flip's edge-on frames: the app's copy is timed to the
+  matched to the loudness of the sound it replaced, which the app still offers as its Classic set,
+  so switching sets leaves the volume where it was; `spin` replaced nothing and takes the coin's
+  gain. Its swells fall on the flip's edge-on frames: the app's copy is timed to the
   frames a phone actually shows and set ahead of them for the delay before a sound starts. The
   video's copy is the same design on the same frames, with no lead, since the video has no start
   latency. The video cuts it at each landing, where the app stops it.

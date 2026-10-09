@@ -31,6 +31,8 @@ pitch, and everything else exists to make that one interaction pleasant:
 - **Streaks** — turn it on and a run of identical results counts up beside the result as HEADS ×7.
   Your best run for each side is kept in Settings, and setting a new record of ten or more plays a
   fanfare.
+- **Sound** — the coin whirs as it spins and rings as it lands. Switch Sound Style to Classic for
+  the sounds the app played from 2011.
 - **Material You** dynamic color on Android 12+, light and dark, portrait and landscape.
 - **Secure random** — swap `kotlin.random.Random` for `java.security.SecureRandom` if you have strong
   feelings about entropy sources in a coin-flipping app. (You might!)
@@ -48,7 +50,7 @@ Single-module Kotlin app, Jetpack Compose throughout, MVI-ish state management.
 | **State** | Per-feature `State` / `Action` / `Effect` triads; ViewModels expose `StateFlow` and a `SharedFlow` of one-shot effects |
 | **DI** | Hilt |
 | **Persistence** | `SharedPreferences` behind a typed `SettingsManager` |
-| **Testing** | JUnit 5, MockK, Kluent, Turbine |
+| **Testing** | JUnit Jupiter, MockK, Kluent, Turbine |
 | **Coverage** | Kover, reported into every CI run's summary |
 | **Toolchain** | Versions live in [`gradle/libs.versions.toml`](gradle/libs.versions.toml); SDK levels in [`coinflip/build.gradle.kts`](coinflip/build.gradle.kts) |
 
@@ -82,9 +84,9 @@ new coin.
 
 The 2026 refactor was done by **[Claude](https://claude.ai/referral/iftfNLT1kQ)** — landscape support, the
 rebuilt Settings screen, the searchable coin picker and favorites, custom coin faces, corrections to
-all 13 translations, the bulk of the unit test suite, the AGP 9 / Gradle 9 / SDK 37 migration, and
-most of the code in between — working from direction, design decisions, and on-device testing by
-[@banasiak](https://github.com/banasiak).
+every translation, the synthesized sound effects, the promo video, the bulk of the unit test suite,
+the AGP 9 / Gradle 9 / SDK 37 migration, and most of the code in between — working from direction,
+design decisions, and on-device testing by [@banasiak](https://github.com/banasiak).
 The commit messages in that stretch were written by Claude as well, which goes some way toward
 explaining their length.
 

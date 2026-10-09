@@ -20,7 +20,7 @@ lands on — and leave `app_name` short.
 # Build debug APK
 ./gradlew :coinflip:assembleDebug
 
-# Run all unit tests (uses JUnit 5 / JUnit Platform)
+# Run all unit tests (JUnit Jupiter on the JUnit Platform)
 ./gradlew :coinflip:test
 
 # Run a single test class (the `test` lifecycle task does not accept --tests)
@@ -137,7 +137,7 @@ enabled — the dynamic color preference changed, so the activity has to be recr
 it consumes back to `finish()` and relaunch, and an enabled callback that reports no progress means
 the system draws no preview. There is no fragment pop to seek in that case, only an activity restart.
 
-**UI is fully migrated to Jetpack Compose.** Fragments create a `ComposeView` in `onCreateView` and render a `*Screen` composable (e.g., `MainFragment` → `MainScreen`, `SettingsFragment` → `SettingsScreen`). Each Compose screen follows a two-layer pattern: `*Screen(viewModel)` collects state, `*View(state, postAction)` is the pure composable (used by `@PreviewLightDark`). The Compose theme is in `ui/theme/` (`AppTheme`), which honors the dynamic-color preference on API 31+. The coin animation still uses `AndroidView` wrapping an `ImageView` with `DurationAnimationDrawable`.
+**UI is fully migrated to Jetpack Compose.** Fragments create a `ComposeView` in `onCreateView` and render a `*Screen` composable (e.g., `MainFragment` → `MainScreen`, `SettingsFragment` → `SettingsScreen`). Each Compose screen follows a two-layer pattern: `*Screen(viewModel)` collects state, `*View(state, postAction)` is the pure composable (used by `@PreviewLightDark`). The Compose theme is in `ui/theme/` (`AppTheme`), which honors the dynamic-color preference on API 31+. The colors that mean something across screens are named once in `ui/theme/Color.kt`, as `ColorScheme` extensions: `headsColor` and `tailsColor` wherever a face is named, and `cardColor` for the fill of every card. Read them through those names rather than the Material role each maps to today, or one site can drift from the rest. The coin animation still uses `AndroidView` wrapping an `ImageView` with `DurationAnimationDrawable`.
 
 **State management pattern (MVI-style):**
 - Each feature has a `*State` (Parcelable data class), `*Action` (sealed class for user intents), and `*Effect` (sealed class for one-shot side effects like navigation or toasts).
@@ -145,7 +145,7 @@ the system draws no preview. There is no fragment pop to seek in that case, only
 - State is saved/restored via `SavedStateHandle` using `save()`/`restore()` extensions in `extensions/SavedState.kt` (stores under the key `"state"`).
 - Effects are consumed by Fragments (navigation, URLs via Chrome Custom Tabs, toasts, rate dialog).
 
-**Dependency injection:** Hilt (`@HiltAndroidApp` on `App`, `@AndroidEntryPoint` on Activity/Fragments, `@HiltViewModel` on ViewModels). `AppModule` provides system services (`SensorManager`, `Vibrator`, `SoundPool`, `SharedPreferences`) and platform types (`Clock`, `Random`, `SecureRandom`, `BuildInfo`) as a `SingletonComponent`. `ColorHelper` is `@ActivityScoped`.
+**Dependency injection:** Hilt (`@HiltAndroidApp` on `App`, `@AndroidEntryPoint` on Activity/Fragments, `@HiltViewModel` on ViewModels). `AppModule` provides system services (`SensorManager`, `Vibrator`, `SoundPool`, `SharedPreferences`) and platform types (`Resources`, `Clock`, `Random`, `SecureRandom`, `BuildInfo`, and `Dispatchers.Default` as the `CoroutineDispatcher` Diagnostics' flip loop runs on, so a test can swap it) as a `SingletonComponent`. `ColorHelper` is `@ActivityScoped`.
 
 **Key domain classes:**
 - `Coin` — core flip logic; tracks `currentValue` to determine animation permutation (heads→heads, heads→tails, etc.). Deliberately holds *no* streak state: `DiagnosticsViewModel` runs `coin.flip()` in a loop up to 10,000,000 times, which would obliterate the user's run and records
@@ -259,14 +259,15 @@ Five things about it are invisible in the code and easy to undo by accident:
   photographed a *real* coin wants neither the ring nor the tinted edge, and the switch in the
   Custom Coin dialog turns both off together (`Setting.CUSTOM_COIN_RIM`, carried to `AnimationHelper`
   as a null `RimColors`, which is also what a shipped coin passes). Not baked into the
-  stored file because the color follows the theme (`secondary` is a crimson in light and a pink in
-  dark, and either can come from Material You). Not drawn over the finished animation because
+  stored file because the color follows the theme (heads is `secondary`, a crimson in light and a
+  pink in dark, and either can come from Material You). Not drawn over the finished animation because
   `resizeBitmapDrawable` squashes frames to a quarter width mid-flip, so a ring added afterwards
-  would stay round while the coin turned inside it. `MainScreen` reads the colors off the Material
-  scheme rather than through `ColorHelper`, which resolves the *View* theme's `colorPrimary` — a
-  parallel mechanism free to drift from the result text the rim is meant to match. Width is 5% of
-  the diameter, rounded from the Claude coin's measured 5.1%. The cache key carries the colors *and*
-  their absence, so switching the border off redraws the ring away rather than leaving it up.
+  would stay round while the coin turned inside it. `MainScreen` reads the colors from `headsColor`
+  and `tailsColor`, the names the result text reads, rather than through `ColorHelper`, which
+  resolves the *View* theme's `colorPrimary` — a parallel mechanism free to drift from the text the
+  rim is meant to match. Width is 5% of the diameter, rounded from the Claude coin's measured 5.1%.
+  The cache key carries the colors *and* their absence, so switching the border off redraws the ring
+  away rather than leaving it up.
 - **The crop screen's turned copy is guarded and released, and the original is neither.** Rotating
   or mirroring re-derives the displayed bitmap through `CoinImage.oriented`, which allocates a
   second full-size copy beside the original — up to 16MB apiece at the 2048px decode bound, so a few
@@ -440,7 +441,7 @@ The two percentages are over different denominators on purpose:
   a strictly alternating sequence — the very case the statistic exists to catch — read (n − 1)/n
   rather than 100%.
 
-**Testing:** JUnit 5 with MockK for mocking, Kluent for assertions, Turbine for Flow testing. ViewModel tests use `@ExtendWith(MainDispatcherRule::class)` to swap `Dispatchers.Main` with `UnconfinedTestDispatcher`. Tests are in `coinflip/src/test/`; there is no `androidTest` source set, so nothing in Compose is covered.
+**Testing:** JUnit Jupiter with MockK for mocking, Kluent for assertions, Turbine for Flow testing. ViewModel tests use `@ExtendWith(MainDispatcherRule::class)` to swap `Dispatchers.Main` with `UnconfinedTestDispatcher`. Tests are in `coinflip/src/test/`; there is no `androidTest` source set, so nothing in Compose is covered.
 
 `FakeSharedPreferences` is an in-memory `SharedPreferences` used instead of mocking the interface, so
 tests can assert what the store ends up holding. `CoinResourcesTests` reads `res/drawable` off disk to assert every
@@ -458,8 +459,9 @@ functions, and the theme declarations are filtered out in the `kover` block of `
 so the number reflects testable logic only — remove the Compose exclusions if UI tests are ever added.
 Nothing gates the build: `koverVerify` runs as part of `check` but has no rules. CI is the single
 **Build & Test** workflow, which reports coverage into its run summary as a step that cannot fail the
-job. It lives on the same job as the tests on purpose: `check` already runs the instrumented tests, so
-generating the reports costs about a second, where a separate workflow would repeat the whole build.
+job. It lives on the same job as the tests on purpose: `check` already runs the unit tests under
+Kover's instrumentation, so generating the reports costs about a second, where a separate workflow
+would repeat the whole build.
 
 ## Code Style
 
