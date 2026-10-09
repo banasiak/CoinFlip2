@@ -69,6 +69,8 @@
   <string name="settings_item_secure_random_title">Générateur de nombres aléatoires</string>
   <string name="settings_item_shake_summary">Secouer l\'appareil pour lancer la pièce</string>
   <string name="settings_item_shake_title">Secouer</string>
+  <string name="settings_item_sound_style_summary">Effets sonores à jouer</string>
+  <string name="settings_item_sound_style_title">Style sonore</string>
   <string name="settings_item_sound_summary">Jouer un son après le lancer de la pièce</string>
   <string name="settings_item_sound_title">Son</string>
   <string name="settings_item_stats_summary">Afficher le total cumulé</string>
@@ -80,6 +82,8 @@
   <string name="settings_item_vibrate_summary">Vibrer lors du lancer de la pièce</string>
   <string name="settings_item_vibrate_title">Vibrer</string>
   <string name="settings_menu_title">Paramètres</string>
+  <string name="sound_style_classic">Classique</string>
+  <string name="sound_style_modern">Moderne</string>
   <string name="stats_reset_message">Les statistiques ont été réinitialisées</string>
   <string name="streak">SÉRIE</string>
   <string name="streak_content_description">%1$d d’affilée</string>

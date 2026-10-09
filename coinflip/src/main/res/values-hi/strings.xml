@@ -69,6 +69,8 @@
   <string name="settings_item_secure_random_title">यादृच्छिक संख्या जनरेटर</string>
   <string name="settings_item_shake_summary">सिक्का उछालने के लिए डिवाइस को हिलाएं</string>
   <string name="settings_item_shake_title">हिलाना</string>
+  <string name="settings_item_sound_style_summary">बजाए जाने वाले ध्वनि प्रभाव</string>
+  <string name="settings_item_sound_style_title">ध्वनि शैली</string>
   <string name="settings_item_sound_summary">सिक्का उछालने के बाद ध्वनि बजाएँ</string>
   <string name="settings_item_sound_title">आवाज़</string>
   <string name="settings_item_stats_summary">वर्तमान कुल प्रदर्शित करें</string>
@@ -80,6 +82,8 @@
   <string name="settings_item_vibrate_summary">सिक्का उछालने पर कंपन</string>
   <string name="settings_item_vibrate_title">कंपन</string>
   <string name="settings_menu_title">सेटिंग्स</string>
+  <string name="sound_style_classic">क्लासिक</string>
+  <string name="sound_style_modern">आधुनिक</string>
   <string name="stats_reset_message">आँकड़े रीसेट कर दिए गए हैं</string>
   <string name="streak">सिलसिला</string>
   <string name="streak_content_description">लगातार %1$d</string>

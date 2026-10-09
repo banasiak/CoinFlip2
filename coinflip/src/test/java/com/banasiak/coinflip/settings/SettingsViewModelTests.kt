@@ -39,6 +39,7 @@ class SettingsViewModelTests {
       every { settings.animationEnabled } returns false
       every { settings.shakeEnabled } returns false
       every { settings.soundEnabled } returns false
+      every { settings.soundStyle } returns SoundStyle.CLASSIC
       every { settings.textEnabled } returns false
       every { settings.vibrateEnabled } returns false
       every { settings.showStats } returns false
@@ -64,6 +65,7 @@ class SettingsViewModelTests {
           animate = false,
           shake = false,
           sound = false,
+          soundStyle = SoundStyle.CLASSIC,
           text = false,
           vibrate = false,
           stats = false,
@@ -199,6 +201,16 @@ class SettingsViewModelTests {
 
       verify { settings.update(Setting.FORCE, ShakeForce.HIGH) }
       vm.stateFlow.value.force shouldBeEqualTo ShakeForce.HIGH
+    }
+
+  @Test
+  fun set_sound_style_persists_and_updates_state() =
+    runTest {
+      val vm = viewModel()
+      vm.postAction(SettingsAction.SetSoundStyle(SoundStyle.CLASSIC))
+
+      verify { settings.update(Setting.SOUND_STYLE, SoundStyle.CLASSIC) }
+      vm.stateFlow.value.soundStyle shouldBeEqualTo SoundStyle.CLASSIC
     }
 
   @Test

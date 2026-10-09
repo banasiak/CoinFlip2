@@ -69,6 +69,8 @@
   <string name="settings_item_secure_random_title">Rastgele sayı üreteci</string>
   <string name="settings_item_shake_summary">Yazı tura atmak için cihazı sallayın</string>
   <string name="settings_item_shake_title">Sallama</string>
+  <string name="settings_item_sound_style_summary">Çalınacak ses efektleri</string>
+  <string name="settings_item_sound_style_title">Ses stili</string>
   <string name="settings_item_sound_summary">Yazı tura attıktan sonra ses çal</string>
   <string name="settings_item_sound_title">Ses</string>
   <string name="settings_item_stats_summary">Güncel toplamı görüntüle</string>
@@ -80,6 +82,8 @@
   <string name="settings_item_vibrate_summary">Yazı tura atıldığında titreşim</string>
   <string name="settings_item_vibrate_title">Titreşim</string>
   <string name="settings_menu_title">Ayarlar</string>
+  <string name="sound_style_classic">Klasik</string>
+  <string name="sound_style_modern">Modern</string>
   <string name="stats_reset_message">İstatistikler sıfırlandı</string>
   <string name="streak">SERİ</string>
   <string name="streak_content_description">%1$d ardışık</string>

@@ -2,8 +2,9 @@
 
 The Google Play promo video, rendered from the app's own artwork rather than edited by hand: the
 coin faces come straight out of `coinflip/src/main/res/drawable`, the catalog is read out of
-`CoinType.kt`, and the flip is the frame sequence `AnimationHelper` builds, at the same 20 ms per
-frame. Change the catalog or the artwork and a re-render picks it up. The one coin never shown is
+`CoinType.kt`, and the flip is the frame sequence `AnimationHelper` builds, at the 20 ms per frame
+it declares. A phone shows each of those frames for 16.7 ms, so the app's flip is a little quicker
+than the video's. Change the catalog or the artwork and a re-render picks it up. The one coin never shown is
 Claude Code, an easter egg rather than a real coin (`OFF_WALL` in `sizzle.js`). The catalog count
 still includes it, so the number on screen matches what the app ships.
 
@@ -14,10 +15,13 @@ FFMPEG=/path/to/ffmpeg node render.mjs        # out/sizzle.mp4, 1920x1080 at 50 
 node render.mjs --jobs 2                      # the same with 2 workers (default: one per core)
 node render.mjs --still 2.5,12.8              # single frames, as out/still-<t>.png
 node render.mjs --audio                       # the soundtrack alone, and its buses, as out/stem-*.wav
+FFMPEG=/path/to/ffmpeg node sounds.mjs         # the app's sound effects, into coinflip/src/main/res/raw
 ```
 
-`ffmpeg` is taken from `$FFMPEG`, else from the `PATH`, and needs `libx264`. Playwright drives a
-headless Chromium; if its browser is not installed, `npx playwright install chromium`.
+`ffmpeg` is taken from `$FFMPEG`, else from the `PATH`, and needs `libx264` for the video and
+`libvorbis` for the sounds. Different ffmpeg builds encode the same sound to different bytes, so
+after `sounds.mjs`, commit only the files whose design changed and restore the rest. Playwright drives a headless Chromium; if its browser is not installed,
+`npx playwright install chromium`.
 
 - `sizzle.js` draws every frame as a pure function of time, so any frame renders on its own. The
   timeline is pinned to a 120 bpm grid, and each flip is scheduled by the beat it lands on.
@@ -38,9 +42,19 @@ headless Chromium; if its browser is not installed, `npx playwright install chro
   pinned Fontsource packages, and `setup()` refuses to render if the emoji font did not load. The
   pizza and taco "photos" are emoji, and on a machine with no emoji font of its own they drew as
   empty boxes.
-- `audio.mjs` synthesizes the soundtrack from the cues the page schedules. Nothing in it is
-  sampled. The app's own `res/raw` sounds are Super Mario Bros. sound effects, which a public
-  promo video cannot carry.
+- `audio.mjs` synthesizes the soundtrack from the cues the page schedules, with the instruments in
+  `synth.mjs`. Nothing in it is sampled.
+- `sounds.mjs` renders the app's five sound effects into `res/raw` from `SOUNDS` in `synth.mjs`. The
+  video's flip whir and landing ting are the app's `spin` and `coin`, so the two can never drift
+  apart. Its record fanfare is only the opening of `streak` (`shortFanfare`), because the app's ~5 s
+  fanfare would overrun the streak section. `sounds.mjs` refuses to write a sound longer than
+  SoundPool holds, 5.46 s, since anything past that is cut off without a word. Each landing sound is
+  matched to the loudness of the original sound it stands in for, which the app still offers as its
+  Classic set, so switching sets leaves the volume where it was; `spin` replaced nothing and takes
+  the coin's gain. Its swells fall on the flip's edge-on frames: the app's copy is timed to the
+  frames a phone actually shows and set ahead of them for the delay before a sound starts, and the
+  video renders its own from the same design at its 20 ms frames. The video cuts it at each landing,
+  where the app stops it.
 - The phone screens are redrawn from the Compose layouts' dp values and the app's color schemes,
   not screen-recorded, because nothing here runs an emulator. They are faithful to the layout
   but are a reconstruction, so re-check them after a UI change.

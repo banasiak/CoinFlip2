@@ -1,257 +1,12 @@
-// The soundtrack, synthesized from nothing so that every sound in the video is original.
-//
-// The app's own sound effects are deliberately not used here: coin.ogg, powerup.ogg, oneup.ogg and
-// streak.ogg are Super Mario Bros. sounds, which a public promo video cannot carry.
+// The promo video's soundtrack, built from the voices in synth.mjs.
 //
 // A 120 bpm bed in C major (C G Am F) runs under the cues sizzle.js schedules: every landing gets a
 // struck-metal ting, every tap a click, every cut a whoosh, and the record streak an original fanfare.
 
-const SR = 48000;
+import { SOUNDS, SR, bass, brass, bubble, clap, click, crash, hat, hz, kick, noiseGen, pad, ping, pluck, reverb, shortFanfare, snare, wav, whoosh } from './synth.mjs';
+
 const BPM = 120;
 const BEAT = 60 / BPM;
-
-// ---------------------------------------------------------------------------------------------
-// primitives
-
-function noiseGen(seed) {
-  let s = seed >>> 0;
-  return () => {
-    s = (Math.imul(s, 1664525) + 1013904223) >>> 0;
-    return (s / 4294967296) * 2 - 1;
-  };
-}
-
-const hz = (midi) => 440 * 2 ** ((midi - 69) / 12);
-
-function buffer(seconds) {
-  return new Float32Array(Math.max(1, Math.ceil(seconds * SR)));
-}
-
-// Chamberlin state-variable filter; returns the chosen output per sample
-function svf(input, cutoff, q = 0.7, mode = 'band') {
-  const out = new Float32Array(input.length);
-  let low = 0;
-  let band = 0;
-  for (let i = 0; i < input.length; i++) {
-    const fc = typeof cutoff === 'function' ? cutoff(i / SR) : cutoff;
-    const f = 2 * Math.sin((Math.PI * Math.min(fc, SR / 6)) / SR);
-    low += f * band;
-    const high = input[i] - low - band / q;
-    band += f * high;
-    out[i] = mode === 'low' ? low : mode === 'high' ? high : band;
-  }
-  return out;
-}
-
-function envelope(sig, attack, release) {
-  const a = Math.max(1, attack * SR);
-  const r = Math.max(1, release * SR);
-  for (let i = 0; i < sig.length; i++) {
-    let g = 1;
-    if (i < a) g = i / a;
-    const left = sig.length - i;
-    if (left < r) g *= left / r;
-    sig[i] *= g;
-  }
-  return sig;
-}
-
-// ---------------------------------------------------------------------------------------------
-// instruments
-
-function kick() {
-  const s = buffer(0.45);
-  let ph = 0;
-  for (let i = 0; i < s.length; i++) {
-    const t = i / SR;
-    ph += (2 * Math.PI * (44 + 120 * Math.exp(-t / 0.028))) / SR;
-    s[i] = Math.sin(ph) * Math.exp(-t / 0.22) + (i < 90 ? 0.4 * Math.exp(-i / 20) : 0);
-  }
-  return s;
-}
-
-function clap(seed) {
-  const n = noiseGen(seed);
-  const raw = buffer(0.25);
-  for (let i = 0; i < raw.length; i++) {
-    const t = i / SR;
-    const bursts = [0, 0.011, 0.022].reduce((acc, b) => acc + (t >= b ? Math.exp(-(t - b) / 0.006) : 0), 0);
-    raw[i] = n() * (0.6 * bursts + Math.exp(-t / 0.11));
-  }
-  return svf(raw, 1300, 1.1, 'band');
-}
-
-function hat(seed, open = false) {
-  const n = noiseGen(seed);
-  const raw = buffer(open ? 0.25 : 0.06);
-  for (let i = 0; i < raw.length; i++) raw[i] = n() * Math.exp(-i / SR / (open ? 0.08 : 0.018));
-  return svf(raw, 9000, 0.8, 'high');
-}
-
-function snare(seed) {
-  const n = noiseGen(seed);
-  const s = buffer(0.2);
-  for (let i = 0; i < s.length; i++) {
-    const t = i / SR;
-    s[i] = 0.7 * n() * Math.exp(-t / 0.07) + 0.5 * Math.sin(2 * Math.PI * 190 * t) * Math.exp(-t / 0.05);
-  }
-  return svf(s, 3500, 0.6, 'low');
-}
-
-function crash(seed) {
-  const n = noiseGen(seed);
-  const raw = buffer(2.2);
-  for (let i = 0; i < raw.length; i++) raw[i] = n() * Math.exp(-i / SR / 0.7);
-  return svf(raw, 6500, 0.7, 'high');
-}
-
-function whoosh(len, f0, f1, seed, shape = 1.5) {
-  const n = noiseGen(seed);
-  const raw = buffer(len);
-  for (let i = 0; i < raw.length; i++) raw[i] = n();
-  const out = svf(raw, (t) => f0 * (f1 / f0) ** (t / len), 1.4, 'band');
-  for (let i = 0; i < out.length; i++) out[i] *= Math.sin((Math.PI * i) / out.length) ** shape;
-  return out;
-}
-
-// struck metal: a bright transient and four inharmonic partials ringing out at different rates
-function ting(f, seed) {
-  const n = noiseGen(seed);
-  const s = buffer(0.9);
-  const partials = [[1, 1, 0.5], [2.32, 0.42, 0.28], [4.25, 0.22, 0.16], [6.63, 0.12, 0.09]];
-  for (let i = 0; i < s.length; i++) {
-    const t = i / SR;
-    let v = 0;
-    for (const [r, a, d] of partials) v += a * Math.sin(2 * Math.PI * f * r * t) * Math.exp(-t / d);
-    s[i] = v + (i < 200 ? 0.5 * n() * Math.exp(-i / 40) : 0);
-  }
-  return envelope(s, 0.001, 0.05);
-}
-
-function ping(f, len = 0.35) {
-  const s = buffer(len);
-  for (let i = 0; i < s.length; i++) {
-    const t = i / SR;
-    s[i] = (Math.sin(2 * Math.PI * f * t) + 0.25 * Math.sin(4 * Math.PI * f * t)) * Math.exp(-t / (len / 4));
-  }
-  return envelope(s, 0.002, 0.02);
-}
-
-function click(seed) {
-  const n = noiseGen(seed);
-  const s = buffer(0.03);
-  for (let i = 0; i < s.length; i++) {
-    const t = i / SR;
-    s[i] = 0.6 * n() * Math.exp(-t / 0.002) + 0.5 * Math.sin(2 * Math.PI * 2400 * t) * Math.exp(-t / 0.006);
-  }
-  return s;
-}
-
-function bubble() {
-  const s = buffer(0.09);
-  let ph = 0;
-  for (let i = 0; i < s.length; i++) {
-    const t = i / SR;
-    ph += (2 * Math.PI * (420 + 900 * (t / 0.09))) / SR;
-    s[i] = Math.sin(ph) * Math.sin((Math.PI * i) / s.length);
-  }
-  return s;
-}
-
-function pluck(f, len = 0.5) {
-  const s = buffer(len);
-  for (let k = 1; k <= 8; k++) {
-    if (f * k > 14000) break;
-    const a = 1 / k ** 1.3;
-    const d = 5 + 4 * k;
-    const w = (2 * Math.PI * f * k) / SR;
-    for (let i = 0; i < s.length; i++) s[i] += a * Math.sin(w * i) * Math.exp((-d * i) / SR);
-  }
-  return envelope(s, 0.002, 0.03);
-}
-
-function bass(f, len) {
-  const s = buffer(len);
-  const w = (2 * Math.PI * f) / SR;
-  for (let i = 0; i < s.length; i++) {
-    const t = i / SR;
-    const e = 0.6 + 0.4 * Math.exp(-t / 0.06);
-    s[i] = e * (Math.sin(w * i) + 0.35 * Math.sin(2 * w * i) + 0.12 * Math.sin(3 * w * i));
-  }
-  return envelope(s, 0.004, 0.03);
-}
-
-// band-limited saws, two voices a few cents apart, with the upper harmonics rolled off
-function pad(freqs, len, attack = 0.25, release = 0.5) {
-  const s = buffer(len);
-  for (const f of freqs) {
-    for (const det of [-0.004, 0.004]) {
-      const fd = f * (1 + det);
-      for (let k = 1; k <= 10; k++) {
-        if (fd * k > 9000) break;
-        const a = 1 / k ** 1.7;
-        const w = (2 * Math.PI * fd * k) / SR;
-        const ph = k * det * 1000;
-        for (let i = 0; i < s.length; i++) s[i] += a * Math.sin(w * i + ph);
-      }
-    }
-  }
-  return envelope(s, attack, release);
-}
-
-// a brass-ish lead: a saw whose brightness swells in over the first 80 ms, vibrato on long notes
-function brass(f, len) {
-  const s = buffer(len);
-  for (let k = 1; k <= 14; k++) {
-    if (f * k > 12000) break;
-    let ph = 0;
-    for (let i = 0; i < s.length; i++) {
-      const t = i / SR;
-      const bright = 0.15 + 0.5 * Math.exp(-t / 0.05);
-      const vib = t > 0.25 ? 1 + 0.004 * Math.sin(2 * Math.PI * 5.5 * t) : 1;
-      ph += (2 * Math.PI * f * k * vib) / SR;
-      s[i] += (Math.exp(-k * bright) / k) * Math.sin(ph);
-    }
-  }
-  return envelope(s, 0.02, Math.min(0.12, len / 3));
-}
-
-// ---------------------------------------------------------------------------------------------
-// Freeverb, abridged
-
-function reverb(inL, inR, room = 0.84, damp = 0.25) {
-  const scale = SR / 44100;
-  const combs = [1116, 1188, 1277, 1356, 1422, 1491, 1557, 1617];
-  const aps = [556, 441, 341, 225];
-  const run = (input, spread) => {
-    const out = new Float32Array(input.length);
-    for (const c of combs) {
-      const buf = new Float32Array(Math.round((c + spread) * scale));
-      let idx = 0;
-      let store = 0;
-      for (let i = 0; i < input.length; i++) {
-        const y = buf[idx];
-        store = y * (1 - damp) + store * damp;
-        buf[idx] = input[i] * 0.015 + store * room;
-        out[i] += y;
-        if (++idx >= buf.length) idx = 0;
-      }
-    }
-    for (const a of aps) {
-      const buf = new Float32Array(Math.round((a + spread) * scale));
-      let idx = 0;
-      for (let i = 0; i < out.length; i++) {
-        const b = buf[idx];
-        const y = -out[i] + b;
-        buf[idx] = out[i] + b * 0.5;
-        out[i] = y;
-        if (++idx >= buf.length) idx = 0;
-      }
-    }
-    return out;
-  };
-  return [run(inL, 0), run(inR, 23)];
-}
 
 // ---------------------------------------------------------------------------------------------
 // harmony: C G Am F from the drop, with the hook, the fanfare and the ending voiced to lead into
@@ -379,16 +134,18 @@ export function synthesize(cues, duration, marks, { stems = false } = {}) {
   for (const c of cues) {
     switch (c.type) {
       case 'land':
-        place(sfx, c.t, ting(hz(91), Math.round(c.t * 10)), 0.34, 0, 0.35);
+        for (const v of SOUNDS.coin(Math.round(c.t * 10))) place(sfx, c.t + v.t, v.sig, v.gain, 0, v.wet);
         break;
-      case 'spin': {
-        const len = 0.9 / (c.speed ?? 1);
-        const w = whoosh(len, 1400, 900, Math.round(c.t * 10), 0.8);
-        // the coin passes edge-on twice a turn, and a turn takes eight 20 ms frames
-        for (let i = 0; i < w.length; i++) w[i] *= 0.55 + 0.45 * Math.sin((2 * Math.PI * 12.5 * (c.speed ?? 1) * i) / SR);
-        place(sfx, c.t, w, 0.1);
+      case 'spin':
+        // cut at the landing, where the app stops it, with a fade so the cut does not click
+        for (const v of SOUNDS.spin(c.speed ?? 1, Math.round(c.t * 10), { frame: c.frame, lead: 0 })) {
+          const end = Math.min(v.sig.length, Math.round((c.until - c.t) * SR));
+          const sig = v.sig.slice(0, end);
+          const fade = Math.min(end, Math.round(0.01 * SR));
+          for (let i = 0; i < fade; i++) sig[end - fade + i] *= 1 - i / fade;
+          place(sfx, c.t + v.t, sig, v.gain, 0, v.wet);
+        }
         break;
-      }
       case 'toss':
         place(sfx, c.t, whoosh(0.75, 250, 3200, 7), 0.8, 0, 0.2);
         break;
@@ -445,14 +202,9 @@ export function synthesize(cues, duration, marks, { stems = false } = {}) {
           place(sfx, c.t + 0.3 * Math.abs(n()) + i * 0.02, ping(hz(m), 0.3), 0.03, n(), 0.6);
         }
         break;
-      case 'fanfare': {
-        // G C E G, E G, then the top C, over a C major hold
-        const line = [[0, 67, 0.1], [0.1, 72, 0.1], [0.2, 76, 0.1], [0.3, 79, 0.45], [0.8, 76, 0.13], [0.95, 79, 0.13], [1.1, 84, 0.95]];
-        for (const [dt, m, len] of line) place(sfx, c.t + dt, brass(hz(m), len), 0.19, 0, 0.35);
-        for (const m of [48, 55, 60, 64]) place(sfx, c.t + 1.1, brass(hz(m), 0.95), 0.07, 0, 0.35);
-        place(sfx, c.t, ting(hz(91), 5), 0.3, 0, 0.35);
+      case 'fanfare':
+        for (const v of shortFanfare()) place(sfx, c.t + v.t, v.sig, v.gain, 0, v.wet);
         break;
-      }
       default:
         break;
     }
@@ -492,26 +244,4 @@ export function synthesize(cues, duration, marks, { stems = false } = {}) {
     sfx: wav(...sfx),
     reverb: wav(wl, wr),
   };
-}
-
-function wav(L, R) {
-  const n = L.length;
-  const buf = Buffer.alloc(44 + n * 4);
-  buf.write('RIFF', 0);
-  buf.writeUInt32LE(36 + n * 4, 4);
-  buf.write('WAVEfmt ', 8);
-  buf.writeUInt32LE(16, 16);
-  buf.writeUInt16LE(1, 20);
-  buf.writeUInt16LE(2, 22);
-  buf.writeUInt32LE(SR, 24);
-  buf.writeUInt32LE(SR * 4, 28);
-  buf.writeUInt16LE(4, 32);
-  buf.writeUInt16LE(16, 34);
-  buf.write('data', 36);
-  buf.writeUInt32LE(n * 4, 40);
-  for (let i = 0; i < n; i++) {
-    buf.writeInt16LE(Math.round(Math.max(-1, Math.min(1, L[i])) * 32767), 44 + i * 4);
-    buf.writeInt16LE(Math.round(Math.max(-1, Math.min(1, R[i])) * 32767), 46 + i * 4);
-  }
-  return buf;
 }

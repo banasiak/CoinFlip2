@@ -72,6 +72,8 @@
   <string name="settings_item_secure_random_title">Random Number Generator</string>
   <string name="settings_item_shake_summary">Shake device to flip coin</string>
   <string name="settings_item_shake_title">Shake</string>
+  <string name="settings_item_sound_style_summary">Sound effects to play</string>
+  <string name="settings_item_sound_style_title">Sound Style</string>
   <string name="settings_item_sound_summary">Play sound after coin flip</string>
   <string name="settings_item_sound_title">Sound</string>
   <string name="settings_item_stats_summary">Display running total</string>
@@ -83,6 +85,8 @@
   <string name="settings_item_vibrate_summary">Vibrate on coin flip</string>
   <string name="settings_item_vibrate_title">Vibrate</string>
   <string name="settings_menu_title">Settings</string>
+  <string name="sound_style_classic">Classic</string>
+  <string name="sound_style_modern">Modern</string>
   <string name="stats_reset_message">Statistics Have Been Reset</string>
   <string name="streak">STREAK</string>
   <string name="streak_content_description">%1$d in a row</string>

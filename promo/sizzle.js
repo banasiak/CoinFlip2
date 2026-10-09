@@ -6,7 +6,8 @@
 
 const W = 1920;
 const H = 1080;
-// the app advances its flip animation every 20 ms, so at 50 fps one video frame is one app frame
+// AnimationHelper declares 20 ms flip frames, so at 50 fps one video frame is one app frame. A phone
+// shows them faster, in 16.7 ms, and the video keeps the declared timing
 const FPS = 50;
 
 const RES = '../coinflip/src/main/res/';
@@ -656,7 +657,7 @@ const DURATION = END + 3.0;
 
 function flipCues(flips, final = 'land') {
   flips.forEach((f, i) => {
-    cue(f.t0, 'spin', { speed: f.speed });
+    cue(f.t0, 'spin', { speed: f.speed, until: f.land, frame: 1 / FPS });
     cue(f.land, i === flips.length - 1 ? final : 'land');
   });
 }
