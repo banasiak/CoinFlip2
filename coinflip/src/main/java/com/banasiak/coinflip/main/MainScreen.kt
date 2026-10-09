@@ -64,6 +64,8 @@ import com.banasiak.coinflip.extensions.formatNumber
 import com.banasiak.coinflip.ui.DurationAnimationDrawable
 import com.banasiak.coinflip.ui.theme.AppTheme
 import com.banasiak.coinflip.ui.theme.Dimen
+import com.banasiak.coinflip.ui.theme.headsColor
+import com.banasiak.coinflip.ui.theme.tailsColor
 import com.banasiak.coinflip.util.AnimationHelper
 import kotlin.math.min
 
@@ -101,10 +103,8 @@ fun MainView(
   flipToken: Int = 0
 ) {
   AppTheme(dynamicColor = state.dynamicColors) {
-    // the same two colors the result text and the stats counts use below, so the custom coin's rim
-    // cannot drift from them
-    val headsRim = MaterialTheme.colorScheme.secondary.toArgb()
-    val tailsRim = MaterialTheme.colorScheme.tertiary.toArgb()
+    val headsRim = MaterialTheme.colorScheme.headsColor.toArgb()
+    val tailsRim = MaterialTheme.colorScheme.tailsColor.toArgb()
     LaunchedEffect(headsRim, tailsRim) { postAction(MainAction.SetRimColors(headsRim, tailsRim)) }
 
     Scaffold(
@@ -309,8 +309,8 @@ private fun CoinImage(state: MainState, flipToken: Int, size: Dp, coinPadding: D
 private fun ResultText(state: MainState, landscape: Boolean) {
   val resultColor =
     when (state.result.value) {
-      Coin.Value.HEADS -> MaterialTheme.colorScheme.secondary
-      Coin.Value.TAILS -> MaterialTheme.colorScheme.tertiary
+      Coin.Value.HEADS -> MaterialTheme.colorScheme.headsColor
+      Coin.Value.TAILS -> MaterialTheme.colorScheme.tailsColor
       else -> MaterialTheme.colorScheme.primary
     }
   val baseFontSize = if (landscape) 56.sp else 72.sp
@@ -432,13 +432,13 @@ private fun StatsRow(state: MainState, landscape: Boolean) {
         text = headsLabel,
         modifier = Modifier.padding(end = Dimen.medium),
         style = MaterialTheme.typography.titleLarge,
-        color = MaterialTheme.colorScheme.secondary
+        color = MaterialTheme.colorScheme.headsColor
       )
       Text(
         text = state.headsCount.formatNumber(),
         modifier = Modifier.padding(end = Dimen.medium),
         style = MaterialTheme.typography.titleLarge,
-        color = MaterialTheme.colorScheme.secondary
+        color = MaterialTheme.colorScheme.headsColor
       )
     }
     Row(
@@ -449,12 +449,12 @@ private fun StatsRow(state: MainState, landscape: Boolean) {
         text = tailsLabel,
         modifier = Modifier.padding(start = Dimen.medium, end = Dimen.medium),
         style = MaterialTheme.typography.titleLarge,
-        color = MaterialTheme.colorScheme.tertiary
+        color = MaterialTheme.colorScheme.tailsColor
       )
       Text(
         text = state.tailsCount.formatNumber(),
         style = MaterialTheme.typography.titleLarge,
-        color = MaterialTheme.colorScheme.tertiary
+        color = MaterialTheme.colorScheme.tailsColor
       )
     }
   }
