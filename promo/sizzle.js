@@ -6,9 +6,9 @@
 
 const W = 1920;
 const H = 1080;
-// AnimationHelper declares 20 ms flip frames, so at 50 fps one video frame is one app frame. A phone
-// shows them faster, in 16.7 ms, and the video keeps the declared timing
-const FPS = 50;
+// a phone shows each of AnimationHelper's flip frames for one 16.7 ms vsync, not the 20 ms it
+// declares, so at 60 fps one video frame is one frame as a phone shows it
+const FPS = 60;
 
 const RES = '../coinflip/src/main/res/';
 
@@ -88,9 +88,9 @@ function flipAt(flips, t) {
   return { cur, landed, flying: cur !== null && t < cur.land, frame: cur ? frameOf(cur, t) : null };
 }
 
-// at double speed a turn takes eight video frames, and stepping through the app's frames strobes
-// between the same two widths, so this turns the coin continuously and blurs each video frame
-// across its whole 20 ms, the way a camera would
+// the streak flips faster than a phone does, and stepping through the app's frames at that speed
+// strobes between a couple of widths, so this turns the coin continuously and blurs each video frame
+// across its whole length, the way a camera would
 const BLUR_SAMPLES = 10;
 let spinAcc = null;
 let spinOne = null;
@@ -744,8 +744,8 @@ const COPY_TAP = [TAP + 0.2, TAP + 3.35];
 const COPY_SHAKE = [TAP + 3.6, TAP + 6.85];
 const COPY_SCORE = TAP + 7.1;
 const TAP_FLIPS = [mkFlip('HH', TAP + 2.5), mkFlip('HT', TAP + 6.0), mkFlip('TH', TAP + 8.5)];
-const TAP_AT = TAP + 1.55;
-const SHAKE = [TAP + 4.55, TAP + 5.25];
+const TAP_AT = TAP_FLIPS[0].t0 - 0.05;
+const SHAKE = [TAP_FLIPS[1].t0 - 0.71, TAP_FLIPS[1].t0 - 0.01];
 cue(TAP, 'rise');
 cue(TAP_AT, 'tap');
 cue(SHAKE[0], 'shake', { until: SHAKE[1] });
@@ -1023,8 +1023,8 @@ const SLIDE_1 = [C + 1.85, C + 2.2];
 const DRAG = [C + 2.4, C + 3.0];
 const OK_2 = C + 3.2;
 const BACK = [C + 3.3, C + 3.75];
-const TAP_2 = C + 4.1;
 const CUSTOM_FLIPS = [mkFlip('HT', C + 5.0), mkFlip('TH', C + 8.0)];
+const TAP_2 = CUSTOM_FLIPS[0].t0 - 0.16;
 const RETYPE = [C + 5.9, C + 6.4];
 cue(C, 'cut');
 cue(CROP_H[0], 'pinch', { until: CROP_H[1] });
@@ -1139,7 +1139,10 @@ function customMain(t) {
 }
 
 // 7. streaks
-const STREAK_FLIPS = [mkFlip('HH', STREAK_AT + 0.5, 2), mkFlip('HH', STREAK_AT + 1.0, 2), mkFlip('HH', STREAK_AT + 1.5, 2)];
+// 100 frames a second, so each flip fills the half second before it lands and the three run back to
+// back: any faster leaves the coin resting between them
+const STREAK_SPEED = 100 / FPS;
+const STREAK_FLIPS = [1, 2, 3].map((k) => mkFlip('HH', STREAK_AT + 0.5 * k, STREAK_SPEED));
 const RECORD = STREAK_FLIPS[2].land;
 cue(STREAK_AT, 'cut');
 flipCues(STREAK_FLIPS, 'fanfare');

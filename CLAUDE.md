@@ -330,8 +330,8 @@ landing fired off a delay summed from the declared durations, which put the land
   at ~110 ms for flips a second or two apart and ~200 ms after a few seconds of quiet, once the
   audio output has gone to standby. Those are about two thirds of a 133 ms turn apart, so one phase
   serves both: a 222 ms lead puts each within ~22 ms of an edge-on frame, quick flips just behind it
-  and the first flip after a pause just ahead. The video passes its own 20 ms frame and no lead,
-  because it draws the declared timing; its flip is a fifth longer than the app's on a phone.
+  and the first flip after a pause just ahead. The video renders at 60 fps, one video frame to each
+  frame a phone shows, so it passes that same frame and no lead: it has no start latency to cover.
 - **The landing sound still comes ~90 ms after the coin**, measured with the audio output already
   awake. Firing it sooner means firing it before frame `N - 4`, which is also where the result text
   and counts are revealed: the first frame of the face the coin lands on, after its last edge-on.
