@@ -1,4 +1,4 @@
-# Coin Flip
+# Simple Coin Flip
 
 **15 years later...** an AI-assisted refactor of the modern rewrite of the app that started it all.
 
@@ -79,6 +79,10 @@ request and reports coverage into the run summary.
 The Play Store promo video is rendered rather than edited. [`promo/`](promo/README.md) draws it
 from the app's own coin artwork and catalog with Playwright and ffmpeg, so a re-render picks up a
 new coin.
+
+The rest of the store listing lives in [`store/`](store/README.md): the description and release
+notes in every language, and the screenshots, which a script retakes in every language from a
+phone.
 
 ## Credits
 
