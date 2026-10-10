@@ -12,7 +12,9 @@ under the launcher icon is not ellipsized; every locale follows the same rule wi
 form (`Münzwurf`, `Pile ou Face`, `抛硬币`) rather than a translation of the full name, and the full
 name appears nowhere in `res/`. The two are not drift and neither is a typo. Use the proper name in
 prose — anything linking to the store listing especially, so the name matches the page the reader
-lands on — and leave `app_name` short.
+lands on — and leave `app_name` short. `store/store_listing.xml` has an `app_name` of its own, and
+it is the full name in every language: it is the Play listing's App name field, not the launcher
+label, so it is meant to differ from the resource.
 
 ## Build & Development Commands
 
@@ -552,3 +554,27 @@ fanfare runs ~5 s, longer than the video's streak section. A change to `SOUNDS` 
 reaches the video at its next render, but the app keeps the old files until `node promo/sounds.mjs`
 is re-run and its output committed. Commit only the files whose design changed: another ffmpeg build
 encodes the same audio to different bytes, so the script rewrites all five wherever it runs.
+
+## Store listing
+
+`store/` holds the Google Play listing: its text and release notes in every language, the
+screenshots, the feature graphic and the icon. Read **[store/README.md](store/README.md)** before
+changing any of it. Play Console's language codes tag both XML files, and Thai's is `th`, not
+`th-TH`: Play drops a block it does not recognise without a word. `python3 store/scripts/check.py`
+checks the languages and Play's length limits.
+
+`store/scripts/screenshots.sh` retakes the screenshots from a separate copy of the app, and several
+things in the app reach into it:
+
+- It writes each shot's state straight into that copy's preferences, under `Setting`'s keys and at
+  schema version 7. A renamed key is ignored rather than rejected, so its shot quietly shows the
+  default, and a `Setting.SCHEMA` bump makes `validateSchema()` wipe the whole seeded state on
+  launch. Update `seed()` with either change, then look at the shots.
+- It finds its way around by labels that `store/scripts/labels.py` reads from the string resources,
+  by key. Renaming one of those keys fails the run loudly, in `labels.py`.
+- It knows a Diagnostic Test is over when TOTAL reads the number on the iterations button, which
+  relies on the button showing `formatNumber()` of the run size followed by
+  `diagnostics_iterations_summary`.
+- The full descriptions in `store_listing.xml` describe the app's features in every language, like
+  the promo video's end card. A feature added or removed means updating them, and the release
+  notes, before the release goes out.

@@ -1,0 +1,9 @@
+// Builds the app as com.banasiak.coinflip.screenshots, so it installs beside a real install instead
+// of over it, and into build/screenshots, so the project's own outputs are left alone. Used by
+// screenshots.sh.
+allprojects {
+  layout.buildDirectory.set(rootProject.layout.projectDirectory.dir("build/screenshots/${name}"))
+  plugins.withId('com.android.application') {
+    android.buildTypes.configureEach { applicationIdSuffix '.screenshots' }
+  }
+}

@@ -1,0 +1,665 @@
+<?xml version="1.0" encoding="utf-8"?>
+<store_listing>
+  <en-US>
+    <app_name>Simple Coin Flip</app_name>
+    <short_description>Tap or shake to flip. 82 coins plus your own. No tracking, no cheating.</short_description>
+    <full_description>
+15 years later... an AI-assisted refactor of the modern rewrite of the app that started it all. Still free, still ad-free, and still open source.
+
+Tap the coin or shake your phone. It flips, it lands, it tells you which side came up. That's the whole pitch — everything else exists to make that one interaction pleasant.
+
+★ 82 COINS TO FLIP
+All 50 US state quarters, plus the District of Columbia. The George Washington dollar, the JFK half-dollar and the Sacagawea dollar. 24 national Euro designs. The Canadian Loonie and Toonie. A two-headed dollar, for when you'd rather not leave things to chance. Or pick Random and let the app choose a different coin every single flip.
+
+★ FLIP YOUR OWN COIN — FINALLY!
+Put your own photos on heads and tails. Pick an image, frame it with pan, zoom, rotate and mirror, and your coin joins the picker pinned to the top of your favorites. It's ringed in the same colors the app writes HEADS and TAILS in, so any picture still reads as a coin — switch the ring off if you photographed an actual coin.
+
+★ STREAKS
+Turn it on and a run of identical results counts up beside the result: HEADS ×7. Your longest run for each side is kept in Settings. Streaks survive a restart, because the whole point is holding your run up to somebody hours later.
+
+★ SOUNDS — NEW
+The coin whirs as it spins and rings as it lands, and a new record plays a fanfare. Prefer the sounds this app has made since 2011? Set Sound Style to Classic.
+
+★ FAVORITES
+Star the coins you actually use and they collect in their own section at the top of the picker, so you're not scrolling past all 51 quarters to find the Loonie. Or just search.
+
+★ CALL THE SIDES WHATEVER YOU LIKE
+Custom labels replace HEADS and TAILS with anything you want. Yes / No. Beer / Tacos. CLAUDE / HUMAN.
+
+★ PROVE IT'S FAIR
+Not convinced it's random? The built-in Diagnostic Test flips the coin up to ten million times and shows the split between heads and tails settling as it goes, and how often the result changed. Want a different entropy source? Swap Kotlin's Random for Java's SecureRandom in Settings. (Sorry — still no cheating.)
+
+★ BUILT FOR MODERN ANDROID
+Jetpack Compose throughout, with Material You colors pulled from your wallpaper on Android 12+. Light and dark. Portrait and landscape. Heads and tails tallies with a one-tap reset. Sound, haptics and animation you can each switch off. 13 languages.
+
+★ NO ADS, NO TRACKING, NO ACCOUNT
+No advertising. No analytics. Nothing to sign up for. The app asks for exactly one permission — vibrate — and has no internet permission at all, so it couldn't phone home if it wanted to.
+
+Open source code, released to the public domain:
+https://github.com/banasiak/CoinFlip2
+
+
+=== FOR LONGTIME USERS ===
+
+Yes, this is the same app, from the same developer, signed with the same key it had in 2011. Simple Coin Flip has been torn down and rebuilt twice since — once in 2023 as a Modern Android Development app, and again in 2026 with an AI pair programmer doing the typing. It is still, fundamentally, an app that shows you a picture of a coin. It is still free, still no ads or unsafe permissions, and still open source.
+
+No Android Wear support. I'm not interested in it anymore. Go buy a G-Shock, you'll be happier.
+
+No more add-on packs, either. Google eventually realized that an official API for loading resources out of any app on your phone was not great for privacy, and removed it. If you bought the Simple Coin Flip Mega Pack back in the day, thank you — every state quarter that was in it now ships in the app for free.
+
+Coin images come from the United States Mint and the European Central Bank. The Claude Code coin wears Claude Code's own mascot. //TODO: Write letter to Canada begging forgiveness.
+    </full_description>
+  </en-US>
+
+  <de-DE>
+    <app_name>Simple Coin Flip</app_name>
+    <short_description>Tippen oder schütteln. 82 Münzen plus die eigene. Ohne Tracking, ohne Schummeln.</short_description>
+    <full_description>
+15 Jahre später... ein KI-gestützter Refactor der modernen Neufassung der App, mit der alles anfing. Immer noch kostenlos, immer noch werbefrei, immer noch Open Source.
+
+Auf die Münze tippen oder das Telefon schütteln. Sie dreht sich, sie landet, sie sagt, welche Seite oben liegt. Mehr ist es nicht — alles andere existiert nur, um genau diese eine Handlung angenehm zu machen.
+
+★ 82 MÜNZEN
+Alle 50 US-State-Quarters, dazu der District of Columbia. Der George-Washington-Dollar, der JFK-Half-Dollar und der Sacagawea-Dollar. 24 nationale Euro-Motive. Der kanadische Loonie und Toonie. Ein doppelköpfiger Dollar, falls Sie es lieber nicht dem Zufall überlassen. Oder wählen Sie Zufall, und die App nimmt bei jedem Wurf eine andere Münze.
+
+★ EIGENE MÜNZE — ENDLICH!
+Eigene Fotos auf KOPF und ZAHL. Bild auswählen, mit Verschieben, Zoomen, Drehen und Spiegeln zuschneiden — fertig ist Ihre Münze, ganz oben in den Favoriten. Sie wird in denselben Farben umrandet, in denen die App KOPF und ZAHL schreibt, damit jedes Bild als Münze lesbar bleibt. Wer eine echte Münze fotografiert hat, schaltet den Rand einfach ab.
+
+★ SERIEN
+Einschalten, und gleiche Ergebnisse in Folge werden neben dem Ergebnis gezählt: KOPF ×7. Die längste Serie je Seite bleibt in den Einstellungen gespeichert. Serien überstehen einen Neustart.
+
+★ TÖNE — NEU
+Die Münze surrt, während sie sich dreht, und klingt hell, wenn sie landet. Ein neuer Rekord spielt eine Fanfare. Lieber die Klänge, die diese App seit 2011 macht? Stellen Sie den Klangstil auf Klassisch.
+
+★ FAVORITEN
+Markieren Sie die Münzen, die Sie wirklich benutzen: Sie sammeln sich in einem eigenen Abschnitt ganz oben. So scrollen Sie nicht an 51 Quarters vorbei, um den Loonie zu finden. Oder suchen Sie einfach.
+
+★ EIGENE BESCHRIFTUNG
+Statt KOPF und ZAHL steht dort, was Sie wollen. Ja / Nein. Bier / Tacos. CLAUDE / MENSCH.
+
+★ BEWEISEN SIE, DASS ES FAIR IST
+Nicht überzeugt, dass es zufällig ist? Der eingebaute Diagnosetest wirft die Münze bis zu zehn Millionen Mal und zeigt live, wie sich KOPF und ZAHL einpendeln und wie oft das Ergebnis wechselt. Lieber eine andere Entropiequelle? In den Einstellungen lässt sich Kotlins Random gegen Javas SecureRandom tauschen. (Tut mir leid — Schummeln geht trotzdem nicht.)
+
+★ FÜR MODERNES ANDROID GEBAUT
+Durchgehend Jetpack Compose, mit Material-You-Farben aus Ihrem Hintergrundbild ab Android 12. Hell und dunkel. Hoch- und Querformat. Zähler für Kopf und Zahl, mit Reset per Tipp. Ton, Haptik und Animation einzeln abschaltbar. 13 Sprachen.
+
+★ KEINE WERBUNG, KEIN TRACKING, KEIN KONTO
+Keine Werbung. Keine Analytics. Nichts zum Anmelden. Die App verlangt genau eine Berechtigung — Vibration — und hat überhaupt keine Internetberechtigung, könnte also gar nicht nach Hause telefonieren.
+
+Open-Source-Code, gemeinfrei veröffentlicht:
+https://github.com/banasiak/CoinFlip2
+
+
+=== FÜR LANGJÄHRIGE NUTZER ===
+
+Ja, dieselbe App, derselbe Entwickler, derselbe Signaturschlüssel wie 2011. Simple Coin Flip wurde seitdem zweimal komplett neu gebaut — 2023 als Modern-Android-Development-App und 2026 noch einmal, mit einem KI-Pair-Programmer an der Tastatur. Im Kern ist es immer noch eine App, die ein Bild von einer Münze zeigt. Immer noch kostenlos, immer noch ohne Werbung und ohne unsichere Berechtigungen, immer noch Open Source.
+
+Keine Unterstützung für Android Wear. Interessiert mich nicht mehr. Kaufen Sie sich eine G-Shock, damit sind Sie glücklicher.
+
+Auch keine Add-on-Packs mehr. Google hat irgendwann gemerkt, dass eine offizielle API zum Laden von Ressourcen aus beliebigen installierten Apps kein Gewinn für den Datenschutz war, und sie entfernt. Wer damals das Simple Coin Flip Mega Pack gekauft hat: danke — jedes State Quarter daraus ist jetzt kostenlos in der App.
+
+Münzbilder stammen von der United States Mint und der Europäischen Zentralbank. Die Claude-Code-Münze trägt das Maskottchen von Claude Code. //TODO: Entschuldigungsbrief an Kanada schreiben.
+    </full_description>
+  </de-DE>
+
+  <es-ES>
+    <app_name>Simple Coin Flip</app_name>
+    <short_description>Toca o agita para lanzar. 82 monedas más la tuya. Sin rastreo y sin trampas.</short_description>
+    <full_description>
+15 años después... una refactorización asistida por IA de la reescritura moderna de la app que lo empezó todo. Sigue siendo gratuita, sigue sin anuncios y sigue siendo de código abierto.
+
+Toca la moneda o agita el teléfono. Gira, cae y te dice qué lado ha salido. Eso es todo — el resto existe solo para que ese único gesto resulte agradable.
+
+★ 82 MONEDAS PARA LANZAR
+Los 50 quarters de los estados de EE. UU., más el del Distrito de Columbia. El dólar de George Washington, el medio dólar de JFK y el dólar de Sacagawea. 24 diseños nacionales del euro. El Loonie y el Toonie canadienses. Un dólar con dos caras iguales, para cuando prefieres no dejar nada al azar. O elige Aleatoria y la app tomará una moneda distinta en cada lanzamiento.
+
+★ TU PROPIA MONEDA — ¡POR FIN!
+Tus fotos en CARA y CRUZ. Elige una imagen, encuádrala desplazando, ampliando, girando y reflejando, y tu moneda entra en la lista, fijada arriba del todo en tus favoritos. Va rodeada con los mismos colores con los que la app escribe CARA y CRUZ, para que cualquier imagen se lea como una moneda — quita el borde si has fotografiado una moneda de verdad.
+
+★ RACHAS
+Actívalas y los resultados iguales seguidos se cuentan junto al resultado: CARA ×7. Tu racha más larga de cada lado se guarda en los ajustes. Las rachas sobreviven a un reinicio.
+
+★ SONIDOS — NUEVO
+La moneda zumba mientras gira y tintinea al caer, y un nuevo récord suena con fanfarria. ¿Prefieres los sonidos que esta app tiene desde 2011? Pon el Estilo de sonido en Clásico.
+
+★ FAVORITOS
+Marca con una estrella las monedas que de verdad usas y se agrupan en su propia sección, arriba del todo. Así no tienes que pasar por 51 quarters para encontrar el Loonie. O simplemente busca.
+
+★ LLAMA A LOS LADOS COMO QUIERAS
+Las etiquetas personalizadas sustituyen CARA y CRUZ por lo que tú quieras. Sí / No. Cerveza / Tacos. CLAUDE / HUMANO.
+
+★ DEMUESTRA QUE ES JUSTO
+¿No te convence que sea aleatorio? La prueba de diagnóstico integrada lanza la moneda hasta diez millones de veces y muestra en directo cómo se equilibran CARA y CRUZ y cuántas veces cambia el resultado. ¿Prefieres otra fuente de entropía? Cambia el Random de Kotlin por el SecureRandom de Java en los ajustes. (Lo siento — seguimos sin poder hacer trampas.)
+
+★ HECHA PARA EL ANDROID MODERNO
+Jetpack Compose de principio a fin, con colores Material You tomados de tu fondo de pantalla en Android 12+. Claro y oscuro. Vertical y horizontal. Contadores de caras y cruces con reinicio de un toque. Sonido, vibración y animación se desactivan por separado. 13 idiomas.
+
+★ SIN ANUNCIOS, SIN RASTREO, SIN CUENTA
+Nada de publicidad. Nada de analítica. Nada que registrar. La app pide exactamente un permiso — vibración — y no tiene ningún permiso de internet, así que no podría llamar a casa aunque quisiera.
+
+Código abierto, liberado al dominio público:
+https://github.com/banasiak/CoinFlip2
+
+
+=== PARA LOS DE SIEMPRE ===
+
+Sí, es la misma app, del mismo desarrollador, firmada con la misma clave que en 2011. Simple Coin Flip se ha desmontado y reconstruido dos veces desde entonces — en 2023 como app Modern Android Development, y otra vez en 2026 con una IA de copiloto al teclado. En el fondo sigue siendo una app que te enseña la foto de una moneda. Sigue gratis, sigue sin anuncios ni permisos dudosos, y sigue siendo de código abierto.
+
+Sin compatibilidad con Android Wear. Ya no me interesa. Cómprate un G-Shock y serás más feliz.
+
+Tampoco habrá más packs adicionales. Google acabó dándose cuenta de que una API oficial para cargar recursos de cualquier app instalada no era muy buena idea para la privacidad, y la retiró. Si en su día compraste el Simple Coin Flip Mega Pack, gracias — todos los quarters que incluía vienen ahora gratis en la app.
+
+Las imágenes de las monedas proceden de la United States Mint y del Banco Central Europeo. La moneda de Claude Code luce la mascota de Claude Code. //TODO: Escribir una carta a Canadá pidiendo perdón.
+    </full_description>
+  </es-ES>
+
+  <fr-FR>
+    <app_name>Simple Coin Flip</app_name>
+    <short_description>Touchez ou secouez. 82 pièces plus la vôtre. Sans pistage et sans triche.</short_description>
+    <full_description>
+15 ans plus tard... une refonte assistée par IA de la réécriture moderne de l'appli qui a tout déclenché. Toujours gratuite, toujours sans publicité, toujours open source.
+
+Touchez la pièce ou secouez votre téléphone. Elle tourne, elle retombe, elle vous dit quel côté est sorti. C'est tout — le reste n'existe que pour rendre ce seul geste agréable.
+
+★ 82 PIÈCES À LANCER
+Les 50 quarters des États américains, plus celui du District de Columbia. Le dollar George Washington, le demi-dollar JFK et le dollar Sacagawea. 24 faces nationales de l'euro. Le Loonie et le Toonie canadiens. Un dollar à deux faces identiques, pour ne rien laisser au hasard. Ou choisissez Aléatoire : l'appli prend une pièce différente à chaque lancer.
+
+★ VOTRE PROPRE PIÈCE — ENFIN !
+Vos photos sur FACE et PILE. Choisissez une image, cadrez-la par déplacement, zoom, rotation et miroir, et votre pièce rejoint la liste, épinglée en haut de vos favoris. Elle est cerclée dans les couleurs où l'appli écrit FACE et PILE, pour que toute image se lise comme une pièce — désactivez le cercle si vous avez photographié une vraie pièce.
+
+★ SÉRIES
+Activez-les : les résultats identiques qui s'enchaînent sont comptés à côté du résultat, FACE ×7. Votre plus longue série de chaque côté est conservée dans les paramètres. Les séries survivent à un redémarrage.
+
+★ SONS — NOUVEAU
+La pièce bourdonne en tournant et tinte en retombant, et un nouveau record déclenche une fanfare. Vous préférez les sons de l'appli depuis 2011 ? Réglez le Style sonore sur Classique.
+
+★ FAVORIS
+Marquez d'une étoile les pièces que vous utilisez vraiment : elles se regroupent dans leur section, tout en haut. Plus besoin de faire défiler 51 quarters pour trouver le Loonie. Ou cherchez.
+
+★ APPELEZ LES CÔTÉS COMME VOUS VOULEZ
+Les libellés personnalisés remplacent FACE et PILE par ce que vous voulez. Oui / Non. Bière / Tacos. CLAUDE / HUMAIN.
+
+★ PREUVE D'ÉQUITÉ
+Pas convaincu que ce soit aléatoire ? Le test de diagnostic intégré lance la pièce jusqu'à dix millions de fois et montre en direct FACE et PILE s'équilibrer, et combien de fois le résultat change. Une autre source d'entropie ? Remplacez le Random de Kotlin par le SecureRandom de Java dans les paramètres. (Désolé — toujours pas moyen de tricher.)
+
+★ CONÇUE POUR L'ANDROID MODERNE
+Jetpack Compose de bout en bout, avec les couleurs Material You tirées de votre fond d'écran sur Android 12+. Clair et sombre. Portrait et paysage. Compteurs de faces et de piles, remis à zéro d'un geste. Son, retour haptique et animation désactivables séparément. 13 langues.
+
+★ PAS DE PUB, PAS DE PISTAGE, PAS DE COMPTE
+Aucune publicité. Aucune analyse d'audience. Rien à créer. L'appli demande une seule autorisation — la vibration — et n'a aucun accès à Internet : elle ne pourrait rien envoyer même si elle le voulait.
+
+Code open source, versé au domaine public :
+https://github.com/banasiak/CoinFlip2
+
+
+=== POUR LES FIDÈLES ===
+
+Oui, c'est la même appli, du même développeur, signée avec la même clé qu'en 2011. Simple Coin Flip a été démolie et reconstruite deux fois depuis — en 2023 en application Modern Android Development, et de nouveau en 2026 avec une IA en binôme au clavier. Au fond, ça reste une appli qui vous montre l'image d'une pièce. Toujours gratuite, toujours sans publicité ni autorisation douteuse, toujours open source.
+
+Pas d'Android Wear. Ça ne m'intéresse plus. Achetez-vous une G-Shock, vous serez plus heureux.
+
+Plus de packs additionnels non plus. Google a fini par comprendre qu'une API officielle pour charger les ressources de n'importe quelle appli installée n'était pas idéale pour la vie privée, et l'a supprimée. Si vous avez acheté le Simple Coin Flip Mega Pack à l'époque, merci — tous les quarters qu'il contenait sont désormais inclus gratuitement.
+
+Les images des pièces proviennent de la United States Mint et de la Banque centrale européenne. La pièce Claude Code arbore la mascotte de Claude Code. //TODO: Écrire au Canada pour implorer son pardon.
+    </full_description>
+  </fr-FR>
+
+  <hi-IN>
+    <app_name>Simple Coin Flip</app_name>
+    <short_description>टैप करें या हिलाएँ। 82 सिक्के, और आपका अपना। न ट्रैकिंग, न बेईमानी।</short_description>
+    <full_description>
+15 साल बाद... उसी ऐप के आधुनिक पुनर्लेखन का AI-सहायित रीफैक्टर, जिससे सब कुछ शुरू हुआ था। अब भी मुफ़्त, अब भी बिना विज्ञापन, अब भी ओपन सोर्स।
+
+सिक्के पर टैप करें या फ़ोन हिलाएँ। वह घूमता है, गिरता है, और बताता है कि कौन-सा पहलू आया। बस इतना ही — बाकी सब कुछ सिर्फ़ इसलिए है कि यह एक काम सुखद लगे।
+
+★ उछालने के लिए 82 सिक्के
+अमेरिका के सभी 50 राज्यों के क्वार्टर, साथ में डिस्ट्रिक्ट ऑफ़ कोलंबिया। जॉर्ज वॉशिंगटन डॉलर, JFK हाफ़ डॉलर और सकागावेया डॉलर। यूरो के 24 राष्ट्रीय डिज़ाइन। कनाडा के लूनी और टूनी। दोनों तरफ़ एक ही पहलू वाला डॉलर, उन मौकों के लिए जब आप कुछ भी संयोग पर नहीं छोड़ना चाहते। या Random चुनें और ऐप हर उछाल पर अलग सिक्का ले आए।
+
+★ अपना सिक्का — आख़िरकार!
+चित और पट पर अपनी तस्वीरें। एक तस्वीर चुनें, उसे पैन, ज़ूम, घुमाव और मिरर से फ़्रेम करें, और आपका सिक्का सूची में आ जाता है — पसंदीदा में सबसे ऊपर पिन किया हुआ। उसके चारों ओर वही रंग होते हैं जिनमें ऐप चित और पट लिखता है, ताकि कोई भी तस्वीर सिक्के जैसी दिखे — अगर आपने असली सिक्के की फ़ोटो ली है तो यह किनारा बंद कर दें।
+
+★ सिलसिला
+इसे चालू करें और लगातार एक जैसे नतीजे परिणाम के बगल में गिने जाएँगे: चित ×7। हर पहलू का सबसे लंबा सिलसिला सेटिंग्स में सहेजा रहता है। सिलसिले रीस्टार्ट के बाद भी बचे रहते हैं, क्योंकि असली मज़ा तो घंटों बाद किसी को अपना सिलसिला दिखाने में है।
+
+★ ध्वनियाँ — नया
+घूमते समय सिक्का सरसराता है और गिरते ही खनकता है, और नया रिकॉर्ड बनने पर विजय-धुन बजती है। 2011 से इस ऐप में बजती आ रही आवाज़ें पसंद हैं? ध्वनि शैली को क्लासिक पर सेट करें।
+
+★ पसंदीदा
+जिन सिक्कों को आप सच में इस्तेमाल करते हैं उन्हें तारा लगाएँ — वे अपने अलग हिस्से में, सबसे ऊपर इकट्ठा हो जाते हैं। लूनी ढूँढ़ने के लिए 51 क्वार्टर स्क्रॉल करने की ज़रूरत नहीं। या बस खोज लें।
+
+★ पहलुओं को जो चाहें कहें
+कस्टम लेबल चित और पट की जगह आपकी मनचाही बात लिख देते हैं। हाँ / नहीं। बियर / टैकोस। CLAUDE / इंसान।
+
+★ साबित करें कि यह निष्पक्ष है
+यकीन नहीं कि यह वाकई यादृच्छिक है? अंदर मौजूद डायग्नोस्टिक टेस्ट सिक्के को एक करोड़ बार तक उछालता है और साथ-साथ दिखाता है कि चित और पट कैसे बराबरी पर आते हैं और नतीजा कितनी बार बदला। कोई और एन्ट्रॉपी स्रोत चाहिए? सेटिंग्स में Kotlin के Random की जगह Java का SecureRandom चुन लें। (माफ़ कीजिए — बेईमानी अब भी नहीं चलेगी।)
+
+★ आधुनिक Android के लिए बना
+पूरे ऐप में Jetpack Compose, और Android 12+ पर आपके वॉलपेपर से लिए गए Material You रंग। लाइट और डार्क। पोर्ट्रेट और लैंडस्केप। चित और पट की गिनती, एक टैप में रीसेट। ध्वनि, कंपन और एनिमेशन अलग-अलग बंद किए जा सकते हैं। 13 भाषाएँ।
+
+★ कोई विज्ञापन नहीं, कोई ट्रैकिंग नहीं, कोई खाता नहीं
+कोई विज्ञापन नहीं। कोई एनालिटिक्स नहीं। साइन अप करने को कुछ नहीं। ऐप ठीक एक अनुमति माँगता है — वाइब्रेट — और इंटरनेट की अनुमति उसके पास है ही नहीं, इसलिए वह चाहकर भी कहीं कुछ भेज नहीं सकता।
+
+ओपन सोर्स कोड, सार्वजनिक डोमेन में जारी:
+https://github.com/banasiak/CoinFlip2
+
+
+=== पुराने उपयोगकर्ताओं के लिए ===
+
+हाँ, यह वही ऐप है, वही डेवलपर, और 2011 वाली वही साइनिंग कुंजी। तब से Simple Coin Flip दो बार पूरी तरह तोड़कर नए सिरे से बनाया गया — 2023 में Modern Android Development ऐप के रूप में, और फिर 2026 में, कीबोर्ड पर साथ बैठे एक AI के साथ। मूल रूप से यह अब भी वही ऐप है जो आपको एक सिक्के की तस्वीर दिखाता है। अब भी मुफ़्त, अब भी बिना विज्ञापन और बिना संदिग्ध अनुमतियों के, अब भी ओपन सोर्स।
+
+Android Wear का समर्थन नहीं है। अब उसमें मेरी दिलचस्पी नहीं रही। जाकर एक G-Shock खरीद लीजिए, ज़्यादा खुश रहेंगे।
+
+ऐड-ऑन पैक भी अब नहीं। Google को आख़िरकार समझ आया कि फ़ोन में इंस्टॉल किसी भी ऐप से संसाधन लोड करने वाला आधिकारिक API निजता के लिहाज़ से अच्छा विचार नहीं था, और उसने उसे हटा दिया। अगर आपने कभी Simple Coin Flip Mega Pack खरीदा था, तो शुक्रिया — उसमें जो भी राज्य क्वार्टर थे, वे सब अब ऐप में मुफ़्त हैं।
+
+सिक्कों की तस्वीरें United States Mint और यूरोपीय केंद्रीय बैंक से हैं। Claude Code सिक्के पर खुद Claude Code का शुभंकर है। //TODO: कनाडा को माफ़ी माँगते हुए पत्र लिखना है।
+    </full_description>
+  </hi-IN>
+
+  <it-IT>
+    <app_name>Simple Coin Flip</app_name>
+    <short_description>Tocca o scuoti. 82 monete più la tua. Niente tracciamento, niente imbrogli.</short_description>
+    <full_description>
+15 anni dopo... un refactoring assistito dall'IA della riscrittura moderna dell'app che ha dato il via a tutto. Sempre gratuita, sempre senza pubblicità, sempre open source.
+
+Tocca la moneta o scuoti il telefono. Gira, atterra e ti dice quale lato è uscito. È tutto qui — il resto esiste solo per rendere piacevole quell'unico gesto.
+
+★ 82 MONETE DA LANCIARE
+Tutti i 50 quarter degli stati USA, più quello del Distretto di Columbia. Il dollaro George Washington, il mezzo dollaro JFK e il dollaro Sacagawea. 24 facce nazionali dell'euro. Il Loonie e il Toonie canadesi. Un dollaro con due teste, per quando preferisci non lasciare nulla al caso. Oppure scegli Casuale e l'app prende una moneta diversa a ogni lancio.
+
+★ LA TUA MONETA — FINALMENTE!
+Le tue foto su TESTA e CROCE. Scegli un'immagine, inquadrala con spostamento, zoom, rotazione e specchio, e la tua moneta entra nell'elenco, fissata in cima ai preferiti. È cerchiata negli stessi colori con cui l'app scrive TESTA e CROCE, così qualsiasi immagine si legge come una moneta — togli il cerchio se hai fotografato una moneta vera.
+
+★ SERIE
+Attivale e i risultati uguali di fila vengono contati accanto al risultato: TESTA ×7. La serie più lunga per ciascun lato resta salvata nelle impostazioni. Le serie sopravvivono a un riavvio, perché il senso è proprio mostrare la tua a qualcuno ore dopo.
+
+★ SUONI — NUOVO
+La moneta ronza mentre gira e tintinna quando atterra, e un nuovo record fa partire una fanfara. Preferisci i suoni che questa app ha dal 2011? Imposta lo Stile audio su Classico.
+
+★ PREFERITI
+Metti la stella alle monete che usi davvero e si raccolgono in una sezione tutta loro, in cima. Così non scorri 51 quarter per trovare il Loonie. Oppure cerca e basta.
+
+★ CHIAMA LE FACCE COME VUOI
+Le etichette personalizzate sostituiscono TESTA e CROCE con quello che vuoi. Sì / No. Birra / Tacos. CLAUDE / UMANO.
+
+★ DIMOSTRA CHE È ONESTA
+Non sei convinto che sia casuale? Il test diagnostico integrato lancia la moneta fino a dieci milioni di volte e mostra in tempo reale TESTA e CROCE che si equilibrano, e quante volte cambia il risultato. Preferisci un'altra fonte di entropia? Nelle impostazioni scambi il Random di Kotlin con il SecureRandom di Java. (Mi dispiace — barare resta impossibile.)
+
+★ COSTRUITA PER L'ANDROID MODERNO
+Jetpack Compose dall'inizio alla fine, con i colori Material You presi dal tuo sfondo su Android 12+. Chiaro e scuro. Verticale e orizzontale. Contatori di teste e croci con azzeramento in un tocco. Suono, vibrazione e animazione si disattivano singolarmente. 13 lingue.
+
+★ NIENTE PUBBLICITÀ, NIENTE TRACCIAMENTO, NIENTE ACCOUNT
+Nessuna pubblicità. Nessuna analisi. Niente a cui iscriversi. L'app chiede esattamente un permesso — la vibrazione — e non ha alcun permesso di accesso a internet, quindi non potrebbe telefonare a casa nemmeno volendo.
+
+Codice open source, rilasciato nel pubblico dominio:
+https://github.com/banasiak/CoinFlip2
+
+
+=== PER CHI C'È DA SEMPRE ===
+
+Sì, è la stessa app, dello stesso sviluppatore, firmata con la stessa chiave del 2011. Da allora Simple Coin Flip è stata smontata e ricostruita due volte — nel 2023 come app Modern Android Development, e di nuovo nel 2026 con un'IA in coppia alla tastiera. In fondo resta un'app che ti mostra la foto di una moneta. Sempre gratuita, sempre senza pubblicità né permessi discutibili, sempre open source.
+
+Nessun supporto per Android Wear. Non mi interessa più. Comprati un G-Shock e sarai più felice.
+
+E niente più pacchetti aggiuntivi. Google ha finito per capire che un'API ufficiale per caricare risorse da qualunque app installata non fosse un granché per la privacy, e l'ha rimossa. Se ai tempi hai comprato il Simple Coin Flip Mega Pack, grazie — tutti i quarter che conteneva ora sono inclusi gratis.
+
+Le immagini delle monete vengono dalla United States Mint e dalla Banca Centrale Europea. La moneta Claude Code indossa la mascotte di Claude Code. //TODO: Scrivere una lettera al Canada per chiedere perdono.
+    </full_description>
+  </it-IT>
+
+  <ja-JP>
+    <app_name>Simple Coin Flip</app_name>
+    <short_description>タップか振るだけ。82枚のコインと、あなた自身のコイン。追跡なし、イカサマなし。</short_description>
+    <full_description>
+15年後 — すべての始まりとなったアプリを現代的に書き直し、それをAIの支援でリファクタリングしました。今も無料、今も広告なし、今もオープンソースです。
+
+コインをタップするか、スマホを振ってください。回って、着地して、どちらの面が出たかを教えてくれます。それだけのアプリです。ほかのすべては、そのたった一つの操作を気持ちよくするためにあります。
+
+★ 82枚のコイン
+アメリカ50州すべてのステートクォーター、さらにコロンビア特別区。ジョージ・ワシントン1ドル、JFKハーフダラー、サカガウィア1ドル。ユーロ24か国の各国面デザイン。カナダのルーニーとトゥーニー。運任せにしたくない日のための、両面とも表のドル硬貨。あるいは「ランダム」を選べば、投げるたびに違うコインが出てきます。
+
+★ 自分だけのコイン — ついに登場！
+表と裏に自分の写真を。画像を選び、移動・拡大・回転・反転でトリミングすれば、あなたのコインがお気に入りの一番上に固定された状態で一覧に加わります。アプリが表と裏を書くのと同じ色で縁取られるので、どんな写真でもちゃんとコインに見えます。本物のコインを撮った場合は、縁取りをオフにしてください。
+
+★ 連続記録
+オンにすると、同じ結果が続いた回数が結果の横に表示されます：表 ×7。各面の最長記録は設定に保存されます。連続記録は再起動しても残ります。何時間か後に誰かに見せられてこその機能だからです。
+
+★ サウンド — 新機能
+コインは回転中にヒュンと鳴り、着地するとチリンと響きます。新記録を出すとファンファーレが鳴ります。このアプリが2011年から使ってきた音がお好みなら、サウンドの種類を「クラシック」にしてください。
+
+★ お気に入り
+実際に使うコインに星を付ければ、専用のセクションにまとまって一番上に並びます。ルーニーを探すために51枚のクォーターをスクロールする必要はありません。もちろん検索もできます。
+
+★ 面の名前は自由に
+カスタムラベルで、表と裏を好きな言葉に置き換えられます。はい／いいえ。ビール／タコス。CLAUDE／人間。
+
+★ 公平さを確かめる
+本当にランダムなのか疑わしい？　内蔵の診断テストは最大1000万回コインを投げ、表と裏の割合が落ち着いていく様子と、結果が切り替わった回数をリアルタイムで表示します。別のエントロピー源が好みなら、設定でKotlinのRandomをJavaのSecureRandomに切り替えられます。（残念ながら、やはりイカサマはできません。）
+
+★ 現代のAndroidのために
+全面的にJetpack Compose。Android 12以降では壁紙から取ったMaterial Youの配色。ライトとダーク。縦向きと横向き。表と裏のカウンターはワンタップでリセット。サウンド、触覚フィードバック、アニメーションはそれぞれ個別にオフにできます。13言語対応。
+
+★ 広告なし、追跡なし、アカウントなし
+広告はありません。解析もありません。登録も不要です。このアプリが求める権限はバイブレーションのちょうど一つだけ。インターネット権限は一切持っていないので、たとえそうしたくても外部に何かを送ることはできません。
+
+オープンソース、パブリックドメインで公開：
+https://github.com/banasiak/CoinFlip2
+
+
+=== 長年のユーザーの方へ ===
+
+はい、同じ開発者による同じアプリで、2011年と同じ署名鍵で署名されています。Simple Coin Flipはそれ以来2度、解体して作り直されました。2023年にModern Android Developmentアプリとして、そして2026年にもう一度、キーボードの隣にAIを置いて。根本的には、今もコインの絵を見せるだけのアプリです。今も無料で、広告も怪しい権限もなく、今もオープンソースです。
+
+Android Wearには対応していません。もう興味がないのです。G-Shockを買ったほうが幸せになれます。
+
+アドオンパックももうありません。スマホに入っているどのアプリからでもリソースを読み込める公式APIはプライバシー的にどうなのか、とGoogleがようやく気づいて廃止したためです。当時Simple Coin Flip Mega Packを買ってくださった方、ありがとうございました。あれに入っていたステートクォーターは、今はすべて無料でアプリに入っています。
+
+コイン画像はUnited States Mintと欧州中央銀行のものです。Claude CodeコインはClaude Code自身のマスコットをまとっています。//TODO: カナダに謝罪の手紙を書くこと。
+    </full_description>
+  </ja-JP>
+
+  <ko-KR>
+    <app_name>Simple Coin Flip</app_name>
+    <short_description>탭하거나 흔드세요. 동전 82개에 나만의 동전까지. 추적 없음, 속임수 없음.</short_description>
+    <full_description>
+15년 후... 모든 것의 시작이었던 앱, 그 현대적 재작성판을 AI의 도움으로 다시 다듬었습니다. 여전히 무료, 여전히 광고 없음, 여전히 오픈 소스입니다.
+
+동전을 탭하거나 휴대폰을 흔드세요. 돌고, 떨어지고, 어느 면이 나왔는지 알려줍니다. 그게 전부입니다. 나머지는 전부 그 한 번의 동작을 기분 좋게 만들기 위해 존재합니다.
+
+★ 던질 수 있는 동전 82개
+미국 50개 주 쿼터 전부와 컬럼비아 특별구. 조지 워싱턴 1달러, JFK 하프달러, 서캘저위아 1달러. 유로 24개국의 국가별 도안. 캐나다의 루니와 투니. 운에 맡기고 싶지 않은 날을 위한 양면이 모두 앞면인 1달러. 아니면 무작위를 고르세요. 던질 때마다 다른 동전이 나옵니다.
+
+★ 나만의 동전 — 드디어!
+앞면과 뒷면에 직접 찍은 사진을 넣으세요. 이미지를 고르고 이동, 확대, 회전, 반전으로 맞추면 내 동전이 즐겨찾기 맨 위에 고정된 채 목록에 들어갑니다. 앱이 앞면과 뒷면을 쓸 때와 같은 색으로 테두리가 둘러지기 때문에 어떤 사진이든 동전처럼 보입니다. 진짜 동전을 찍었다면 테두리를 끄면 됩니다.
+
+★ 연속 기록
+켜 두면 같은 결과가 이어진 횟수가 결과 옆에 표시됩니다: 앞면 ×7. 각 면의 최장 기록은 설정에 저장됩니다. 연속 기록은 재시작해도 남습니다. 몇 시간 뒤에 누군가에게 보여주는 것이 이 기능의 핵심이니까요.
+
+★ 사운드 — 신규
+동전이 돌 때는 휙휙 소리가 나고, 떨어지면 맑게 울립니다. 새 기록을 세우면 팡파르가 울립니다. 이 앱이 2011년부터 내던 소리가 좋다면 사운드 스타일을 클래식으로 바꾸세요.
+
+★ 즐겨찾기
+실제로 쓰는 동전에 별표를 해 두면 별도 섹션으로 맨 위에 모입니다. 루니를 찾겠다고 쿼터 51개를 스크롤할 필요가 없습니다. 물론 검색도 됩니다.
+
+★ 양면 이름은 마음대로
+커스텀 라벨로 앞면과 뒷면을 원하는 말로 바꿀 수 있습니다. 예 / 아니요. 맥주 / 타코. CLAUDE / 인간.
+
+★ 공정한지 직접 확인
+정말 무작위인지 의심스럽나요? 내장된 진단 테스트가 동전을 최대 천만 번까지 던지며, 앞면과 뒷면의 비율이 자리를 잡아 가는 모습과 결과가 바뀐 횟수를 실시간으로 보여줍니다. 다른 엔트로피 소스를 원하신다면 설정에서 Kotlin의 Random을 Java의 SecureRandom으로 바꾸세요. (죄송하지만 — 여전히 속임수는 통하지 않습니다.)
+
+★ 요즘 Android에 맞게
+전부 Jetpack Compose로. Android 12 이상에서는 배경화면에서 가져온 Material You 색상. 라이트와 다크. 세로와 가로. 앞면과 뒷면 집계는 한 번 탭으로 초기화. 소리, 진동, 애니메이션은 각각 따로 끌 수 있습니다. 13개 언어.
+
+★ 광고 없음, 추적 없음, 계정 없음
+광고 없습니다. 분석 없습니다. 가입할 것도 없습니다. 이 앱이 요구하는 권한은 진동 딱 하나이며, 인터넷 권한은 아예 없습니다. 그러고 싶어도 밖으로 무언가를 보낼 수 없다는 뜻입니다.
+
+오픈 소스 코드, 퍼블릭 도메인으로 공개:
+https://github.com/banasiak/CoinFlip2
+
+
+=== 오래된 사용자분들께 ===
+
+네, 같은 개발자의 같은 앱이고, 2011년과 같은 서명 키로 서명되어 있습니다. Simple Coin Flip은 그 뒤로 두 번 완전히 뜯어고쳐졌습니다. 2023년에는 Modern Android Development 앱으로, 2026년에는 다시 한 번, 키보드 옆에 AI를 두고서. 근본적으로는 여전히 동전 그림을 보여주는 앱입니다. 여전히 무료이고, 광고도 수상한 권한도 없으며, 여전히 오픈 소스입니다.
+
+Android Wear는 지원하지 않습니다. 이제 관심이 없습니다. G-Shock을 사시는 편이 더 행복하실 겁니다.
+
+추가 팩도 더는 없습니다. 휴대폰에 설치된 아무 앱에서나 리소스를 불러올 수 있는 공식 API가 프라이버시 측면에서 그리 좋지 않다는 걸 구글이 결국 깨닫고 없앴기 때문입니다. 예전에 Simple Coin Flip Mega Pack을 구매하셨다면 감사합니다. 거기 들어 있던 주 쿼터는 이제 전부 앱에 무료로 들어 있습니다.
+
+동전 이미지는 United States Mint와 유럽중앙은행에서 가져왔습니다. Claude Code 동전은 Claude Code 자신의 마스코트를 달고 있습니다. //TODO: 캐나다에 용서를 구하는 편지 쓰기.
+    </full_description>
+  </ko-KR>
+
+  <pl-PL>
+    <app_name>Simple Coin Flip</app_name>
+    <short_description>Dotknij lub potrząśnij. 82 monety plus twoja własna. Bez śledzenia i oszustw.</short_description>
+    <full_description>
+15 lat później... wspomagany przez AI refaktor nowoczesnej przeróbki aplikacji, od której wszystko się zaczęło. Nadal za darmo, nadal bez reklam, nadal open source.
+
+Dotknij monety albo potrząśnij telefonem. Kręci się, ląduje i mówi, która strona wypadła. To cała aplikacja — reszta istnieje tylko po to, żeby ten jeden gest był przyjemny.
+
+★ 82 MONETY DO RZUCANIA
+Wszystkie 50 amerykańskich quarterów stanowych plus Dystrykt Kolumbii. Dolar Jerzego Waszyngtona, półdolarówka JFK i dolar Sacagawei. 24 narodowe rewersy euro. Kanadyjskie Loonie i Toonie. Dolar z dwoma orłami, gdy wolisz nie zostawiać niczego przypadkowi. Albo wybierz Losowo, a aplikacja weźmie inną monetę do każdego rzutu.
+
+★ WŁASNA MONETA — NARESZCIE!
+Twoje zdjęcia po obu stronach — ORZEŁ i RESZKA. Wybierz obraz, wykadruj go przesuwaniem, powiększaniem, obrotem i odbiciem, a twoja moneta trafi na listę, przypięta na samą górę ulubionych. Otacza ją obwódka w tych samych kolorach, którymi aplikacja pisze ORZEŁ i RESZKA, żeby każde zdjęcie czytało się jak moneta — wyłącz obwódkę, jeśli na zdjęciu masz prawdziwą monetę.
+
+★ SERIE
+Włącz je, a takie same wyniki pod rząd będą zliczane obok wyniku: ORZEŁ ×7. Najdłuższa seria dla każdej strony zostaje zapisana w ustawieniach. Serie przetrwają restart, bo o to właśnie chodzi — żeby pokazać swoją komuś kilka godzin później.
+
+★ DŹWIĘKI — NOWOŚĆ
+Moneta szumi, gdy się obraca, i dzwoni, gdy spada, a nowy rekord gra fanfarę. Wolisz dźwięki, które aplikacja odtwarzała od 2011 roku? Ustaw Styl dźwięku na Klasyczny.
+
+★ ULUBIONE
+Oznacz gwiazdką monety, których naprawdę używasz, a zbiorą się we własnej sekcji na samej górze. Nie musisz przewijać 51 quarterów, żeby znaleźć Loonie. Albo po prostu wyszukaj.
+
+★ NAZWIJ STRONY, JAK CHCESZ
+Własne etykiety zastępują ORZEŁ i RESZKA czymkolwiek chcesz. Tak / Nie. Piwo / Tacos. CLAUDE / CZŁOWIEK.
+
+★ UDOWODNIJ, ŻE JEST UCZCIWA
+Nie wierzysz, że to losowe? Wbudowany Test diagnostyczny rzuca monetą nawet dziesięć milionów razy i na bieżąco pokazuje, jak ORZEŁ i RESZKA się wyrównują i jak często zmienia się wynik. Wolisz inne źródło entropii? W ustawieniach zamień Random z Kotlina na SecureRandom z Javy. (Przykro mi — oszukiwać nadal się nie da.)
+
+★ ZBUDOWANA POD NOWOCZESNEGO ANDROIDA
+Jetpack Compose od początku do końca, z kolorami Material You pobranymi z twojej tapety na Androidzie 12+. Jasny i ciemny. Pionowo i poziomo. Liczniki orłów i reszek z resetem jednym dotknięciem. Dźwięk, wibracje i animację wyłączasz osobno. 13 języków.
+
+★ BEZ REKLAM, BEZ ŚLEDZENIA, BEZ KONTA
+Żadnych reklam. Żadnej analityki. Niczego do zakładania. Aplikacja prosi o dokładnie jedno uprawnienie — wibracje — i nie ma żadnego uprawnienia do internetu, więc nie mogłaby zadzwonić do domu, nawet gdyby chciała.
+
+Otwarty kod, wydany do domeny publicznej:
+https://github.com/banasiak/CoinFlip2
+
+
+=== DLA WIELOLETNICH UŻYTKOWNIKÓW ===
+
+Tak, to ta sama aplikacja, tego samego autora, podpisana tym samym kluczem co w 2011. Od tamtej pory Simple Coin Flip został rozebrany i zbudowany od nowa dwa razy — w 2023 jako aplikacja Modern Android Development, i jeszcze raz w 2026, z AI piszącą do pary. W gruncie rzeczy to wciąż aplikacja, która pokazuje zdjęcie monety. Nadal za darmo, nadal bez reklam i podejrzanych uprawnień, nadal open source.
+
+Bez obsługi Android Wear. Już mnie to nie interesuje. Kup sobie G-Shocka, będziesz szczęśliwszy.
+
+I bez dodatkowych pakietów. Google w końcu zauważył, że oficjalne API do wczytywania zasobów z dowolnej zainstalowanej aplikacji nie było najlepsze dla prywatności, i je usunął. Osobom, które kupiły kiedyś Simple Coin Flip Mega Pack — dziękuję. Każdy quarter, który w nim był, jest teraz w aplikacji za darmo.
+
+Obrazy monet pochodzą z United States Mint i Europejskiego Banku Centralnego. Moneta Claude Code nosi maskotkę samego Claude Code. //TODO: Napisać do Kanady list z prośbą o wybaczenie.
+    </full_description>
+  </pl-PL>
+
+  <pt-BR>
+    <app_name>Simple Coin Flip</app_name>
+    <short_description>Toque ou balance. 82 moedas mais a sua. Sem rastreamento e sem trapaça.</short_description>
+    <full_description>
+15 anos depois... uma refatoração assistida por IA da reescrita moderna do app que começou tudo. Continua grátis, continua sem anúncios e continua de código aberto.
+
+Toque na moeda ou balance o telefone. Ela gira, cai e diz qual lado saiu. É só isso — todo o resto existe para deixar esse único gesto agradável.
+
+★ 82 MOEDAS PARA LANÇAR
+Todos os 50 quarters dos estados dos EUA, mais o do Distrito de Columbia. O dólar George Washington, o meio dólar JFK e o dólar Sacagawea. 24 faces nacionais do euro. O Loonie e o Toonie canadenses. Um dólar de duas caras iguais, para quando você prefere não deixar nada ao acaso. Ou escolha Aleatória e o app pega uma moeda diferente a cada lançamento.
+
+★ SUA PRÓPRIA MOEDA — FINALMENTE!
+Suas fotos em CARA e COROA. Escolha uma imagem, enquadre com mover, zoom, girar e espelhar, e sua moeda entra na lista, fixada no topo dos favoritos. Ela vem contornada nas mesmas cores em que o app escreve CARA e COROA, para que qualquer imagem se leia como moeda — desligue o contorno se você fotografou uma moeda de verdade.
+
+★ SEQUÊNCIAS
+Ative e os resultados iguais seguidos são contados ao lado do resultado: CARA ×7. Sua maior sequência de cada lado fica guardada nas configurações. As sequências sobrevivem a um reinício, porque a graça é justamente mostrar a sua para alguém horas depois.
+
+★ SONS — NOVO
+A moeda zune enquanto gira e tilinta ao cair, e um novo recorde toca uma fanfarra. Prefere os sons que este app tem desde 2011? Mude o Estilo de som para Clássico.
+
+★ FAVORITOS
+Marque com estrela as moedas que você realmente usa e elas se juntam numa seção só delas, no topo. Assim você não passa por 51 quarters para achar o Loonie. Ou simplesmente pesquise.
+
+★ CHAME OS LADOS COMO QUISER
+Os rótulos personalizados trocam CARA e COROA pelo que você quiser. Sim / Não. Cerveja / Tacos. CLAUDE / HUMANO.
+
+★ PROVE QUE É JUSTO
+Não acredita que seja aleatório? O Teste de Diagnóstico embutido lança a moeda até dez milhões de vezes e mostra em tempo real CARA e COROA se equilibrando e quantas vezes o resultado mudou. Prefere outra fonte de entropia? Troque o Random do Kotlin pelo SecureRandom do Java nas configurações. (Desculpe — continua não dando para trapacear.)
+
+★ FEITO PARA O ANDROID MODERNO
+Jetpack Compose de ponta a ponta, com cores Material You tiradas do seu papel de parede no Android 12+. Claro e escuro. Retrato e paisagem. Contadores de cara e coroa com reinício em um toque. Som, vibração e animação podem ser desligados separadamente. 13 idiomas.
+
+★ SEM ANÚNCIOS, SEM RASTREAMENTO, SEM CONTA
+Nenhuma publicidade. Nenhuma análise. Nada para cadastrar. O app pede exatamente uma permissão — vibrar — e não tem nenhuma permissão de internet, então não conseguiria ligar para casa nem se quisesse.
+
+Código aberto, liberado em domínio público:
+https://github.com/banasiak/CoinFlip2
+
+
+=== PARA QUEM ESTÁ AQUI DESDE O COMEÇO ===
+
+Sim, é o mesmo app, do mesmo desenvolvedor, assinado com a mesma chave de 2011. De lá para cá o Simple Coin Flip foi desmontado e reconstruído duas vezes — em 2023 como app Modern Android Development, e de novo em 2026 com uma IA de dupla no teclado. No fundo, continua sendo um app que mostra a foto de uma moeda. Continua grátis, continua sem anúncios nem permissões duvidosas, e continua de código aberto.
+
+Sem suporte a Android Wear. Não me interessa mais. Compre um G-Shock e você será mais feliz.
+
+Nem mais pacotes adicionais. O Google acabou percebendo que uma API oficial para carregar recursos de qualquer app instalado não era grande coisa para a privacidade, e a removeu. Se você comprou o Simple Coin Flip Mega Pack na época, obrigado — todos os quarters que vinham nele agora estão no app de graça.
+
+As imagens das moedas vêm da United States Mint e do Banco Central Europeu. A moeda do Claude Code veste o mascote do próprio Claude Code. //TODO: Escrever uma carta ao Canadá implorando perdão.
+    </full_description>
+  </pt-BR>
+
+  <th>
+    <app_name>Simple Coin Flip</app_name>
+    <short_description>แตะหรือเขย่าเพื่อโยน 82 เหรียญ บวกเหรียญของคุณเอง ไม่มีการติดตาม ไม่มีการโกง</short_description>
+    <full_description>
+15 ปีต่อมา... การรีแฟกเตอร์โดยมี AI ช่วย ของแอปที่เขียนใหม่ในแบบสมัยใหม่ ซึ่งเป็นจุดเริ่มต้นของทุกอย่าง ยังฟรีเหมือนเดิม ยังไม่มีโฆษณา และยังเป็นโอเพนซอร์ส
+
+แตะที่เหรียญหรือเขย่าโทรศัพท์ มันจะหมุน ตกลงมา แล้วบอกว่าออกด้านไหน แค่นั้นเอง — ที่เหลือทั้งหมดมีไว้เพื่อให้การกระทำเพียงอย่างเดียวนี้รู้สึกดี
+
+★ 82 เหรียญให้โยน
+ควอเตอร์ครบทั้ง 50 รัฐของสหรัฐฯ บวกดิสตริกต์ออฟโคลัมเบีย เหรียญดอลลาร์จอร์จ วอชิงตัน เหรียญครึ่งดอลลาร์ JFK และดอลลาร์ซาคากาเวีย ลวดลายประจำชาติของยูโร 24 แบบ เหรียญลูนีและทูนีของแคนาดา เหรียญดอลลาร์ที่เป็นหัวทั้งสองด้าน สำหรับวันที่คุณไม่อยากปล่อยให้เป็นเรื่องของโชค หรือเลือกแบบสุ่ม แล้วแอปจะหยิบเหรียญใหม่ให้ทุกครั้งที่โยน
+
+★ เหรียญของคุณเอง — ในที่สุด!
+ใส่รูปของคุณเองลงบนด้านหัวและก้อย เลือกรูป จัดกรอบด้วยการเลื่อน ซูม หมุน และกลับด้าน แล้วเหรียญของคุณจะเข้าไปอยู่ในรายการ ปักหมุดไว้บนสุดของรายการโปรด เหรียญจะมีขอบเป็นสีเดียวกับที่แอปใช้เขียนคำว่าหัวและก้อย รูปอะไรก็เลยยังดูเป็นเหรียญ — ถ้าคุณถ่ายเหรียญจริงมา ก็ปิดขอบนี้ได้
+
+★ ผลต่อเนื่อง
+เปิดใช้แล้วผลที่เหมือนกันติดต่อกันจะถูกนับไว้ข้างผลลัพธ์: หัว ×7 สถิติต่อเนื่องสูงสุดของแต่ละด้านจะถูกเก็บไว้ในการตั้งค่า ผลต่อเนื่องอยู่รอดแม้รีสตาร์ท เพราะประเด็นทั้งหมดคือการได้อวดสถิติของคุณให้ใครสักคนดูในอีกหลายชั่วโมงต่อมา
+
+★ เสียง — ใหม่
+เหรียญส่งเสียงหวิวขณะหมุน และดังกริ๊งเมื่อตกลง ส่วนสถิติใหม่จะมีเสียงแตรฉลอง ชอบเสียงที่แอปนี้ใช้มาตั้งแต่ปี 2011 มากกว่าใช่ไหม? ตั้งรูปแบบเสียงเป็นคลาสสิก
+
+★ รายการโปรด
+ติดดาวเหรียญที่คุณใช้จริง แล้วมันจะไปรวมกันอยู่ในหมวดของตัวเองบนสุด คุณจะได้ไม่ต้องเลื่อนผ่านควอเตอร์ 51 เหรียญเพื่อหาเหรียญลูนี หรือจะค้นหาเอาก็ได้
+
+★ จะเรียกสองด้านว่าอะไรก็ได้
+ป้ายกำกับที่กำหนดเองจะแทนที่คำว่าหัวและก้อยด้วยอะไรก็ได้ที่คุณต้องการ ใช่ / ไม่ใช่ เบียร์ / ทาโก้ CLAUDE / มนุษย์
+
+★ พิสูจน์ว่ามันยุติธรรม
+ไม่เชื่อว่าสุ่มจริงหรือ? การทดสอบวินิจฉัยในตัวจะโยนเหรียญได้มากถึงสิบล้านครั้ง และแสดงแบบเรียลไทม์ว่าหัวกับก้อยค่อย ๆ สมดุลกันอย่างไร และผลเปลี่ยนไปกี่ครั้ง อยากได้แหล่งเอนโทรปีอื่นไหม? ในการตั้งค่า สลับจาก Random ของ Kotlin ไปเป็น SecureRandom ของ Java ได้เลย (ขอโทษด้วย — ยังโกงไม่ได้อยู่ดี)
+
+★ สร้างมาเพื่อ Android สมัยใหม่
+ใช้ Jetpack Compose ทั้งหมด พร้อมสี Material You ที่ดึงมาจากวอลเปเปอร์ของคุณบน Android 12+ ทั้งโหมดสว่างและมืด ทั้งแนวตั้งและแนวนอน ตัวนับหัวและก้อยพร้อมปุ่มรีเซ็ตแตะเดียว เสียง การสั่น และแอนิเมชัน ปิดแยกกันได้ 13 ภาษา
+
+★ ไม่มีโฆษณา ไม่มีการติดตาม ไม่ต้องมีบัญชี
+ไม่มีโฆษณา ไม่มีการเก็บสถิติผู้ใช้ ไม่มีอะไรให้สมัคร แอปขอสิทธิ์เพียงอย่างเดียวเท่านั้น — การสั่น — และไม่มีสิทธิ์เข้าถึงอินเทอร์เน็ตเลย ดังนั้นต่อให้อยากส่งข้อมูลกลับบ้านก็ทำไม่ได้
+
+โค้ดโอเพนซอร์ส เผยแพร่สู่สาธารณสมบัติ:
+https://github.com/banasiak/CoinFlip2
+
+
+=== สำหรับผู้ใช้รุ่นเก่า ===
+
+ใช่ครับ แอปเดิม นักพัฒนาคนเดิม เซ็นด้วยคีย์เดิมตั้งแต่ปี 2011 หลังจากนั้น Simple Coin Flip ถูกรื้อและสร้างใหม่มาแล้วสองครั้ง — ครั้งหนึ่งในปี 2023 ในฐานะแอป Modern Android Development และอีกครั้งในปี 2026 โดยมี AI นั่งพิมพ์เป็นคู่หู โดยพื้นฐานแล้วมันก็ยังเป็นแอปที่เอารูปเหรียญมาให้คุณดู ยังฟรี ยังไม่มีโฆษณาและไม่มีสิทธิ์ที่น่าสงสัย และยังเป็นโอเพนซอร์ส
+
+ไม่รองรับ Android Wear ผมไม่สนใจมันแล้ว ไปซื้อ G-Shock มาใส่ แล้วคุณจะมีความสุขกว่า
+
+และไม่มีชุดเสริมอีกต่อไป สุดท้าย Google ก็ตระหนักว่าการมี API อย่างเป็นทางการสำหรับโหลดทรัพยากรจากแอปใดก็ได้ในเครื่องนั้นไม่ค่อยดีนักในแง่ความเป็นส่วนตัว จึงเอาออกไป ถ้าคุณเคยซื้อ Simple Coin Flip Mega Pack ในสมัยนั้น ขอบคุณครับ — ควอเตอร์ประจำรัฐทุกเหรียญที่อยู่ในชุดนั้น ตอนนี้มาพร้อมแอปแบบฟรีๆ แล้ว
+
+ภาพเหรียญมาจาก United States Mint และธนาคารกลางยุโรป ส่วนเหรียญ Claude Code สวมมาสคอตของ Claude Code เอง //TODO: เขียนจดหมายถึงแคนาดาเพื่อขอการให้อภัย
+    </full_description>
+  </th>
+
+  <tr-TR>
+    <app_name>Simple Coin Flip</app_name>
+    <short_description>Dokunun ya da sallayın. 82 para, artı kendinizinki. Takip yok, hile yok.</short_description>
+    <full_description>
+15 yıl sonra... her şeyi başlatan uygulamanın modern sürümünün yapay zekâ destekli yeniden yazımı. Hâlâ ücretsiz, hâlâ reklamsız, hâlâ açık kaynak.
+
+Paraya dokunun ya da telefonu sallayın. Döner, yere iner ve hangi yüzün geldiğini söyler. Hepsi bu — geri kalan her şey yalnızca bu tek hareketi keyifli kılmak için var.
+
+★ ATILACAK 82 PARA
+ABD'nin 50 eyalet quarter'ının tamamı, üstüne Columbia Bölgesi. George Washington doları, JFK yarım doları ve Sacagawea doları. 24 ulusal euro tasarımı. Kanada'nın Loonie ve Toonie'si. İşi şansa bırakmak istemediğiniz günler için iki yüzü de tura olan bir dolar. Ya da Rastgele'yi seçin, uygulama her atışta başka bir para alsın.
+
+★ KENDİ PARANIZ — SONUNDA!
+TURA ve YAZI yüzlerine kendi fotoğraflarınız. Bir görsel seçin; kaydırma, yakınlaştırma, döndürme ve aynalama ile çerçeveleyin. Paranız listeye girer, favorilerinizin en üstüne sabitlenmiş olarak. Uygulamanın TURA ve YAZI yazdığı renklerle çerçevelenir, böylece herhangi bir fotoğraf bile para gibi okunur — gerçek bir para fotoğrafladıysanız çerçeveyi kapatın.
+
+★ SERİLER
+Açın; art arda gelen aynı sonuçlar sonucun yanında sayılsın: TURA ×7. Her yüz için en uzun seriniz ayarlarda saklanır. Seriler yeniden başlatmadan sağ çıkar, çünkü bütün mesele saatler sonra birine serinizi gösterebilmek.
+
+★ SESLER — YENİ
+Para dönerken vızıldar, düşünce çınlar; yeni bir rekor fanfarla kutlanır. Bu uygulamanın 2011'den beri çaldığı sesleri mi tercih edersiniz? Ses stilini Klasik yapın.
+
+★ FAVORİLER
+Gerçekten kullandığınız paraları yıldızlayın; kendi bölümlerinde, en üstte toplansınlar. Loonie'yi bulmak için 51 quarter'ı geçmeniz gerekmez. Ya da aratın, o kadar.
+
+★ YÜZLERE NE İSTERSENİZ DEYİN
+Özel etiketler TURA ve YAZI yerine ne isterseniz onu yazar. Evet / Hayır. Bira / Tacos. CLAUDE / İNSAN.
+
+★ ADİL OLDUĞUNU KANITLAYIN
+Rastgele olduğuna ikna olmadınız mı? Yerleşik Tanı Testi parayı on milyon kez atar; TURA ile YAZI'nın nasıl dengelendiğini ve sonucun kaç kez değiştiğini anlık olarak gösterir. Başka bir entropi kaynağı mı istiyorsunuz? Ayarlardan Kotlin'in Random'ını Java'nın SecureRandom'ı ile değiştirin. (Kusura bakmayın — hile yine yok.)
+
+★ MODERN ANDROID İÇİN YAPILDI
+Baştan sona Jetpack Compose; Android 12+ üzerinde duvar kâğıdınızdan alınan Material You renkleriyle. Açık ve koyu. Dikey ve yatay. Tura ve yazı sayaçları, tek dokunuşla sıfırlama. Ses, titreşim ve animasyon tek tek kapatılabilir. 13 dil.
+
+★ REKLAM YOK, TAKİP YOK, HESAP YOK
+Reklam yok. Analitik yok. Kaydolunacak bir şey yok. Uygulama tam olarak tek bir izin ister — titreşim — ve hiçbir internet izni yoktur; yani isteseydi bile eve telefon açamazdı.
+
+Açık kaynak kod, kamu malı olarak yayımlandı:
+https://github.com/banasiak/CoinFlip2
+
+
+=== ESKİ KULLANICILAR İÇİN ===
+
+Evet, aynı uygulama, aynı geliştirici, 2011'deki aynı imza anahtarı. Simple Coin Flip o günden beri iki kez söküldü ve yeniden kuruldu — 2023'te Modern Android Development uygulaması olarak, 2026'da bir kez daha, klavyede eşlik eden bir yapay zekâ ile. Özünde hâlâ size bir para resmi gösteren bir uygulama. Hâlâ ücretsiz, hâlâ reklamsız ve şüpheli izinsiz, hâlâ açık kaynak.
+
+Android Wear desteği yok. Artık ilgimi çekmiyor. Kendinize bir G-Shock alın, daha mutlu olursunuz.
+
+Ek paketler de yok. Google sonunda, telefonunuzdaki herhangi bir uygulamadan kaynak yüklemeye yarayan resmî bir API'nin gizlilik açısından pek de iyi olmadığını fark etti ve kaldırdı. Zamanında Simple Coin Flip Mega Pack'i satın aldıysanız, teşekkürler — içindeki her eyalet quarter'ı artık uygulamada ücretsiz.
+
+Para görselleri United States Mint ve Avrupa Merkez Bankası'ndan geliyor. Claude Code parası, Claude Code'un kendi maskotunu taşıyor. //TODO: Kanada'ya af dileyen bir mektup yaz.
+    </full_description>
+  </tr-TR>
+
+  <zh-CN>
+    <app_name>Simple Coin Flip</app_name>
+    <short_description>点一下或摇一摇。82 枚硬币，外加你自己的。没有追踪，也没法作弊。</short_description>
+    <full_description>
+15 年后……在 AI 协助下，对那款开启一切的应用的现代重写版进行了重构。依然免费，依然没有广告，依然开源。
+
+点一下硬币，或者摇一摇手机。它会翻转、落下，然后告诉你哪一面朝上。就这么简单——其余的一切，都只是为了让这一个动作变得舒服。
+
+★ 82 枚可抛的硬币
+全部 50 个美国州份的25 美分硬币，外加哥伦比亚特区。乔治·华盛顿1 美元、肯尼迪半美元和萨卡加维亚1 美元。24 种欧元国家面设计。加拿大的 Loonie 和 Toonie。还有一枚两面都是正面的美元，留给你不想听天由命的时候。或者选“随机”，每抛一次都换一枚不同的硬币。
+
+★ 你自己的硬币 — 终于来了！
+把自己的照片放到正面和反面上。选一张图，用平移、缩放、旋转和镜像裁好，你的硬币就会进入列表，固定在收藏的最上方。它的外圈用的是应用书写正面和反面时的同一种颜色，所以任何照片看上去依然像一枚硬币——如果你拍的本来就是真硬币，把外圈关掉就好。
+
+★ 连续记录
+打开它，连续出现的相同结果就会在结果旁边计数：正面 ×7。每一面的最长记录都保存在设置里。连续记录在重启后依然保留，毕竟这个功能的意义，就是几小时后还能拿给别人看。
+
+★ 音效 — 全新
+硬币旋转时呼呼作响，落地时叮的一声，刷新纪录还会奏响号角。更喜欢这个应用从 2011 年起一直用的声音？把音效风格设为经典即可。
+
+★ 收藏
+给你真正会用的硬币加上星标，它们会集中到最上方属于自己的分区里。想找 Loonie，不必再划过 51 枚25 美分硬币。当然，直接搜索也行。
+
+★ 两面叫什么随你
+自定义标签可以把正面和反面换成你想要的任何字。是 / 否。啤酒 / 塔可。CLAUDE / 人类。
+
+★ 证明它是公平的
+不相信它真的随机？内置的诊断测试最多可以抛一千万次硬币，并实时显示正面和反面的比例如何趋于平衡，以及结果变了多少次。想换一个熵源？在设置里把 Kotlin 的 Random 换成 Java 的 SecureRandom 就行。（抱歉——还是没法作弊。）
+
+★ 为现代 Android 打造
+全程 Jetpack Compose，在 Android 12 及以上会从你的壁纸中取用 Material You 配色。浅色与深色。竖屏与横屏。正面反面计数器，一次点击即可清零。声音、触感和动画都能单独关掉。支持 13 种语言。
+
+★ 没有广告，没有追踪，不用账号
+没有广告。没有分析统计。没有什么要注册。这个应用只申请一项权限——振动——而且完全没有联网权限，所以就算它想把数据传回去也做不到。
+
+开源代码，已置于公有领域：
+https://github.com/banasiak/CoinFlip2
+
+
+=== 写给老用户 ===
+
+是的，同一个应用，同一个开发者，用的还是 2011 年那把签名密钥。此后 Simple Coin Flip 被拆掉重建过两次——2023 年重写为一款 Modern Android Development 应用，2026 年又来了一次，这回键盘边上坐着一个 AI 搭档。归根结底，它依然是一个给你看硬币图片的应用。依然免费，依然没有广告、没有可疑权限，依然开源。
+
+不支持 Android Wear。我对它已经没兴趣了。去买块 G-Shock，你会更开心。
+
+也不会再有扩展包了。谷歌终于意识到，提供一个可以从手机上任意已安装应用中加载资源的官方 API，对隐私来说并不是什么好主意，于是把它移除了。如果你当年买过 Simple Coin Flip Mega Pack，谢谢你——里面的每一枚州份25 美分硬币，现在都免费包含在应用里了。
+
+硬币图片来自 United States Mint 和欧洲中央银行。Claude Code 硬币戴的是 Claude Code 自己的吉祥物。//TODO: 给加拿大写封信请求原谅。
+    </full_description>
+  </zh-CN>
+</store_listing>
