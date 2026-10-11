@@ -605,7 +605,8 @@ encodes the same audio to different bytes, so the script rewrites all five where
 screenshots, the feature graphic and the icon. Read **[store/README.md](store/README.md)** before
 changing any of it. Play Console's language codes tag both XML files, and Thai's is `th`, not
 `th-TH`: Play drops a block it does not recognise without a word. `python3 store/scripts/check.py`
-checks the languages and Play's length limits.
+checks the languages and Play's length limits. A release's version bump in
+`coinflip/build.gradle.kts` and its release notes go in one commit.
 
 `store/scripts/screenshots.sh` retakes the screenshots from a separate copy of the app, and several
 things in the app reach into it:
