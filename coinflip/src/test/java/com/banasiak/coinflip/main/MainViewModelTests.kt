@@ -524,6 +524,26 @@ class MainViewModelTests {
     }
 
   @Test
+  fun a_second_return_after_changing_the_coin_draws_no_run_beside_the_placeholder() =
+    runTest {
+      every { animationHelper.identity(any()) } answers { firstArg() }
+      every { settings.textEnabled } returns true
+      every { settings.showStreak } returns true
+      every { settings.loadStats() } returns Stats(streakValue = Coin.Value.HEADS, streak = 3L)
+
+      val vm = viewModel()
+      vm.postAction(MainAction.OnResume)
+      every { settings.coinPrefix } returns "jfk"
+      vm.postAction(MainAction.OnResume)
+      // and to Settings once more without changing anything: the new coin is still unflipped
+      vm.postAction(MainAction.OnResume)
+
+      val state = vm.stateFlow.value
+      state.result.value shouldBeEqualTo Coin.Value.UNKNOWN
+      state.streakCount shouldBeEqualTo 0L
+    }
+
+  @Test
   fun a_coin_changed_and_changed_back_is_not_a_change() =
     runTest {
       val animation: DurationAnimationDrawable = mockk(relaxed = true)
@@ -564,6 +584,176 @@ class MainViewModelTests {
       state.coinImageType shouldBeEqualTo CoinImageType.PLACEHOLDER
       state.resultVisible shouldBeEqualTo false
       state.streakCount shouldBeEqualTo 0L
+    }
+
+  @Test
+  fun clearing_the_previous_result_opens_the_app_on_the_placeholder() =
+    runTest {
+      val animation: DurationAnimationDrawable = mockk(relaxed = true)
+      every { animationHelper.animations } returns mapOf(AnimationHelper.Permutation.TAILS_TAILS to animation)
+      every { settings.clearResult } returns true
+      every { settings.textEnabled } returns true
+      every { settings.showStreak } returns true
+      every { settings.loadStats() } returns Stats(streakValue = Coin.Value.TAILS, streak = 3L)
+
+      val vm = viewModel()
+      vm.postAction(MainAction.OnResume)
+      advanceUntilIdle()
+
+      val state = vm.stateFlow.value
+      state.coinImageType shouldBeEqualTo CoinImageType.PLACEHOLDER
+      state.resultVisible shouldBeEqualTo false
+      state.streakCount shouldBeEqualTo 0L
+      // only the display is cleared, as for a changed coin: the run stands, so the next flip continues it
+      state.stats.streak shouldBeEqualTo 3L
+      // and the coin agrees with the screen, so the first flip animates away from the ?
+      verify { coin.restoreFace(Coin.Value.UNKNOWN) }
+    }
+
+  @Test
+  fun clearing_the_previous_result_counts_a_restore_after_process_death_as_opening_the_app() =
+    runTest {
+      every { animationHelper.identity(any()) } answers { firstArg() }
+      every { settings.clearResult } returns true
+      every { settings.textEnabled } returns true
+      // the saved state names the coin on screen, so nothing but the setting can clear it
+      every { savedStateHandle.get<MainState>("state") } returns
+        MainState(drawnCoin = "gw", result = Coin.Result(Coin.Value.TAILS, AnimationHelper.Permutation.HEADS_TAILS))
+
+      val vm = viewModel()
+      vm.postAction(MainAction.OnResume)
+
+      val state = vm.stateFlow.value
+      state.result.value shouldBeEqualTo Coin.Value.UNKNOWN
+      state.resultVisible shouldBeEqualTo false
+    }
+
+  @Test
+  fun a_return_from_settings_after_opening_on_the_placeholder_draws_no_run_beside_it() =
+    runTest {
+      every { settings.clearResult } returns true
+      every { settings.textEnabled } returns true
+      every { settings.showStreak } returns true
+      every { settings.loadStats() } returns Stats(streakValue = Coin.Value.HEADS, streak = 5L)
+
+      val vm = viewModel()
+      vm.postAction(MainAction.OnResume)
+      // to Settings and back: the ? stays until the next flip, and so must the absence of a run, which
+      // the screen would otherwise draw on its own beside the ?
+      vm.postAction(MainAction.OnPause)
+      vm.postAction(MainAction.OnResume)
+
+      vm.stateFlow.value.result.value shouldBeEqualTo Coin.Value.UNKNOWN
+      vm.stateFlow.value.streakCount shouldBeEqualTo 0L
+
+      // switching the setting off in Settings does not bring the run back either
+      every { settings.clearResult } returns false
+      vm.postAction(MainAction.OnPause)
+      vm.postAction(MainAction.OnResume)
+
+      val state = vm.stateFlow.value
+      state.result.value shouldBeEqualTo Coin.Value.UNKNOWN
+      state.streakCount shouldBeEqualTo 0L
+      // the run itself stands, so the next flip continues it
+      state.stats.streak shouldBeEqualTo 5L
+    }
+
+  @Test
+  fun clearing_the_previous_result_leaves_it_up_on_a_return_from_settings() =
+    runTest {
+      val animation: DurationAnimationDrawable = mockk(relaxed = true)
+      every { animationHelper.animations } returns mapOf(AnimationHelper.Permutation.HEADS_TAILS to animation)
+      every { settings.clearResult } returns true
+      every { settings.animationEnabled } returns false
+      every { settings.textEnabled } returns true
+      every { coin.flip() } returns Coin.Result(Coin.Value.TAILS, AnimationHelper.Permutation.HEADS_TAILS)
+
+      val vm = viewModel()
+      vm.postAction(MainAction.OnResume)
+      vm.postAction(MainAction.TapCoin)
+      // Settings pauses and resumes this screen without the app ever leaving the screen
+      vm.postAction(MainAction.OnPause)
+      vm.postAction(MainAction.OnResume)
+
+      val state = vm.stateFlow.value
+      state.result.value shouldBeEqualTo Coin.Value.TAILS
+      state.resultVisible shouldBeEqualTo true
+      state.coinImageType shouldBeEqualTo CoinImageType.IMAGE
+    }
+
+  @Test
+  fun clearing_the_previous_result_clears_it_once_the_app_has_been_left() =
+    runTest {
+      val animation: DurationAnimationDrawable = mockk(relaxed = true)
+      every { animationHelper.animations } returns mapOf(AnimationHelper.Permutation.HEADS_TAILS to animation)
+      every { settings.clearResult } returns true
+      every { settings.animationEnabled } returns false
+      every { settings.textEnabled } returns true
+      every { coin.flip() } returns Coin.Result(Coin.Value.TAILS, AnimationHelper.Permutation.HEADS_TAILS)
+
+      val vm = viewModel()
+      vm.postAction(MainAction.OnResume)
+      vm.postAction(MainAction.TapCoin)
+      // Home, Back or the screen switching off: the activity stops, not just this screen
+      vm.postAction(MainAction.OnPause)
+      vm.postAction(MainAction.OnBackground)
+      vm.postAction(MainAction.OnResume)
+      advanceUntilIdle()
+
+      val state = vm.stateFlow.value
+      state.coinImageType shouldBeEqualTo CoinImageType.PLACEHOLDER
+      state.resultVisible shouldBeEqualTo false
+    }
+
+  @Test
+  fun leaving_the_app_keeps_the_previous_result_unless_told_to_clear_it() =
+    runTest {
+      val animation: DurationAnimationDrawable = mockk(relaxed = true)
+      every { animationHelper.animations } returns mapOf(AnimationHelper.Permutation.HEADS_TAILS to animation)
+      every { settings.clearResult } returns false
+      every { settings.animationEnabled } returns false
+      every { settings.textEnabled } returns true
+      every { coin.flip() } returns Coin.Result(Coin.Value.TAILS, AnimationHelper.Permutation.HEADS_TAILS)
+
+      val vm = viewModel()
+      vm.postAction(MainAction.OnResume)
+      vm.postAction(MainAction.TapCoin)
+      vm.postAction(MainAction.OnPause)
+      vm.postAction(MainAction.OnBackground)
+      vm.postAction(MainAction.OnResume)
+
+      val state = vm.stateFlow.value
+      state.result.value shouldBeEqualTo Coin.Value.TAILS
+      state.resultVisible shouldBeEqualTo true
+    }
+
+  @Test
+  fun an_app_reopened_mid_flip_does_not_clear_the_result_on_the_next_return_from_settings() =
+    runTest {
+      val animation = flipAnimation()
+      every { animationHelper.animations } returns mapOf(AnimationHelper.Permutation.HEADS_TAILS to animation)
+      every { settings.clearResult } returns true
+      every { settings.animationEnabled } returns true
+      every { settings.textEnabled } returns true
+      every { coin.flip() } returns Coin.Result(Coin.Value.TAILS, AnimationHelper.Permutation.HEADS_TAILS)
+
+      val vm = viewModel()
+      vm.postAction(MainAction.OnResume)
+      vm.postAction(MainAction.TapCoin) // suspends until the landing frame draws
+      // left and reopened with the coin still in the air, which owns the screen until it lands
+      vm.postAction(MainAction.OnPause)
+      vm.postAction(MainAction.OnBackground)
+      vm.postAction(MainAction.OnResume)
+      advanceUntilIdle()
+      vm.stateFlow.value.resultVisible shouldBeEqualTo true
+
+      // that resume was the app opening, so a trip to Settings afterwards is not
+      vm.postAction(MainAction.OnPause)
+      vm.postAction(MainAction.OnResume)
+
+      val state = vm.stateFlow.value
+      state.result.value shouldBeEqualTo Coin.Value.TAILS
+      state.resultVisible shouldBeEqualTo true
     }
 
   @Test

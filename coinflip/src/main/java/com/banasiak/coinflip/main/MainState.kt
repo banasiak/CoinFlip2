@@ -40,6 +40,7 @@ data class MainState(
 ) : Parcelable
 
 sealed class MainAction {
+  data object OnBackground : MainAction()
   data object OnPause : MainAction()
   data class SetRimColors(val heads: Int, val tails: Int) : MainAction()
   data object OnResume : MainAction()

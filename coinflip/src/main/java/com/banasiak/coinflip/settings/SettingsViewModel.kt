@@ -59,6 +59,7 @@ class SettingsViewModel @Inject constructor(
       is SettingsAction.SetSecureRandom -> persist(Setting.SECURE_RANDOM, action.value) { copy(secureRandom = action.value) }
       is SettingsAction.SetForce -> persist(Setting.FORCE, action.value) { copy(force = action.value) }
       is SettingsAction.SetDynamic -> onSetDynamic(action.value)
+      is SettingsAction.SetClearResult -> persist(Setting.CLEAR_RESULT, action.value) { copy(clearResult = action.value) }
       SettingsAction.ResetStats -> onResetStats()
       SettingsAction.UndoResetStats -> onUndoResetStats()
       is SettingsAction.PickedCustomImage -> emit(state.copy(pendingCrop = PendingCrop(action.uri, action.face)))
@@ -231,6 +232,7 @@ class SettingsViewModel @Inject constructor(
       customHeads = settings.customHeadsText,
       customTails = settings.customTailsText,
       dynamic = settings.dynamicColorsEnabled,
+      clearResult = settings.clearResult,
       secureRandom = settings.secureRandom,
       force = settings.force,
       customRim = settings.customCoinRim

@@ -40,6 +40,8 @@
   <string name="settings_header_statistics_title">Statistics</string>
   <string name="settings_item_animation_summary">Render spinning coin</string>
   <string name="settings_item_animation_title">Animation</string>
+  <string name="settings_item_clear_result_summary">Always show the ? when opening the app</string>
+  <string name="settings_item_clear_result_title">Clear Previous Result</string>
   <string name="settings_item_coin_empty">No matching coins</string>
   <string name="settings_item_coin_favorite_add">Add %1$s to favorites</string>
   <string name="settings_item_coin_favorite_pinned">%1$s is always in favorites</string>

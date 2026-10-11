@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.banasiak.coinflip.extensions.navigate
@@ -27,6 +29,26 @@ class MainFragment : Fragment() {
 
   private lateinit var shakeDetector: ShakeDetector
   private val viewModel: MainViewModel by viewModels()
+
+  // the activity's stop, not this fragment's: Settings replaces this fragment and stops it with the
+  // app still on screen
+  private val backgroundObserver =
+    object : DefaultLifecycleObserver {
+      override fun onStop(owner: LifecycleOwner) {
+        // a recreation for a light/dark switch stops the activity without the app going anywhere
+        if (!requireActivity().isChangingConfigurations) viewModel.postAction(MainAction.OnBackground)
+      }
+    }
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    requireActivity().lifecycle.addObserver(backgroundObserver)
+  }
+
+  override fun onDestroy() {
+    requireActivity().lifecycle.removeObserver(backgroundObserver)
+    super.onDestroy()
+  }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
     shakeDetector = ShakeDetector { viewModel.postAction(MainAction.Shake) }

@@ -37,6 +37,8 @@
   <string name="settings_header_statistics_title">統計</string>
   <string name="settings_item_animation_summary">回転するコインを表示する</string>
   <string name="settings_item_animation_title">アニメーション</string>
+  <string name="settings_item_clear_result_summary">アプリを開くときは常に「?」を表示する</string>
+  <string name="settings_item_clear_result_title">前回の結果を表示しない</string>
   <string name="settings_item_coin_empty">一致するコインがありません</string>
   <string name="settings_item_coin_favorite_add">%1$s をお気に入りに追加</string>
   <string name="settings_item_coin_favorite_pinned">%1$sは常にお気に入りに表示されます</string>

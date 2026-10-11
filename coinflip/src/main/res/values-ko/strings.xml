@@ -37,6 +37,8 @@
   <string name="settings_header_statistics_title">통계</string>
   <string name="settings_item_animation_summary">회전하는 동전 렌더링</string>
   <string name="settings_item_animation_title">애니메이션</string>
+  <string name="settings_item_clear_result_summary">앱을 열 때 항상 ? 표시</string>
+  <string name="settings_item_clear_result_title">이전 결과 숨기기</string>
   <string name="settings_item_coin_empty">일치하는 동전이 없습니다</string>
   <string name="settings_item_coin_favorite_add">%1$s을(를) 즐겨찾기에 추가</string>
   <string name="settings_item_coin_favorite_pinned">%1$s은(는) 항상 즐겨찾기에 있습니다</string>

@@ -308,14 +308,15 @@ up to somebody.
 **Resuming the main screen** puts back what the user left: the last result named, the face it landed
 on drawn, and the run it belongs to counted. It used to revert to the `?` glyph on every resume and
 hide the result unless a drawn streak was standing — a holdover from the first version of the app,
-fifteen years ago. Two things still reset it to `?` with the result line cleared: the user picking a
-different coin in Settings, and `RANDOM`, which draws a different coin every time it loads and would
-otherwise spoil its own surprise. Both are decided in `restoreDisplay` by comparing
-`AnimationHelper.identity()` against `MainState.drawnCoin`, the coin the face on screen was actually
-drawn from — which is why replacing the custom coin's artwork counts as a change, a rim redrawn for
-a new theme does not, and a coin picked in Settings and changed back before returning does not
-either. Only the *display* is cleared: `stats` keeps the run, so the flip after a coin change
-continues it rather than starting over.
+fifteen years ago. Three things still reset it to `?` with the result line cleared: the user picking
+a different coin in Settings, `RANDOM`, which draws a different coin every time it loads and would
+otherwise spoil its own surprise, and the Clear Previous Result setting below. The first two are
+decided in `restoreDisplay` by comparing `AnimationHelper.identity()` against `MainState.drawnCoin`,
+the coin the face on screen was actually drawn from — which is why replacing the custom coin's
+artwork counts as a change, a rim redrawn for a new theme does not, and a coin picked in Settings
+and changed back before returning does not either. Only the *display* is cleared: `stats` keeps the
+run, so the flip after a coin change, or after the app opens on `?`, continues it rather than
+starting over.
 
 Three things about it are less obvious than the rule:
 
@@ -336,6 +337,46 @@ Three things about it are less obvious than the rule:
   moved into `restoreDisplay` for the same reason, alongside `streakCount`, which was already
   deferred.
 
+**Clear Previous Result** (`Setting.CLEAR_RESULT`, off by default, under Appearance) brings the old
+`?` back for the users who asked for it once the result started surviving. It applies when the app
+is *opened*, not on every resume: a cold start, a restore after process death, and the activity
+returning after it stopped, which covers Home, Back and switching apps. The screen going off stops
+the activity too, so it should clear the result the same way, but that has not been tried on a
+device. A return from Settings keeps the result, which is what the label promises. Keying on the
+pause, as the old rule did, would also blank it behind the in-app review dialog every hundredth
+flip. That dialog is translucent, so it should pause the activity without stopping it, but this is
+inferred rather than tested. A cold start alone would not have been enough either: Home and Back
+both leave the activity and its ViewModel alive, so reopening from the launcher is an ordinary
+resume.
+
+- **`MainViewModel.opening` is what says a resume opens the app.** A new ViewModel starts it true,
+  `MainAction.OnBackground` sets it again, and `onResume` spends it whether or not it restored the
+  display. A flip still in the air when the app reopens lands as usual, and if the flag were left
+  unspent the next return from Settings would clear that result.
+- **`OnBackground` comes from the activity's stop, not the fragment's.** `MainFragment` observes the
+  activity's lifecycle because Settings replaces the fragment and stops it with the app still on
+  screen. It skips a stop with `isChangingConfigurations` set, the recreation a light/dark switch
+  causes. Without that check, switching themes would clear the result.
+- **Back keeps the activity only when the home screen started it.** On Back at a task's root, the
+  system server moves the task behind only if its root activity was launched by the home process
+  (`shouldMoveTaskToBack` in `ActivityClientController`, the same in Android 16 and 17); otherwise
+  it asks the activity to finish. Started from its icon, the app survives Back, and the reopen
+  arrives through `OnBackground` just as it does after Home. Started from adb, Back finishes it, and
+  the reopen builds a new ViewModel, which opens on `?` for a different reason. Android 17 adds a
+  device config, `config_alwaysMoveTaskToBackOnBackPressed`, that drops the home-launch condition.
+  The Pixel 9a behaves as if it is not set.
+
+To check it on a device, start the app from its icon on the home screen; `input tap` on the icon
+works. Both `am start -n` and
+`adb shell monkey -p com.banasiak.coinflip -c android.intent.category.LAUNCHER 1` launch it from
+the shell, so Back finishes it. `am start -n` is worse: a launcher start after it stacked a second
+`AppActivity`, with a ViewModel of its own, on top of the first. `monkey` at least sends the
+launcher's intent, so it serves for Home. Either mistake
+passes for a working setting, because a new ViewModel opens on `?` whatever `OnBackground` did.
+`dumpsys activity activities` lists the `AppActivity` records with their `launchedFromPackage`, and
+the debug build logs each `postAction()`. A reopen after Home or Back logs `OnPause`,
+`OnBackground` and `OnResume`, in that order, from the same process.
+
 **The flip's timing** is not what its frames declare. `AnimationHelper` gives every frame 20 ms, but
 a phone shows each for whole vsyncs: on a Pixel 9a every frame lasted 16.7 ms, so flips of 41 and
 49 frames took 667 and 800 ms rather than 820 and 980. The cause is the platform's, not the app's:
@@ -350,12 +391,15 @@ landing fired off a delay summed from the declared durations, which put the land
   `DurationAnimationDrawable.awaitFrames(withoutFinal = 4)`, which resumes as the drawable *selects*
   the fourth frame from the end, just before it is drawn. The animation's whole declared duration
   still bounds the wait, and has to: a screen that stops drawing mid-flip never reaches the frame,
-  and the `SPIN` vibration repeats until stopped. Home stops the drawing, and so does Back. Since
-  Android 12, Back on a root activity moves the task behind instead of finishing it, so the flip is
-  not cancelled and nothing stops until the bound lands it, under a second later. `FrameSignal`
-  ignores what the drawable selects until the run restarts from frame 0, because attaching the
-  drawable to a view re-selects the frame the last flip stopped on, which is past any frame being
-  waited for.
+  and the `SPIN` vibration repeats until stopped. Home and Back are not what stops it, though both
+  stop the drawing in the end. On the Pixel 9a on Android 17 the window keeps drawing while it
+  animates away and stops about a second after the key, longer than a flip takes: with Home or Back
+  pressed within 100 ms of the tap, all eight flips landed on their frame. Back does not cancel the
+  flip either. Since Android 12 it moves a root task behind instead of finishing it, provided the
+  home screen started the app (see Clear Previous Result above). Nothing that stops the drawing
+  mid-flip, such as the screen switching off, has been tested. `FrameSignal` ignores what the
+  drawable selects until the run restarts from frame 0, because attaching the drawable to a view
+  re-selects the frame the last flip stopped on, which is past any frame being waited for.
 - **The whir is timed to the frames a phone shows, and set ahead of them for SoundPool's start
   latency** (`APP_FRAME`, `APP_LEAD` in `promo/synth.mjs`). The latency was measured on the Pixel 9a
   at ~110 ms for flips a second or two apart and ~200 ms after a few seconds of quiet, once the

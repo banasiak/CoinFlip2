@@ -37,6 +37,8 @@
   <string name="settings_header_statistics_title">สถิติ</string>
   <string name="settings_item_animation_summary">แสดงเหรียญหมุน</string>
   <string name="settings_item_animation_title">แอนิเมชัน</string>
+  <string name="settings_item_clear_result_summary">แสดง ? ทุกครั้งที่เปิดแอป</string>
+  <string name="settings_item_clear_result_title">ซ่อนผลลัพธ์ก่อนหน้า</string>
   <string name="settings_item_coin_empty">ไม่พบเหรียญที่ตรงกัน</string>
   <string name="settings_item_coin_favorite_add">เพิ่ม %1$s ในรายการโปรด</string>
   <string name="settings_item_coin_favorite_pinned">%1$s อยู่ในรายการโปรดเสมอ</string>

@@ -65,9 +65,14 @@ class MainViewModel @Inject constructor(
   // process death
   private var rimColors: AnimationHelper.RimColors? = null
 
+  // whether the next resume brings the app onto the screen rather than back from Settings; a new
+  // ViewModel is the app starting, cold or after process death
+  private var opening = true
+
   fun postAction(action: MainAction) {
     Timber.d("postAction(): $action")
     when (action) {
+      MainAction.OnBackground -> opening = true
       MainAction.OnPause -> onPause()
       is MainAction.SetRimColors -> onSetRimColors(action.heads, action.tails)
       MainAction.OnResume -> onResume()
@@ -106,17 +111,23 @@ class MainViewModel @Inject constructor(
     // mid-flip, state.result already holds what the animation has not revealed yet: restoring the
     // "previous" state here shows the result the coin is about to land on
     if (!isFlipping) restoreDisplay(stats)
+    // spent even mid-flip, or the next return from Settings would clear the result as if the app
+    // had just opened
+    opening = false
 
     generateAnimations()
   }
 
   private fun restoreDisplay(stats: Stats) {
     val identity = animationHelper.identity(settings.coinPrefix)
-    // a null drawnCoin is a cold start, not a coin change: the face rebuilt from the persisted run
-    // is the last result, which belongs to whichever coin is selected now
-    val surprise = settings.coinPrefix == CoinType.RANDOM.prefix || (state.drawnCoin != null && state.drawnCoin != identity)
+    val blank =
+      settings.coinPrefix == CoinType.RANDOM.prefix ||
+        // a null drawnCoin is a cold start, not a coin change: the face rebuilt from the persisted run
+        // is the last result, which belongs to whichever coin is selected now
+        (state.drawnCoin != null && state.drawnCoin != identity) ||
+        (opening && settings.clearResult)
     val result =
-      if (surprise) {
+      if (blank) {
         Coin.Result(Coin.Value.UNKNOWN, AnimationHelper.Permutation.UNKNOWN, null)
       } else {
         // the label can have been edited in Settings while the screen was away; the face it names has not
@@ -135,7 +146,9 @@ class MainViewModel @Inject constructor(
         resultVisible = settings.textEnabled && result.value != Coin.Value.UNKNOWN,
         headsCount = stats.count(Coin.Value.HEADS),
         tailsCount = stats.count(Coin.Value.TAILS),
-        streakCount = if (surprise) 0 else stats.streak
+        // keyed on the face on screen, not on blank: a ? kept from an earlier resume has no run, and
+        // the screen draws a run even with no result beside it
+        streakCount = if (result.value == Coin.Value.UNKNOWN) 0 else stats.streak
       )
   }
 

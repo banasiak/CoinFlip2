@@ -37,6 +37,8 @@
   <string name="settings_header_statistics_title">统计</string>
   <string name="settings_item_animation_summary">渲染旋转硬币</string>
   <string name="settings_item_animation_title">动画</string>
+  <string name="settings_item_clear_result_summary">打开应用时始终显示“?”</string>
+  <string name="settings_item_clear_result_title">隐藏上次结果</string>
   <string name="settings_item_coin_empty">没有匹配的硬币</string>
   <string name="settings_item_coin_favorite_add">将 %1$s 添加到收藏</string>
   <string name="settings_item_coin_favorite_pinned">%1$s 始终显示在收藏中</string>

@@ -346,6 +346,12 @@ fun SettingsView(
         // ----- Appearance -----
         CategoryHeader(stringResource(R.string.settings_header_appearance_title))
         SwitchPreference(
+          title = stringResource(R.string.settings_item_clear_result_title),
+          summary = stringResource(R.string.settings_item_clear_result_summary),
+          checked = state.clearResult,
+          onCheckedChange = { postAction(SettingsAction.SetClearResult(it)) }
+        )
+        SwitchPreference(
           title = stringResource(R.string.settings_item_dynamic_colors_title),
           summary = stringResource(R.string.settings_item_dynamic_colors_summary),
           checked = state.dynamic,

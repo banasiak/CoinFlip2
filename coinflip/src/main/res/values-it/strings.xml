@@ -37,6 +37,8 @@
   <string name="settings_header_statistics_title">Statistiche</string>
   <string name="settings_item_animation_summary">Renderizza la moneta che gira</string>
   <string name="settings_item_animation_title">Animazione</string>
+  <string name="settings_item_clear_result_summary">Mostra sempre il ? all\'apertura dell\'app</string>
+  <string name="settings_item_clear_result_title">Nascondi il risultato precedente</string>
   <string name="settings_item_coin_empty">Nessuna moneta corrispondente</string>
   <string name="settings_item_coin_favorite_add">Aggiungi %1$s ai preferiti</string>
   <string name="settings_item_coin_favorite_pinned">%1$s è sempre tra i preferiti</string>

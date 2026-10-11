@@ -94,6 +94,7 @@ class SettingsManagerTests {
       settings.vibrateEnabled.shouldBeTrue()
       settings.showQuickReset.shouldBeFalse()
       settings.dynamicColorsEnabled.shouldBeFalse()
+      settings.clearResult.shouldBeFalse()
       settings.secureRandom.shouldBeFalse()
       settings.diagnosticsIterations shouldBeEqualTo 100_000L
       settings.force shouldBeEqualTo ShakeForce.MEDIUM

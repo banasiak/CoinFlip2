@@ -41,6 +41,9 @@ class SettingsManager @Inject constructor(private val prefs: SharedPreferences) 
   val dynamicColorsEnabled get() = prefs[Setting.DYNAMIC]
   val secureRandom get() = prefs[Setting.SECURE_RANDOM]
 
+  // whether opening the app shows the ? rather than the last result
+  val clearResult get() = prefs[Setting.CLEAR_RESULT]
+
   /** The choice the user made; [shakeSensitivity] is the threshold seismic wants for it. */
   val force get() = prefs[Setting.FORCE]
   val shakeSensitivity get() = force.sensitivity

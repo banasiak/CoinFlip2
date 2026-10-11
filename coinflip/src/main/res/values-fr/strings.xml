@@ -37,6 +37,8 @@
   <string name="settings_header_statistics_title">Statistiques</string>
   <string name="settings_item_animation_summary">Afficher la pièce en rotation</string>
   <string name="settings_item_animation_title">Animation</string>
+  <string name="settings_item_clear_result_summary">Toujours afficher le ? à l\'ouverture de l\'application</string>
+  <string name="settings_item_clear_result_title">Masquer le résultat précédent</string>
   <string name="settings_item_coin_empty">Aucune pièce correspondante</string>
   <string name="settings_item_coin_favorite_add">Ajouter %1$s aux favoris</string>
   <string name="settings_item_coin_favorite_pinned">%1$s est toujours dans les favoris</string>

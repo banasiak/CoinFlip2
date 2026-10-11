@@ -37,6 +37,8 @@
   <string name="settings_header_statistics_title">Statystyki</string>
   <string name="settings_item_animation_summary">Wyświetl wirującą monetę</string>
   <string name="settings_item_animation_title">Animacja</string>
+  <string name="settings_item_clear_result_summary">Zawsze pokazuj ? po otwarciu aplikacji</string>
+  <string name="settings_item_clear_result_title">Ukrywanie poprzedniego wyniku</string>
   <string name="settings_item_coin_empty">Brak pasujących monet</string>
   <string name="settings_item_coin_favorite_add">Dodaj %1$s do ulubionych</string>
   <string name="settings_item_coin_favorite_pinned">%1$s zawsze jest w ulubionych</string>
