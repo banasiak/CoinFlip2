@@ -37,6 +37,8 @@
   <string name="settings_header_statistics_title">İstatistikler</string>
   <string name="settings_item_animation_summary">Dönen parayı göster</string>
   <string name="settings_item_animation_title">Animasyon</string>
+  <string name="settings_item_clear_result_summary">Uygulama açıldığında her zaman ? göster</string>
+  <string name="settings_item_clear_result_title">Önceki sonucu gizle</string>
   <string name="settings_item_coin_empty">Eşleşen madeni para yok</string>
   <string name="settings_item_coin_favorite_add">%1$s favorilere ekle</string>
   <string name="settings_item_coin_favorite_pinned">%1$s her zaman favorilerde</string>

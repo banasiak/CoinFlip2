@@ -47,6 +47,7 @@ class SettingsViewModelTests {
       every { settings.customHeadsText } returns "CROWN"
       every { settings.customTailsText } returns "SHIP"
       every { settings.dynamicColorsEnabled } returns true
+      every { settings.clearResult } returns true
       every { settings.secureRandom } returns true
       every { settings.force } returns ShakeForce.HIGH
       every { settings.showStreak } returns true
@@ -74,6 +75,7 @@ class SettingsViewModelTests {
           customHeads = "CROWN",
           customTails = "SHIP",
           dynamic = true,
+          clearResult = true,
           secureRandom = true,
           force = ShakeForce.HIGH,
           customRim = false,
@@ -191,6 +193,16 @@ class SettingsViewModelTests {
 
       verify { settings.update(Setting.CUSTOM_TAILS_TEXT, "SHIP") }
       vm.stateFlow.value.customTails shouldBeEqualTo "SHIP"
+    }
+
+  @Test
+  fun set_clear_result_persists_and_updates_state() =
+    runTest {
+      val vm = viewModel()
+      vm.postAction(SettingsAction.SetClearResult(true))
+
+      verify { settings.update(Setting.CLEAR_RESULT, true) }
+      vm.stateFlow.value.clearResult shouldBeEqualTo true
     }
 
   @Test

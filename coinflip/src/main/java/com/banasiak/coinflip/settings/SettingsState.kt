@@ -20,6 +20,7 @@ data class SettingsState(
   val customHeads: String? = Setting.CUSTOM_HEADS_TEXT.default,
   val customTails: String? = Setting.CUSTOM_TAILS_TEXT.default,
   val dynamic: Boolean = Setting.DYNAMIC.default,
+  val clearResult: Boolean = Setting.CLEAR_RESULT.default,
   val secureRandom: Boolean = Setting.SECURE_RANDOM.default,
   val force: ShakeForce = Setting.FORCE.default,
   val favorites: Set<String> = Setting.FAVORITES.default,
@@ -61,6 +62,7 @@ sealed class SettingsAction {
   data class SetCustomHeads(val value: String?) : SettingsAction()
   data class SetCustomTails(val value: String?) : SettingsAction()
   data class SetDynamic(val value: Boolean) : SettingsAction()
+  data class SetClearResult(val value: Boolean) : SettingsAction()
   data class SetSecureRandom(val value: Boolean) : SettingsAction()
   data class SetForce(val value: ShakeForce) : SettingsAction()
   data object ResetStats : SettingsAction()

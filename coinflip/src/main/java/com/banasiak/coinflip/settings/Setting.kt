@@ -149,6 +149,7 @@ sealed class Setting<T>(val key: String, val default: T) {
     val FAVORITES = StringSetSetting("favoriteCoins")
 
     val CUSTOM_COIN_RIM = BooleanSetting("customCoinRim", true)
+    val CLEAR_RESULT = BooleanSetting("clearResult", false)
     val STREAK = BooleanSetting("streak", false)
     val HEADS = LongSetting("headsCount", 0L)
     val TAILS = LongSetting("tailsCount", 0L)

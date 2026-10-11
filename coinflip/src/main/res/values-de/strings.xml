@@ -37,6 +37,8 @@
   <string name="settings_header_statistics_title">Statistiken</string>
   <string name="settings_item_animation_summary">Sich drehende Münze anzeigen</string>
   <string name="settings_item_animation_title">Animation</string>
+  <string name="settings_item_clear_result_summary">Beim Öffnen der App immer das ? anzeigen</string>
+  <string name="settings_item_clear_result_title">Vorheriges Ergebnis ausblenden</string>
   <string name="settings_item_coin_empty">Keine passenden Münzen</string>
   <string name="settings_item_coin_favorite_add">%1$s zu Favoriten hinzufügen</string>
   <string name="settings_item_coin_favorite_pinned">%1$s ist immer in den Favoriten</string>
