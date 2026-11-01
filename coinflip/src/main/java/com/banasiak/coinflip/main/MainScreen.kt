@@ -5,6 +5,8 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.widget.ImageView
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -13,10 +15,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
@@ -24,7 +29,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,6 +46,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalDensity
@@ -52,6 +61,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
@@ -107,66 +117,88 @@ fun MainView(
     val tailsRim = MaterialTheme.colorScheme.tailsColor.toArgb()
     LaunchedEffect(headsRim, tailsRim) { postAction(MainAction.SetRimColors(headsRim, tailsRim)) }
 
-    Scaffold(
-      // the display cutout sits alongside the content in landscape, not above it
-      contentWindowInsets = WindowInsets.safeDrawing,
-      bottomBar = { MainNavigationBar(postAction) }
-    ) { contentPadding ->
-      BoxWithConstraints(
-        modifier =
-          Modifier
-            .padding(contentPadding)
-            .fillMaxSize()
-            .clickable(
-              interactionSource = remember { MutableInteractionSource() },
-              indication = null
-            ) { postAction(MainAction.TapCoin) }
-      ) {
-        // the coin is emitted from two different call sites below; movableContent keeps the same
-        // ImageView (and any in-flight animation) alive when the device rotates between them
-        val coin =
-          remember {
-            movableContentOf<MainState, Int, Dp, Dp> { coinState, token, size, coinPadding ->
-              CoinImage(coinState, token, size, coinPadding)
-            }
-          }
-
-        val landscape = maxWidth > maxHeight
-        val coinPadding = if (landscape) Dimen.large else Dimen.xlarge
-        // portrait sizes the coin off the width; landscape sizes it off the (much scarcer) height,
-        // capped at half the width so the text column still gets its share of a square-ish window
-        val fullSize = if (landscape) maxHeight.coerceAtMost(maxWidth / 2) else maxWidth
-        val coinSize = fullSize.coerceAtMost(Dimen.maxCoin + coinPadding * 2)
-        val capped = coinSize < fullSize
-
-        if (landscape) {
-          // the coin keeps its half of the window and the text column takes the other
-          Row(
-            modifier = Modifier.fillMaxSize(),
-            verticalAlignment = Alignment.CenterVertically
-          ) {
-            Box(
-              modifier = Modifier.weight(1f),
-              contentAlignment = Alignment.Center
-            ) {
-              coin(state, flipToken, coinSize, coinPadding)
-            }
-            Column(
-              modifier = Modifier.weight(1f),
-              horizontalAlignment = Alignment.CenterHorizontally,
-              verticalArrangement = Arrangement.Center
-            ) {
-              CoinDetails(state, postAction, landscape = true)
-            }
-          }
+    BoxWithConstraints {
+      val rail = maxWidth > maxHeight
+      val navigationColor =
+        if (minOf(maxWidth, maxHeight) >= TABLET_MIN_SIDE) {
+          // background, not transparent: the rail sits outside the Scaffold, with only the window behind it
+          MaterialTheme.colorScheme.background
         } else {
-          Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = if (capped) Arrangement.Center else Arrangement.Top
+          NavigationBarDefaults.containerColor
+        }
+      Row(modifier = Modifier.fillMaxSize()) {
+        if (rail) {
+          MainNavigationRail(postAction, navigationColor)
+        }
+        Scaffold(
+          modifier = Modifier.weight(1f),
+          // the display cutout sits alongside the content in landscape, not above it; a rail has
+          // already padded the start edge, so the content must not pad it again
+          contentWindowInsets =
+            if (rail) {
+              WindowInsets.safeDrawing.only(WindowInsetsSides.Vertical + WindowInsetsSides.End)
+            } else {
+              WindowInsets.safeDrawing
+            },
+          bottomBar = { if (!rail) MainNavigationBar(postAction, navigationColor) }
+        ) { contentPadding ->
+          BoxWithConstraints(
+            modifier =
+              Modifier
+                .padding(contentPadding)
+                .fillMaxSize()
+                .clickable(
+                  interactionSource = remember { MutableInteractionSource() },
+                  indication = null
+                ) { postAction(MainAction.TapCoin) }
           ) {
-            coin(state, flipToken, coinSize, coinPadding)
-            CoinDetails(state, postAction, landscape = false)
+            // the coin is emitted from two different call sites below; movableContent keeps the same
+            // ImageView (and any in-flight animation) alive when the device rotates between them
+            val coin =
+              remember {
+                movableContentOf<MainState, Int, Dp, Dp> { coinState, token, size, coinPadding ->
+                  CoinImage(coinState, token, size, coinPadding)
+                }
+              }
+
+            val landscape = maxWidth > maxHeight
+            val coinPadding = if (landscape) Dimen.large else Dimen.xlarge
+            // portrait sizes the coin off the width; landscape sizes it off the (much scarcer) height,
+            // capped at half the width so the text column still gets its share of a square-ish window
+            val fullSize = if (landscape) maxHeight.coerceAtMost(maxWidth / 2) else maxWidth
+            val coinSize = fullSize.coerceAtMost(Dimen.maxCoin + coinPadding * 2)
+            val capped = coinSize < fullSize
+
+            if (landscape) {
+              // the coin keeps its half of the window and the text column takes the other
+              Row(
+                modifier = Modifier.fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically
+              ) {
+                Box(
+                  modifier = Modifier.weight(1f),
+                  contentAlignment = Alignment.Center
+                ) {
+                  coin(state, flipToken, coinSize, coinPadding)
+                }
+                Column(
+                  modifier = Modifier.weight(1f),
+                  horizontalAlignment = Alignment.CenterHorizontally,
+                  verticalArrangement = Arrangement.Center
+                ) {
+                  CoinDetails(state, postAction, landscape = true)
+                }
+              }
+            } else {
+              Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = if (capped) Arrangement.Center else Arrangement.Top
+              ) {
+                coin(state, flipToken, coinSize, coinPadding)
+                CoinDetails(state, postAction, landscape = false)
+              }
+            }
           }
         }
       }
@@ -192,6 +224,10 @@ private fun CoinDetails(state: MainState, postAction: (MainAction) -> Unit, land
 }
 
 private const val PLACEHOLDER_GLYPH = "?"
+
+// Material's medium width class: a tablet's window reaches it on its shorter side in either
+// orientation, and a phone's never does
+private val TABLET_MIN_SIDE = 600.dp
 
 // backs the glyph off the ~97% of its box the fit below lands on, so it does not crowd the coin
 private const val PLACEHOLDER_FILL_RATIO = 0.9f
@@ -466,42 +502,58 @@ private fun StatsRow(state: MainState, landscape: Boolean) {
   }
 }
 
+// the actions the bar and the rail both offer; none is a destination the main screen can be on, so
+// neither ever shows one selected
+private enum class MainNavigationItem(
+  @DrawableRes val icon: Int,
+  @StringRes val label: Int,
+  val action: MainAction
+) {
+  DIAGNOSTICS(R.drawable.diagnostics, R.string.diagnostics_menu_title, MainAction.TapDiagnostics),
+  SETTINGS(R.drawable.settings, R.string.settings_menu_title, MainAction.TapSettings),
+  ABOUT(R.drawable.about, R.string.about_menu_title, MainAction.TapAbout)
+}
+
 @Composable
-private fun MainNavigationBar(postAction: (MainAction) -> Unit) {
-  NavigationBar {
-    NavigationBarItem(
-      selected = false,
-      onClick = { postAction(MainAction.TapDiagnostics) },
-      icon = {
-        Icon(
-          painter = painterResource(R.drawable.diagnostics),
-          contentDescription = stringResource(R.string.diagnostics_menu_title)
-        )
-      },
-      label = { Text(stringResource(R.string.diagnostics_menu_title)) }
-    )
-    NavigationBarItem(
-      selected = false,
-      onClick = { postAction(MainAction.TapSettings) },
-      icon = {
-        Icon(
-          painter = painterResource(R.drawable.settings),
-          contentDescription = stringResource(R.string.settings_menu_title)
-        )
-      },
-      label = { Text(stringResource(R.string.settings_menu_title)) }
-    )
-    NavigationBarItem(
-      selected = false,
-      onClick = { postAction(MainAction.TapAbout) },
-      icon = {
-        Icon(
-          painter = painterResource(R.drawable.about),
-          contentDescription = stringResource(R.string.about_menu_title)
-        )
-      },
-      label = { Text(stringResource(R.string.about_menu_title)) }
-    )
+private fun MainNavigationIcon(item: MainNavigationItem) {
+  Icon(
+    painter = painterResource(item.icon),
+    contentDescription = stringResource(item.label)
+  )
+}
+
+@Composable
+private fun MainNavigationBar(postAction: (MainAction) -> Unit, containerColor: Color) {
+  NavigationBar(containerColor = containerColor) {
+    for (item in MainNavigationItem.entries) {
+      NavigationBarItem(
+        selected = false,
+        onClick = { postAction(item.action) },
+        icon = { MainNavigationIcon(item) },
+        label = { Text(stringResource(item.label)) }
+      )
+    }
+  }
+}
+
+@Composable
+private fun MainNavigationRail(postAction: (MainAction) -> Unit, containerColor: Color) {
+  NavigationRail(
+    containerColor = containerColor,
+    // the default keeps clear of the system bars but not of the display cutout, which a landscape
+    // window can have on this edge
+    windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Vertical + WindowInsetsSides.Start)
+  ) {
+    Spacer(Modifier.weight(1f))
+    for (item in MainNavigationItem.entries) {
+      NavigationRailItem(
+        selected = false,
+        onClick = { postAction(item.action) },
+        icon = { MainNavigationIcon(item) },
+        label = { Text(stringResource(item.label)) }
+      )
+    }
+    Spacer(Modifier.weight(1f))
   }
 }
 
@@ -527,5 +579,11 @@ fun MainViewPreview() {
 @Preview(name = "landscape dark", widthDp = 892, heightDp = 411, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun MainViewLandscapePreview() {
+  MainView(previewState())
+}
+
+@Preview(name = "tablet", widthDp = 800, heightDp = 1280)
+@Composable
+fun MainViewTabletPreview() {
   MainView(previewState())
 }
