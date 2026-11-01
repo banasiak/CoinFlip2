@@ -14,6 +14,11 @@ class Dimen {
     // their label on landscape phones and tablets
     val maxContent = 600.dp
 
+    // the faces' own size, 390px at mdpi: a coin drawn larger is stretched beyond the screen's
+    // density and goes visibly soft, as one left to fill a tablet's width does. Higher-resolution
+    // faces would be what lets this grow. A phone's coin never reaches it.
+    val maxCoin = 390.dp
+
     // leading artwork in the coin picker rows
     val coinThumbnail = 40.dp
 

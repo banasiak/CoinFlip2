@@ -141,6 +141,25 @@ the system draws no preview. There is no fragment pop to seek in that case, only
 
 **UI is fully migrated to Jetpack Compose.** Fragments create a `ComposeView` in `onCreateView` and render a `*Screen` composable (e.g., `MainFragment` → `MainScreen`, `SettingsFragment` → `SettingsScreen`). Each Compose screen follows a two-layer pattern: `*Screen(viewModel)` collects state, `*View(state, postAction)` is the pure composable (used by `@PreviewLightDark`). The Compose theme is in `ui/theme/` (`AppTheme`), which honors the dynamic-color preference on API 31+. The colors that mean something across screens are named once in `ui/theme/Color.kt`, as `ColorScheme` extensions: `headsColor` and `tailsColor` wherever a face is named, and `cardColor` for the fill of every card. Read them through those names rather than the Material role each maps to today, or one site can drift from the rest. The coin animation still uses `AndroidView` wrapping an `ImageView` with `DurationAnimationDrawable`.
 
+**The coin is never drawn larger than its artwork, 390dp.** The faces, shipped and custom alike,
+are 390px at mdpi, so a 390dp coin is already stretched 2× on an xhdpi tablet. Left to fill the
+width, a Pixel Tablet's portrait coin was 672dp, a 3.4× stretch, and visibly soft. `Dimen.maxCoin`
+caps the coin's box, and the space beyond it becomes margin. A capped portrait column also centers
+vertically, rather than leaving all of the slack under the stats. A phone's coin is well under the
+cap (a Pixel 9a's is about 283dp), so phones lay out as they did. 448dp and 512dp were
+tried on the tablet, at 2.3× and 2.6×, and sharpness was chosen over size. A bigger coin that stays
+sharp needs higher-resolution faces, not a larger cap.
+
+The landed face is `FIT_CENTER` for the same reason, and the cap depends on it. The flip runs as the
+`ImageView`'s *background*, which always fills the view, while `CENTER_INSIDE`, which this used to
+be, never enlarges a drawable past its intrinsic size. Wherever the view was larger than 390dp the
+two disagreed. The coin flipped at the box's size, and stayed there after landing, because
+`coinImageType` stays `ANIMATION` until the next resume. It then dropped back to 390dp when
+`restoreDisplay` put up `IMAGE`. That was the coin visibly changing size on a tablet. At a cap of
+exactly 390dp the two happen to agree, but only `FIT_CENTER` keeps them agreeing if the cap or the
+artwork ever changes. To check on a device, screen-record a flip and read the coin's width along its
+centre row in every frame; the resting face, each flip frame and the landed face should all match.
+
 **State management pattern (MVI-style):**
 - Each feature has a `*State` (Parcelable data class), `*Action` (sealed class for user intents), and `*Effect` (sealed class for one-shot side effects like navigation or toasts).
 - ViewModels expose `stateFlow: StateFlow<State>` and `effectFlow: SharedFlow<Effect>`. UI calls `viewModel.postAction(action)`.
