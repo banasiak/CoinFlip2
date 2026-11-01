@@ -132,9 +132,12 @@ fun MainView(
           }
 
         val landscape = maxWidth > maxHeight
+        val coinPadding = if (landscape) Dimen.large else Dimen.xlarge
         // portrait sizes the coin off the width; landscape sizes it off the (much scarcer) height,
         // capped at half the width so the text column still gets its share of a square-ish window
-        val coinSize = if (landscape) maxHeight.coerceAtMost(maxWidth / 2) else maxWidth
+        val fullSize = if (landscape) maxHeight.coerceAtMost(maxWidth / 2) else maxWidth
+        val coinSize = fullSize.coerceAtMost(Dimen.maxCoin + coinPadding * 2)
+        val capped = coinSize < fullSize
 
         if (landscape) {
           // the coin keeps its half of the window and the text column takes the other
@@ -146,7 +149,7 @@ fun MainView(
               modifier = Modifier.weight(1f),
               contentAlignment = Alignment.Center
             ) {
-              coin(state, flipToken, coinSize, Dimen.large)
+              coin(state, flipToken, coinSize, coinPadding)
             }
             Column(
               modifier = Modifier.weight(1f),
@@ -159,9 +162,10 @@ fun MainView(
         } else {
           Column(
             modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = if (capped) Arrangement.Center else Arrangement.Top
           ) {
-            coin(state, flipToken, coinSize, Dimen.xlarge)
+            coin(state, flipToken, coinSize, coinPadding)
             CoinDetails(state, postAction, landscape = false)
           }
         }
@@ -266,7 +270,9 @@ private fun CoinImage(state: MainState, flipToken: Int, size: Dp, coinPadding: D
               .padding(coinPadding),
           factory = { context ->
             ImageView(context).apply {
-              scaleType = ImageView.ScaleType.CENTER_INSIDE
+              // not CENTER_INSIDE: the flip runs as the view's background, which always fills the
+              // view, so a landed face held to its intrinsic size shrinks wherever the view is larger
+              scaleType = ImageView.ScaleType.FIT_CENTER
               contentDescription = context.getString(R.string.coin_animation)
               // a view built here is never mid-flip -- the running animation belonged to the view
               // that has gone -- so seed it with the landed face. CoinImageType.ANIMATION is a
