@@ -160,6 +160,54 @@ exactly 390dp the two happen to agree, but only `FIT_CENTER` keeps them agreeing
 artwork ever changes. To check on a device, screen-record a flip and read the coin's width along its
 centre row in every frame; the resting face, each flip frame and the landed face should all match.
 
+**The main screen's three actions move to a rail at the start edge when the window is wider than
+tall,** and stay in a bottom bar otherwise, a tablet in portrait included. The structure is taken
+from the owner's fst-regen app, which also gives any window 600dp wide a rail. That half of its rule
+was tried here and dropped on 2026-11-01: a portrait tablet's rail pushed the coin 40dp off the
+screen's centre. `MainView` decides once, against the whole window; the content's own `landscape`
+test, which puts the coin beside the text, still runs on what is left beside the rail.
+
+**On a tablet neither the bar nor the rail has a band;** both are drawn in the screen's own
+`background`. A phone keeps the bar's `surfaceContainer` band for both. A tablet here is a window
+whose shorter side is at least 600dp (`TABLET_MIN_SIDE`), which a tablet's is in either orientation
+and a phone's never is. It is the window's measure, not the device's, so a tablet in split screen
+can come out as a phone. Three things are easy to undo by accident:
+
+- **The bandless color is `background`, not transparent.** The bar sits inside the `Scaffold`, but
+  the rail sits outside it, where only the window is behind it, and the window's background is the
+  View theme's, free to differ from the Compose scheme. The bar's default elevation is zero, so it
+  adds no tint over `background`.
+- **The rail's insets are `safeDrawing`, not its default,** which keeps clear of the system bars but
+  not of the display cutout, and a landscape window can have the camera on the rail's edge. The
+  `Scaffold` then drops the start side from its content insets, or the content pads that edge twice.
+- **The items are actions, not destinations,** so none is ever selected. `MainNavigationItem` is the
+  one list both the bar and the rail draw.
+
+The items are centered down the rail rather than at its top, where fst-regen's five tabs sit: three
+items at the top leave the rail mostly empty, and centered puts them under the thumb of a hand
+holding the device sideways. Both were tried on a Pixel Tablet on 2026-11-01. The owner chose
+centered while calling the rail better than the bar but not loved, then put a portrait tablet back
+on the bar and took the band off a tablet's, so the design may see another pass.
+`NavigationSuiteScaffold` was not used, for fst-regen's reasons: it adds a dependency, and nobody
+checked what it picks for a phone in landscape.
+
+A phone in landscape is where the rail matters most, since its coin is sized off the height and is
+well under the cap. On a Pixel 9a the coin went from 219dp to 297dp after landing, 79 of the 80dp
+the bar took, with the rail checked in both landscape rotations, so with the camera cutout on the
+rail's side and on the content's. Its portrait layout was unchanged, band included. On the Pixel
+Tablet, portrait has the bar with the coin back at the screen's centre. In both orientations the
+pixels behind the bar or the rail matched the screen's background exactly, and the coin stayed
+390dp at rest and after landing. The tablet was checked in light mode and the 9a in dark.
+
+Two things about testing this on a device. A phone carrying the Play release cannot take a debug
+build without uninstalling the release and its data, so build a side copy with
+`./gradlew -I store/scripts/side-copy.init.gradle :coinflip:assembleDebug`; it installs beside the
+release as `com.banasiak.coinflip.screenshots` and launches with `am start -n
+com.banasiak.coinflip.screenshots/com.banasiak.coinflip.AppActivity`. And to hold an orientation,
+use `cmd window user-rotation lock <n>` and launch with `am start`, not `monkey`: on the Pixel
+Tablet a `monkey` launch put the lock back to auto-rotate every time, so every "portrait" shot
+came out landscape.
+
 **State management pattern (MVI-style):**
 - Each feature has a `*State` (Parcelable data class), `*Action` (sealed class for user intents), and `*Effect` (sealed class for one-shot side effects like navigation or toasts).
 - ViewModels expose `stateFlow: StateFlow<State>` and `effectFlow: SharedFlow<Effect>`. UI calls `viewModel.postAction(action)`.
