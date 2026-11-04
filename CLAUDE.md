@@ -596,6 +596,11 @@ ktlint runs from the CLI and takes its rules from the `ktlint_*` block at the en
 Each release adds standard rules that reflow working code rather than catch a defect, so a bump
 normally arrives as a wall of violations; the ones this project rejects are disabled there, and the
 next bump will likely need a few more added. Check what a new rule actually changes before adopting it.
+A bump can also take a rule out of the defaults, and then it simply stops running, so read the
+changelog for both. 1.7.0 did that to `no-unused-imports`, and the move from 1.1.0 to 1.8.0 lost it
+unnoticed, since neither the compiler nor Android lint reports an unused import. The block now
+enables it by name, which is the only way it runs. It is deprecated and goes in ktlint 2.0.0, so
+that bump needs another way to catch unused imports.
 
 ## Comments
 
