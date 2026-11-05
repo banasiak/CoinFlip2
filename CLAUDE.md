@@ -602,6 +602,12 @@ unnoticed, since neither the compiler nor Android lint reports an unused import.
 enables it by name, which is the only way it runs. It is deprecated and goes in ktlint 2.0.0, so
 that bump needs another way to catch unused imports.
 
+The tasks hand ktlint its files, never a glob (`ktlintFiles`): the `.kt` files under `src/`, this
+module's `build.gradle.kts`, and the root project's `build.gradle.kts` and `settings.gradle.kts`.
+Given a glob, ktlint walks the whole module, `build/` included, and a file that another task deletes
+partway through fails the run (`fileSequence()` in ktlint-cli's `FileUtils.kt`). Handed only files,
+it doesn't walk. A glob run from `coinflip/` also never reached the root project's two scripts.
+
 ## Comments
 
 These rules are enforced in review. They govern **production code**; test files are exempt, and
