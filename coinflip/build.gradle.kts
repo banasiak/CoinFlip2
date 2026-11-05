@@ -131,6 +131,16 @@ dependencies {
   }
 }
 
+// the files themselves, never a glob: given a glob, ktlint walks the whole module, build/ included,
+// and fails when another task deletes a file there partway through
+val ktlintFiles =
+  files(
+    fileTree("src") { include("**/*.kt") },
+    "build.gradle.kts",
+    rootProject.file("build.gradle.kts"),
+    rootProject.file("settings.gradle.kts")
+  ).let { files -> CommandLineArgumentProvider { files.map { it.path } } }
+
 val ktlintCheck =
   tasks.register<JavaExec>("ktlintCheck") {
     group = LifecycleBasePlugin.VERIFICATION_GROUP
@@ -138,11 +148,7 @@ val ktlintCheck =
     classpath = ktlint
     mainClass.set("com.pinterest.ktlint.Main")
     // see https://pinterest.github.io/ktlint/install/cli/#command-line-usage for more information
-    args(
-      "**/src/**/*.kt",
-      "**.kts",
-      "!**/build/**"
-    )
+    argumentProviders.add(ktlintFiles)
   }
 
 tasks.check {
@@ -156,10 +162,6 @@ tasks.register<JavaExec>("format") {
   mainClass.set("com.pinterest.ktlint.Main")
   jvmArgs("--add-opens=java.base/java.lang=ALL-UNNAMED")
   // see https://pinterest.github.io/ktlint/install/cli/#command-line-usage for more information
-  args(
-    "-F",
-    "**/src/**/*.kt",
-    "**.kts",
-    "!**/build/**"
-  )
+  args("-F")
+  argumentProviders.add(ktlintFiles)
 }
