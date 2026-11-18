@@ -38,6 +38,7 @@ import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.movableContentOf
@@ -51,6 +52,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -62,6 +64,7 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -121,8 +124,10 @@ fun MainView(
 
     BoxWithConstraints {
       val rail = maxWidth > maxHeight
+      val tablet = minOf(maxWidth, maxHeight) >= TABLET_MIN_SIDE
+      val detailsScale = if (tablet) TABLET_DETAILS_SCALE else 1f
       val navigationColor =
-        if (minOf(maxWidth, maxHeight) >= TABLET_MIN_SIDE) {
+        if (tablet) {
           // background, not transparent: the rail sits outside the Scaffold, with only the window behind it
           MaterialTheme.colorScheme.background
         } else {
@@ -187,10 +192,11 @@ fun MainView(
                   horizontalAlignment = Alignment.CenterHorizontally,
                   verticalArrangement = Arrangement.Center
                 ) {
-                  CoinDetails(state, postAction, landscape = true)
+                  CoinDetails(state, postAction, landscape = true, detailsScale, besideCoin = 0.dp)
                 }
               }
             } else {
+              val fullCoin = maxWidth.coerceAtMost(maxCoinBox)
               Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -210,7 +216,7 @@ fun MainView(
                     .aspectRatio(1f, matchHeightConstraintsFirst = true),
                   coinPadding
                 )
-                CoinDetails(state, postAction, landscape = false)
+                CoinDetails(state, postAction, landscape = false, detailsScale, besideCoin = fullCoin)
               }
             }
           }
@@ -220,24 +226,72 @@ fun MainView(
   }
 }
 
+/**
+ * The result, instructions and stats, drawn [scale] times larger when they fit at that size and at
+ * their phone size otherwise. Fitting means the width a phone gives them times [scale], and the
+ * height of the larger block plus [besideCoin], the height the coin needs above it at full size.
+ * The height is measured with the counts at [PROBE_COUNT], so the choice holds as they grow.
+ */
 @Composable
-private fun CoinDetails(state: MainState, postAction: (MainAction) -> Unit, landscape: Boolean) {
-  ResultText(state, landscape)
-  InstructionsText(state, landscape)
-  if (state.statsVisible) {
-    StatsRow(state, landscape)
+private fun CoinDetails(
+  state: MainState,
+  postAction: (MainAction) -> Unit,
+  landscape: Boolean,
+  scale: Float,
+  besideCoin: Dp
+) {
+  SubcomposeLayout { constraints ->
+    val loose = constraints.copy(minHeight = 0)
+    val fits =
+      scale > 1f &&
+        constraints.maxWidth >= (PHONE_DETAILS_WIDTH * scale).roundToPx() &&
+        subcompose(FIT_PROBE) {
+          DetailsBlock(state.copy(headsCount = PROBE_COUNT, tailsCount = PROBE_COUNT), postAction, landscape, scale)
+        }.single().measure(loose).let { probe ->
+          !constraints.hasBoundedHeight || probe.height + besideCoin.roundToPx() <= constraints.maxHeight
+        }
+    val size = if (fits) scale else 1f
+    val placeable = subcompose(size) { DetailsBlock(state, postAction, landscape, size) }.single().measure(loose)
+    layout(placeable.width, placeable.height) { placeable.place(0, 0) }
   }
-  if (state.resetVisible) {
-    Button(
-      modifier = Modifier.padding(vertical = if (landscape) Dimen.small else Dimen.medium),
-      onClick = { postAction(MainAction.ResetStats) }
-    ) {
-      Text(stringResource(R.string.reset_stats))
+}
+
+@Composable
+private fun DetailsBlock(state: MainState, postAction: (MainAction) -> Unit, landscape: Boolean, scale: Float) {
+  val density = LocalDensity.current
+  // fontScale carried over, so the user's own font size still applies on top of the scale
+  CompositionLocalProvider(LocalDensity provides Density(density.density * scale, density.fontScale)) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+      ResultText(state, landscape)
+      InstructionsText(state, landscape)
+      if (state.statsVisible) {
+        StatsRow(state, landscape)
+      }
+      if (state.resetVisible) {
+        Button(
+          modifier = Modifier.padding(vertical = if (landscape) Dimen.small else Dimen.medium),
+          onClick = { postAction(MainAction.ResetStats) }
+        ) {
+          Text(stringResource(R.string.reset_stats))
+        }
+      }
     }
   }
 }
 
 private const val PLACEHOLDER_GLYPH = "?"
+
+private const val TABLET_DETAILS_SCALE = 1.5f
+
+// the narrowest the details run at their phone size, on a 360dp-wide phone in portrait. Scaled, they
+// need this times the scale to wrap no more than they do there.
+private val PHONE_DETAILS_WIDTH = 360.dp
+
+// the count the larger block is fitted against. A wrapping stats row grows taller with a wider count,
+// so real counts up to this can't outgrow the fit and drop the text back mid-session.
+private const val PROBE_COUNT = 9_999_999L
+
+private const val FIT_PROBE = "fitProbe"
 
 // backs the glyph off the ~97% of its box the fit below lands on, so it does not crowd the coin
 private const val PLACEHOLDER_FILL_RATIO = 0.9f
