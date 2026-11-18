@@ -225,10 +225,6 @@ private fun CoinDetails(state: MainState, postAction: (MainAction) -> Unit, land
 
 private const val PLACEHOLDER_GLYPH = "?"
 
-// Material's medium width class: a tablet's window reaches it on its shorter side in either
-// orientation, and a phone's never does
-private val TABLET_MIN_SIDE = 600.dp
-
 // backs the glyph off the ~97% of its box the fit below lands on, so it does not crowd the coin
 private const val PLACEHOLDER_FILL_RATIO = 0.9f
 
@@ -501,6 +497,10 @@ private fun StatsRow(state: MainState, landscape: Boolean) {
     }
   }
 }
+
+// the smallest-width rule, sw600dp, not a width class: a tablet's window reaches it on its shorter
+// side in either orientation, and a phone's never does
+private val TABLET_MIN_SIDE = 600.dp
 
 // the actions the bar and the rail both offer; none is a destination the main screen can be on, so
 // neither ever shows one selected
