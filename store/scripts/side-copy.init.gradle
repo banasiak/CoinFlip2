@@ -1,6 +1,6 @@
 // Builds the app as com.banasiak.coinflip.screenshots, so it installs beside a real install instead
 // of over it, and into build/screenshots, so the project's own outputs are left alone. Used by
-// screenshots.sh.
+// screenshots.sh, and by hand to try a debug build on a phone that has the Play release.
 allprojects {
   layout.buildDirectory.set(rootProject.layout.projectDirectory.dir("build/screenshots/${name}"))
   plugins.withId('com.android.application') {
