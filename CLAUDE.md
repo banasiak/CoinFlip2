@@ -16,6 +16,12 @@ lands on — and leave `app_name` short. `store/store_listing.xml` has an `app_n
 it is the full name in every language: it is the Play listing's App name field, not the launcher
 label, so it is meant to differ from the resource.
 
+The repository is public, and its documentation, comments and commit messages name no other app or
+repository, the owner's own included. When a decision came from one, state its reasons here, since
+a reader of this repository cannot open it. The libraries and tools the build uses are dependencies,
+not other projects, and the 2011 original, which the README links as this app's history, is the one
+exception.
+
 ## Build & Development Commands
 
 ```bash
@@ -161,11 +167,10 @@ artwork ever changes. To check on a device, screen-record a flip and read the co
 centre row in every frame; the resting face, each flip frame and the landed face should all match.
 
 **The main screen's three actions move to a rail at the start edge when the window is wider than
-tall,** and stay in a bottom bar otherwise, a tablet in portrait included. The structure is taken
-from the owner's fst-regen app, which also gives any window 600dp wide a rail. That half of its rule
-was tried here and dropped on 2026-11-01: a portrait tablet's rail pushed the coin 40dp off the
-screen's centre. `MainView` decides once, against the whole window; the content's own `landscape`
-test, which puts the coin beside the text, still runs on what is left beside the rail.
+tall,** and stay in a bottom bar otherwise, a tablet in portrait included. Giving any window 600dp
+wide a rail as well was tried and dropped on 2026-11-01: a portrait tablet's rail pushed the coin
+40dp off the screen's centre. `MainView` decides once, against the whole window; the content's own
+`landscape` test, which puts the coin beside the text, still runs on what is left beside the rail.
 
 **On a tablet neither the bar nor the rail has a band;** both are drawn in the screen's own
 `background`. A phone keeps the bar's `surfaceContainer` band for both. A tablet here is a window
@@ -183,13 +188,11 @@ can come out as a phone. Three things are easy to undo by accident:
 - **The items are actions, not destinations,** so none is ever selected. `MainNavigationItem` is the
   one list both the bar and the rail draw.
 
-The items are centered down the rail rather than at its top, where fst-regen's five tabs sit: three
-items at the top leave the rail mostly empty, and centered puts them under the thumb of a hand
-holding the device sideways. Both were tried on a Pixel Tablet on 2026-11-01. The owner chose
-centered while calling the rail better than the bar but not loved, then put a portrait tablet back
-on the bar and took the band off a tablet's, so the design may see another pass.
-`NavigationSuiteScaffold` was not used, for fst-regen's reasons: it adds a dependency, and nobody
-checked what it picks for a phone in landscape.
+The items are centered down the rail rather than at its top: three items at the top leave the rail
+mostly empty, and centered puts them under the thumb of a hand holding the device sideways. Both
+were tried on a Pixel Tablet on 2026-11-01, and the owner chose centered. The design may see another
+pass. `NavigationSuiteScaffold` was not used: it adds a dependency, and nobody checked what it picks
+for a phone in landscape.
 
 A phone in landscape is where the rail matters most, since its coin is sized off the height and is
 well under the cap. On a Pixel 9a the coin went from 219dp to 297dp after landing, 79 of the 80dp
@@ -199,14 +202,14 @@ Tablet, portrait has the bar with the coin back at the screen's centre. In both 
 pixels behind the bar or the rail matched the screen's background exactly, and the coin stayed
 390dp at rest and after landing. The tablet was checked in light mode and the 9a in dark.
 
-Two things about testing this on a device. A phone carrying the Play release cannot take a debug
-build without uninstalling the release and its data, so build a side copy with
-`./gradlew -I store/scripts/side-copy.init.gradle :coinflip:assembleDebug`; it installs beside the
-release as `com.banasiak.coinflip.screenshots` and launches with `am start -n
-com.banasiak.coinflip.screenshots/com.banasiak.coinflip.AppActivity`. And to hold an orientation,
-use `cmd window user-rotation lock <n>` and launch with `am start`, not `monkey`: on the Pixel
-Tablet a `monkey` launch put the lock back to auto-rotate every time, so every "portrait" shot
-came out landscape.
+To try a change on a phone with the Play release installed, build the side copy with
+`./gradlew -I store/scripts/side-copy.init.gradle :coinflip:assembleDebug`. A plain debug build
+keeps the release's application ID, so it cannot install over the release without uninstalling it
+and its data. The side copy is `com.banasiak.coinflip.screenshots` and installs beside the release.
+The init script moves every build directory under `build/screenshots/`, so its APK is
+`build/screenshots/coinflip/outputs/apk/debug/coinflip-debug.apk`, not anywhere under
+`coinflip/build/`. `am start -n com.banasiak.coinflip.screenshots/com.banasiak.coinflip.AppActivity`
+launches it, and Clear Previous Result, below, says when that launch and `monkey` each mislead.
 
 **State management pattern (MVI-style):**
 - Each feature has a `*State` (Parcelable data class), `*Action` (sealed class for user intents), and `*Effect` (sealed class for one-shot side effects like navigation or toasts).
