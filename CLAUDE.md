@@ -185,6 +185,42 @@ exactly 390dp the two happen to agree, but only `FIT_CENTER` keeps them agreeing
 artwork ever changes. To check on a device, screen-record a flip and read the coin's width along its
 centre row in every frame; the resting face, each flip frame and the landed face should all match.
 
+**On a tablet the text with the coin is drawn 1.5× larger, wherever it fits at that size.** At a
+phone's sizes the full Pixel Tablet's text sat in mostly empty space: in landscape it took about
+146dp of a 600×732dp column. The owner tried 1.5× on the tablet on 2026-11-17 and kept it; 2× was
+offered and not tried. `CoinDetails` draws the result, the instructions, the stats and Quick Stats
+Reset's button as one block, and `DetailsBlock` scales it by providing a `LocalDensity` with its
+`density` multiplied, so dp and sp grow together and the block keeps a phone's proportions.
+`fontScale` is carried over, so a larger system font still applies on top.
+
+The scale applies only where the larger block fits, which takes three things: a tablet window
+(`TABLET_MIN_SIDE`), at least `PHONE_DETAILS_WIDTH` times the scale across, so it wraps no more than
+it does on a 360dp phone, and, in portrait, the height for the larger block under a full-size coin.
+The owner chose that split screen keep a phone's sizes rather than give the coin up for the text. A
+side-by-side half of the tablet in landscape, 635×800dp, fails the height test, where 1.5× would
+have cut the coin from 334dp to about 240dp. A top-and-bottom half in portrait fails the width test,
+since its text column beside the coin is 360dp. The rule is measured rather than set by a
+window-size threshold, which would also have to know where the bar, the rail and the insets fall.
+The stats row's texts wrap, and custom labels have no length cap, so the block's height can grow
+with the counts: a long label wraps once its count gains a digit. Measured with the real counts, a
+window near the fit would drop the text back to a phone's size partway through a session. The height
+is therefore measured with both counts at `PROBE_COUNT`, 9,999,999, so the choice depends only on
+the window and the settings.
+
+The fit needs the larger block's measured height, so `CoinDetails` is a `SubcomposeLayout`. It
+measures a probe of the larger block with those counts, never placed, then composes the block it
+chose, so the details are composed twice wherever the width test passes, and once elsewhere.
+Intrinsic measurements can't stand in for it: `ResultText` is a `BoxWithConstraints`, which is
+itself a `SubcomposeLayout` and does not answer them. The coin's movable content stays outside the
+subcomposition, in the `BoxWithConstraints` it always lived in. On the Pixel Tablet, with the fit
+taken from the real counts before the probe was added, the result line measured 105dp in landscape
+and 135dp in portrait, at 84sp and 108sp, with the coin at 390dp in both. The side-by-side half, the
+top-and-bottom half and a 411dp-wide window all kept a phone's sizes, with coins of 334, 296 and
+283dp. The probe was checked by arithmetic, not on the device: it only adds height, a full tablet
+has the room for it in either orientation, and the split halves already failed. In landscape the
+probe's heads half needs about 197 of its 200 phone-dp, so it may or may not wrap a line, and fits
+either way.
+
 **The main screen's three actions move to a rail at the start edge when the window is wider than
 tall,** and stay in a bottom bar otherwise, a tablet in portrait included. Giving any window 600dp
 wide a rail as well was tried and dropped on 2026-11-01: a portrait tablet's rail pushed the coin
