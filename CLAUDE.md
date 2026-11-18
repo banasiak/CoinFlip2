@@ -156,6 +156,25 @@ cap (a Pixel 9a's is about 283dp), so phones lay out as they did. 448dp and 512d
 tried on the tablet, at 2.3× and 2.6×, and sharpness was chosen over size. A bigger coin that stays
 sharp needs higher-resolution faces, not a larger cap.
 
+**A portrait coin takes only the height the text beneath it leaves.** Sized off the width alone, it
+squeezed the text out of a window close to square. Each half of a 50/50 split on a Pixel Tablet in
+landscape is 635×800dp, the content between the status bar and the bottom bar is 652dp, and the
+capped column needed 708dp. With Quick Stats Reset it needed 788, since the button lays out at the
+48dp minimum touch target rather than its 40dp height. A `Column` measures each unweighted child in
+the height still left, so the coin's box and the two lines under it took 648dp and the stats row got
+the last 4dp. Its text was measured at zero height and dropped out of the accessibility tree.
+Nothing overflowed and nothing sat under the bar, so a translucent bar or padding beneath it would
+not have helped. The coin's box is therefore weighted with `fill = false`, so the column measures
+the details first and gives the coin what is left, and `aspectRatio` with
+`matchHeightConstraintsFirst` squares it to the smaller of that and the width. The split now shows a
+334dp coin, or 254dp with Quick Stats Reset, with all of the text laid out, and the coin is the same
+size mid-flip as landed. A window just wider than tall takes the rail, which leaves a portrait
+content box with no bar under it; on the tablet's insets that is a window within about 12dp of
+square, where the text was squeezed the same way and now fits. Elsewhere nothing moved: 390dp on the
+full tablet in either orientation, and 283dp in a 411dp-wide window. The coin shrinks rather than
+its 64dp padding; shrinking the padding first was not tried. Landscape still sizes the coin off the
+height, with the text beside it rather than beneath, so the two never compete for height.
+
 The landed face is `FIT_CENTER` for the same reason, and the cap depends on it. The flip runs as the
 `ImageView`'s *background*, which always fills the view, while `CENTER_INSIDE`, which this used to
 be, never enlarges a drawable past its intrinsic size. Wherever the view was larger than 390dp the

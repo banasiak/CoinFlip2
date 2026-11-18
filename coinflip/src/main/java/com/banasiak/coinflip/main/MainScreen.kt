@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -25,6 +26,7 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -156,20 +158,19 @@ fun MainView(
             // ImageView (and any in-flight animation) alive when the device rotates between them
             val coin =
               remember {
-                movableContentOf<MainState, Int, Dp, Dp> { coinState, token, size, coinPadding ->
-                  CoinImage(coinState, token, size, coinPadding)
+                movableContentOf<MainState, Int, Modifier, Dp> { coinState, token, modifier, coinPadding ->
+                  CoinImage(coinState, token, modifier, coinPadding)
                 }
               }
 
             val landscape = maxWidth > maxHeight
             val coinPadding = if (landscape) Dimen.large else Dimen.xlarge
-            // portrait sizes the coin off the width; landscape sizes it off the (much scarcer) height,
-            // capped at half the width so the text column still gets its share of a square-ish window
-            val fullSize = if (landscape) maxHeight.coerceAtMost(maxWidth / 2) else maxWidth
-            val coinSize = fullSize.coerceAtMost(Dimen.maxCoin + coinPadding * 2)
-            val capped = coinSize < fullSize
+            val maxCoinBox = Dimen.maxCoin + coinPadding * 2
 
             if (landscape) {
+              // sized off the (much scarcer) height, capped at half the width so the text column still
+              // gets its share of a square-ish window
+              val coinSize = maxHeight.coerceAtMost(maxWidth / 2).coerceAtMost(maxCoinBox)
               // the coin keeps its half of the window and the text column takes the other
               Row(
                 modifier = Modifier.fillMaxSize(),
@@ -179,7 +180,7 @@ fun MainView(
                   modifier = Modifier.weight(1f),
                   contentAlignment = Alignment.Center
                 ) {
-                  coin(state, flipToken, coinSize, coinPadding)
+                  coin(state, flipToken, Modifier.size(coinSize), coinPadding)
                 }
                 Column(
                   modifier = Modifier.weight(1f),
@@ -193,9 +194,22 @@ fun MainView(
               Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = if (capped) Arrangement.Center else Arrangement.Top
+                verticalArrangement = if (maxWidth > maxCoinBox) Arrangement.Center else Arrangement.Top
               ) {
-                coin(state, flipToken, coinSize, coinPadding)
+                coin(
+                  state,
+                  flipToken,
+                  Modifier
+                    // weighted, so it is measured after the details and gets only the height they
+                    // leave; unweighted, it is measured first and squeezes them out of a window
+                    // close to square
+                    .weight(1f, fill = false)
+                    // the cap has to come before aspectRatio, which measures everything after it at
+                    // exactly the size it picked
+                    .widthIn(max = maxCoinBox)
+                    .aspectRatio(1f, matchHeightConstraintsFirst = true),
+                  coinPadding
+                )
                 CoinDetails(state, postAction, landscape = false)
               }
             }
@@ -244,11 +258,11 @@ private const val FIT_MARGIN = 0.98f
 private const val RESULT_LINE_HEIGHT_RATIO = 1.25f
 
 @Composable
-private fun CoinImage(state: MainState, flipToken: Int, size: Dp, coinPadding: Dp) {
+private fun CoinImage(state: MainState, flipToken: Int, modifier: Modifier, coinPadding: Dp) {
   val imageViewRef = remember { mutableStateOf<ImageView?>(null) }
 
   Box(
-    modifier = Modifier.size(size),
+    modifier = modifier,
     contentAlignment = Alignment.Center
   ) {
     when (state.coinImageType) {
@@ -263,8 +277,7 @@ private fun CoinImage(state: MainState, flipToken: Int, size: Dp, coinPadding: D
               // a Canvas has no semantics of its own; announce what a Text normally would
               .semantics { contentDescription = PLACEHOLDER_GLYPH }
         ) {
-          // explicit receiver: the enclosing composable also has a `size`, in Dp
-          val box = this.size
+          val box = size
           val paint =
             Paint().apply {
               isAntiAlias = true
