@@ -660,6 +660,14 @@ unnoticed, since neither the compiler nor Android lint reports an unused import.
 enables it by name, which is the only way it runs. It is deprecated and goes in ktlint 2.0.0, so
 that bump needs another way to catch unused imports.
 
+`.editorconfig` starts with `root = true`, and that line has to stay first. Without it, EditorConfig
+keeps looking up the directory tree and ktlint merges every `.editorconfig` it finds, the nearest
+file winning for any key it sets. The desktop app's worktrees sit inside the main checkout, under
+`.claude/worktrees/`, so a worktree inherits the main checkout's copy for every key its own leaves
+unset. A branch that turns a rule back on by deleting its `disabled` line would still find it
+disabled there, from the main checkout's file, so `check` would pass in the worktree and fail
+everywhere else.
+
 The tasks hand ktlint its files, never a glob (`ktlintFiles`): the `.kt` files under `src/`, this
 module's `build.gradle.kts`, and the root project's `build.gradle.kts` and `settings.gradle.kts`.
 Given a glob, ktlint walks the whole module, `build/` included, and a file that another task deletes
