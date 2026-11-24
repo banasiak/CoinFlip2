@@ -11,6 +11,7 @@ changed here reaches the store only when it is pasted or uploaded there.
 | `screenshots/<language>/1.png`–`7.png` | Seven framed phone screenshots per language | The main store listing's phone screenshots, per language |
 | `feature_graphic.png` | The 1024×500 banner | The main store listing's feature graphic |
 | `ic_launcher-playstore.png` | The 512×512 app icon | The main store listing's app icon |
+| `feature_graphic_background.png` | The banner the feature graphic's coin is painted onto | Nowhere: `scripts/icon.py` reads it |
 
 The promo video is rendered by [`promo/`](../promo/README.md), and Play takes it as a YouTube URL.
 
@@ -130,6 +131,26 @@ to get the images rather than pointer files.
 
 ## The icon
 
-`ic_launcher-playstore.png` comes from Android Studio's Image Asset wizard. That wizard also writes
-a new copy into `coinflip/src/main/` every time it regenerates the launcher icons. Move that copy
-here, replacing this one.
+```bash
+python3 -I store/scripts/icon.py
+```
+
+The icon is drawn by `scripts/icon.py`, from one set of shapes in the script, with only Python's
+standard library. It writes every copy of it, so none of them is edited by hand:
+
+- `ic_launcher_foreground.xml` and `ic_launcher_monochrome.xml` in `coinflip/src/main/res/drawable`,
+  the adaptive icon's foreground and its themed-icon layer
+- `ic_launcher_debug_badge.xml` beside them, and `ic_launcher_monochrome_debug.xml` in
+  `coinflip/src/debug/res/drawable`, the debug build's DEBUG band
+- `ic_launcher-playstore.png`, the 512×512 store icon, full bleed: Play applies its own mask
+- `feature_graphic.png`, with the coin painted onto `feature_graphic_background.png` at the size and
+  place of the coin already there
+- `promo/logo.png`, the foreground alone, which the promo video draws as its logo
+
+`feature_graphic_background.png` is the banner before the redrawn coin, with the raster coin it
+replaced still on it. Nothing else holds the photograph behind the coin, so keep it. The new coin
+covers the old one and its dark outline completely, which is what lets every run paint onto it and
+give the same pixels. The PNG bytes also depend on the zlib build Python uses, so after a run on
+another machine, commit only the outputs whose drawing changed.
+
+Most of a run's time goes to rasterizing the feature graphic.
