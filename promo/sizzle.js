@@ -169,7 +169,7 @@ async function setup() {
   const cache = {};
   const load = (src) => (cache[src] ??= loadImage(src));
   IMG.edge = await load(`${RES}drawable/edge.webp`);
-  IMG.logo = await load(`${RES}mipmap-xxxhdpi/ic_launcher_foreground.webp`);
+  IMG.logo = await load('logo.png');
   COINS = await Promise.all(
     catalog.map(async (c) => ({ ...c, heads: await load(c.headsUrl), tails: await load(c.tailsUrl), edge: IMG.edge })),
   );

@@ -9,6 +9,9 @@ artwork and a re-render picks it up. The one coin never shown is
 Claude Code, an easter egg rather than a real coin (`OFF_WALL` in `sizzle.js`). The catalog count
 still includes it, so the number on screen matches what the app ships.
 
+The logo is `logo.png`, the app icon's foreground, which `store/scripts/icon.py` writes along with
+the icon itself. Rerun that script, not anything here, to change it.
+
 ```bash
 cd promo
 npm ci --ignore-scripts

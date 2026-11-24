@@ -127,7 +127,7 @@ fun AboutView(state: AboutState, postAction: (AboutAction) -> Unit = { }) {
 private fun AppIcon(debugBadge: Boolean, modifier: Modifier = Modifier) {
   Box(modifier = modifier.clip(CircleShape).background(colorResource(R.color.ic_launcher_background))) {
     val layer = Modifier.matchParentSize().graphicsLayer(scaleX = 1.5f, scaleY = 1.5f)
-    Image(painter = painterResource(R.mipmap.ic_launcher_foreground), contentDescription = null, modifier = layer)
+    Image(painter = painterResource(R.drawable.ic_launcher_foreground), contentDescription = null, modifier = layer)
     if (debugBadge) {
       Image(painter = painterResource(R.drawable.ic_launcher_debug_badge), contentDescription = null, modifier = layer)
     }

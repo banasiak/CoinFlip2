@@ -261,18 +261,37 @@ Tablet, portrait has the bar with the coin back at the screen's centre. In both 
 pixels behind the bar or the rail matched the screen's background exactly, and the coin stayed
 390dp at rest and after landing. The tablet was checked in light mode and the 9a in dark.
 
+**The launcher icon is generated.** `store/scripts/icon.py` holds its shapes, a flat gold coin with
+a raised dollar sign on the `seed` periwinkle, and writes every copy: the vector foreground and
+monochrome layers, the debug band, the Play Store icon, the coin on the feature graphic and the
+promo video's logo. Change the script and rerun it rather than editing any of those, and
+`store/README.md` says what each is for. It redraws the raster icon the app shipped until November
+2026 in the same palette and outline. The dollar sign is a modern one, its bar only a stub above and
+below the S, which the owner chose partly because the S also reads as the S of Simple Coin Flip. Its
+two tails are cut symmetrically: with the lower one running further, the sign looked as if it leaned
+to the right. The feature graphic has no source, so the script paints the coin onto
+`store/feature_graphic_background.png`, the banner as it was, whose coin and its dark outline the
+new one covers completely, so a rerun gives the same pixels. The PNG bytes also depend on the zlib
+build, so commit only the outputs whose drawing changed. The monochrome layer, for Android's themed
+icons, is the rim as a ring and the dollar sign, since a filled disc tints to a featureless blob.
+There are no raster launcher icons: at `minSdk` 26 every launcher reads the adaptive icon.
+`ic_launcher_round` is the same icon, kept for launchers that ask for it by name.
+
 **A debug build is `com.banasiak.coinflip.debug`** (`applicationIdSuffix` on the debug build type),
 so it installs beside the Play release rather than over it, with its own data. Its launcher icon
 carries a red DEBUG band so the two can be told apart on the home screen, and so does the copy of
 the icon on the About sheet. The band is one vector, `ic_launcher_debug_badge`, in `main` because
 About's code names it in every build. The launcher's band comes from `src/debug/res`: the two
-adaptive icons there swap the foreground for a layer list of the shipped foreground and the band.
-About's copy draws the band over the foreground when `BuildInfo.debugBadge` is set, which
-`AppModule` reads from `BuildConfig.DEBUG_BADGE`, true only for the debug build type. The band runs
-across the whole canvas so any launcher's mask clips it to the icon's edge, and the letters sit
-inside the 66dp safe zone so no mask cuts them. The Rate link in About points at the `.debug` ID,
-which has no listing. `am start -n com.banasiak.coinflip.debug/com.banasiak.coinflip.AppActivity`
-launches it, and Clear Previous Result, below, says when that launch and `monkey` each mislead.
+adaptive icons there swap the foreground for a layer list of the shipped foreground and the band,
+and the monochrome layer for `ic_launcher_monochrome_debug`. That one is its own vector because a
+themed icon has one tint, so letters drawn over the dollar sign merge with it: the coin is cut away
+under the band, the band is drawn at partial alpha and the letters at full. About's copy draws the
+band over the foreground when `BuildInfo.debugBadge` is set, which `AppModule` reads from
+`BuildConfig.DEBUG_BADGE`, true only for the debug build type. The band runs across the whole canvas
+so any launcher's mask clips it to the icon's edge, and the letters sit inside the 66dp safe zone so
+no mask cuts them. The Rate link in About points at the `.debug` ID, which has no listing.
+`am start -n com.banasiak.coinflip.debug/com.banasiak.coinflip.AppActivity` launches it, and Clear
+Previous Result, below, says when that launch and `monkey` each mislead.
 
 `store/scripts/side-copy.init.gradle` builds a third ID, `com.banasiak.coinflip.screenshots`, which
 only `screenshots.sh` needs: its debug and release builds have to share one ID so each installs over
@@ -751,7 +770,8 @@ changing it. Three things in the app reach into it, and nothing fails when they 
 - Its end card says "Free. No ads. No tracking. Open source." Adding an ad or analytics SDK, or
   the `INTERNET` permission, means re-checking that line.
 
-It also reaches back the other way: the app's five `res/raw` sounds are rendered by
+Its logo is `promo/logo.png`, the icon's foreground, which `store/scripts/icon.py` writes along with
+the app's icon. It also reaches back the other way: the app's five `res/raw` sounds are rendered by
 `promo/sounds.mjs`, and the video's flip whir and landing ting are the app's `spin` and `coin`. Its
 record fanfare is only the ting and opening call of the app's `streak` (`shortFanfare`): the full
 fanfare runs ~5 s, longer than the video's streak section. A change to `SOUNDS` in `promo/synth.mjs`
