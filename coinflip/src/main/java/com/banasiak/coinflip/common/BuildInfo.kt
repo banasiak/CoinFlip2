@@ -7,7 +7,8 @@ data class BuildInfo(
   val apiLevel: Int,
   val packageName: String,
   val versionName: String,
-  val versionCode: Int
+  val versionCode: Int,
+  val debugBadge: Boolean
 ) {
   @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.S)
   fun isSnowCone() = apiLevel >= Build.VERSION_CODES.S

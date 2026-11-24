@@ -1,9 +1,17 @@
 // Builds the app as com.banasiak.coinflip.screenshots, so it installs beside a real install instead
 // of over it, and into build/screenshots, so the project's own outputs are left alone. Used by
-// screenshots.sh, and by hand to try a debug build on a phone that has the Play release.
+// screenshots.sh, whose debug and release builds have to share one ID so each installs over the other,
+// and whose About shot has to show the release's icon rather than the debug build's.
 allprojects {
   layout.buildDirectory.set(rootProject.layout.projectDirectory.dir("build/screenshots/${name}"))
   plugins.withId('com.android.application') {
-    android.buildTypes.configureEach { applicationIdSuffix '.screenshots' }
+    // set on the variant, after the build script has run: a suffix set on the build type here would
+    // be replaced by the debug build type's own
+    // AGP's classes are not on an init script's compile classpath, so this one comes from the plugin's
+    def buildConfigField = androidComponents.class.classLoader.loadClass('com.android.build.api.variant.BuildConfigField')
+    androidComponents.onVariants(androidComponents.selector().all()) { variant ->
+      variant.applicationId.set("${android.defaultConfig.applicationId}.screenshots")
+      variant.buildConfigFields.put('DEBUG_BADGE', buildConfigField.newInstance('boolean', 'false', null))
+    }
   }
 }

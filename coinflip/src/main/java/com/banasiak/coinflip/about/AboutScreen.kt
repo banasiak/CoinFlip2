@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -62,7 +63,7 @@ fun AboutView(state: AboutState, postAction: (AboutAction) -> Unit = { }) {
             .verticalScroll(rememberScrollState())
       ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-          AppIcon(modifier = Modifier.size(APP_ICON_SIZE))
+          AppIcon(debugBadge = state.debugBadge, modifier = Modifier.size(APP_ICON_SIZE))
           Spacer(modifier = Modifier.width(Dimen.medium))
           Column {
             Text(
@@ -120,19 +121,17 @@ fun AboutView(state: AboutState, postAction: (AboutAction) -> Unit = { }) {
   }
 }
 
-// the launcher icon is adaptive, which painterResource cannot draw, so it is rebuilt from its two
+// the launcher icon is adaptive, which painterResource cannot draw, so it is rebuilt from its
 // layers. A launcher's mask shows only the middle 72dp of the 108dp foreground, hence the 1.5 scale
 @Composable
-private fun AppIcon(modifier: Modifier = Modifier) {
-  Image(
-    painter = painterResource(R.mipmap.ic_launcher_foreground),
-    contentDescription = null,
-    modifier =
-      modifier
-        .clip(CircleShape)
-        .background(colorResource(R.color.ic_launcher_background))
-        .graphicsLayer(scaleX = 1.5f, scaleY = 1.5f)
-  )
+private fun AppIcon(debugBadge: Boolean, modifier: Modifier = Modifier) {
+  Box(modifier = modifier.clip(CircleShape).background(colorResource(R.color.ic_launcher_background))) {
+    val layer = Modifier.matchParentSize().graphicsLayer(scaleX = 1.5f, scaleY = 1.5f)
+    Image(painter = painterResource(R.mipmap.ic_launcher_foreground), contentDescription = null, modifier = layer)
+    if (debugBadge) {
+      Image(painter = painterResource(R.drawable.ic_launcher_debug_badge), contentDescription = null, modifier = layer)
+    }
+  }
 }
 
 @Composable

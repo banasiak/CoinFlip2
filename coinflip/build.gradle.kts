@@ -20,11 +20,18 @@ android {
     targetSdk = 37
     versionCode = 82
     versionName = "2026/11"
+    // the About sheet's icon draws the launcher's DEBUG band when this is set. side-copy.init.gradle
+    // clears it, so the store screenshots taken from a debug build show the release's icon
+    buildConfigField("boolean", "DEBUG_BADGE", "false")
   }
   buildFeatures {
     buildConfig = true
   }
   buildTypes {
+    debug {
+      applicationIdSuffix = ".debug"
+      buildConfigField("boolean", "DEBUG_BADGE", "true")
+    }
     release {
       isMinifyEnabled = true
       isShrinkResources = true

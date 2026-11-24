@@ -20,7 +20,8 @@ class AboutViewModel @Inject constructor(
   private val sourceUrl = "https://github.com/banasiak/CoinFlip2"
   private val websiteUrl = "https://www.banasiak.com"
 
-  private var state = AboutState(buildInfo.versionName, buildInfo.versionCode, settings.dynamicColorsEnabled)
+  private var state =
+    AboutState(buildInfo.versionName, buildInfo.versionCode, settings.dynamicColorsEnabled, buildInfo.debugBadge)
   private val _stateFlow = MutableStateFlow(state)
   val stateFlow = _stateFlow.asStateFlow()
 

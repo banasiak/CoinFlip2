@@ -29,5 +29,5 @@ class BuildInfoTests {
   }
 
   private fun buildInfo(apiLevel: Int) =
-    BuildInfo(apiLevel = apiLevel, packageName = "com.banasiak.coinflip", versionName = "2026/07", versionCode = 74)
+    BuildInfo(apiLevel = apiLevel, packageName = "com.banasiak.coinflip", versionName = "2026/07", versionCode = 74, debugBadge = false)
 }
