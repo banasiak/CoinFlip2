@@ -24,6 +24,7 @@ class AboutViewModelTests {
     every { buildInfo.packageName } returns "packageName"
     every { buildInfo.versionName } returns "versionName"
     every { buildInfo.versionCode } returns 99
+    every { buildInfo.debugBadge } returns false
   }
 
   @Test
@@ -113,5 +114,15 @@ class AboutViewModelTests {
       val vm = viewModel()
 
       vm.stateFlow.value shouldBeEqualTo AboutState("versionName", 99, dynamicColors = true)
+    }
+
+  @Test
+  fun `debug badge comes from build info`() =
+    runTest {
+      every { buildInfo.debugBadge } returns true
+
+      val vm = viewModel()
+
+      vm.stateFlow.value shouldBeEqualTo AboutState("versionName", 99, debugBadge = true)
     }
 }

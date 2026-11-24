@@ -3,7 +3,8 @@ package com.banasiak.coinflip.about
 data class AboutState(
   val versionName: String,
   val versionCode: Int,
-  val dynamicColors: Boolean = false
+  val dynamicColors: Boolean = false,
+  val debugBadge: Boolean = false
 )
 
 sealed class AboutAction {

@@ -47,6 +47,10 @@ exception.
 ./gradlew :coinflip:koverHtmlReportDebug
 ```
 
+`main` takes changes only through a pull request. A repository rule enforces it, and a direct push
+is refused with `GH013: Repository rule violations found`, so push a branch and open a pull request
+against `main`. The **Build & Test** workflow runs on it.
+
 ## Architecture
 
 **Single Activity, Fragment-based navigation:** `AppActivity` hosts a Navigation Component graph (`nav_graph.xml`). Fragments are the top-level destinations:
@@ -257,14 +261,26 @@ Tablet, portrait has the bar with the coin back at the screen's centre. In both 
 pixels behind the bar or the rail matched the screen's background exactly, and the coin stayed
 390dp at rest and after landing. The tablet was checked in light mode and the 9a in dark.
 
-To try a change on a phone with the Play release installed, build the side copy with
-`./gradlew -I store/scripts/side-copy.init.gradle :coinflip:assembleDebug`. A plain debug build
-keeps the release's application ID, so it cannot install over the release without uninstalling it
-and its data. The side copy is `com.banasiak.coinflip.screenshots` and installs beside the release.
-The init script moves every build directory under `build/screenshots/`, so its APK is
-`build/screenshots/coinflip/outputs/apk/debug/coinflip-debug.apk`, not anywhere under
-`coinflip/build/`. `am start -n com.banasiak.coinflip.screenshots/com.banasiak.coinflip.AppActivity`
+**A debug build is `com.banasiak.coinflip.debug`** (`applicationIdSuffix` on the debug build type),
+so it installs beside the Play release rather than over it, with its own data. Its launcher icon
+carries a red DEBUG band so the two can be told apart on the home screen, and so does the copy of
+the icon on the About sheet. The band is one vector, `ic_launcher_debug_badge`, in `main` because
+About's code names it in every build. The launcher's band comes from `src/debug/res`: the two
+adaptive icons there swap the foreground for a layer list of the shipped foreground and the band.
+About's copy draws the band over the foreground when `BuildInfo.debugBadge` is set, which
+`AppModule` reads from `BuildConfig.DEBUG_BADGE`, true only for the debug build type. The band runs
+across the whole canvas so any launcher's mask clips it to the icon's edge, and the letters sit
+inside the 66dp safe zone so no mask cuts them. The Rate link in About points at the `.debug` ID,
+which has no listing. `am start -n com.banasiak.coinflip.debug/com.banasiak.coinflip.AppActivity`
 launches it, and Clear Previous Result, below, says when that launch and `monkey` each mislead.
+
+`store/scripts/side-copy.init.gradle` builds a third ID, `com.banasiak.coinflip.screenshots`, which
+only `screenshots.sh` needs: its debug and release builds have to share one ID so each installs over
+the other with the seeded state. It also clears `DEBUG_BADGE`, because the About shot comes from the
+debug build. The script sets both on the variant rather than on the build type, because the debug
+build type's own values, applied after an init script, would replace them. It moves every build
+directory under `build/screenshots/`, so its APKs are under
+`build/screenshots/coinflip/outputs/apk/`, not `coinflip/build/`.
 
 **State management pattern (MVI-style):**
 - Each feature has a `*State` (Parcelable data class), `*Action` (sealed class for user intents), and `*Effect` (sealed class for one-shot side effects like navigation or toasts).
@@ -493,14 +509,14 @@ resume.
 
 To check it on a device, start the app from its icon on the home screen; `input tap` on the icon
 works. Both `am start -n` and
-`adb shell monkey -p com.banasiak.coinflip -c android.intent.category.LAUNCHER 1` launch it from
-the shell, so Back finishes it. `am start -n` is worse: a launcher start after it stacked a second
-`AppActivity`, with a ViewModel of its own, on top of the first. `monkey` at least sends the
-launcher's intent, so it serves for Home. Either mistake
-passes for a working setting, because a new ViewModel opens on `?` whatever `OnBackground` did.
-`dumpsys activity activities` lists the `AppActivity` records with their `launchedFromPackage`, and
-the debug build logs each `postAction()`. A reopen after Home or Back logs `OnPause`,
-`OnBackground` and `OnResume`, in that order, from the same process.
+`adb shell monkey -p com.banasiak.coinflip.debug -c android.intent.category.LAUNCHER 1` launch it
+from the shell, so Back finishes it. `am start -n` is worse: a launcher start after it stacked a
+second `AppActivity`, with a ViewModel of its own, on top of the first. `monkey` at least sends the
+launcher's intent, so it serves for Home. Either mistake passes for a working setting, because a new
+ViewModel opens on `?` whatever `OnBackground` did. `dumpsys activity activities` lists the
+`AppActivity` records with their `launchedFromPackage`, and the debug build logs each
+`postAction()`. A reopen after Home or Back logs `OnPause`, `OnBackground` and `OnResume`, in that
+order, from the same process.
 
 **The flip's timing** is not what its frames declare. `AnimationHelper` gives every frame 20 ms, but
 a phone shows each for whole vsyncs: on a Pixel 9a every frame lasted 16.7 ms, so flips of 41 and

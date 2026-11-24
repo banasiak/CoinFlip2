@@ -69,6 +69,10 @@ Two supporting documents are worth reading before touching related code:
 ./gradlew :coinflip:assembleDebug
 ```
 
+A debug build is `com.banasiak.coinflip.debug`, so it installs beside the Play Store release instead
+of replacing it. Its icon, on the launcher and in About, carries a red DEBUG band to tell the two
+apart.
+
 ```bash
 ./gradlew :coinflip:check
 ```

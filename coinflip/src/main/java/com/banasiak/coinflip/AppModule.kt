@@ -31,7 +31,8 @@ object AppModule {
       Build.VERSION.SDK_INT,
       context.packageName,
       BuildConfig.VERSION_NAME,
-      BuildConfig.VERSION_CODE
+      BuildConfig.VERSION_CODE,
+      BuildConfig.DEBUG_BADGE
     )
 
   @Provides
