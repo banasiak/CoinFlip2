@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.banasiak.coinflip.MainDispatcherRule
 import com.banasiak.coinflip.R
+import com.banasiak.coinflip.common.BuildInfo
 import com.banasiak.coinflip.common.Coin
 import com.banasiak.coinflip.settings.Setting
 import com.banasiak.coinflip.settings.SettingsManager
@@ -24,6 +25,7 @@ import java.time.Clock
 
 @ExtendWith(MainDispatcherRule::class)
 class DiagnosticsViewModelTests {
+  private val buildInfo: BuildInfo = mockk { every { debug } returns false }
   private val clock: Clock = mockk()
   private val coin: Coin = mockk(relaxed = true)
   private val settingsManager: SettingsManager = mockk(relaxed = true)
@@ -32,7 +34,7 @@ class DiagnosticsViewModelTests {
 
   private fun viewModel(): DiagnosticsViewModel {
     // Dispatchers.Main is the UnconfinedTestDispatcher here, so runTest virtual time drives the flip loop
-    return DiagnosticsViewModel(clock, coin, settingsManager, soundHelper, Dispatchers.Main, savedStateHandle)
+    return DiagnosticsViewModel(buildInfo, clock, coin, settingsManager, soundHelper, Dispatchers.Main, savedStateHandle)
   }
 
   @BeforeEach

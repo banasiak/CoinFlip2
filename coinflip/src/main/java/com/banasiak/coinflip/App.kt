@@ -1,6 +1,7 @@
 package com.banasiak.coinflip
 
 import android.app.Application
+import com.banasiak.coinflip.common.BuildInfo
 import com.banasiak.coinflip.settings.SettingsManager
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.color.DynamicColorsOptions
@@ -10,6 +11,8 @@ import javax.inject.Inject
 
 @HiltAndroidApp
 class App : Application() {
+  @Inject lateinit var buildInfo: BuildInfo
+
   @Inject lateinit var settings: SettingsManager
 
   override fun onCreate() {
@@ -18,7 +21,7 @@ class App : Application() {
     val options = DynamicColorsOptions.Builder().setPrecondition { _, _ -> settings.dynamicColorsEnabled }.build()
     DynamicColors.applyToActivitiesIfAvailable(this, options)
 
-    if (BuildConfig.DEBUG) {
+    if (buildInfo.debug) {
       Timber.plant(Timber.DebugTree())
     }
   }
