@@ -6,7 +6,8 @@
 //   node render.mjs --still 2.5,12.8 single frames, as out/still-<t>.png
 //   node render.mjs --audio          the soundtrack alone, and its buses, as out/stem-*.wav
 //
-// ffmpeg is taken from $FFMPEG, else from the PATH, and needs libx264.
+// ffmpeg is taken from $FFMPEG, else from the PATH, and needs libx264. Chromium is $CHROMIUM if it is
+// set, else the browser Playwright installs for itself, and runs with its sandbox on.
 
 import fs from 'node:fs';
 import http from 'node:http';
@@ -130,7 +131,7 @@ async function main() {
 
   fs.mkdirSync(out, { recursive: true });
   const server = await serve();
-  const browser = await chromium.launch();
+  const browser = await chromium.launch({ executablePath: process.env.CHROMIUM || undefined, chromiumSandbox: true });
   try {
     const port = server.address().port;
     const first = await openPage(browser, port);
