@@ -8,6 +8,7 @@ data class BuildInfo(
   val packageName: String,
   val versionName: String,
   val versionCode: Int,
+  val debug: Boolean,
   val debugBadge: Boolean
 ) {
   @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.S)

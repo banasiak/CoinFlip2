@@ -6,8 +6,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.banasiak.coinflip.BuildConfig
 import com.banasiak.coinflip.R
+import com.banasiak.coinflip.common.BuildInfo
 import com.banasiak.coinflip.common.Coin
 import com.banasiak.coinflip.extensions.formatMilliseconds
 import com.banasiak.coinflip.extensions.formatNumber
@@ -34,6 +34,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DiagnosticsViewModel @Inject constructor(
+  private val buildInfo: BuildInfo,
   private val clock: Clock,
   private val coin: Coin,
   private val settings: SettingsManager,
@@ -231,7 +232,7 @@ class DiagnosticsViewModel @Inject constructor(
   }
 
   private fun printBenchmark() {
-    if (!BuildConfig.DEBUG) return
+    if (!buildInfo.debug) return
     try {
       Timber.i("Diagnostic test complete.")
       Timber.i("SecureRandom: ${coin.isSecure()} | Turbo Mode: ${state.turboMode}")

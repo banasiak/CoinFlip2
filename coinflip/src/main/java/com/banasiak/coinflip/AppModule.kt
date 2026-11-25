@@ -32,6 +32,7 @@ object AppModule {
       context.packageName,
       BuildConfig.VERSION_NAME,
       BuildConfig.VERSION_CODE,
+      BuildConfig.DEBUG,
       BuildConfig.DEBUG_BADGE
     )
 
